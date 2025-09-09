@@ -1,7 +1,7 @@
 # TICKET APERTI:
 
 
-- ### FESTIVI GRMANIA 
+- ### FESTIVI GERMANIA 
   per ciascun Land
 
 
