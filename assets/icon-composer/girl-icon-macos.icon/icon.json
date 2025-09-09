@@ -1,0 +1,41 @@
+{
+  "fill" : {
+    "linear-gradient" : [
+      "srgb:0.99685,0.49962,0.00000,1.00000",
+      "srgb:0.86692,0.06667,0.00000,1.00000"
+    ]
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill" : "automatic",
+          "glass" : true,
+          "image-name" : "icon_girl-on.svg",
+          "name" : "icon_girl-on",
+          "position" : {
+            "scale" : 0.85,
+            "translation-in-points" : [
+              -10.2591552734375,
+              4.0155029296875
+            ]
+          }
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}

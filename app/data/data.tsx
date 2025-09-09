@@ -1,0 +1,171 @@
+
+  /* ============================================================================= 
+     NOME DEI MESI
+     ============================================================================= */
+  export const getMonth = (country: string, id: number): string => {
+    let month = new Date(1970, id, 1).toLocaleString(country, { month: "long" });
+    return month;
+  }
+
+  /* ============================================================================= 
+     NOMI DEI GIORNI
+     ============================================================================= */
+  export const getLocalizedWeekdays = (locale: string) => {
+    const formatter = new Intl.DateTimeFormat(locale, { weekday: 'long' });
+    return [...Array(7).keys()].map((dayIndex) => {
+      const date = new Date(Date.UTC(2024, 0, 1 + dayIndex));
+      return formatter.format(date);
+    });
+  }
+
+  /* ============================================================================= 
+    GIORNI FESTIVI PER NAZIONE
+    ============================================================================= */
+  export const getLocalHolydas = (country: string) => {
+    switch (country) {
+      case "de-AT":
+        return [
+        { day: 1, month: 0, description: "Neujahrstag" },
+        { day: 6, month: 0, description: "Heilige Drei Könige" },
+        { day: 1, month: 4, description: "Staatsfeiertag" },
+        { day: 15, month: 7, description: "Mariä Himmelfahrt" },
+        { day: 26, month: 9, description: "Nationalfeiertag" },
+        { day: 1, month: 10, description: "Allerheiligen" },
+        { day: 8, month: 11, description: "Mariä Empfängnis" },
+        { day: 25, month: 11, description: "Christtag" },
+        { day: 26, month: 11, description: "Stefanitag" }
+        ];
+      case "ch-CH":
+        return [
+        { day: 1, month: 0, description: "Capodanno" },
+        { day: 2, month: 0, description: "Giorno di Berchtold" },
+        { day: 1, month: 7, description: "Festa Nazionale Svizzera" },
+        { day: 25, month: 11, description: "Natale" },
+        { day: 26, month: 11, description: "Santo Stefano" }      
+      ];
+      case "be-BE":
+        return [
+        { day: 1, month: 0, description: "Nouvel An / Nieuwjaar" },
+        { day: 1, month: 4, description: "Fête du Travail / Dag van de Arbeid" },
+        { day: 21, month: 6, description: "Fête Nationale / Nationale Feestdag" },
+        { day: 15, month: 7, description: "Assomption / Onze-Lieve-Vrouw-Hemelvaart" },
+        { day: 1, month: 10, description: "Toussaint / Allerheiligen" },
+        { day: 11, month: 10, description: "Armistice / Wapenstilstand" },
+        { day: 25, month: 11, description: "Noël / Kerstmis" }
+        ];
+      case "en-GB":
+        return[        
+        { day: 1, month: 0, description: "New Year's Day" },
+        { day: 2, month: 0, description: "New Year's Day (Scotland)" },
+        { day: 25, month: 7, description: "Summer Bank Holiday" },
+        { day: 25, month: 11, description: "Christmas Day" },
+        { day: 26, month: 11, description: "Boxing Day" }
+        ];
+      case "en-IE":
+        return [
+          { day: 1, month: 0, description: "New Year's Day" },
+          { day: 17, month: 2, description: "St. Patrick's Day" },
+          { day: 25, month: 11, description: "Christmas Day" },
+          { day: 26, month: 11, description: "Boxing Day" }
+        ];
+      case "fr-FR":
+        return [
+          { day: 1, month: 0, description: "Jour de l'An" },
+          { day: 1, month: 4, description: "Fête du Travail" },
+          { day: 8, month: 4, description: "Victoire 1945" },
+          { day: 14, month: 6, description: "Fête Nationale" },
+          { day: 15, month: 7, description: "Assomption" },
+          { day: 1, month: 10, description: "Toussaint" },
+          { day: 11, month: 10, description: "Armistice 1918" },
+          { day: 25, month: 11, description: "Noël" }
+        ];
+      case "de-DE":
+        return [
+          { day: 1, month: 0, description: "Neujahr" },
+          { day: 1, month: 4, description: "Tag der Arbeit" },
+          { day: 3, month: 9, description: "Tag der Deutschen Einheit" },
+          { day: 25, month: 11, description: "Weihnachtstag" },
+          { day: 26, month: 11, description: "Zweiter Weihnachtstag" }
+          ];
+      case 'es-ES':
+        return [
+          { day: 1, month: 0, description: "Año Nuevo" },
+          { day: 6, month: 0, description: "Día de los Reyes Magos" },
+          { day: 1, month: 4, description: "Día del Trabajador" },
+          { day: 15, month: 7, description: "Asunción de la Virgen" },
+          { day: 12, month: 9, description: "Día de la Hispanidad" },
+          { day: 1, month: 10, description: "Día de Todos los Santos" },
+          { day: 6, month: 11, description: "Día de la Constitución" },
+          { day: 8, month: 11, description: "Inmaculada Concepción" },
+          { day: 25, month: 11, description: "Navidad" }
+          ];
+      case 'nl-NL':
+        return [
+          { day: 1, month: 0, description: "Nieuwjaardag" },
+          { day: 5, month: 4, description: "Bevrijdingsdag" },
+          { day: 25, month: 11, description: "Eerste Kerstdag" },
+          { day: 26, month: 11, description: "Tweede Kerstdag" }
+          ];
+      case 'pt-PT':
+        return [
+          { day: 1, month: 0, description: "Ano Novo" },
+          { day: 25, month: 3, description: "Dia da Liberdade" },
+          { day: 1, month: 4, description: "Dia do Trabalhador" },
+          { day: 10, month: 5, description: "Dia de Portugal" },
+          { day: 15, month: 7, description: "Assunção de Nossa Senhora" },
+          { day: 5, month: 9, description: "Implantação da República" },
+          { day: 1, month: 10, description: "Dia de Todos os Santos" },
+          { day: 1, month: 11, description: "Restauração da Independência" },
+          { day: 8, month: 11, description: "Imaculada Conceição" },
+          { day: 25, month: 11, description: "Natal" }
+          ];
+      default: 
+        return [
+          { day: 1, month: 0, description: 'Capodanno' },
+          { day: 6, month: 0, description: 'Epifania' },
+          { day: 25, month: 3, description: 'Festa della Liberazione' },
+          { day: 1, month: 4, description: 'Festa del lavoro' },
+          { day: 2, month: 5, description: 'Festa della Repubblica' },
+          { day: 15, month: 7, description: 'Ferragosto' },
+          { day: 1, month: 10, description: 'Ognissanti' },
+          { day: 8, month: 11, description: 'Immacolata Concezione' },
+          { day: 25, month: 11, description: 'Natale' },
+          { day: 26, month: 11, description: 'Santo Stefano' },
+        ];  
+    }
+  }
+
+/* ###########################################################################################################
+
+                                                  MAIN
+                                      
+########################################################################################################### */
+export default function useLocalizationData() {
+
+  const country = 'it-IT';
+
+  // GENERO I NOMI DEI MESI E DEI GIORNI
+  const localizedDays = getLocalizedWeekdays(country);
+  const months = (() => {
+    const mesi = [];
+    for (let i = 0; i <= 11; i++) {
+      mesi.push({ label: getMonth(country, i), value: i.toString() });
+    }
+    return mesi;
+  })();
+  
+  // FESTIVI NAZIONALI: NON LA INIZIALIZZO SUBITO PERCHE TANTO VIENE SOVRASCRITTA IMMEDIATAMENTE DOPO
+
+  // const localHolydas = getLocalHolydas(country);
+  const localHolydas: any[] = []; 
+
+  // RESTITUISCE LE VARIABILI COME UNICO OGGETTO
+  return {
+    localizedDays,
+    localHolydas,
+    months,
+  };
+}
+
+
+  

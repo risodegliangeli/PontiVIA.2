@@ -1,0 +1,63 @@
+{
+  "expo": {
+    "name": "PontiVIA!",
+    "description": "Il calendario smart che trova i ponti fra le festività",
+    "slug": "pontivia",
+    "owner": "risodegliangeli",
+    "version": "1.0.0",
+    "icon": "./assets/images/girl-icon-macos-129x129@2x.png",
+    "scheme": "cercaponti",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "com.angelieassociati.pontivia",
+      "buildNumber": "1.0.0",
+      "userInterfaceStyle": "automatic"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/cercaponti-icon96x96.png",
+        "backgroundColor": "#ffffff"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.angelieassociati.pontivia",
+      "permissions": [
+        "android.permission.READ_CALENDAR",
+        "android.permission.WRITE_CALENDAR"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "L'app ha bisogno di poter accedere al calendario per gestire gli eventi",
+          "remindersPermission": "L'app ha bisogno di poter accedere ai promemoria per gestire gli eventi"
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/pontivia_logo_splash.png",
+          "imageWidth": "204",
+          "resizeMode": "contain",
+          "backgroundColor": "#FFFFC5"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "cb0a6d99-e865-4053-9126-946083815c32"
+      }
+    }
+  }
+}
