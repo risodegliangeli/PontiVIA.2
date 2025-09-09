@@ -1,7 +1,7 @@
 # TICKET APERTI:
 
 
-- ### FSTIVI GRMANIA 
+- ### FESTIVI GRMANIA 
   per ciascun Land
 
 
