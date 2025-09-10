@@ -20,7 +20,7 @@ import {
   const { localizedDays } = useLocalizationData();
 
 const preferencesLabel = [
-  'Filtri e preferenze',
+  'Imposta i tuoi filtri',
   'Durata del ponte',
   'Primo giorno della settimana',
   'Giorni della settimana festivi',
