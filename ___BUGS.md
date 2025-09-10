@@ -1,15 +1,21 @@
 # TICKET APERTI:
 
 
-- ### FESTIVI GERMANIA 
-  per ciascun Land
 
+- #### ADV AdMob
+  -- aggiungere
+
+---
+
+- ### FESTIVI GERMANIA 
+  -- per ciascun Land
+
+---
 
 - #### ANNO BISESTILE
   -- aggiungere nel datepicker del giorno singolo
 
 ---
-
 
 - #### TOOLTIP
   aggiungere a fianco delle label delle PREFERENCES
@@ -26,10 +32,6 @@
 
 ---
 
-- #### aggiungere ADV
-
----
-
 - #### geolocalizzazione per santo del giorno
 
 ---
@@ -39,6 +41,7 @@
 --- 
  
 - #### SPLASH ICON & SCREEN
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
