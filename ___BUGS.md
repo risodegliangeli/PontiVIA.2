@@ -2,12 +2,22 @@
 
 
 
-- #### ADV AdMob
+- ### ADV AdMob
   -- aggiungere
 
 ---
 
-- ### FESTIVI GERMANIA 
+- #### ALERT possibili ponti
+
+---
+
+- #### ALERT eventi personali
+  aggiungere checkbox CAMPANELLA nelle due modal (giono singolo e periodo):
+  "Ricordami di questa data [ 7 ] giorni prima"
+
+---
+
+- #### FESTIVI GERMANIA 
   -- per ciascun Land
 
 ---
@@ -19,16 +29,6 @@
 
 - #### TOOLTIP
   aggiungere a fianco delle label delle PREFERENCES
-
----
-
-- #### ALERT possibili ponti
-
----
-
-- #### ALERT eventi personali
-  aggiungere checkbox CAMPANELLA nelle due modal (giono singolo e periodo):
-  "Ricordami di questa data [ 7 ] giorni prima"
 
 ---
 
