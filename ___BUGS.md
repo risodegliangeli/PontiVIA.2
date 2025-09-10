@@ -1,6 +1,10 @@
 # TICKET APERTI:
 
 
+- ### SALVATAGGIO LOCALE
+  -- alla chiusura si perdono *date inserite* e *preferenze*
+
+---
 
 - ### ADV AdMob
   -- aggiungere
