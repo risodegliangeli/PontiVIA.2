@@ -5,7 +5,6 @@ import { Colors } from '@/constants/Colors';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import React, { useEffect, useState, Suspense, ReactNode } from 'react';
 import DateTimePicker, { DateType, useDefaultStyles, } from 'react-native-ui-datepicker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Alert,
   ImageBackground,
@@ -40,514 +39,1122 @@ const holydaysLabels = [
   'Annulla',                                    // 9
   'Elimina',                                    // 10
   'Salva',                                      // 11
-  'Data inizio',                                // 12
-  'Data fine',                                  // 13
+  'Inserisci una descrizione',                  // 12
+  'Esiste già una festività nazionale in questa data',  // 13
   'Descrizione',                                // 14
-  'Elimina periodo',                             // 15
-];
+  '(ripete ogni anno)',                         // 15
+  'I tuoi giorni speciali'                      // 16
+]
 
-
-const saveData = async (data: any, key: string) => {
-  try {
-    const jsonValue = JSON.stringify(data);
-    await AsyncStorage.setItem(key, jsonValue);
-  } catch (e) {
-    console.error(`Failed to save data with key ${key}:`, e);
-  }
+type Holiday = {  // DEFINIZIONE DI holiday
+  day: number;
+  month: number;
+  description: string;
 };
 
-const loadData = async (key: string) => {
-  try {
-    const jsonValue = await AsyncStorage.getItem(key);
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
-    console.error(`Failed to load data with key ${key}:`, e);
-    return null;
-  }
-};
+type HolidayType = 'personal' | 'regional' | 'national';
 
-/* ============================================================================= 
+type ItemType = HolidayType | 'vacation';
 
-                          MAIN EXPORT - Holydays
+interface VacationPeriod {
+  startDay: number;
+  startMonth: number;
+  startYear: number;
+  endDay: number;
+  endMonth: number;
+  endYear: number;
+  description: string;
+}
 
-============================================================================= */
-export default function Holydays() {
+/* ###########################################################################################################
+
+                                      MAIN - HolydaysScreen
+                                      
+########################################################################################################### */
+export default function HolydaysScreen({}: any) {
+
   const colors = useThemeColors();
-  const { 
-    myCountry, setMyCountry,
-    personalHolydays, setPersonalHolydays,
-    vacationPeriods, setVacationPeriods,
-    addSingleDate, addPeriod,
-    deleteSingleDate, deletePeriod
-  } = useHolydays();
-  
-  const [modalVisible, setModalVisible] = useState(false);
-  const [selectedRadioOption, setSelectedRadioOption] = useState('single');
-  const [selectedSingleDate, setSelectedSingleDate] = useState<DateType>(new Date());
-  const [selectedPeriodStart, setSelectedPeriodStart] = useState<DateType>(new Date());
-  const [selectedPeriodEnd, setSelectedPeriodEnd] = useState<DateType>(new Date());
-  const [singleDateDescription, setSingleDateDescription] = useState<string>('');
-  const [periodDescription, setPeriodDescription] = useState<string>('');
-  
-  useEffect(() => {
-    const initializeData = async () => {
-      const storedPersonalHolydays = await loadData('personalHolydays');
-      if (storedPersonalHolydays) {
-        setPersonalHolydays(storedPersonalHolydays);
-      }
-      const storedVacationPeriods = await loadData('vacationPeriods');
-      if (storedVacationPeriods) {
-        setVacationPeriods(storedVacationPeriods);
-      }
-      const storedMyCountry = await loadData('myCountry');
-      if (storedMyCountry) {
-        setMyCountry(storedMyCountry);
-      }
-    };
-    initializeData();
-  }, []);
 
-  const handleAddSingleDate = async () => {
+  const { personalHolydays, setPersonalHolydays,
+          regionalHolydays, setRegionalHolydays,
+          nationalHolydays, setNationalHolydays,
+          vacationPeriods, setVacationPeriods,
+          myCountry, setMyCountry,
+          } = useHolydays();
+          
+  const [isModalSingleDateVisible, setIsModalSingleDateVisible] = useState(false);
+
+  // MODAL SINGOLA DATA: STATUS DEI DATI DEL FORM
+  const [singleDateDay, setSingleDateDay] = useState<string | null>(null); // SERVE PER handleAddSingleDate
+  const [singleDateMonth, setSingleDateMonth] = useState<string | null>(null); // idem
+  const [singleDateDescription, setSingleDateDescription] = useState<string | undefined>(undefined);
+  const [singleDateType, setSingleDateType] = useState<HolidayType>('personal');
+  const [singleDateError, setSingleDateError] = useState<string | null>(null);
+
+  // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD FESTIVITA' SINGOLA
+  const [initialType, setInitialType] = useState<HolidayType>();
+  const [initialIndex, setInitialIndex] = useState<number | null>(null);
+
+  // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD PERIODO VACANZA
+  const [initialPeriodIndex, setInitialPeriodIndex] = useState<number | null>(null);
+  
+  /* ============================================================================= 
+   VALORI NUOVA MODAL
+   ============================================================================= */
+  const [datePickerSelected, setDatePickerSelected] = useState<Date | null>(null); // DATA SELEZIONATA SU PICKER SINGLE DAY
+  
+  const [startDate, setStartdate] = useState<Date | null>(null); // DATA INIZIO SELEZIONATA SU PICKER PERIOD
+  const [endDate, setEndDate] = useState<Date | null>(null);     // DATA FINE SELEZIONATA SU PICKER PERIOD
+
+  const defaultStyles = useDefaultStyles();
+  const minDate = new Date( new Date().getFullYear() + '-01-01'); // MIN E MAX SONO IMPOSTATI NELL'ANNO 2020 (BISESTILE)
+  const maxDate = new Date( new Date().getFullYear() + '-12-31'); // PER POTR VISUALIZZARE IL GIORNO 29 FEBBRAIO
+
+  // MODAL PERIODO: STATUS DEI DATI DEL FORM
+  const [periodStartDate, setPeriodStartDate] = useState<Date | null>(null);
+  const [periodEndDate, setPeriodEndDate] = useState<Date | null>(null);
+
+  /* ============================================================================= 
+     GESTIONE SHOW/HIDE MODAL
+  ============================================================================= */
+  const showModalSingleDate = () => {
+    setSingleDateDay('');
+    setSingleDateMonth('');
+    setIsModalSingleDateVisible(true);
+  };
+  const hideModalSingleDate = () => {
+    setIsModalSingleDateVisible(false);
+  };
+
+  /* ============================================================================= 
+     RESET MODAL GIORNO SINGOLO avviene sempre alla chiusura della modal 
+  ============================================================================= */
+  const resetSingleDateForm = () => {
+    hideModalSingleDate();        // CHIUDE MODAL
+    setPeriodStartDate(null);     // AZZERA VARIABILI PERIOD
+    setPeriodEndDate(null);       //
+    setSingleDateDay(null);       // AZZERA VARIABILI GIORNO SINGOLO
+    setSingleDateMonth(null);
+    setSingleDateDescription(undefined); // AZZERA CAMPO DESCRIZIONE
+    setSingleDateError(null);     // AZZER ERRORE
+    setInitialIndex(null);  // VARIABILE USATA (SE DIVERSA DA null) PER L'EDIT DI UN RECORD
+  };
+
+  // AZZERAMENTO STATUS, CHIUSURA MODAL E RETURN
+  const clearData = () => {
+    setInitialType(undefined);
+    setInitialIndex(null);
+    hideModalSingleDate();
+  }
+  
+  /* ============================================================================= 
+    AGGIUNGI GIORNO SINGOLO 
+  ============================================================================= */
+  const handleAddSingleDate = () => {
+
+    // PRELEVA I VALORI DALLE VARIABILI
+    const day = parseInt(singleDateDay);
+    const month = parseInt(singleDateMonth);
+
+    // CONTROLLA ESISTENZA DELLA DESCRIZIONE
     if (!singleDateDescription) {
-      // Alert.alert(holydaysLabels[7], holydaysLabels[14]);
-      setModalVisible(false);
+      setSingleDateError(holydaysLabels[12]);
       return;
     }
-    const newDate = {
-      date: selectedSingleDate,
-      description: singleDateDescription
+
+    // ASSEGNA I VALORI PRELEVATI DALLA FORM ALLA COSTANTE newHolyday
+    const newHoliday: Holiday = { day, month, description: singleDateDescription.trim() };
+
+    // CONTROLLA SE ESISTE GIA' UN RECORD CON LO STESSO GIORNO E LO STESSO MESE TRA I 'national'
+    const nationalIndex = nationalHolydays.findIndex(h => h.day === day && h.month === month);
+    if (nationalIndex !== -1) {
+      setSingleDateError(holydaysLabels[13]);
+      return;
+    }
+
+    // A) NUOVO *********************************************************************
+    if (initialType != singleDateType && initialIndex === null) {
+      // CERCA LA STESSA DATA NELL'ALTRA CATEGORIA
+      let foundDuplicate = '';
+      singleDateType === 'personal' ? foundDuplicate = regionalHolydays.findIndex(h => h.day === day && h.month === month) : foundDuplicate = personalHolydays.findIndex(h => h.day === day && h.month === month);
+
+      // CERCA ANCHE NELLA STESSA CATEGORIA
+      let sameCategoryDuplicate = '';
+      singleDateType === 'personal' ? sameCategoryDuplicate = personalHolydays.findIndex(h => h.day === day && h.month === month) : sameCategoryDuplicate = regionalHolydays.findIndex(h => h.day === day && h.month === month);
+
+      if (foundDuplicate > -1) {
+      // ESISTE DUPLICATO NELL'ALTRA CATEGORIA SI PROCEDE A CANCELLARLO
+        switch (singleDateType) {
+          case 'personal':
+            setRegionalHolydays(regionalHolydays.filter((_, i) => i !== foundDuplicate));
+            break;
+          case 'regional':
+            setPersonalHolydays(personalHolydays.filter((_, i) => i !== foundDuplicate));
+            break;
+        }
+        // E SI PROCEDE ALLA SCRITTURA SULL'ARRAY (singleDateType)
+        switch (singleDateType) {
+          case 'personal':
+            setPersonalHolydays([...personalHolydays, newHoliday]);
+            break;
+          case 'regional':
+            setRegionalHolydays([...regionalHolydays, newHoliday]);
+            break;
+        }
+      } else {
+      // NON ESISTE DUPLICATO NELL'ALTRA CATEGORIA
+
+        // CONTROLLO SE ESISTE DUPLICATO NELLA *PROPRIA* CATEGORIA (singleDateType)
+        if (sameCategoryDuplicate > -1) {
+          // ESISTE GIA' NELLA PROPRIA CATEGORIA
+          setSingleDateError('Questa data esiste già');
+          return;      
+        } else {
+          switch (singleDateType) {
+            case 'personal':
+              setPersonalHolydays([...personalHolydays, newHoliday]);
+              break;
+          }
+        }
+
+      }
+      clearData();
+      return;
+    }
+
+    // B) EDIT **********************************************************************
+    if (initialType === singleDateType && initialIndex != null) {
+      // CERCA LA STESSA DATA NELL'ALTRA CATEGORIA (se 'personal' -> cerca in 'regional' e viceversa)
+      let foundDuplicate: number[] = [];
+      singleDateType === 'personal' ? 
+        foundDuplicate = [regionalHolydays.findIndex(h => h.day === day && h.month === month), 'festività locali'] 
+        : 
+        foundDuplicate = [personalHolydays.findIndex(h => h.day === day && h.month === month), 'festività personali'];
+
+      if (foundDuplicate[0] > -1) {
+        setSingleDateError(`Esiste già una data uguale tra le ${foundDuplicate[1]}`);
+        return;
+      } else {
+        switch (singleDateType) {
+          case 'personal':
+            setPersonalHolydays(personalHolydays.map((h, i) => i === initialIndex ? newHoliday : h));
+            break;
+          // case 'regional':
+          //   setRegionalHolydays(regionalHolydays.map((h, i) => i === initialIndex ? newHoliday : h));
+          //   break;
+        }
+      }
+      clearData();
+      return;
+    }
+
+    // C) EDIT + SPOSTA *************************************************************
+    if (initialType  != singleDateType && initialIndex  != undefined) {
+      // console.log('C) EDIT + SPOSTA');
+
+      // CERCA LA STESSA DATA NELLA CATEGORIA DI DESTINAZION (singleDataType)
+      let foundDuplicate = '';
+      singleDateType === 'personal' ? foundDuplicate = personalHolydays.findIndex(h => h.day === day && h.month === month) : foundDuplicate = regionalHolydays.findIndex(h => h.day === day && h.month === month);
+      // console.log(`foundDuplicate in ${singleDateType}: ${foundDuplicate}`);
+
+      // SE ESISTE DUPLICATO NELL'ALTRA CATEGORIA SI SOVRASCRIVE
+      if (foundDuplicate > -1) {
+        // SOVRASCRITTURA SU singleDateType @ foundDuplicate
+        switch (singleDateType) {
+          case 'personal':
+            setPersonalHolydays(personalHolydays.map((h, i) => i === foundDuplicate ? newHoliday : h));
+            break;
+        }
+        // CANCELLAZIONE initialIndex DA initialType
+        switch (initialType) {
+          case 'personal':
+            setPersonalHolydays(personalHolydays.filter((_, i) => i !== initialIndex));
+            break;
+        }
+
+      } else {
+
+      // SE NON ESISTE UN DUPLICATO SI CANCELLA DALLA VECCHIA CATEGORIA E SI SCRIVE SULLA NUOVA
+      
+      // SCRITTURA SU singleDateType
+        switch (singleDateType) {
+          case 'personal':
+            setPersonalHolydays([...personalHolydays, newHoliday]);
+            break;
+        }
+      // CANCELLAZIONE DA initialType
+        switch (initialType) {
+          case 'personal':
+            setPersonalHolydays(personalHolydays.filter((_, i) => i !== initialIndex));
+            break;
+        }
+      }
+      clearData();
+      return;
+    }
+
+    // AZZERA VARIABILI E CHIUDE MODAL
+    resetSingleDateForm();
+  }
+
+  /* ============================================================================= 
+    AGGIUNGI PERIODO FESTIVI
+   ============================================================================= */
+  const handleAddPeriod = () => {
+
+    // console.log('\t<handleAddPeriod>');
+   
+    if (!singleDateDescription) {
+      setSingleDateError('Inserisci una descrizione');
+      return;
+    }
+  
+    // console.log(`periodStartDate ${periodStartDate}, periodEndDate ${periodEndDate}, singleDateDescription ${singleDateDescription}`);
+
+    const startDay = periodStartDate?.getDate();
+    const startMonth = periodStartDate.getMonth() + 1;
+    const startYear = periodStartDate?.getFullYear(); 
+
+    const adjustedEndDate = new Date(periodEndDate);
+    if (periodEndDate?.getHours() === 0 && periodEndDate.getMinutes() === 0 && periodEndDate.getSeconds() === 0) {
+      adjustedEndDate.setDate(adjustedEndDate.getDate() - 1);
+    }
+
+    const endDay = periodEndDate?.getDate();
+    const endMonth = periodEndDate?.getMonth() + 1;
+    const endYear = periodEndDate?.getFullYear();   
+  
+    const newPeriod: VacationPeriod = { 
+      startDay, 
+      startMonth, 
+      startYear, 
+      endDay, 
+      endMonth, 
+      endYear, 
+      description: singleDateDescription.trim() 
     };
-    const newHolydays = [...personalHolydays, newDate];
-    setPersonalHolydays(newHolydays);
-    await saveData(newHolydays, 'personalHolydays');
-    setModalVisible(false);
+
+    // Caso di modifica: aggiorna l'elemento esistente
+    if (initialPeriodIndex !== null) {
+      setVacationPeriods(vacationPeriods.map((period, index) =>
+        index === initialPeriodIndex ? newPeriod : period
+      ));
+    } else {
+      // Caso di aggiunta: aggiungi un nuovo elemento
+      setVacationPeriods([...vacationPeriods, newPeriod]);
+    }
+
+    setInitialPeriodIndex(null); // Resetta l'indice dopo il salvataggio
+
+    // AZZERA VARIABILI E CHIUDE MODAL
     resetSingleDateForm();
   };
+
+  /* ============================================================================= 
+   EDIT ITEM (SINGOLO E PERIODO)
+   ============================================================================= */
+  // LA FUNZIONE RICEVE CATEGORIA 'type' E INDICE 'index' DEL RECORD DA EDITARE
+  const handleEdit = (type: ItemType, index: number) => {
+
+    // DEFINISCE E AZZERA I CONTENITORI COI VALORI DA EDITARE, GIORNO SINGOLO E PERIODO
+    let itemToEdit: { 
+      day: number; 
+      month: number; 
+      description: string | undefined } | null = null; // singolo
+    let periodToEdit: {
+      startDay: number; 
+      startMonth: number; 
+      startYear: number; 
+      endDay: number; 
+      endMonth: number; 
+      endYear: number; 
+      description: string | undefined} | null = null; // periodo
   
-  const handleAddPeriod = async () => {
-    if (!periodDescription) {
-      // Alert.alert(holydaysLabels[7], holydaysLabels[14]);
-      setModalVisible(false);
+    // SI COPIANO I VALORI DAL RECORD N. index IN itemToEdit O IN periodToEdit
+    switch (type) {
+      case 'personal':
+        if (personalHolydays[index]) {
+          itemToEdit = {
+            day: personalHolydays[index].day,
+            month: personalHolydays[index].month,
+            description: personalHolydays[index].description
+          };
+        }
+                  // SET RADIOBUTTON PERIOD = INACTIVE (E RADIOBUTTON SINGLE ATTIVO)
+                  // -- così si carica da solo il datepicker 'single'
+                  setLeftRadioButtonActive(true);
+                  setRightRadioButtonActive(false);
+
+      // console.log(`\titemToEdit: ${JSON.stringify(itemToEdit)}`);
+      break;
+
+      // NATIONAL -> NON SI FA NIENTE
+      // case 'national':
+      // return;
+
+      // VACATION -> SI COPIANO I VALORI DAL RECORD DELL'ARRAY E SI APRE LA MODAL 'periodo'
+      case 'vacation':
+        setInitialPeriodIndex(index);
+
+        if (JSON.stringify(vacationPeriods[index])) {
+          periodToEdit = {
+            startDay: vacationPeriods[index].startDay,
+            startMonth: vacationPeriods[index].startMonth,
+            startYear: vacationPeriods[index].startYear,
+            endDay: vacationPeriods[index].endDay,
+            endMonth: vacationPeriods[index].endMonth,
+            endYear: vacationPeriods[index].endYear,
+            description: vacationPeriods[index].description
+          };
+        }
+        // VISUALIZZA MODAL PERIODO
+        //showModalSingleDate();
+      break;
+
+      default:
+        console.warn('Impossibile modificare l\'elemento:', type);
       return;
     }
-    const newPeriod = {
-      startDate: selectedPeriodStart,
-      endDate: selectedPeriodEnd,
-      description: periodDescription,
+
+    // CASO 1) ITEM SINGOLO (itemToEdit != null)
+    if (itemToEdit) {
+      setDatePickerSelected(
+        new Date(
+          new Date().getFullYear(),
+          itemToEdit.month ,
+          itemToEdit.day
+        )
+      );
+      setSingleDateDay(itemToEdit.day.toString());
+      setSingleDateMonth((itemToEdit.month).toString());
+      setSingleDateDescription(itemToEdit.description);
+      setSelectedRadioOption('single');
+
+      // SI INIZIALIZZANO initialType E initialIndex CON CATEGORIA E POSIZIONE DI PROVENIENZA
+      // SERVIRANNO ALLA FUNZIONE handleAddSingleDate PER I CONFRONTI
+      setInitialType(type as HolidayType);
+      setInitialIndex(index);
+
+      setIsModalSingleDateVisible(true);
+
+    } else if (periodToEdit) {
+    // CASO 2) PERIODO (periodToEdit != null)
+      let sd: Date = new Date(
+          periodToEdit.startYear, 
+          periodToEdit.startMonth - 1, 
+          periodToEdit.startDay
+        )
+      setStartdate(sd);
+      setPeriodStartDate(sd);
+
+      let ed: Date = new Date(
+          periodToEdit.endYear, 
+          periodToEdit.endMonth - 1, 
+          periodToEdit.endDay
+        )
+      setEndDate(ed);
+      setPeriodEndDate(ed);
+      
+      setSingleDateDescription(periodToEdit?.description);
+      setSelectedRadioOption('period');
+                  // AGGIUNGERE:
+                  // RADIOBUTTON SINGLE = INACTIVE
+                  // -- quindi si carica da solo il datepicker 'single'
+                  setLeftRadioButtonActive(false);
+                  setRightRadioButtonActive(true);
+      setIsModalSingleDateVisible(true);
+    }
+  };
+
+  /* ============================================================================= 
+   DELETE ITEM
+   ============================================================================= */
+  const handleDelete = (type: ItemType, index: number) => {
+    let itemDescription = '';
+    switch (type) {
+      case 'personal':
+        if (personalHolydays[index]) {
+          itemDescription = `${personalHolydays[index].day} ${months[personalHolydays[index].month]?.label} (${personalHolydays[index].description})`;
+        }
+        break;
+      case 'vacation':
+        if (vacationPeriods[index]) {
+          const period = vacationPeriods[index];
+          itemDescription = `${period.startDay}/${period.startMonth}/${period.startYear} - ${period.endDay}/${period.endMonth}/${period.endYear} (${period.description})`;
+        }
+        break;
+      default:
+        itemDescription = `l'item ${index}`;
+      break;
+    }
+
+    Alert.alert(
+        holydaysLabels[7],
+        `${holydaysLabels[8]} ${itemDescription}?`,
+        [
+          {
+            text: holydaysLabels[9],
+            style: "cancel"
+          },
+          { 
+            text: holydaysLabels[10], 
+            onPress: () => {
+              switch (type) {
+                case 'personal':
+                  setPersonalHolydays(personalHolydays.filter((_, i) => i !== index));
+                  break;
+                // case 'regional':
+                //   setRegionalHolydays(regionalHolydays.filter((_, i) => i !== index));
+                //   break;
+                case 'national':
+                  setNationalHolydays(nationalHolydays.filter((_, i) => i !== index));
+                  break;
+                case 'vacation':
+                  setVacationPeriods(vacationPeriods.filter((_, i) => i !== index));
+                  break;
+              }
+            }
+          }
+        ]
+      );
     };
-    const newVacationPeriods = [...vacationPeriods, newPeriod];
-    setVacationPeriods(newVacationPeriods);
-    await saveData(newVacationPeriods, 'vacationPeriods');
-    setModalVisible(false);
-    resetPeriodForm();
-  };
-  
-  const handleDeleteSingleDate = async (indexToDelete: number) => {
-    Alert.alert(
-      holydaysLabels[7],
-      `${holydaysLabels[8]} ${personalHolydays[indexToDelete].description}?`,
-      [
-        { text: holydaysLabels[9], style: 'cancel' },
-        {
-          text: holydaysLabels[10],
-          onPress: async () => {
-            const newHolydays = personalHolydays.filter((_, index) => index !== indexToDelete);
-            setPersonalHolydays(newHolydays);
-            await saveData(newHolydays, 'personalHolydays');
-          },
-        },
-      ],
-      { cancelable: false }
-    );
-  };
 
-  const handleDeletePeriod = async (indexToDelete: number) => {
-    Alert.alert(
-      holydaysLabels[7],
-      `${holydaysLabels[15]} ${vacationPeriods[indexToDelete].description}?`,
-      [
-        { text: holydaysLabels[9], style: 'cancel' },
-        {
-          text: holydaysLabels[10],
-          onPress: async () => {
-            const newVacationPeriods = vacationPeriods.filter((_, index) => index !== indexToDelete);
-            setVacationPeriods(newVacationPeriods);
-            await saveData(newVacationPeriods, 'vacationPeriods');
-          },
-        },
-      ],
-      { cancelable: false }
-    );
-  };
-  
-  const resetSingleDateForm = () => {
-    setSingleDateDescription('');
-    setSelectedSingleDate(new Date());
-    setModalVisible(false);
-  };
-
-  const resetPeriodForm = () => {
-    setPeriodDescription('');
-    setSelectedPeriodStart(new Date());
-    setSelectedPeriodEnd(new Date());
-    setModalVisible(false);
-  };
-  
-  const styles = StyleSheet.create({
-    scrollview: {
-      flex:0, 
+  /* ============================================================================= 
+   STYLESHEET
+   ============================================================================= */
+  const styles =StyleSheet.create({
+    // SFONDO
+    image: {      
+        flex: 1,
+        justifyContent: 'center',
+        width: '100%',
+      },
+    // CONTENITORE PRINCIPALE
+    container: {
+      flex: 1,
       backgroundColor: 'transparent',
-      paddingHorizontal:12, 
+      paddingHorizontal: 12,
       paddingTop: 80,
     },
-    image: {
-      flex: 1,
-      justifyContent: 'center',
-    },
+    // TITOLO PAGINA
     sectionTitle: {
       fontSize: 24,
       fontWeight: '600',
       textAlign: 'center',
       color: colors.text,
     },
-    // CARD
-    groupContainer: {
-      backgroundColor: colors.cardBackground,
-      borderRadius: 24,
-      paddingVertical: 24,
-      paddingHorizontal:18,
-      marginBottom: 20,
+    // WRAPPER TITOLO PAGINA
+    sectionContainer: {
       width: '100%',
+      flex:1,
+      justifyContent:'center',
+      alignItems:'center',
+      alignContent:'center',
     },
+    // TITOLO CARD
     listTitle: {
-      color: colors.text,
-      fontSize: 14,
+      color: colors.headerText,
+      fontSize: 18,
       fontWeight: '600',
-      marginTop: 0,
-      marginBottom: 0,
+      marginBottom: 10,
       paddingBottom: 12,
     },
-    editButton: {
+    // CARD
+    listItem: { 
+      flex:1,
+      backgroundColor: colors.cardBackground,
+      paddingTop: 24,
+      paddingBottom: 24,
+      paddingLeft:16,
+      paddingRight:16,
+      borderRadius: 24,
+      marginBottom: 10,
+    },
+    holidayRow: { 
+      flex:1,
       flexDirection: 'row',
       alignItems: 'center',
-      marginTop: 12,
+      justifyContent: 'space-between',
+      paddingVertical: 16,
     },
-    editText: {
-      marginLeft: 8,
+    itemDate: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      paddingLeft:12,
       color: colors.text,
-      fontSize: 14,
-      fontWeight: 400,
     },
-    listItem: {
+    itemDescription: {
+      fontSize: 14,
+      paddingLeft:12,
+      color: colors.text,
+    },
+    itemActions: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginRight:12,
+    },
+    // MODAL
+    modalOverlay: {
+      flex: 1,
+      // position:'absolute',
+      // top:0, left:0,
+      // bottom:0, right:0,
+       margin: 0,
+      backgroundColor: 'rgba(255, 0, 0, 0.75)',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    modalContainer: {
+      backgroundColor: 'rgba(255, 255, 255, 1)',
+      width: '100%',
+      paddingVertical: 24,
+      paddingHorizontal: 12,
+      borderRadius: 12,
+    },
+    modalTitle: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      marginBottom: 20,
+      textAlign: 'center',
+    },
+    modalLabel: {
+      fontSize: 16,
+      marginBottom: 5,
+      marginTop: 10,
+    },
+    dateInputContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 15,
+    },
+    datePickerWrapper: {
+      borderWidth: 1,
+      borderColor: colors.textRed,
+      borderRadius: 5,
+      padding:8,
+      backgroundColor:'transparent',
+    },
+    modalInput: {
+      borderWidth: 1,
+      borderColor: colors.textRed,
+      borderRadius: 5,
+      padding: 10,
+      fontSize: 16,
+      marginBottom: 12,
+      height:50,
+      color: colors.black,
+    },
+    dateAndMonthContainer: {
+      flex:1, 
+      flexDirection:'row', 
+      alignItems:'flex-start',
+      alignContent:'flex-start',
+      justifyContent:'space-between', 
+      width: '100%',
+    },
+    dropdownContainer: { 
+      minWidth: 'calc(100%-48)', 
+      flex:1, 
+      flexDirection:'column', 
+      justifyContent:'flex-end', 
+      alignItems:'center',
+      alignContent:'flex-end',
+    },
+    dateInput: {
+      width: 60,
+      textAlign: 'center',
+      marginBottom: 0,
+      marginRight:8,
+      color: colors.black,
+    },
+    dateSeparator: {
+      fontSize: 20,
+      marginHorizontal: 5,
+    },
+    // Nuovi stili per i pulsanti data
+    dateButton: {
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
-      paddingVertical: 8,
+      borderWidth: 1,
+      borderColor: colors.textRed,
+      borderRadius: 5,
+      padding: 12,
+      marginBottom: 15,
+      backgroundColor: colors.textNegative,
     },
-    listItemText: {
-      color: colors.text,
+    dateButtonText: {
       fontSize: 16,
-      fontWeight: '400',
+      color: colors.black,
     },
-    deleteButton: {
-      padding: 5,
-    },
-    modalContainer: {
-      flex: 1,
-      justifyContent: 'flex-end',
-      alignItems: 'center',
-      backgroundColor: 'rgba(0,0,0,0.5)',
-    },
-    modalContent: {
-      backgroundColor: colors.modalBackground,
-      borderTopLeftRadius: 20,
-      borderTopRightRadius: 20,
-      padding: 20,
-      width: '100%',
-      alignItems: 'center',
-    },
-    closeButton: {
-      alignSelf: 'flex-end',
-    },
-    modalTitle: {
-      fontSize: 20,
-      fontWeight: 'bold',
-      marginBottom: 10,
-      color: colors.text,
-    },
-    radioButtons: {
+    radioContainer: {
+      width:'100%',
       flexDirection: 'row',
       justifyContent: 'space-around',
-      width: '100%',
-      marginVertical: 10,
+      marginBottom: 42,
     },
-    radioButton: {
+    radioOption: {
       flexDirection: 'row',
       alignItems: 'center',
     },
-    radioText: {
-      marginLeft: 8,
-      color: colors.text,
-      fontSize: 16,
-    },
-    radioCircle: {
+    // RADIOBUTTON (SOLO CIRCOLETTO ESTERNO)
+    radioButton: {
       height: 20,
       width: 20,
       borderRadius: 10,
       borderWidth: 1,
-      borderColor: colors.text,
+      borderColor: '#333',
       alignItems: 'center',
       justifyContent: 'center',
+      marginRight: 8,
     },
-    selectedRadioCircle: {
-      width: 12,
-      height: 12,
-      borderRadius: 6,
-      backgroundColor: colors.text,
-    },
-    modalInput: {
-      width: '100%',
-      height: 40,
-      backgroundColor: colors.inputBackground,
+    radioButtonDisabled: {
+      height: 20,
+      width: 20,
       borderRadius: 10,
-      paddingHorizontal: 10,
-      color: colors.text,
+      borderWidth: 1,
+      borderColor: '#999',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginRight: 8,
     },
+
+    // PALLINO NERO ACCESO
+    radioButtonSelected: {
+      height: 10,
+      width: 10,
+      borderRadius: 5,
+      backgroundColor: colors.textRed,
+    },
+    radioLabelNotFocused: {
+      fontSize: 16,
+      fontWeight: 400,
+      color: colors.black,
+    },
+    radioLabelInactive: {
+            fontSize: 16,
+      fontWeight: 400,
+      color: '#999999',
+    },
+    radioLabelFocused:{
+      fontSize: 16,
+      fontWeight: 800,
+      color: colors.textRed,
+    },
+
     modalButtons: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      width: '100%',
       marginTop: 20,
     },
-    cancelButton: {
-      backgroundColor: colors.disabled,
-      padding: 10,
-      borderRadius: 20,
-      width: '48%',
-      alignItems: 'center',
-    },
     addButton: {
-      backgroundColor: colors.addButtonBackground,
-      padding: 10,
-      borderRadius: 20,
-      width: '48%',
+      backgroundColor: colors.textRed,
+      padding: 15,
+      borderRadius: 8,
       alignItems: 'center',
-    },
-    cancelButtonText: {
-      color: colors.black,
-      fontWeight: 'bold',
+      flex: 1,
+      marginLeft: 10,
     },
     addButtonText: {
       color: colors.white,
+      fontSize: 16,
       fontWeight: 'bold',
     },
+    cancelButton: {
+      backgroundColor: colors.cancelButton,
+      padding: 15,
+      borderRadius: 8,
+      alignItems: 'center',
+      flex: 1,
+      marginRight: 10,
+    },
+    cancelButtonText: {
+      color: colors.text,
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+    errorText: {
+      color: 'red',
+      marginBottom: 16,
+      textAlign: 'center',
+      fontSize:16,
+      fontWeight:600,
+    },
+    button: {
+      borderRadius: 6,
+      width: 220,
+      margin: 20,
+    },
+    buttonContainer: {
+      margin: 20,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    specialDays: {
+      flex:1,
+      minHeight:80,
+      borderWidth: 2,
+      borderColor: '#0088ff',
+      borderStyle: 'dotted',
+      borderRadius: 24,
+      marginBottom:24,
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingLeft:16
+    },
+    specialDaysLabel: {
+      fontSize:20,
+      fontWeight:400,
+      color: '#0088ff',
+    },
+    dropDownCountry: {
+      flex:1,
+      width:'100%',
+      flexDirection:'row',
+      justifyContent:'flex-end',
+      alignItems:'center',
+      gap:8,
+    }
   });
+
+  // BOTTONE RESET DROPDOWN COUNTRY: RIPORTA LA SELEZIONE A 'ITALIA'
+  const ResetCountryButton = () => {
+    return(
+      <TouchableOpacity
+        onPress={ () => setMyCountry('it-IT')}>
+        <IconSymbol size={20} name="gobackward" color={colors.blueBar} style={{paddingBottom:8,}}/>
+      </TouchableOpacity>
+    )
+  }
+  
+  // GESTIONE STATI DELLE RADIOBUTTON DELLA MODAL, ATTIVO, FOCUSED E DISABILITATO
+  const [selectedRadioOption, setSelectedRadioOption] = useState<'single' | 'period'>('single'); // STATO INIZIALE DEL RADIOBUTTON
+  const [leftRadioButtonActive, setLeftRadioButtonActive] = useState<boolean>(true);    // FLAG PER DISATTIVARE IL RADIOBUTTON SINISTRO (da resettare a ogni + Aggiungi)
+  const [rightRadioButtonActive, setRightRadioButtonActive] = useState<boolean>(true);  // FLAG PER DISATTIVARE IL RADIOBUTTON DESTRO (da resettare a ogni + Aggiungi)
+
+  /* ============================================================================= 
+  * useEffect * AL CAMBIO DI myCountry
+  Viene richiamato ogni volta che myCountry cambia, per aggiornare le festività nazionali
+  ============================================================================= */
+  useEffect(() => {
+    // console.log('(holydays.tsx) * useEffect * myCountry -> aggiornato a ' + myCountry + ', si aggiorna la lista');
+    setNationalHolydays(getLocalHolydas(myCountry));    // RICHIAMO LA FUNZIONE getLocalHolydas (DA data.tsx)
+  }, [myCountry]);
 
   return (
     <ImageBackground 
-      source={useColorScheme() === 'light' ? 
-        require('@/assets/images/background-image_minified.jpg') 
-        : 
-        null
-      }
+      source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg')}
       resizeMode="cover" 
-      style={styles.image}>
-      <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
-        {/* TITOLO PAGINA */}
-        <View style={{
-          flex:1,
-          width:'100%',
-          height:48,
-          flexDirection:'row',
-          justifyContent:'center',
-          alignItems:'center',
-          borderWidth: 0,
-          pointerEvents: 'box-none',
-        }}>
-          <Text style={styles.sectionTitle}>{holydaysLabels[0]}</Text>
-        </View>
+      style={styles.image}> 
 
-        {/* DROPDOWN PAESI */}
-        <Text style={styles.listTitle}>{holydaysLabels[2]}</Text>
-        <DropdownCountry 
-          selectedValue={myCountry}
-          onChange={async (value: string) => {
-            setMyCountry(value);
-            await saveData(value, 'myCountry');
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+
+        {/* TITOLO PAGINA  */}{/* LE MIE DATE */}
+        <Text style={[styles.sectionTitle, { flex:1, marginBottom:32, }]}> {holydaysLabels[0]} </Text> 
+
+        {/* TOUCHABLE + GIORNI SPECIALI ########################################################################## */}
+        <TouchableOpacity 
+          style={styles.specialDays}
+          onPress={ () => { 
+            setSelectedRadioOption('single');           
+            setDatePickerSelected(new Date()); // SINGLE DATE: IMPOSTA A MESE CORRENTE 
+            setStartdate(null); // PERIOD: AZZERA SCELTA PRECEDENTE
+            setEndDate(null); // PERIOD: AZZERA SCELTA
+            setSingleDateDescription(undefined);
+            setLeftRadioButtonActive(true); // RESETTA A ATTIVI ENTRAMBI I RADIOBUTTON
+            setRightRadioButtonActive(true);
+            showModalSingleDate(); // APRE MODAL CON DATEPICKER
           }}
-        />
+        >
+          <IconSymbol name="plus" size={36} color={'#0088ff'}/>
+          <Text style={styles.specialDaysLabel}>{holydaysLabels[1]}</Text>
+        </TouchableOpacity>
 
-        {/* GIORNI SPECIALI */}
-        <View>
-          <Text style={styles.listTitle}>{holydaysLabels[4]}</Text>
-        </View>
-        <View style={styles.groupContainer}>
-          {personalHolydays.length > 0 ? (
-            personalHolydays.map((item, index) => (
-              <View key={index} style={styles.listItem}>
-                <Text style={styles.listItemText}>{item.description}</Text>
-                <TouchableOpacity onPress={() => handleDeleteSingleDate(index)} style={styles.deleteButton}>
-                  <IconSymbol size={20} name="trash" color={colors.text} />
-                </TouchableOpacity>
-              </View>
-            ))
-          ) : (
-            <Text style={styles.listItemText}>Nessun giorno speciale salvato</Text>
-          )}
+
+
+
+        {/* ////////////////////////////////
+        // /////////////////////////////////
+        //       CONTROLLO VALORI.       ///
+        // /////////////////////////////////
+        // //////////////////////////////*/}
+        {/* <TouchableOpacity
+          onPress={ () => {
+            console.log('GIORNI SPECIALI:');
+            personalHolydays.map( (index) => {
+              console.log('\t',index);
+              })}
+          }>
+          <View>
+            <Text style={{textAlign:'center', padding:12}}>STAMPA GIORNI SPECIALI</Text>
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={ () => {
+            console.log('PERIODI LUNGHI:');
+            vacationPeriods.map( (index) => {
+              console.log('\t',index);
+              })}
+          }>
+          <View>
+            <Text style={{textAlign:'center', paddingBottom:12}}>STAMPA PERIODI</Text>
+          </View>
+        </TouchableOpacity> */}
+
+        {/* ////////////////////////////////
+        // /////////////////////////////////
+        //       CONTROLLO VALORI.       ///
+        // /////////////////////////////////
+        // //////////////////////////////*/}
+
+
+
+
+        {/* CARD GIORNI SPECIALI ############################################################################# */}
+        {personalHolydays.length > 0 && (
+          <View style={styles.listItem}>
+            <Text style={[styles.listTitle, { textAlign:'center' } ]}>{holydaysLabels[4]}</Text>
+            {personalHolydays.sort((a, b) => a.day - b.day).sort((a, b) => a.month - b.month).map((holiday, index) => (
+              <React.Fragment key={index}>
+                <View 
+                style={styles.holidayRow }>
+                  <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
+                    <Image
+                      source={require('@/assets/images/icon_calendar-off.png')} 
+                      style={{width:24, height:24, resizeMode:'contain'}}/>
+                    <View style={{flexDirection:'column'}} >
+                      <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label} `}</Text>
+                      <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
+                      <Text style={[styles.itemDescription, {maxWidth:240, fontStyle:'italic', fontWeight:400}]}>{holydaysLabels[15]}</Text>
+                    </View>
+                  </View>
+                  <View>
+                  <View style={styles.itemActions}>
+                    <TouchableOpacity onPress={() => handleEdit('personal', index)}>
+                      <IconSymbol name="pencil" size={20} color={colors.text} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleDelete('personal', index)} style={{ marginLeft: 12 }}>
+                      <IconSymbol name="trash" size={20} color={colors.text} />
+                    </TouchableOpacity>
+                  </View>
+                  </View>
+                </View>
+                {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
+                {index !== personalHolydays.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
+              </React.Fragment>
+            ))}
+          </View>
+        )}
+
+        {/* PERIODI PIU' LUNGHI ########################################################################## */}
+        {vacationPeriods.length > 0 && (
+          <View style={styles.listItem}>
+            <Text style={[styles.listTitle, { textAlign:'center' } ]}>{holydaysLabels[3]}</Text>
+            {vacationPeriods.sort((a, b) => a.startDay - b.startDay).sort((a, b) => a.startMonth - b.startMonth).sort((a, b) => a.startYear - b.startYear).map((period, index) => (
+              <React.Fragment key={index}>
+                <View key={index} style={styles.holidayRow}>
+                  <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
+                    <Image
+                      source={require('@/assets/images/icon_calendar_bridge-off.png')} 
+                      style={{width:24, height:24, resizeMode:'contain'}}/>
+                    <View style={{flexDirection:'column'}} >
+                      <Text style={styles.itemDate}>
+                        {`${period.startDay}.${period.startMonth}.${period.startYear} / ${period.endDay}.${period.endMonth}.${period.endYear}`}
+                      </Text>
+                      <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{period.description}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.itemActions}>
+                    <TouchableOpacity onPress={() => handleEdit('vacation', index)}>
+                      <IconSymbol name="pencil" size={20} color={colors.text} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleDelete('vacation', index)} style={{ marginLeft: 12 }}>
+                      <IconSymbol name="trash" size={20} color={colors.text} />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                {index !== vacationPeriods.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
+              </React.Fragment>
+            ))}
+          </View>
+        )}    
+        
+        {/* FESTIVITA NAZIONALI ############################################################################# */}
+        <View style={styles.listItem}>
+          
+          {/* TITOLO */}
+          <Text style={[ styles.listTitle, { textAlign:'center' } ]}>{holydaysLabels[2]}</Text>
+
+          {/* DROPDOWN PAESE */}
+          <View style={styles.dropDownCountry}>
+            <DropdownCountry 
+              selectedValue={myCountry}
+              onChange={ (item) => {
+                setMyCountry(item);
+              }}
+            />
+            { myCountry !== 'it-IT'  ? <ResetCountryButton/> : null }
+          </View>
+
+          {nationalHolydays.map((holiday, index) => (
+            <React.Fragment key={index}>
+              <View 
+                key={index} 
+                style={[styles.holidayRow, {justifyContent:'flex-start', alignItems:'flex-start'}]}>
+                  <IconSymbol name="calendar.circle" size={28} color={colors.text}  />
+                  <View style={{flexDirection:'column'}}>
+                    <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label}`}</Text>
+                    <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
+                  </View>
+              </View> 
+              {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
+              {index !== nationalHolydays.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
+            </React.Fragment>
+          ))}
         </View>
 
-        {/* PERIODI LUNGHI */}
-        <View>
-          <Text style={styles.listTitle}>{holydaysLabels[3]}</Text>
-        </View>
-        <View style={styles.groupContainer}>
-          {vacationPeriods.length > 0 ? (
-            vacationPeriods.map((item, index) => (
-              <View key={index} style={styles.listItem}>
-                <Text style={styles.listItemText}>{item.description}</Text>
-                <TouchableOpacity onPress={() => handleDeletePeriod(index)} style={styles.deleteButton}>
-                  <IconSymbol size={20} name="trash" color={colors.text} />
-                </TouchableOpacity>
-              </View>
-            ))
-          ) : (
-            <Text style={styles.listItemText}>Nessun periodo lungo salvato</Text>
-          )}
-        </View>
-
-        {/* AGGIUNGI NUOVA DATA */}
-        <View style={{width: '100%', alignItems: 'center'}}>
-          <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.editButton}>
-            <IconSymbol size={20} name="plus" color={colors.text} />
-            <Text style={styles.editText}>{holydaysLabels[1]}</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ height: 180 }} />
+        {/* BOTTOM SPACE ############################################################################# */}
+        <View style={{ height: 280 }} />
       </ScrollView>
+
+      {/* MODAL GIORNO SINGOLO ############################################################################# */}
       <Suspense>
           <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              setModalVisible(!modalVisible);
-            }}
-          >
-            <View style={styles.modalContainer}>
-              <View style={styles.modalContent}>
-                {/* TITOLO + CLOSE BUTTON */}
-                <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.closeButton}>
-                  <IconSymbol size={24} name="x" color={colors.text} />
-                </TouchableOpacity>
-                <Text style={styles.modalTitle}>{holydaysLabels[1]}</Text>
+            visible={isModalSingleDateVisible}
+            presentationStyle="fullScreen"
+            transparent={false}
+            backdropColor={'rgba(0, 0, 0, .25)'}
+            animationType="none"
+            onRequestClose={hideModalSingleDate} 
+            hardwareAccelerated={true}
+            >
+            <View style={{
+              flex:1,
+              flexDirection:'column',
+              justifyContent:'center',
+            }}>
 
-                {/* RADIO BUTTONS */}
-                <View style={styles.radioButtons}>
-                  <TouchableOpacity style={styles.radioButton} onPress={() => setSelectedRadioOption('single')}>
-                    <View style={styles.radioCircle}>
-                      {selectedRadioOption === 'single' && <View style={styles.selectedRadioCircle} />}
+
+              <View style={styles.modalContainer}>
+
+                {/* TITOLO MODAL */}
+                <Text style={[styles.listTitle, { textAlign:'center', marginBottom:24, }]}>{holydaysLabels[4]}</Text>
+                {singleDateError ? <Text style={styles.errorText}>{singleDateError}</Text> : null}
+
+                {/* RADIOBUTTON */}
+                <View style={styles.radioContainer}>
+
+                  {/* LEFT */}
+                  <TouchableOpacity
+                    style={styles.radioOption}
+                    onPress={() => {
+                      leftRadioButtonActive ? setSelectedRadioOption('single') : null;
+                    }} >
+                    <View style={ leftRadioButtonActive ?  styles.radioButton : styles.radioButtonDisabled}>
+                      {selectedRadioOption === 'single' && <View style={styles.radioButtonSelected}/>}
                     </View>
-                    <Text style={styles.radioText}>{holydaysLabels[5]}</Text>
+                    <Text style={
+                      leftRadioButtonActive ? // RADIOBUTTON ATTIVO
+                        selectedRadioOption === 'single' ? styles.radioLabelFocused : styles.radioLabelNotFocused
+                      :
+                        styles.radioLabelInactive // RADIOBUTTON DISABLED
+                      }>
+                        {holydaysLabels[5]}
+                    </Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.radioButton} onPress={() => setSelectedRadioOption('period')}>
-                    <View style={styles.radioCircle}>
-                      {selectedRadioOption === 'period' && <View style={styles.selectedRadioCircle} />}
+                  
+                  {/* RIGHT */}
+                  <TouchableOpacity
+                    style={styles.radioOption}
+                    onPress={() => {
+                      rightRadioButtonActive ? setSelectedRadioOption('period') : null;
+                    }} >
+                    <View style={rightRadioButtonActive ? styles.radioButton : styles.radioButtonDisabled}>
+                      {selectedRadioOption === 'period' && <View style={styles.radioButtonSelected}/>}
                     </View>
-                    <Text style={styles.radioText}>{holydaysLabels[6]}</Text>
+                    <Text style={
+                      rightRadioButtonActive ?
+                        selectedRadioOption === 'period' ? styles.radioLabelFocused : styles.radioLabelNotFocused
+                      :
+                        styles.radioLabelInactive}>
+                          {holydaysLabels[6]}
+                    </Text>
                   </TouchableOpacity>
+
                 </View>
 
-                {/* DATE PICKERS */}
-                {selectedRadioOption === 'single' ?
-                  <DateTimePicker
-                    mode="single"
-                    date={selectedSingleDate}
-                    onChange={(params) => setSelectedSingleDate(params.date)}
-                    headerContainerStyle={{backgroundColor:colors.cardBackground}}
-                    weekDaysContainerStyle={{backgroundColor:colors.cardBackground}}
-                    calendarTextStyle={{color:colors.text}}
-                    headerTextStyle={{color:colors.text}}
-                    selectedItemColor={colors.active}
-                    selectedTextStyle={{color:colors.white}}
-                    todayContainerStyle={{borderColor:colors.active}}
-                    todayTextStyle={{color:colors.active}}
-                    monthContainerStyle={{backgroundColor:colors.cardBackground}}
-                    yearContainerStyle={{backgroundColor:colors.cardBackground}}
-                    headerButtonColor={colors.text}
-                    weekdaysTextStyle={{color:colors.disabled}}
-                    locale='it'
-                    headerTextStyle={{
-                      color: colors.text, 
-                      fontSize: 14, fontWeight:600, textTransform:'capitalize'
-                    }}
-                    weekDaysTextStyle={{fontSize: 12, fontWeight:400, color:colors.disabled}}
-                    dayTextStyle={{color:colors.text}}
-                    style={{
-                      backgroundColor:colors.cardBackground, 
-                      borderRadius:16, 
-                      width:'100%',
-                      marginVertical:12
-                    }}
-                    
-                  />
-                  :
-                  <View style={{width:'100%'}}>
-                    <Text style={styles.modalTitle}>{holydaysLabels[12]}</Text>
-                    <DateTimePicker
+                <View style={styles.datePickerWrapper}> 
+                {selectedRadioOption === 'single' ? 
+                    <DateTimePicker // SINGLE //////////////////////////////
                       mode="single"
-                      date={selectedPeriodStart}
-                      onChange={(params) => setSelectedPeriodStart(params.date)}
-                      headerContainerStyle={{backgroundColor:colors.cardBackground}}
-                      weekDaysContainerStyle={{backgroundColor:colors.cardBackground}}
-                      calendarTextStyle={{color:colors.text}}
-                      headerTextStyle={{color:colors.text}}
-                      selectedItemColor={colors.active}
-                      selectedTextStyle={{color:colors.white}}
-                      todayContainerStyle={{borderColor:colors.active}}
-                      todayTextStyle={{color:colors.active}}
-                      monthContainerStyle={{backgroundColor:colors.cardBackground}}
-                      yearContainerStyle={{backgroundColor:colors.cardBackground}}
-                      headerButtonColor={colors.text}
-                      weekdaysTextStyle={{color:colors.disabled}}
-                      locale='it'
+                      calendar="gregory"
+                      date={datePickerSelected}
+                      onChange={( {date } ) => {
+                        setDatePickerSelected( date );
+                        setSingleDateDay( new Date(date).getDate() );                        
+                        setSingleDateMonth( new Date(date).getMonth()); 
+                      } }
+                      containerHeight={265}
+                      hideWeekdays={true}
+                      disableMonthPicker={true}
+                      disableYearPicker={true}
+                      showOutsideDays={false}          
+                      minDate={minDate}
+                      maxDate={maxDate}
+                      firstDayOfWeek={1}
+                      //timeZone={'UTC'}
+                      locale={'it-IT'}
                       style={{
-                        backgroundColor:colors.cardBackground, 
-                        borderRadius:16, 
-                        width:'100%',
-                        marginVertical:12
+                        backgroundColor: 'transparent',
                       }}
-                      headerTextStyle={{fontSize: 14, fontWeight:600, textTransform:'capitalize'}}
-                      weekDaysTextStyle={{fontSize: 12, fontWeight:400, color:colors.disabled}}
-                      dayTextStyle={{color:colors.text}}
+                      styles={{
+                        ...defaultStyles,
+                        today: { borderWidth: 0, backgroundColor:'transparent'}, 
+                        selected: { backgroundColor: colors.textRed, borderRadius:'10%' }, 
+                        selected_label: { color: 'white' },
+                        year_selector_label: { display:'none'},
+                        month_selector_label: {fontSize: 14, fontWeight:600, textTransform:'capitalize'},
+                        day: {fontSize:16}
+                      }}
                     />
-                    <Text style={[styles.modalTitle, {marginTop:24}]}>{holydaysLabels[13]}</Text>
-                    <DateTimePicker
-                      mode="single"
-                      date={selectedPeriodEnd}
-                      onChange={(params) => setSelectedPeriodEnd(params.date)}
-                      headerContainerStyle={{backgroundColor:colors.cardBackground}}
-                      weekDaysContainerStyle={{backgroundColor:colors.cardBackground}}
-                      calendarTextStyle={{color:colors.text}}
-                      headerTextStyle={{color:colors.text}}
-                      selectedItemColor={colors.active}
-                      selectedTextStyle={{color:colors.white}}
-                      todayContainerStyle={{borderColor:colors.active}}
-                      todayTextStyle={{color:colors.active}}
-                      monthContainerStyle={{backgroundColor:colors.cardBackground}}
-                      yearContainerStyle={{backgroundColor:colors.cardBackground}}
-                      headerButtonColor={colors.text}
-                      weekdaysTextStyle={{color:colors.disabled}}
-                      locale='it'
-                      style={{
-                        backgroundColor:colors.cardBackground, 
-                        borderRadius:16, 
-                        width:'100%',
-                        marginVertical:12
+                  : 
+                    <DateTimePicker // PERIOD ///////////////////////////////
+                      mode="range"
+                      calendar="gregory"
+                      startDate={startDate}
+                      endDate={endDate}
+                      onChange={({startDate, endDate}) =>  {
+                        setStartdate(startDate); 
+                        setEndDate(endDate);
+                        startDate && setPeriodStartDate(startDate);
+                        endDate && setPeriodEndDate(endDate);
                       }}
-                      headerTextStyle={{fontSize: 14, fontWeight:600, textTransform:'capitalize'}}
-                      weekDaysTextStyle={{fontSize: 12, fontWeight:400, color:colors.disabled}}
-                      dayTextStyle={{color:colors.text}}
+
+                      containerHeight={265}
+                      hideWeekdays={false}
+                      disableMonthPicker={true}
+                      disableYearPicker={true}
+                      showOutsideDays={false}          
+                      firstDayOfWeek={1}
+                      // timeZone={'UTC'}
+                      locale={'it-IT'}
+                      style={{
+                        backgroundColor: '#transparent',
+                      }}
+                      styles={{
+                        ...defaultStyles,
+                        today: { borderWidth: 0, backgroundColor:'transparent'}, 
+                        selected: { borderColor:colors.textRed, borderWidth:2, borderStyle:'dotted', borderRadius:'10%' },
+                        selected_label: { color:colors.textRed},
+                        range_start: { borderWidth:0, backgroundColor: colors.textRed, borderRadius:'10%' }, 
+                        range_start_label: { color: 'white' },
+                        range_end: { borderWidth:0, backgroundColor: colors.textRed, borderRadius:'10%' }, 
+                        range_end_label: { color: 'white' },
+                        //year_selector_label: { display:'none'},
+                        month_selector_label: {fontSize: 14, fontWeight:600, textTransform:'capitalize'},
+                        day: {fontSize:16}
+                      }}
                     />
                 }
                 </View>
@@ -557,26 +1164,24 @@ export default function Holydays() {
                   style={[styles.modalInput, {marginTop:24}]}
                   placeholder={holydaysLabels[14]}
                   placeholderTextColor={colors.black}
-                  value={selectedRadioOption === 'single' ? singleDateDescription : periodDescription}
-                  onChangeText={selectedRadioOption === 'single' ? setSingleDateDescription : setPeriodDescription}
+                  value={singleDateDescription}
+                  onChangeText={setSingleDateDescription}
                 />
 
                 {/* PULSANTI ANNULLA-SALVA */}
                 <View style={styles.modalButtons}>
                   <TouchableOpacity 
                     style={styles.cancelButton} 
-                    onPress={ () => {
-                      selectedRadioOption === 'single' ? resetSingleDateForm() : resetPeriodForm();
-                    }}
-                  >
+                    onPress={resetSingleDateForm}
+                    >
                     <Text style={styles.cancelButtonText}>Annulla</Text>
                   </TouchableOpacity>
                   <TouchableOpacity 
                     style={styles.addButton} 
                     onPress={ () => {
+                      // console.log('chiusura modal + operazione scrittura', selectedRadioOption);
                       selectedRadioOption === 'single' ? handleAddSingleDate() : handleAddPeriod();
-                      }}
-                  >
+                      }}>
                     <Text style={styles.addButtonText}>Salva</Text>
                   </TouchableOpacity>
                 </View>

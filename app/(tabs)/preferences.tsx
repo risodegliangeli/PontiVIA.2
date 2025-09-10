@@ -2,10 +2,9 @@ import useLocalizationData from '@/app/data/data';
 import DropdownComponent from '@/components/ui/DropdownComponent'; // IMPORTA DROPDOWN DURATA PONTI
 import DropdownFDOW from '@/components/ui/DropdownFDoW'; // IMPORTA DROPDOWN GIORNO SETTIMANA
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState } from 'react';
 import { Colors } from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   ImageBackground,
   ScrollView,
@@ -20,7 +19,7 @@ import {
   const { localizedDays } = useLocalizationData();
 
 const preferencesLabel = [
-  'Imposta i tuoi filtri',
+  'Filtri e preferenze',
   'Durata del ponte',
   'Primo giorno della settimana',
   'Giorni della settimana festivi',
@@ -32,7 +31,7 @@ const preferencesLabel = [
 
 const dataLabel = [
   'Pasqua',
-  "Lunedì dell'angelo",
+  'Lunedì dell\'angelo',
   'Ascensione',
   'Pentecoste',
   'Lunedì di pentecoste',
@@ -70,46 +69,16 @@ const useThemeColors = () => {
   return Colors[colorScheme ?? 'light'];
 };
 
-const savePreferences = async () => {
-  try {
-    const jsonValue = JSON.stringify(PREFERENCES);
-    await AsyncStorage.setItem('PREFERENCES_KEY', jsonValue);
-    console.log('Preferences saved successfully');
-  } catch (e) {
-    console.error('Failed to save preferences:', e);
-  }
-};
-
-const loadPreferences = async () => {
-  try {
-    const jsonValue = await AsyncStorage.getItem('PREFERENCES_KEY');
-    if (jsonValue != null) {
-      const storedPreferences = JSON.parse(jsonValue);
-      Object.assign(PREFERENCES, storedPreferences);
-    }
-  } catch (e) {
-    console.error('Failed to load preferences:', e);
-  }
-};
 
 
 /* =========================== SWITCH ====================================== */
 function PreferenceSwitch ({ preferenceKey }: { preferenceKey: keyof typeof PREFERENCES }) {
   const colors = useThemeColors();
   const [isEnabled, setIsEnabled] = useState((PREFERENCES[preferenceKey] as { status: boolean }).status);
-
-  useEffect(() => {
-    // Sincronizza lo stato locale con la costante globale
-    setIsEnabled((PREFERENCES[preferenceKey] as { status: boolean }).status);
-  }, [PREFERENCES[preferenceKey].status]);
-
-  const toggleSwitch = async () => {
-    const newStatus = !isEnabled;
-    setIsEnabled(newStatus);
-    (PREFERENCES[preferenceKey] as { status: boolean }).status = newStatus;
-    await savePreferences();
+  const toggleSwitch = () => {
+    setIsEnabled(!isEnabled);
+    PREFERENCES[preferenceKey].status = !isEnabled;
   };
-
   const styles = StyleSheet.create({
     image: {      
       flex: 1,
@@ -130,7 +99,7 @@ function PreferenceSwitch ({ preferenceKey }: { preferenceKey: keyof typeof PREF
   });
   return (
     <View style={styles.preferenceRow as ViewStyle}>
-      <Text style={styles.text}>{(PREFERENCES[preferenceKey] as { label: string }).label}</Text>
+      <Text style={styles.text}>{PREFERENCES[preferenceKey].label}</Text>
       <Switch
         trackColor={{ false: '#767577', true: '#767577' }} 
         thumbColor={isEnabled ? colors.textRed : '#f4f3f4'} 
@@ -150,16 +119,6 @@ function PreferenceSwitch ({ preferenceKey }: { preferenceKey: keyof typeof PREF
 export default function Preferences() {
   const colors = useThemeColors();
   const navigation = useNavigation();
-  const [preferencesLoaded, setPreferencesLoaded] = useState(false);
-
-  useEffect(() => {
-    const initializePreferences = async () => {
-      await loadPreferences();
-      setPreferencesLoaded(true);
-    };
-    initializePreferences();
-  }, []);
-
   const handleEditHolydays = () => { navigation.navigate('holydays') };
 
   const styles = StyleSheet.create({
@@ -277,18 +236,16 @@ export default function Preferences() {
           <Text style={styles.listTitle}>{preferencesLabel[1]}</Text>
           <DropdownComponent 
             selectedValue={PREFERENCES.bridgeDuration}
-            onChange={async (value) => {
+            onChange={(value) => {
               PREFERENCES.bridgeDuration = value;
-              await savePreferences();
             }}
           />
           {/* ==================== DROPDOWN GIORNO SETTIMANA ==================== */}
           <Text style={styles.listTitle}>{preferencesLabel[2]}</Text>
           <DropdownFDOW 
             selectedValue={PREFERENCES.firstDayOfWeek}
-            onChange={async (value) => {
+            onChange={(value) => {
               PREFERENCES.firstDayOfWeek= value;
-              await savePreferences();
             }}
           />
           {/* ==================== SETTIMANA ==================== */}
@@ -354,3 +311,4 @@ export default function Preferences() {
     </ImageBackground>
   );
 }
+
