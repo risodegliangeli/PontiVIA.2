@@ -122,27 +122,40 @@ export default function Preferences() {
   const handleEditHolydays = () => { navigation.navigate('holydays') };
 
   const styles = StyleSheet.create({
-    scrollview: {
-      flex:0, 
-      backgroundColor: 'transparent',
-      paddingHorizontal:12, 
-      paddingTop: 80,
+    image: {
+      flex: 1,
+      justifyContent: 'center',
+      width: '100%',
     },
+    container: {
+      flex: 1, 
+      width:'100%',
+      maxWidth:600,
+      paddingHorizontal:12,
+      backgroundColor: 'transparent',
+      paddingTop:80
+    },
+    // contentContainer: {
+    //   paddingHorizontal: 12,
+    //   //paddingTop: 80,
+    //   width: '100%',
+    //   maxWidth: 600, 
+    //   backgroundColor:'red'
+    // },
+    // scrollview: {
+    //   flex:1,
+    //   backgroundColor: 'transparent',
+    //   paddingHorizontal:12, 
+    //   paddingTop: 80,
+    //   maxWidth:600,
+    // },
     sectionTitle: {
       fontSize: 24,
       fontWeight: '600',
       textAlign: 'center',
       color: colors.text,
     },
-    // CONTAINER TITOLO PAGINA
-    sectionContainer: {
-      width: '100%',
-      flex:1,
-      justifyContent:'center',
-      alignItems:'center',
-      alignContent:'center',
-      marginBottom:8,
-    },
+
     // TITOLO ESTERNO BLOCCHETTI
     listTitle: {
       color: colors.text,
@@ -202,31 +215,26 @@ export default function Preferences() {
       fontSize: 11,
       color: colors.disabled,
     },
-    image: {
-      flex: 1,
-      justifyContent: 'center',
-    },
+
   });
 
   return (
     <ImageBackground 
-      source= {useColorScheme() === 'light' ? 
-        require('@/assets/images/background-image_minified.jpg') 
-        : 
-        null // SFONDO NERO
-        }
+      source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg')}
       resizeMode="cover" 
-      style={styles.image}>
-        <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
+      style={[styles.image, {alignItems:'center'}]}>
+
+        <ScrollView 
+          style={styles.container} 
+          showsVerticalScrollIndicator={false}>
           {/* ==================== TITOLO PAGINA + PULSANTE RESET ==================== */}
           <View style={{
-            flex:1,
+            //flex:1,
             width:'100%',
             height:48,
             flexDirection:'row',
             justifyContent:'center',
             alignItems:'center',
-            borderWidth: 0,
             pointerEvents: 'box-none',
           }}>
             <Text style={styles.sectionTitle}>{preferencesLabel[0]}</Text>

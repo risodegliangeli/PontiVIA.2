@@ -90,6 +90,7 @@ const CalendarScreen = (PREFERENCES: any) => {
     fltList:{
       flex:1,
       backgroundColor: 'transparent', 
+      maxWidth: 600, // CENTRATO SU TABLET
     },
     card: {
       flex:1,
@@ -101,6 +102,7 @@ const CalendarScreen = (PREFERENCES: any) => {
       backgroundColor: colors.cardBackground,
       borderRadius: 24,
       borderWidth: 0,
+
     },
     monthTitle: {
       fontSize: 16,
@@ -861,7 +863,7 @@ const CalendarScreen = (PREFERENCES: any) => {
         ListEmptyComponent={() => ( // DA VISUALIZZA CON LA LISTA VUOTA:
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color={Colors.light.tint} />
-                <Text style={styles.loadingText}>Caricamento...</Text>
+                <Text style={styles.loadingText}>...</Text>
             </View>
             )}
         ListFooterComponent={renderFooter}
@@ -870,12 +872,12 @@ const CalendarScreen = (PREFERENCES: any) => {
         initialNumToRender={monthsToLoad-1} // Render initial number of items
         maxToRenderPerBatch={monthsToLoad-1} // How many items to render in a batch
         windowSize={2} // QUANTI ELEM. RENDERIZZATI FUORI DALLA SCHERM. VISIBILE
-        // scrollEventThrottle={16}           // ← Migliora la fluidità dello scroll
+        scrollEventThrottle={16}           // ← Migliora la fluidità dello scroll
         removeClippedSubviews={true}       // ← Ottimizza le performance // VA IN CONFLITTO CON IL TOAST
         // keyboardShouldPersistTaps="handled" // ← Migliora la gestione dei touch
-        // disableIntervalMomentum={true}     // ← Scroll più reattivo
-        // decelerationRate="normal"          // ← Decelerazione naturale
-        // bouncesZoom={false}               // ← Disabilita zoom accidentali
+        disableIntervalMomentum={true}     // ← Scroll più reattivo
+        decelerationRate="normal"          // ← Decelerazione naturale
+        bouncesZoom={false}               // ← Disabilita zoom accidentali
 
       />
       <Suspense>

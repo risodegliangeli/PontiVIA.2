@@ -14,7 +14,7 @@ import { MovingHands } from '@/components/ui/MovingHands';
 export default function HomeScreen() {
 
   const indexLabels =[
-    'Nessun ponte in vista?\nScorri in basso il calendario\ne imposta i filtri e le tue date',
+    'Nessun ponte in vista?\nScorri verso il basso il calendario\ne imposta i filtri e le tue date',
   ];
  
   const { 
@@ -46,14 +46,16 @@ export default function HomeScreen() {
     container: {
       flex: 1,
       width: '100%',
+      maxWidth:600,
       paddingHorizontal:12,      
       marginTop: 0,
+      alignItems:'center'
     }, 
     // IMMAGINE DI SFONDO
     image: {      
       flex: 1,
-      justifyContent: 'center',
       width: '100%',
+      alignItems:'center'
     },
   });
 

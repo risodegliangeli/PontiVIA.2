@@ -535,6 +535,7 @@ export default function HolydaysScreen({}: any) {
       backgroundColor: 'transparent',
       paddingHorizontal: 12,
       paddingTop: 80,
+      maxWidth:600,
     },
     // TITOLO PAGINA
     sectionTitle: {
@@ -607,6 +608,7 @@ export default function HolydaysScreen({}: any) {
     modalContainer: {
       backgroundColor: 'rgba(255, 255, 255, 1)',
       width: '100%',
+      maxWidth:500, // CENTRATO SU TABLET
       paddingVertical: 24,
       paddingHorizontal: 12,
       borderRadius: 12,
@@ -845,9 +847,11 @@ export default function HolydaysScreen({}: any) {
     <ImageBackground 
       source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg')}
       resizeMode="cover" 
-      style={styles.image}> 
+      style={[styles.image, {alignItems:'center'}]}> 
 
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.container} 
+        showsVerticalScrollIndicator={false} >
 
         {/* TITOLO PAGINA  */}{/* LE MIE DATE */}
         <Text style={[styles.sectionTitle, { flex:1, marginBottom:32, }]}> {holydaysLabels[0]} </Text> 
@@ -1023,8 +1027,8 @@ export default function HolydaysScreen({}: any) {
           <Modal
             visible={isModalSingleDateVisible}
             presentationStyle="fullScreen"
-            transparent={false}
-            backdropColor={'rgba(0, 0, 0, .25)'}
+            transparent={true}
+            // backdropColor={'rgba(0, 0, 0, .25)'} // NON FUNZIONA TRASPARENZA
             animationType="none"
             onRequestClose={hideModalSingleDate} 
             hardwareAccelerated={true}
@@ -1033,6 +1037,8 @@ export default function HolydaysScreen({}: any) {
               flex:1,
               flexDirection:'column',
               justifyContent:'center',
+              alignItems:'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.75)'
             }}>
 
 

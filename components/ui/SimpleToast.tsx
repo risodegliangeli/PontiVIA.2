@@ -22,7 +22,7 @@ const SimpleToast: React.FC<SimpleToastInterface> = ({
   isSTVisible, 
   isSTPosition = 'center', 
   isSTBackground = 'rgba(255, 255, 255, 1)', // DEFAULT
-  isOverlayBackground = '#0000001a', // DEFAULT
+  isOverlayBackground = 'rgba(0, 0, 0, .5)', // DEFAULT
   isSTRadius = [0, 0, 0, 0],
   isSTpaddingFromTop = 0, 
   isSTpaddingFromBottom = 0,
@@ -54,9 +54,11 @@ const SimpleToast: React.FC<SimpleToastInterface> = ({
     },
     modalContainer: {
       width:'100%',
+      maxWidth:500,
       height:'100%',
       flexDirection: 'column',
       alignItems: 'center', // HOR.
+      alignContent:'center',
       justifyContent: 
         isSTPosition === 'top'
           ? 'flex-start'
@@ -72,15 +74,15 @@ const SimpleToast: React.FC<SimpleToastInterface> = ({
   return (  
       <Modal
         visible={isSTVisible}
-        transparent={false}
-        backdropColor={isOverlayBackground}
+        transparent={true}
+        // backdropColor={'rgba(225, 0, 0, 1)'} // NON FUNZIONA TRASPARENZA: ASSEGNATO BGCOLOR ALLA TOUCHABLE
         animationType={isSTAnimation}
         onRequestClose={onClose}
         statusBarTranslucent={true}
         hardwareAccelerated={true}
         >
           <TouchableOpacity 
-            style={StyleSheet.absoluteFill} 
+            style={[StyleSheet.absoluteFill, {alignItems:'center', backgroundColor: 'rgba(0, 0, 0, 0.75)'}]} 
             onPress={onClose} 
             activeOpacity={1}>
             <View style={styles.modalContainer}>

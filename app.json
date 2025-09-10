@@ -12,7 +12,8 @@
     "ios": {
       "bundleIdentifier": "com.angelieassociati.pontivia",
       "buildNumber": "1.0.0",
-      "userInterfaceStyle": "automatic"
+      "userInterfaceStyle": "automatic",
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
