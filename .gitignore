@@ -1,4 +1,5 @@
 .git/
+.idx/
 .gitattributes
 tsconfig.*
 node_modules/
