@@ -4,7 +4,9 @@ import { useHolydays } from '@/context/HolydaysContext';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo, useRef, useCallback } from 'react';
 import { Animated, Image, ImageBackground, StyleSheet, useColorScheme, useWindowDimensions, View, Text, Pressable } from 'react-native';
-import { MovingHands } from '@/components/ui/MovingHands';
+import { MovingHands } from '@/components/ui/MovingHands'; // MIO
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 /* ###########################################################################################################
 
@@ -18,11 +20,49 @@ export default function HomeScreen() {
   ];
  
   const { 
-    personalHolydays, 
-    regionalHolydays, 
-    vacationPeriods, 
-    myCountry
-    } = useHolydays();
+    personalHolydays, setPersonalHolydays,
+    vacationPeriods, setVacationPeriods,
+    //regionalHolydays,
+    myCountry, setMyCountry
+  } = useHolydays();
+
+  const loadData = async (key: string) => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(key);
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      console.error(`Errore ${key} nella lettura da locale:`, e);
+      return null;
+    }
+  };
+
+  // INIZIALIZZAZIONE DATI DA LOCAL STORAGE ///////////////////////////
+  // 1) personalHolydays
+  // 2) vacationPeriods
+  // 3) myCountry
+  useEffect(() => {
+
+  // FUNZIONE DI LETTURA DA LOCAL STORAGE
+  const initializeData = async () => {
+    const storedPersonalHolydays = await loadData('personalHolydays');
+    // console.log('storedPersonalHolydays:', JSON.stringify(storedPersonalHolydays));
+      if (storedPersonalHolydays) {
+        setPersonalHolydays(storedPersonalHolydays);
+      }
+    const storedVacationPeriods = await loadData('vacationPeriods');
+    // console.log('storedVacationPeriods:', JSON.stringify(storedVacationPeriods));
+      if (storedVacationPeriods) {
+        setVacationPeriods(storedVacationPeriods);
+      }
+    const storedMyCountry = await loadData('myCountry');
+      if (storedMyCountry) {
+        setMyCountry(storedMyCountry);
+      }
+  };  
+
+  // CHIAMATA FUNZ. LETTURA
+  initializeData();
+  }, []);
 
   // MEMORIZZA IL KEY DEL CALENDARIO
   // e forza il ricaricamento del calendario quando i dati cambiano.
@@ -30,13 +70,13 @@ export default function HomeScreen() {
     JSON.stringify({
       PREFERENCES,
       personalHolydays,
-      regionalHolydays,
+      //regionalHolydays,
       vacationPeriods,
       myCountry
     }),
     [PREFERENCES,
       personalHolydays, 
-      regionalHolydays, 
+      //regionalHolydays, 
       vacationPeriods,
     myCountry]
   );
@@ -106,6 +146,13 @@ export default function HomeScreen() {
     if (animationTimeout.current) clearTimeout(animationTimeout.current);
     startAnimation();
   };
+
+
+  console.log('<index> prima del rendering:');
+  console.log('personalHolydays: ', JSON.stringify(personalHolydays));
+  console.log('vacationPeriods:', JSON.stringify(vacationPeriods));
+  console.log('myCountry:', myCountry);
+
 
   return (  
       <ImageBackground 

@@ -5,6 +5,7 @@ import { Colors } from '@/constants/Colors';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import React, { useEffect, useState, Suspense, ReactNode } from 'react';
 import DateTimePicker, { DateType, useDefaultStyles, } from 'react-native-ui-datepicker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Alert,
   ImageBackground,
@@ -43,7 +44,8 @@ const holydaysLabels = [
   'Esiste già una festività nazionale in questa data',  // 13
   'Descrizione',                                // 14
   '(ripete ogni anno)',                         // 15
-  'I tuoi giorni speciali'                      // 16
+  'I tuoi giorni speciali',                     // 16
+  'In questa data è già presente un evento'     // 17
 ]
 
 type Holiday = {  // DEFINIZIONE DI holiday
@@ -66,6 +68,18 @@ interface VacationPeriod {
   description: string;
 }
 
+// GESTIONE LOCAL STORAGE DATI
+const saveData = async (data: any, key: string) => {
+  try {
+    const jsonValue = JSON.stringify(data);
+    await AsyncStorage.setItem(key, jsonValue);
+  } catch (e) {
+    console.error(`Errore ${key} nel salvataggio locale: `, e);
+  }
+};
+
+
+
 /* ###########################################################################################################
 
                                       MAIN - HolydaysScreen
@@ -76,7 +90,7 @@ export default function HolydaysScreen({}: any) {
   const colors = useThemeColors();
 
   const { personalHolydays, setPersonalHolydays,
-          regionalHolydays, setRegionalHolydays,
+          //regionalHolydays, setRegionalHolydays,
           nationalHolydays, setNationalHolydays,
           vacationPeriods, setVacationPeriods,
           myCountry, setMyCountry,
@@ -137,182 +151,124 @@ export default function HolydaysScreen({}: any) {
     setSingleDateMonth(null);
     setSingleDateDescription(undefined); // AZZERA CAMPO DESCRIZIONE
     setSingleDateError(null);     // AZZER ERRORE
-    setInitialIndex(null);  // VARIABILE USATA (SE DIVERSA DA null) PER L'EDIT DI UN RECORD
+    setInitialIndex(null);        // VARIABILE USATA (SE DIVERSA DA null) PER L'EDIT DI UN RECORD
   };
 
   // AZZERAMENTO STATUS, CHIUSURA MODAL E RETURN
   const clearData = () => {
+    hideModalSingleDate();        // CHIUDE MODAL
     setInitialType(undefined);
     setInitialIndex(null);
-    hideModalSingleDate();
+    setPeriodStartDate(null);     // AZZERA VARIABILI PERIOD
+    setPeriodEndDate(null);       //
+    setSingleDateDay(null);       // AZZERA VARIABILI GIORNO SINGOLO
+    setSingleDateMonth(null);
+    setSingleDateDescription(undefined); // AZZERA CAMPO DESCRIZIONE
+    setSingleDateError(null);     // AZZER ERRORE
+    setInitialIndex(null);  // VARIABILE USATA (SE DIVERSA DA null) PER L'EDIT DI UN RECORD
   }
   
   /* ============================================================================= 
     AGGIUNGI GIORNO SINGOLO 
   ============================================================================= */
-  const handleAddSingleDate = () => {
+  const handleAddSingleDate = async () => {
 
-    // PRELEVA I VALORI DALLE VARIABILI
-    const day = parseInt(singleDateDay);
-    const month = parseInt(singleDateMonth);
-
-    // CONTROLLA ESISTENZA DELLA DESCRIZIONE
+    // CONTROLLA COMPILAZIONE DELLA DESCRIZIONE NELLA FORM
     if (!singleDateDescription) {
-      setSingleDateError(holydaysLabels[12]);
+      setSingleDateError(holydaysLabels[12]); // MSG ERRORE 'Inserisci una descrizione ecc...'
       return;
     }
 
-    // ASSEGNA I VALORI PRELEVATI DALLA FORM ALLA COSTANTE newHolyday
-    const newHoliday: Holiday = { day, month, description: singleDateDescription.trim() };
-
-    // CONTROLLA SE ESISTE GIA' UN RECORD CON LO STESSO GIORNO E LO STESSO MESE TRA I 'national'
+    // CONTROLLA SE ESISTE GIA' QUEL GIORNO TRA LE FESTIVITA NAZIONALI
     const nationalIndex = nationalHolydays.findIndex(h => h.day === day && h.month === month);
     if (nationalIndex !== -1) {
-      setSingleDateError(holydaysLabels[13]);
+      setSingleDateError(holydaysLabels[13]); // MSG ERRORE: 'Esiste già una festività nazionale in questa data...'
       return;
-    }
+    }    
+    
+    // SE DESCRIZIONE = OK E DATA NON PRESENTE TRA LE FEST. NAZIONALI -->    
+    
+    // PRELEVA I VALORI DALLE VARIABILI DALLA FORM
+    const day = parseInt(singleDateDay);
+    const month = parseInt(singleDateMonth);
+    // E ASSEGNA I VALORI ALLA COSTANTE newHolyday
+    const newHoliday: Holiday = { day, month, description: singleDateDescription.trim() };
 
-    // A) NUOVO *********************************************************************
-    if (initialType != singleDateType && initialIndex === null) {
-      // CERCA LA STESSA DATA NELL'ALTRA CATEGORIA
-      let foundDuplicate = '';
-      singleDateType === 'personal' ? foundDuplicate = regionalHolydays.findIndex(h => h.day === day && h.month === month) : foundDuplicate = personalHolydays.findIndex(h => h.day === day && h.month === month);
+    // CONTROLLO: E' UN NUOVO ITEM O SI EDITA UN ITEM ESISTENTE? -->
 
-      // CERCA ANCHE NELLA STESSA CATEGORIA
-      let sameCategoryDuplicate = '';
-      singleDateType === 'personal' ? sameCategoryDuplicate = personalHolydays.findIndex(h => h.day === day && h.month === month) : sameCategoryDuplicate = regionalHolydays.findIndex(h => h.day === day && h.month === month);
+    // NUOVO ITEM 
+    if (initialIndex === null) {
+      //console.log('\t- nuovo item');
 
-      if (foundDuplicate > -1) {
-      // ESISTE DUPLICATO NELL'ALTRA CATEGORIA SI PROCEDE A CANCELLARLO
-        switch (singleDateType) {
-          case 'personal':
-            setRegionalHolydays(regionalHolydays.filter((_, i) => i !== foundDuplicate));
-            break;
-          case 'regional':
-            setPersonalHolydays(personalHolydays.filter((_, i) => i !== foundDuplicate));
-            break;
-        }
-        // E SI PROCEDE ALLA SCRITTURA SULL'ARRAY (singleDateType)
-        switch (singleDateType) {
-          case 'personal':
-            setPersonalHolydays([...personalHolydays, newHoliday]);
-            break;
-          case 'regional':
-            setRegionalHolydays([...regionalHolydays, newHoliday]);
-            break;
-        }
-      } else {
-      // NON ESISTE DUPLICATO NELL'ALTRA CATEGORIA
-
-        // CONTROLLO SE ESISTE DUPLICATO NELLA *PROPRIA* CATEGORIA (singleDateType)
-        if (sameCategoryDuplicate > -1) {
-          // ESISTE GIA' NELLA PROPRIA CATEGORIA
-          setSingleDateError('Questa data esiste già');
-          return;      
-        } else {
-          switch (singleDateType) {
-            case 'personal':
-              setPersonalHolydays([...personalHolydays, newHoliday]);
-              break;
-          }
-        }
-
-      }
-      clearData();
-      return;
-    }
-
-    // B) EDIT **********************************************************************
-    if (initialType === singleDateType && initialIndex != null) {
-      // CERCA LA STESSA DATA NELL'ALTRA CATEGORIA (se 'personal' -> cerca in 'regional' e viceversa)
-      let foundDuplicate: number[] = [];
-      singleDateType === 'personal' ? 
-        foundDuplicate = [regionalHolydays.findIndex(h => h.day === day && h.month === month), 'festività locali'] 
-        : 
-        foundDuplicate = [personalHolydays.findIndex(h => h.day === day && h.month === month), 'festività personali'];
-
-      if (foundDuplicate[0] > -1) {
-        setSingleDateError(`Esiste già una data uguale tra le ${foundDuplicate[1]}`);
+      // CERCA SE ESISTE GIA' ITEM CON STESSO GIORNO E MESE
+      let sameCategoryDuplicate = 0;
+      sameCategoryDuplicate = personalHolydays.findIndex(h => h.day === day && h.month === month);
+      //console.log('\t- item stessa data/mese?', sameCategoryDuplicate);
+        
+        // TROVATO = ERRORE E RETURN 
+      if (sameCategoryDuplicate > -1) {
+        setSingleDateError(holydaysLabels[17]); // MSG ERRORE: 'Questa data esiste già ecc.'
         return;
       } else {
-        switch (singleDateType) {
-          case 'personal':
-            setPersonalHolydays(personalHolydays.map((h, i) => i === initialIndex ? newHoliday : h));
-            break;
-          // case 'regional':
-          //   setRegionalHolydays(regionalHolydays.map((h, i) => i === initialIndex ? newHoliday : h));
-          //   break;
-        }
+        // NON TROVATO = SCRITTURA NUOVO ITEM E RETURN
+        //console.log('\t- scrittura su personalHolydays');
+        let tempPersonalHolydays = [...personalHolydays, newHoliday];
+          setPersonalHolydays(tempPersonalHolydays);
+          await saveData(tempPersonalHolydays, 'personalHolydays'); // SALVATAGGIO LOCAL STORAGE
+        setSingleDateError(null); // RESETTA EVENTUALI MSG DI ERRORE
       }
-      clearData();
-      return;
-    }
 
-    // C) EDIT + SPOSTA *************************************************************
-    if (initialType  != singleDateType && initialIndex  != undefined) {
-      // console.log('C) EDIT + SPOSTA');
+    } else {
 
-      // CERCA LA STESSA DATA NELLA CATEGORIA DI DESTINAZION (singleDataType)
-      let foundDuplicate = '';
-      singleDateType === 'personal' ? foundDuplicate = personalHolydays.findIndex(h => h.day === day && h.month === month) : foundDuplicate = regionalHolydays.findIndex(h => h.day === day && h.month === month);
-      // console.log(`foundDuplicate in ${singleDateType}: ${foundDuplicate}`);
+      // EDIT //
+      // SE GIORNO O MESE INIZIALI SONO DIVERSI DA QUELLI DELL'initialIndex
+      let presentDay = personalHolydays[initialIndex].day;
+      let presentMonth = personalHolydays[initialIndex].month;
 
-      // SE ESISTE DUPLICATO NELL'ALTRA CATEGORIA SI SOVRASCRIVE
-      if (foundDuplicate > -1) {
-        // SOVRASCRITTURA SU singleDateType @ foundDuplicate
-        switch (singleDateType) {
-          case 'personal':
-            setPersonalHolydays(personalHolydays.map((h, i) => i === foundDuplicate ? newHoliday : h));
-            break;
+      if (presentDay != day || presentMonth != month) {
+        // ATTENZIONE: L'UTENTE HA MODIFICATO LA DATA
+        // SI CERCA SE LA NUOVA DATA ESISTE
+        let sameCategoryDuplicate = 0;
+        sameCategoryDuplicate = personalHolydays.findIndex(h => h.day === day && h.month === month);
+        if (sameCategoryDuplicate > -1) {
+          // SE QUELLA DATA ESISTE GIA' = ERRORE
+          setSingleDateError(holydaysLabels[17]); // MSG ERRORE: 'Questa data esiste già ecc.'
+          return;
+        } else {
+          // SE QUELLA DATA E' LIBERA = SOVRASCRITTURA
+          let tempPersonalHolydays = personalHolydays.map((h, i) => i === initialIndex ? newHoliday : h);
+            setPersonalHolydays(tempPersonalHolydays);
+            await saveData(tempPersonalHolydays, 'personalHolydays'); // SALVATAGGIO LOCAL STORAGE
         }
-        // CANCELLAZIONE initialIndex DA initialType
-        switch (initialType) {
-          case 'personal':
-            setPersonalHolydays(personalHolydays.filter((_, i) => i !== initialIndex));
-            break;
-        }
-
       } else {
-
-      // SE NON ESISTE UN DUPLICATO SI CANCELLA DALLA VECCHIA CATEGORIA E SI SCRIVE SULLA NUOVA
-      
-      // SCRITTURA SU singleDateType
-        switch (singleDateType) {
-          case 'personal':
-            setPersonalHolydays([...personalHolydays, newHoliday]);
-            break;
-        }
-      // CANCELLAZIONE DA initialType
-        switch (initialType) {
-          case 'personal':
-            setPersonalHolydays(personalHolydays.filter((_, i) => i !== initialIndex));
-            break;
-        }
+        // L'UTENTE NON HA MODIFICATO LA DATA
+        // SI SOVRASCRIVE
+        let tempPersonalHolydays = personalHolydays.map((h, i) => i === initialIndex ? newHoliday : h);
+          setPersonalHolydays(tempPersonalHolydays);
+          await saveData(tempPersonalHolydays, 'personalHolydays'); // SALVATAGGIO LOCAL STORAGE
       }
-      clearData();
-      return;
     }
 
-    // AZZERA VARIABILI E CHIUDE MODAL
-    resetSingleDateForm();
+    // AZZERAMENTO VARIABILI E CHIUSURA MODAL
+    clearData();
+
+    return;
   }
 
   /* ============================================================================= 
     AGGIUNGI PERIODO FESTIVI
    ============================================================================= */
-  const handleAddPeriod = () => {
-
-    // console.log('\t<handleAddPeriod>');
-   
+  const handleAddPeriod = async () => {
+  
+    // CONTROLLA COMPILAZIONE DELLA DESCRIZIONE NELLA FORM
     if (!singleDateDescription) {
-      setSingleDateError('Inserisci una descrizione');
+      setSingleDateError(holydaysLabels[12]); // MSG ERRORE 'Inserisci una descrizione'
       return;
     }
-  
-    // console.log(`periodStartDate ${periodStartDate}, periodEndDate ${periodEndDate}, singleDateDescription ${singleDateDescription}`);
 
+    // PRELEVA DATI DALLA FORM
     const startDay = periodStartDate?.getDate();
-    const startMonth = periodStartDate.getMonth() + 1;
+    const startMonth = periodStartDate?.getMonth() + 1;
     const startYear = periodStartDate?.getFullYear(); 
 
     const adjustedEndDate = new Date(periodEndDate);
@@ -324,30 +280,24 @@ export default function HolydaysScreen({}: any) {
     const endMonth = periodEndDate?.getMonth() + 1;
     const endYear = periodEndDate?.getFullYear();   
   
-    const newPeriod: VacationPeriod = { 
-      startDay, 
-      startMonth, 
-      startYear, 
-      endDay, 
-      endMonth, 
-      endYear, 
-      description: singleDateDescription.trim() 
-    };
+    const newPeriod: VacationPeriod = { startDay, startMonth, startYear, endDay, endMonth, endYear, description: singleDateDescription.trim() };
 
-    // Caso di modifica: aggiorna l'elemento esistente
+    // MODIFICA ITEM = SOVRASCRITTURA
     if (initialPeriodIndex !== null) {
-      setVacationPeriods(vacationPeriods.map((period, index) =>
-        index === initialPeriodIndex ? newPeriod : period
-      ));
+      let tempVacationPeriods = vacationPeriods.map((period, index) => index === initialPeriodIndex ? newPeriod : period);
+        setVacationPeriods(tempVacationPeriods);
+        await saveData(tempVacationPeriods, 'vacationPeriods'); 
     } else {
-      // Caso di aggiunta: aggiungi un nuovo elemento
-      setVacationPeriods([...vacationPeriods, newPeriod]);
+      // NUOVO ITEM = AGGIUNTA ALL'ARRAY
+      let tempVacationPeriods = [...vacationPeriods, newPeriod];
+        setVacationPeriods(tempVacationPeriods);
+        await saveData(tempVacationPeriods, 'vacationPeriods'); 
     }
 
     setInitialPeriodIndex(null); // Resetta l'indice dopo il salvataggio
 
     // AZZERA VARIABILI E CHIUDE MODAL
-    resetSingleDateForm();
+    clearData();
   };
 
   /* ============================================================================= 
@@ -469,7 +419,7 @@ export default function HolydaysScreen({}: any) {
   /* ============================================================================= 
    DELETE ITEM
    ============================================================================= */
-  const handleDelete = (type: ItemType, index: number) => {
+  const handleDelete = async (type: ItemType, index: number) => {
     let itemDescription = '';
     switch (type) {
       case 'personal':
@@ -498,19 +448,17 @@ export default function HolydaysScreen({}: any) {
           },
           { 
             text: holydaysLabels[10], 
-            onPress: () => {
+            onPress: async () => {
               switch (type) {
                 case 'personal':
-                  setPersonalHolydays(personalHolydays.filter((_, i) => i !== index));
-                  break;
-                // case 'regional':
-                //   setRegionalHolydays(regionalHolydays.filter((_, i) => i !== index));
-                //   break;
-                case 'national':
-                  setNationalHolydays(nationalHolydays.filter((_, i) => i !== index));
+                  let tempPersonalHolydays = personalHolydays.filter((_, i) => i !== index);
+                    setPersonalHolydays(tempPersonalHolydays);
+                    await saveData(tempPersonalHolydays, 'personalHolydays');
                   break;
                 case 'vacation':
-                  setVacationPeriods(vacationPeriods.filter((_, i) => i !== index));
+                  let tempVacationPeriods = vacationPeriods.filter((_, i) => i !== index);
+                    setVacationPeriods(tempVacationPeriods);
+                    await saveData(vacationPeriods.filter((_, i) => i !== index), 'vacationPeriods');
                   break;
               }
             }
@@ -607,7 +555,7 @@ export default function HolydaysScreen({}: any) {
     },
     modalContainer: {
       backgroundColor: 'rgba(255, 255, 255, 1)',
-      width: '100%',
+      width: '95%', // RIENTRATO RISPETTO AI BORDI SCREEN
       maxWidth:500, // CENTRATO SU TABLET
       paddingVertical: 24,
       paddingHorizontal: 12,
@@ -823,7 +771,12 @@ export default function HolydaysScreen({}: any) {
   const ResetCountryButton = () => {
     return(
       <TouchableOpacity
-        onPress={ () => setMyCountry('it-IT')}>
+        onPress={ 
+          async () => {
+            setMyCountry('it-IT');
+            await saveData('it-IT', 'myCountry');
+          }
+        }>
         <IconSymbol size={20} name="gobackward" color={colors.blueBar} style={{paddingBottom:8,}}/>
       </TouchableOpacity>
     )
@@ -831,16 +784,16 @@ export default function HolydaysScreen({}: any) {
   
   // GESTIONE STATI DELLE RADIOBUTTON DELLA MODAL, ATTIVO, FOCUSED E DISABILITATO
   const [selectedRadioOption, setSelectedRadioOption] = useState<'single' | 'period'>('single'); // STATO INIZIALE DEL RADIOBUTTON
-  const [leftRadioButtonActive, setLeftRadioButtonActive] = useState<boolean>(true);    // FLAG PER DISATTIVARE IL RADIOBUTTON SINISTRO (da resettare a ogni + Aggiungi)
-  const [rightRadioButtonActive, setRightRadioButtonActive] = useState<boolean>(true);  // FLAG PER DISATTIVARE IL RADIOBUTTON DESTRO (da resettare a ogni + Aggiungi)
+  const [leftRadioButtonActive, setLeftRadioButtonActive] = useState<boolean>(true);    // FLAG PER DISATTIVARE IL RADIOBUTTON SINISTRO (da resettare a ogni [+ Aggiungi] )
+  const [rightRadioButtonActive, setRightRadioButtonActive] = useState<boolean>(true);  // FLAG PER DISATTIVARE IL RADIOBUTTON DESTRO (da resettare a ogni [+ Aggiungi] )
 
   /* ============================================================================= 
   * useEffect * AL CAMBIO DI myCountry
   Viene richiamato ogni volta che myCountry cambia, per aggiornare le festività nazionali
   ============================================================================= */
-  useEffect(() => {
-    // console.log('(holydays.tsx) * useEffect * myCountry -> aggiornato a ' + myCountry + ', si aggiorna la lista');
+  useEffect( () => {
     setNationalHolydays(getLocalHolydas(myCountry));    // RICHIAMO LA FUNZIONE getLocalHolydas (DA data.tsx)
+    async () => await saveData(myCountry, 'myCountry');
   }, [myCountry]);
 
   return (
@@ -873,47 +826,6 @@ export default function HolydaysScreen({}: any) {
           <IconSymbol name="plus" size={36} color={'#0088ff'}/>
           <Text style={styles.specialDaysLabel}>{holydaysLabels[1]}</Text>
         </TouchableOpacity>
-
-
-
-
-        {/* ////////////////////////////////
-        // /////////////////////////////////
-        //       CONTROLLO VALORI.       ///
-        // /////////////////////////////////
-        // //////////////////////////////*/}
-        {/* <TouchableOpacity
-          onPress={ () => {
-            console.log('GIORNI SPECIALI:');
-            personalHolydays.map( (index) => {
-              console.log('\t',index);
-              })}
-          }>
-          <View>
-            <Text style={{textAlign:'center', padding:12}}>STAMPA GIORNI SPECIALI</Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={ () => {
-            console.log('PERIODI LUNGHI:');
-            vacationPeriods.map( (index) => {
-              console.log('\t',index);
-              })}
-          }>
-          <View>
-            <Text style={{textAlign:'center', paddingBottom:12}}>STAMPA PERIODI</Text>
-          </View>
-        </TouchableOpacity> */}
-
-        {/* ////////////////////////////////
-        // /////////////////////////////////
-        //       CONTROLLO VALORI.       ///
-        // /////////////////////////////////
-        // //////////////////////////////*/}
-
-
-
 
         {/* CARD GIORNI SPECIALI ############################################################################# */}
         {personalHolydays.length > 0 && (
@@ -994,8 +906,9 @@ export default function HolydaysScreen({}: any) {
           <View style={styles.dropDownCountry}>
             <DropdownCountry 
               selectedValue={myCountry}
-              onChange={ (item) => {
+              onChange={ async (item) => {
                 setMyCountry(item);
+                await saveData(item, 'myCountry');
               }}
             />
             { myCountry !== 'it-IT'  ? <ResetCountryButton/> : null }
@@ -1026,7 +939,7 @@ export default function HolydaysScreen({}: any) {
       <Suspense>
           <Modal
             visible={isModalSingleDateVisible}
-            presentationStyle="fullScreen"
+            // presentationStyle="fullScreen"
             transparent={true}
             // backdropColor={'rgba(0, 0, 0, .25)'} // NON FUNZIONA TRASPARENZA
             animationType="none"

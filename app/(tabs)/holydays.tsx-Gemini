@@ -107,6 +107,10 @@ export default function Holydays() {
     initializeData();
   }, []);
 
+
+  /* ============================================================================= 
+    AGGIUNGI GIORNO SINGOLO 
+  ============================================================================= */
   const handleAddSingleDate = async () => {
     if (!singleDateDescription) {
       // Alert.alert(holydaysLabels[7], holydaysLabels[14]);
