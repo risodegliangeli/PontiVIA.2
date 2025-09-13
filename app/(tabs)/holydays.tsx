@@ -17,7 +17,8 @@ import {
   TouchableOpacity,
   View,
   useColorScheme,
-  Image
+  Image,
+  Platform
 } from 'react-native';
 
 const useThemeColors = () => {
@@ -45,7 +46,9 @@ const holydaysLabels = [
   'Descrizione',                                // 14
   '(ripete ogni anno)',                         // 15
   'I tuoi giorni speciali',                     // 16
-  'In questa data è già presente un evento'     // 17
+  'In questa data è già presente un evento',     // 17
+  'Vuoi eliminare tutte le date di questa sezione?',// 18
+  
 ]
 
 type Holiday = {  // DEFINIZIONE DI holiday
@@ -830,7 +833,39 @@ export default function HolydaysScreen({}: any) {
         {/* CARD GIORNI SPECIALI ############################################################################# */}
         {personalHolydays.length > 0 && (
           <View style={styles.listItem}>
-            <Text style={[styles.listTitle, { textAlign:'center' } ]}>{holydaysLabels[4]}</Text>
+
+            {/* LABEL SEZIONE CON PULSANTE CANCELLAZIONE */}
+            <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
+              <Text style={{opacity:0}}>*</Text>
+              <Text style={[styles.listTitle, { textAlign:'center' } ]}>{holydaysLabels[4]}</Text>
+              {personalHolydays ?                
+                <TouchableOpacity
+                  onPress={ async () => {
+                    Alert.alert(
+                        holydaysLabels[7],  // Attenzione
+                        holydaysLabels[18],// Vuoi eliminare tutte le date ecc.?
+                        [
+                          {
+                            text: holydaysLabels[9], // Annulla
+                            style: "cancel"
+                          },
+                          { 
+                            text: holydaysLabels[10], // Elimina
+                            onPress: async () => {
+                              setPersonalHolydays([]);
+                              await saveData([], 'personalHolydays');
+                            }
+                          }
+                        ]
+                      );
+                  }}>
+                  <IconSymbol size={Platform.OS === 'ios' ? 28 : 24} name="trash.circle.fill" color={colors.text} />
+                </TouchableOpacity>
+              :
+                <Text style={{opacity:0}}>*</Text>
+              }
+            </View>
+
             {personalHolydays.sort((a, b) => a.day - b.day).sort((a, b) => a.month - b.month).map((holiday, index) => (
               <React.Fragment key={index}>
                 <View 
@@ -866,7 +901,39 @@ export default function HolydaysScreen({}: any) {
         {/* PERIODI PIU' LUNGHI ########################################################################## */}
         {vacationPeriods.length > 0 && (
           <View style={styles.listItem}>
-            <Text style={[styles.listTitle, { textAlign:'center' } ]}>{holydaysLabels[3]}</Text>
+
+            {/* LABEL SEZIONE CON PULSANTE CANCELLAZIONE */}
+            <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
+              <Text style={{opacity:0}}>*</Text>
+              <Text style={[styles.listTitle, { textAlign:'center' } ]}>{holydaysLabels[3]}</Text>
+              {personalHolydays ?                
+                <TouchableOpacity
+                  onPress={ async () => {
+                    Alert.alert(
+                        holydaysLabels[7],  // Attenzione
+                        holydaysLabels[18],// Vuoi eliminare tutte le date ecc.?
+                        [
+                          {
+                            text: holydaysLabels[9], // Annulla
+                            style: "cancel"
+                          },
+                          { 
+                            text: holydaysLabels[10], // Elimina
+                            onPress: async () => {
+                              setVacationPeriods([]);
+                              await saveData([], 'vacationPeriods');
+                            }
+                          }
+                        ]
+                      );
+                  }}>
+                  <IconSymbol size={Platform.OS === 'ios' ? 28 : 24} name="trash.circle.fill" color={colors.text} />
+                </TouchableOpacity>
+              :
+                <Text style={{opacity:0}}>*</Text>
+              }
+            </View>
+
             {vacationPeriods.sort((a, b) => a.startDay - b.startDay).sort((a, b) => a.startMonth - b.startMonth).sort((a, b) => a.startYear - b.startYear).map((period, index) => (
               <React.Fragment key={index}>
                 <View key={index} style={styles.holidayRow}>

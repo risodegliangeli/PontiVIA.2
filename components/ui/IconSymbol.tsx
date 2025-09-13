@@ -24,6 +24,7 @@ const MAPPING = {
   'arrow.left': 'arrow-back', // back
   'pencil': 'edit',
   'trash': 'delete',
+  'trash.circle.fill':'delete-sweep', // DELETE ALL
   'multiply': 'close',
   'bell': 'notifications',  // CAMPANELLA OUTILNED
   'bell.circle.fill': 'circle-notifications', // CAMPANELLA FILLED

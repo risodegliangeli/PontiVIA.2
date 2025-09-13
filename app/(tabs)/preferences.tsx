@@ -135,35 +135,26 @@ export default function Preferences() {
       backgroundColor: 'transparent',
       paddingTop:80
     },
-    // contentContainer: {
-    //   paddingHorizontal: 12,
-    //   //paddingTop: 80,
-    //   width: '100%',
-    //   maxWidth: 600, 
-    //   backgroundColor:'red'
-    // },
-    // scrollview: {
-    //   flex:1,
-    //   backgroundColor: 'transparent',
-    //   paddingHorizontal:12, 
-    //   paddingTop: 80,
-    //   maxWidth:600,
-    // },
+
     sectionTitle: {
+      flex:1,
+      width:'100%',
+      height:48,
       fontSize: 24,
       fontWeight: '600',
       textAlign: 'center',
       color: colors.text,
+      //marginBottom:24,
+      // borderWidth:1
     },
 
     // TITOLO ESTERNO BLOCCHETTI
     listTitle: {
-      color: colors.text,
-      fontSize: 14,
+      color: colors.headerText,
+      fontSize: 18,
       fontWeight: '600',
-      marginTop: 0,
       marginBottom: 0,
-      paddingBottom: 12,
+      paddingBottom: 16,
     },
     text: {
       fontSize: 16,
@@ -229,7 +220,6 @@ export default function Preferences() {
           showsVerticalScrollIndicator={false}>
           {/* ==================== TITOLO PAGINA + PULSANTE RESET ==================== */}
           <View style={{
-            //flex:1,
             width:'100%',
             height:48,
             flexDirection:'row',
@@ -241,7 +231,7 @@ export default function Preferences() {
           </View>
 
           {/* ==================== DROPDOWN DURATA PONTI ==================== */}
-          <Text style={styles.listTitle}>{preferencesLabel[1]}</Text>
+          <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[1]}</Text>
           <DropdownComponent 
             selectedValue={PREFERENCES.bridgeDuration}
             onChange={(value) => {
@@ -249,7 +239,7 @@ export default function Preferences() {
             }}
           />
           {/* ==================== DROPDOWN GIORNO SETTIMANA ==================== */}
-          <Text style={styles.listTitle}>{preferencesLabel[2]}</Text>
+          <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[2]}</Text>
           <DropdownFDOW 
             selectedValue={PREFERENCES.firstDayOfWeek}
             onChange={(value) => {
@@ -257,10 +247,10 @@ export default function Preferences() {
             }}
           />
           {/* ==================== SETTIMANA ==================== */}
-          <View>
-            <Text style={styles.listTitle}>{preferencesLabel[3]}</Text>
-          </View>
           <View style={styles.groupContainer}>
+            <View style={{width:'100%'}}>
+              <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[3]}</Text>
+            </View>
             <PreferenceSwitch preferenceKey="domenica"  />
             <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
             <PreferenceSwitch preferenceKey="sabato"  />
@@ -277,10 +267,10 @@ export default function Preferences() {
           </View>
           {/* ==================== FESTIVITA NAZIONALI ==================== */}   
           <Suspense> 
-            <View>
-              <Text style={styles.listTitle}>{preferencesLabel[4]}</Text>
-            </View>
             <View style={styles.groupContainer}>
+              <View style={{width:'100%'}}>
+                <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[4]}</Text>
+              </View>
               <PreferenceSwitch preferenceKey="festivitaNazionali" />
               <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
               <PreferenceSwitch preferenceKey="festivitaLocali" />
@@ -299,10 +289,10 @@ export default function Preferences() {
           </Suspense>  
           {/* ==================== PASQUA ==================== */}
           <Suspense>
-            <View>
-              <Text style={styles.listTitle}>{preferencesLabel[6]}</Text>
-            </View>
             <View style={styles.groupContainer}>
+              <View style={{width:'100%'}}>
+                <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[6]}</Text>
+              </View>
               <PreferenceSwitch preferenceKey="pasqua" />
               <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
               <PreferenceSwitch preferenceKey="lunediDellAngelo" />
