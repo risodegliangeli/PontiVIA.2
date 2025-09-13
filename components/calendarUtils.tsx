@@ -8,6 +8,17 @@ import { PREFERENCES } from '@/app/(tabs)/preferences';
 import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
   const { localHolydas: countryHolydays } = useLocalizationData();
 
+const dataLabel = [
+    'Pasqua',                               // 0
+    'Lunedì dell\'Angelo',                  // 1
+    'Ascensione (40 giorni dopo Pasqua',    // 2
+    "Pentecoste (50 giorni dopo Pasqua)",   // 3
+    "Lunedì di Pentecoste",                 // 4
+    "Corpus Domini (60 giorni dopo Pasqua)" // 5
+
+
+];
+
 /* ============================================================================= 
     CREA UNA DATA A MEZZOGIORNO UTC
 ============================================================================= */
@@ -92,7 +103,7 @@ const getCountryNationalHolidays = (
     PREFERENCES.pasqua.status && holidays.push({ 
         day: dayOfEaster, 
         month: monthOfEaster - 1, 
-        description: "Pasqua" 
+        description: dataLabel[0] 
     });
 
     let currentPasqua = createUTCDate(year, monthOfEaster - 1, dayOfEaster);
@@ -103,7 +114,7 @@ const getCountryNationalHolidays = (
         holidays.push({ 
             day: easterMonday.getUTCDate(), 
             month: easterMonday.getUTCMonth(), 
-            description: "Lunedì dell'Angelo" });
+            description: dataLabel[1] });
     }
 
     // ASCENSIONE (39 giorni dopo Pasqua)
@@ -112,7 +123,7 @@ const getCountryNationalHolidays = (
         holidays.push({ 
             day: ascensione.getUTCDate(), 
             month: ascensione.getUTCMonth(), 
-            description: "Ascensione" 
+            description: dataLabel[2] 
         });
     }
 
@@ -122,7 +133,7 @@ const getCountryNationalHolidays = (
         holidays.push({ 
             day: pentecoste.getUTCDate(), 
             month: pentecoste.getUTCMonth(), 
-            description: "Pentecoste" 
+            description: dataLabel[3] 
         });
     }
 
@@ -132,7 +143,17 @@ const getCountryNationalHolidays = (
         holidays.push({ 
             day: lunediPentecoste.getUTCDate(), 
             month: lunediPentecoste.getUTCMonth(), 
-            description: "Lunedì di Pentecoste" 
+            description: dataLabel[4] 
+        });
+    }
+
+    // CORPUS DOMINI (60 giorni dopo Pasqua)
+    if (PREFERENCES.corpusDomini.status === true) {
+        const corpusDomini = addDays(currentPasqua, 60);
+        holidays.push({ 
+            day: corpusDomini.getUTCDate(), 
+            month: corpusDomini.getUTCMonth(), 
+            description: dataLabel[5]
         });
     }
 

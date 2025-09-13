@@ -2,9 +2,10 @@ import useLocalizationData from '@/app/data/data';
 import DropdownComponent from '@/components/ui/DropdownComponent'; // IMPORTA DROPDOWN DURATA PONTI
 import DropdownFDOW from '@/components/ui/DropdownFDoW'; // IMPORTA DROPDOWN GIORNO SETTIMANA
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { Colors } from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   ImageBackground,
   ScrollView,
@@ -19,7 +20,7 @@ import {
   const { localizedDays } = useLocalizationData();
 
 const preferencesLabel = [
-  'Filtri e preferenze',
+  'Imposta i tuoi filtri',
   'Durata del ponte',
   'Primo giorno della settimana',
   'Giorni della settimana festivi',
@@ -30,15 +31,16 @@ const preferencesLabel = [
 ];
 
 const dataLabel = [
-  'Pasqua',
-  'Lunedì dell\'angelo',
-  'Ascensione',
-  'Pentecoste',
-  'Lunedì di pentecoste',
-  'Festività nazionali',
-  'Festività locali',
-  'Festività personali',
-  'Periodi di ferie'
+  'Pasqua',                           // 0
+  "Lunedì dell'angelo",               // 1
+  'Ascensione',                       // 2
+  'Pentecoste',                       // 3
+  'Lunedì di pentecoste',             // 4 
+  'Festività nazionali',              // 5
+  'Festività locali',                 // 6
+  'Festività personali',              // 7
+  'Periodi di ferie',                 // 8
+  'Corpus Domini'                     // 9
 ];
 
 export const PREFERENCES = {
@@ -55,6 +57,7 @@ export const PREFERENCES = {
   ascensione: { status: false, label: dataLabel[2] },
   pentecoste: { status: false, label: dataLabel[3] },
   lunediPentecoste: { status: false, label: dataLabel[4] },
+  corpusDomini: {status: false, label:dataLabel[9]},
   // -----------------------------
   festivitaNazionali: { status: true, label: dataLabel[5] },
   festivitaLocali: { status: true, label: dataLabel[6]},
@@ -69,16 +72,46 @@ const useThemeColors = () => {
   return Colors[colorScheme ?? 'light'];
 };
 
+const savePreferences = async () => {
+  try {
+    const jsonValue = JSON.stringify(PREFERENCES);
+    await AsyncStorage.setItem('PREFERENCES_KEY', jsonValue);
+    console.log('Preferences saved successfully');
+  } catch (e) {
+    console.error('Failed to save preferences:', e);
+  }
+};
+
+const loadPreferences = async () => {
+  try {
+    const jsonValue = await AsyncStorage.getItem('PREFERENCES_KEY');
+    if (jsonValue != null) {
+      const storedPreferences = JSON.parse(jsonValue);
+      Object.assign(PREFERENCES, storedPreferences);
+    }
+  } catch (e) {
+    console.error('Failed to load preferences:', e);
+  }
+};
 
 
 /* =========================== SWITCH ====================================== */
 function PreferenceSwitch ({ preferenceKey }: { preferenceKey: keyof typeof PREFERENCES }) {
   const colors = useThemeColors();
   const [isEnabled, setIsEnabled] = useState((PREFERENCES[preferenceKey] as { status: boolean }).status);
-  const toggleSwitch = () => {
-    setIsEnabled(!isEnabled);
-    PREFERENCES[preferenceKey].status = !isEnabled;
+
+  useEffect(() => {
+    // Sincronizza lo stato locale con la costante globale
+    setIsEnabled((PREFERENCES[preferenceKey] as { status: boolean }).status);
+  }, [PREFERENCES[preferenceKey].status]);
+
+  const toggleSwitch = async () => {
+    const newStatus = !isEnabled;
+    setIsEnabled(newStatus);
+    (PREFERENCES[preferenceKey] as { status: boolean }).status = newStatus;
+    await savePreferences();
   };
+
   const styles = StyleSheet.create({
     image: {      
       flex: 1,
@@ -99,7 +132,7 @@ function PreferenceSwitch ({ preferenceKey }: { preferenceKey: keyof typeof PREF
   });
   return (
     <View style={styles.preferenceRow as ViewStyle}>
-      <Text style={styles.text}>{PREFERENCES[preferenceKey].label}</Text>
+      <Text style={styles.text}>{(PREFERENCES[preferenceKey] as { label: string }).label}</Text>
       <Switch
         trackColor={{ false: '#767577', true: '#767577' }} 
         thumbColor={isEnabled ? colors.textRed : '#f4f3f4'} 
@@ -119,35 +152,40 @@ function PreferenceSwitch ({ preferenceKey }: { preferenceKey: keyof typeof PREF
 export default function Preferences() {
   const colors = useThemeColors();
   const navigation = useNavigation();
+  const [preferencesLoaded, setPreferencesLoaded] = useState(false);
+
+  useEffect(() => {
+    const initializePreferences = async () => {
+      await loadPreferences();
+      setPreferencesLoaded(true);
+    };
+    initializePreferences();
+  }, []);
+
   const handleEditHolydays = () => { navigation.navigate('holydays') };
 
   const styles = StyleSheet.create({
-    image: {
-      flex: 1,
-      justifyContent: 'center',
-      width: '100%',
-    },
-    container: {
-      flex: 1, 
-      width:'100%',
-      maxWidth:600,
-      paddingHorizontal:12,
+    scrollview: {
+      flex:0, 
       backgroundColor: 'transparent',
-      paddingTop:80
+      paddingHorizontal:12, 
+      paddingTop: 80,
     },
-
     sectionTitle: {
-      flex:1,
-      width:'100%',
-      height:48,
       fontSize: 24,
       fontWeight: '600',
       textAlign: 'center',
       color: colors.text,
-      //marginBottom:24,
-      // borderWidth:1
     },
-
+    // CONTAINER TITOLO PAGINA
+    sectionContainer: {
+      width: '100%',
+      flex:1,
+      justifyContent:'center',
+      alignItems:'center',
+      alignContent:'center',
+      marginBottom:8,
+    },
     // TITOLO ESTERNO BLOCCHETTI
     listTitle: {
       color: colors.headerText,
@@ -206,47 +244,56 @@ export default function Preferences() {
       fontSize: 11,
       color: colors.disabled,
     },
-
+    image: {
+      flex: 1,
+      justifyContent: 'center',
+    },
   });
 
   return (
     <ImageBackground 
-      source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg')}
+      source= {useColorScheme() === 'light' ? 
+        require('@/assets/images/background-image_minified.jpg') 
+        : 
+        null // SFONDO NERO
+        }
       resizeMode="cover" 
-      style={[styles.image, {alignItems:'center'}]}>
-
-        <ScrollView 
-          style={styles.container} 
-          showsVerticalScrollIndicator={false}>
+      style={styles.image}>
+        <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
           {/* ==================== TITOLO PAGINA + PULSANTE RESET ==================== */}
           <View style={{
+            flex:1,
             width:'100%',
             height:48,
             flexDirection:'row',
             justifyContent:'center',
             alignItems:'center',
+            borderWidth: 0,
             pointerEvents: 'box-none',
           }}>
             <Text style={styles.sectionTitle}>{preferencesLabel[0]}</Text>
           </View>
 
           {/* ==================== DROPDOWN DURATA PONTI ==================== */}
-          <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[1]}</Text>
+          <Text style={styles.listTitle}>{preferencesLabel[1]}</Text>
           <DropdownComponent 
             selectedValue={PREFERENCES.bridgeDuration}
-            onChange={(value) => {
+            onChange={async (value) => {
               PREFERENCES.bridgeDuration = value;
+              await savePreferences();
             }}
           />
           {/* ==================== DROPDOWN GIORNO SETTIMANA ==================== */}
-          <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[2]}</Text>
+          <Text style={styles.listTitle}>{preferencesLabel[2]}</Text>
           <DropdownFDOW 
             selectedValue={PREFERENCES.firstDayOfWeek}
-            onChange={(value) => {
+            onChange={async (value) => {
               PREFERENCES.firstDayOfWeek= value;
+              await savePreferences();
             }}
           />
           {/* ==================== SETTIMANA ==================== */}
+
           <View style={styles.groupContainer}>
             <View style={{width:'100%'}}>
               <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[3]}</Text>
@@ -267,6 +314,7 @@ export default function Preferences() {
           </View>
           {/* ==================== FESTIVITA NAZIONALI ==================== */}   
           <Suspense> 
+
             <View style={styles.groupContainer}>
               <View style={{width:'100%'}}>
                 <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[4]}</Text>
@@ -289,6 +337,7 @@ export default function Preferences() {
           </Suspense>  
           {/* ==================== PASQUA ==================== */}
           <Suspense>
+
             <View style={styles.groupContainer}>
               <View style={{width:'100%'}}>
                 <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[6]}</Text>
@@ -302,6 +351,8 @@ export default function Preferences() {
               <PreferenceSwitch preferenceKey="pentecoste" />
               <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
               <PreferenceSwitch preferenceKey="lunediPentecoste" /> 
+              <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
+              <PreferenceSwitch preferenceKey="corpusDomini" /> 
             </View>
           </Suspense>
           <View style={{ height: 180 }} />
@@ -309,4 +360,3 @@ export default function Preferences() {
     </ImageBackground>
   );
 }
-
