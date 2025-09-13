@@ -1,6 +1,6 @@
 // MY CUSTOM BAR
 // import CustomTabBar from '@/components/ui/CustomTabBar';
-import SplittedBar from '../../components/ui/SplittedBar';
+import SplittedBar from '@/components/ui/SplittedBar';
 
 // CONTEXT
 import { HolydaysProvider } from '@/context/HolydaysContext';
