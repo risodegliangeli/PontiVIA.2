@@ -81,8 +81,6 @@ const saveData = async (data: any, key: string) => {
   }
 };
 
-
-
 /* ###########################################################################################################
 
                                       MAIN - HolydaysScreen
@@ -999,7 +997,7 @@ export default function HolydaysScreen({}: any) {
         </View>
 
         {/* BOTTOM SPACE ############################################################################# */}
-        <View style={{ height: 280 }} />
+        <View style={{ height: 280 }} ><Text style={{fontSize:11}}>Prebuild 1.0.0@13092025 (c) Angeli & Associati</Text></View>
       </ScrollView>
 
       {/* MODAL GIORNO SINGOLO ############################################################################# */}

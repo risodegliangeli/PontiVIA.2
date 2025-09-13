@@ -38,7 +38,7 @@ const dataLabel = [
   'Lunedì di pentecoste',             // 4 
   'Festività nazionali',              // 5
   'Festività locali',                 // 6
-  'Festività personali',              // 7
+  'Giorni speciali',              // 7
   'Periodi di ferie',                 // 8
   'Corpus Domini'                     // 9
 ];
@@ -176,6 +176,7 @@ export default function Preferences() {
       fontWeight: '600',
       textAlign: 'center',
       color: colors.text,
+      paddingBottom:16,
     },
     // CONTAINER TITOLO PAGINA
     sectionContainer: {
@@ -192,7 +193,7 @@ export default function Preferences() {
       fontSize: 18,
       fontWeight: '600',
       marginBottom: 0,
-      paddingBottom: 16,
+      paddingBottom: 8,
     },
     text: {
       fontSize: 16,
@@ -275,7 +276,7 @@ export default function Preferences() {
           </View>
 
           {/* ==================== DROPDOWN DURATA PONTI ==================== */}
-          <Text style={styles.listTitle}>{preferencesLabel[1]}</Text>
+          <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[1]}</Text>
           <DropdownComponent 
             selectedValue={PREFERENCES.bridgeDuration}
             onChange={async (value) => {
@@ -284,7 +285,7 @@ export default function Preferences() {
             }}
           />
           {/* ==================== DROPDOWN GIORNO SETTIMANA ==================== */}
-          <Text style={styles.listTitle}>{preferencesLabel[2]}</Text>
+          <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[2]}</Text>
           <DropdownFDOW 
             selectedValue={PREFERENCES.firstDayOfWeek}
             onChange={async (value) => {
@@ -321,8 +322,8 @@ export default function Preferences() {
               </View>
               <PreferenceSwitch preferenceKey="festivitaNazionali" />
               <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-              <PreferenceSwitch preferenceKey="festivitaLocali" />
-              <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
+              {/*<PreferenceSwitch preferenceKey="festivitaLocali" />
+              <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>*/}
               <PreferenceSwitch preferenceKey="festivitaPersonali" />
               <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
               <PreferenceSwitch preferenceKey="feriePersonali" />

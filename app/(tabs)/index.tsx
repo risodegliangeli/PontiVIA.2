@@ -16,7 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function HomeScreen() {
 
   const indexLabels =[
-    'Nessun ponte in vista?\nScorri verso il basso il calendario\ne imposta i filtri e le tue date',
+    'Nessun ponte in vista?\nScorri in avanti il calendario\ne imposta i filtri e le tue date',
   ];
  
   const { 
@@ -41,27 +41,25 @@ export default function HomeScreen() {
   // 2) vacationPeriods
   // 3) myCountry
   useEffect(() => {
-
-  // FUNZIONE DI LETTURA DA LOCAL STORAGE
-  const initializeData = async () => {
-    const storedPersonalHolydays = await loadData('personalHolydays');
-    // console.log('storedPersonalHolydays:', JSON.stringify(storedPersonalHolydays));
-      if (storedPersonalHolydays) {
-        setPersonalHolydays(storedPersonalHolydays);
-      }
-    const storedVacationPeriods = await loadData('vacationPeriods');
-    // console.log('storedVacationPeriods:', JSON.stringify(storedVacationPeriods));
-      if (storedVacationPeriods) {
-        setVacationPeriods(storedVacationPeriods);
-      }
-    const storedMyCountry = await loadData('myCountry');
-      if (storedMyCountry) {
-        setMyCountry(storedMyCountry);
-      }
-  };  
-
-  // CHIAMATA FUNZ. LETTURA
-  initializeData();
+    // FUNZIONE DI LETTURA DA LOCAL STORAGE
+    const initializeData = async () => {
+      const storedPersonalHolydays = await loadData('personalHolydays');
+      // console.log('storedPersonalHolydays:', JSON.stringify(storedPersonalHolydays));
+        if (storedPersonalHolydays) {
+          setPersonalHolydays(storedPersonalHolydays);
+        }
+      const storedVacationPeriods = await loadData('vacationPeriods');
+      // console.log('storedVacationPeriods:', JSON.stringify(storedVacationPeriods));
+        if (storedVacationPeriods) {
+          setVacationPeriods(storedVacationPeriods);
+        }
+      const storedMyCountry = await loadData('myCountry');
+        if (storedMyCountry) {
+          setMyCountry(storedMyCountry);
+        }
+    };  
+    // CHIAMATA FUNZ. LETTURA
+    initializeData();
   }, []);
 
   // MEMORIZZA IL KEY DEL CALENDARIO
@@ -147,12 +145,9 @@ export default function HomeScreen() {
     startAnimation();
   };
 
-
-  console.log('<index> prima del rendering:');
-  console.log('personalHolydays: ', JSON.stringify(personalHolydays));
-  console.log('vacationPeriods:', JSON.stringify(vacationPeriods));
-  console.log('myCountry:', myCountry);
-
+  // console.log('personalHolydays: ', JSON.stringify(personalHolydays));
+  // console.log('vacationPeriods:', JSON.stringify(vacationPeriods));
+  // console.log('myCountry:', myCountry);
 
   return (  
       <ImageBackground 

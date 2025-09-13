@@ -5,7 +5,7 @@
     "slug": "pontivia",
     "owner": "risodegliangeli",
     "version": "1.0.0",
-    "icon": "./assets/images/girl-icon-macos-129x129@2x.png",
+    "icon": "./assets/images/splash-cercaponti-icon1024.png",
     "scheme": "cercaponti",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -17,7 +17,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/cercaponti-icon96x96.png",
+        "foregroundImage": "./assets/images/girl-icon-macos-129x129@2x.png",
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
@@ -44,7 +44,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/pontivia_logo_splash.png",
+          "image": "./assets/images/girl-icon-macos-129x129@2x.png",
           "imageWidth": "204",
           "resizeMode": "contain",
           "backgroundColor": "#FFFFC5"

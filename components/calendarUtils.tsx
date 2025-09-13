@@ -77,9 +77,9 @@ const getCountryNationalHolidays = (
     if (PREFERENCES.festivitaNazionali.status) {
         holidays.push(...getLocalHolydas(myCountry)); // funzione per le nazionali
         }
-    if (PREFERENCES.festivitaLocali.status) {
+    {/*if (PREFERENCES.festivitaLocali.status) {
         holidays.push(...regionalHolydays); // funzione per le locali
-        }
+        }*/}
     if (PREFERENCES.festivitaPersonali.status) {
         holidays.push(...personalHolydays);
         }
