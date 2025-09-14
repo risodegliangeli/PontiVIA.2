@@ -37,7 +37,7 @@ CALENDARSCREEN - print calendario
 ============================================================================= */
 const CalendarScreen = (PREFERENCES: any) => {
   const colors = useThemeColors();
-  const monthsToLoad = 3; 
+  const monthsToLoad = 4; 
   const { 
     personalHolydays, 
     regionalHolydays, 
@@ -51,8 +51,6 @@ const CalendarScreen = (PREFERENCES: any) => {
     const { status } = await Calendar.requestCalendarPermissionsAsync();
     if (status === 'granted') {
       const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
-      // console.log(`ok ${Platform.OS} calendar`);
-      //console.log({ calendars });
       }
     })();
   }, []);
@@ -813,9 +811,9 @@ const CalendarScreen = (PREFERENCES: any) => {
         </View>
       
         {/* ADV */}
-        {((index +1)  % 3 === 0) && (
+        {((index +1)  % monthsToLoad === 0) && (
           <View style={[styles.adBanner, {borderWidth:.5}]}>
-              {/* <Text style={{color: colors.text}}> </Text> */}
+              <Text style={{color: colors.text}}>ADV</Text>
           </View>
         )}
 
@@ -849,7 +847,8 @@ const CalendarScreen = (PREFERENCES: any) => {
     return null;
   }, [isLoading, hasMore, calendarData.length, backgroundColor]);
 
-  const keyExtractor = useCallback((item, index) => `${item.y}-${item.m}-${index}` ,[])
+  const keyExtractor = useCallback((item: any, index: number) => `${item.y}-${item.m}-${index}` ,[])
+
   // FLATLIST
   return (
     <>

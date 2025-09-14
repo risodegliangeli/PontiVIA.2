@@ -11,12 +11,10 @@ import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
 const dataLabel = [
     'Pasqua',                               // 0
     'Lunedì dell\'Angelo',                  // 1
-    'Ascensione (40 giorni dopo Pasqua',    // 2
-    "Pentecoste (50 giorni dopo Pasqua)",   // 3
+    'Ascensione',                           // 2
+    "Pentecoste",                           // 3
     "Lunedì di Pentecoste",                 // 4
-    "Corpus Domini (60 giorni dopo Pasqua)" // 5
-
-
+    "Corpus Domini"                         // 5
 ];
 
 /* ============================================================================= 
@@ -160,8 +158,8 @@ const getCountryNationalHolidays = (
     // AGGIUNGO FESTIVITA PERSONALI A holidays (VALIDE PER OGNI ANNO)
     PREFERENCES.festivitaPersonali.status && holidays.push(...personalHolydays);
 
-    // AGGIUNGO FESTIVITA LOCALI A holidays (VALIDE PER OGNI ANNO)
-    PREFERENCES.festivitaLocali.status && holidays.push(...regionalHolydays);
+    // // AGGIUNGO FESTIVITA LOCALI A holidays (VALIDE PER OGNI ANNO)
+    // PREFERENCES.festivitaLocali.status && holidays.push(...regionalHolydays);
 
     // AGGIUNGO PERIODI DI FERIE RELATIVI ALL'ANNO IN ESAME (year)
     if (PREFERENCES.feriePersonali.status === true) {
@@ -239,11 +237,8 @@ CONTEGGIO DEI PONTI
 // CONTEGGIA TUTTI I ONTI ALL'INTERNO DI CIASCUN MESE E LI AGGIUNGE
 // IN FONDO ALL'ARRAY 'grid'
 const countBridges = (monthTable: any[]) => {
-
   const bridges: Array<{ da: Date; a: Date; length: number }> = [];
-
   let currentBridge: { start: Date; days: Date[] } | null = null;
-  
   const sortedDays = [...monthTable].sort((a, b) => a[0].getTime() - b[0].getTime());
   
   sortedDays.forEach((day) => {
@@ -474,11 +469,8 @@ const createCalendarGrid = (
                 }
             }
         }
-
         // CHIAMO LA FUNZIONE CHE CONTEGGIA I PONTI E LA AGGIUNGO ALL'ARRAY monthData
         monthData.bridges = [...countBridges(monthData.table)];
-        // console.log('\n\n', monthData.y, monthData.m, JSON.stringify(monthData.bridges, null, 2));
-
         grid.push(monthData);
     }
     //console.log('\n\nGRID\n', JSON.stringify(grid));

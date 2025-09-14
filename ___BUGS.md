@@ -1,6 +1,14 @@
 # TICKET APERTI:
 
 
+
+- ### DROPDOWN LUNGHEZZA PONTE
+  -- non salva nelle preferenze
+  -- check: inizio settimana
+
+---
+
+
 - ### CONDIVISIONE DATE PERSONALI
   -- con altri utenti che hanno PontiVIA! installato
   -- se non installato te lo fa installare
