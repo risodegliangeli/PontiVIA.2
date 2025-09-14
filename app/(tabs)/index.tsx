@@ -15,9 +15,35 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 ########################################################################################################### */
 export default function HomeScreen() {
 
-  const indexLabels =[
-    'Nessun ponte in vista?\nScorri in avanti il calendario\ne imposta i filtri e le tue date',
-  ];
+  const dataLabel: any = {
+    'it-IT':[
+        'Nessun ponte in vista?\nScorri in avanti il calendario\ne imposta i filtri e le tue date',
+        'Prova',
+        'Prova'],
+    'en-IT':[
+        'Nessun ponte in vista?\nScorri in avanti il calendario\ne imposta i filtri e le tue date',
+        'Prova',
+        'Prova'],
+    "de-AT":[
+        'Keine Brücke in Sicht?\nBlättern Sie im Kalender vorwärts\nund stellen Sie die Filter und Ihre Daten ein',
+        '',
+        ''],
+    "ch-CH":[],
+    "be-BE":[],
+    "en-GB":[],
+    "en-IE":[],
+    'fr-FR': [
+        'Pas de pont en vue?\nFaites défiler le calendrier\net définissez les filtres et vos dates',
+        'Essai',
+        'Essai'],
+    "de-DE":[
+        'Keine Brücke in Sicht?\nBlättern Sie im Kalender vorwärts\nund stellen Sie die Filter und Ihre Daten ein',
+        '',
+        ''],
+    'es-ES':[],
+    'nl-NL':[],
+    'pt-PT':[]
+  };
  
   const { 
     personalHolydays, setPersonalHolydays,
@@ -186,7 +212,7 @@ export default function HomeScreen() {
             <Pressable 
               onPress={handleLogoPress} 
               style={{width: '100%', alignItems: 'center'}}>
-              <Text style={{fontSize:18, fontWeight:600, color: '#0088FF', textAlign:'center'}}>{indexLabels[0]}</Text>
+              <Text style={{fontSize:18, fontWeight:600, color: '#0088FF', textAlign:'center'}}>{dataLabel[myCountry][0]}</Text>
               <MovingHands />
             </Pressable>
           </Animated.View>

@@ -28,28 +28,140 @@ const useThemeColors = () => {
 
 const { months } = useLocalizationData();
 
-const holydaysLabels = [
-  'Le mie date',                                // 0
-  'Aggiungi i tuoi giorni speciali',            // 1
-  'Le festività nazionali',                     // 2
-  'I periodi lunghi',                           // 3
-  'I tuoi giorni speciali',                     // 4
-  'Un giorno',                                  // 5
-  'Un periodo di più giorni',                   // 6
-  'Attenzione',                                 // 7
-  'Vuoi eliminare il giorno',                   // 8
-  'Annulla',                                    // 9
-  'Elimina',                                    // 10
-  'Salva',                                      // 11
-  'Inserisci una descrizione',                  // 12
-  'Esiste già una festività nazionale in questa data',  // 13
-  'Descrizione',                                // 14
-  '(ripete ogni anno)',                         // 15
-  'I tuoi giorni speciali',                     // 16
-  'In questa data è già presente un evento',     // 17
-  'Vuoi eliminare tutte le date di questa sezione?',// 18
-  
-]
+const dataLabel: any = {
+  'it-IT':[
+      'Le mie date',                                // 0
+      'Aggiungi i tuoi giorni speciali',            // 1
+      'Le festività nazionali',                     // 2
+      'I periodi lunghi',                           // 3
+      'I tuoi giorni speciali',                     // 4
+      'Un giorno',                                  // 5
+      'Un periodo di più giorni',                   // 6
+      'Attenzione',                                 // 7
+      'Vuoi eliminare il giorno',                   // 8
+      'Annulla',                                    // 9
+      'Elimina',                                    // 10
+      'Salva',                                      // 11
+      'Inserisci una descrizione',                  // 12
+      'Esiste già una festività nazionale in questa data',  // 13
+      'Descrizione',                                // 14
+      '(ripete ogni anno)',                         // 15
+      'I tuoi giorni speciali',                     // 16
+      'In questa data è già presente un evento',     // 17
+      'Vuoi eliminare tutte le date di questa sezione?'// 18],
+      ],
+  'en-IT':[
+      'Le mie date',                                // 0
+      'Aggiungi i tuoi giorni speciali',            // 1
+      'Le festività nazionali',                     // 2
+      'I periodi lunghi',                           // 3
+      'I tuoi giorni speciali',                     // 4
+      'Un giorno',                                  // 5
+      'Un periodo di più giorni',                   // 6
+      'Attenzione',                                 // 7
+      'Vuoi eliminare il giorno',                   // 8
+      'Annulla',                                    // 9
+      'Elimina',                                    // 10
+      'Salva',                                      // 11
+      'Inserisci una descrizione',                  // 12
+      'Esiste già una festività nazionale in questa data',  // 13
+      'Descrizione',                                // 14
+      '(ripete ogni anno)',                         // 15
+      'I tuoi giorni speciali',                     // 16
+      'In questa data è già presente un evento',     // 17
+      'Vuoi eliminare tutte le date di questa sezione?'// 18],
+      ],
+  "de-AT":[
+      'Meine Termine',                                // 0
+      'Füge deine besonderen Tage hinzu',            // 1
+      'Die nationalen Feiertage',                     // 2
+      'Die langen Zeiträume',                           // 3
+      'Deine besonderen Tage',                     // 4
+      'Ein Tag',                                  // 5
+      'Ein mehrtägiger Zeitraum',                   // 6
+      'Vorsicht!',                                 // 7
+      'Möchtest du den Tag löschen',                   // 8
+      'Abbrchen',                                    // 9
+      'Löschen',                                    // 10
+      'Speichern',                                      // 11
+      'Gib eine Beschreibung ein!',                  // 12
+      'An diesem Datum gibt es bereits einen nationalen Feiertag',  // 13
+      'Beschreibung',                                // 14
+      '(wiederholt sich jedes Jahr)',                         // 15
+      'Deine besonderen Tage',                     // 16
+      'An diesem Datum ist bereits ein Ereignis vorhanden',     // 17
+      'Möchtest du alle Termine in diesem Bereich löschen?'// 18],
+      ],
+  "ch-CH":[],
+  "be-BE":[],
+  "en-GB":[],
+  "en-IE":[],
+  'fr-FR': [
+      'Mes dates',                                // 0
+      'Ajoutez vos jours spéciaux',            // 1
+      'Les fêtes nationales',                     // 2
+      'Les longues périodes',                           // 3
+      'Tes jours spéciaux',                     // 4
+      'Un jour',                                  // 5
+      'Une période de plusieurs jours',                   // 6
+      'Attention',                                 // 7
+      'Voulez-vous supprimer le jour',                   // 8
+      'Annuler',                                    // 9
+      'Supprimer',                                    // 10
+      'Enregistrer',                                      // 11
+      'Saisissez une description',                  // 12
+      'Il existe déjà une fête nationale à cette date',  // 13
+      'Description',                                // 14
+      '(se répète chaque année)',                         // 15
+      'Tes jours spéciaux',                     // 16
+      'Un événement est déjà présent à cette date',     // 17
+      'Voulez-vous supprimer toutes les dates de cette section ?'// 18],
+      ],
+  "de-DE":[
+      'Meine Termine',                                // 0
+      'Füge deine besonderen Tage hinzu',            // 1
+      'Die nationalen Feiertage',                     // 2
+      'Die langen Zeiträume',                           // 3
+      'Deine besonderen Tage',                     // 4
+      'Ein Tag',                                  // 5
+      'Ein mehrtägiger Zeitraum',                   // 6
+      'Vorsicht!',                                 // 7
+      'Möchtest du den Tag löschen',                   // 8
+      'Abbrchen',                                    // 9
+      'Löschen',                                    // 10
+      'Speichern',                                      // 11
+      'Gib eine Beschreibung ein!',                  // 12
+      'An diesem Datum gibt es bereits einen nationalen Feiertag',  // 13
+      'Beschreibung',                                // 14
+      '(wiederholt sich jedes Jahr)',                         // 15
+      'Deine besonderen Tage',                     // 16
+      'An diesem Datum ist bereits ein Ereignis vorhanden',     // 17
+      'Möchtest du alle Termine in diesem Bereich löschen?'// 18],
+      ],
+  'es-ES':[
+      'Mis fechas',                                // 0
+      'Añade tus días especiales',            // 1
+      'Las festividades nacionales',                     // 2
+      'Los períodos largos',                           // 3
+      'Tus días especiales',                     // 4
+      'Un día',                                  // 5
+      'Un período de varios días',                   // 6
+      'Atención',                                 // 7
+      '¿Quieres eliminar el día',                   // 8
+      'Cancelar',                                    // 9
+      'Eliminar',                                    // 10
+      'Guardar',                                      // 11
+      'Introduce una descripción',                  // 12
+      'Ya existe una festividad nacional en esta fecha',  // 13
+      'Descripción',                                // 14
+      '(se repite cada año)',                         // 15
+      'Tus días especiales',                     // 16
+      'Ya hay un evento presente en esta fecha',     // 17
+      '¿Quieres eliminar todas las fechas de esta sección?'// 18],
+      ],
+  'nl-NL':[],
+  'pt-PT':[]
+};
 
 type Holiday = {  // DEFINIZIONE DI holiday
   day: number;
@@ -176,14 +288,14 @@ export default function HolydaysScreen({}: any) {
 
     // CONTROLLA COMPILAZIONE DELLA DESCRIZIONE NELLA FORM
     if (!singleDateDescription) {
-      setSingleDateError(holydaysLabels[12]); // MSG ERRORE 'Inserisci una descrizione ecc...'
+      setSingleDateError(dataLabel[myCountry][12]); // MSG ERRORE 'Inserisci una descrizione ecc...'
       return;
     }
 
     // CONTROLLA SE ESISTE GIA' QUEL GIORNO TRA LE FESTIVITA NAZIONALI
     const nationalIndex = nationalHolydays.findIndex(h => h.day === day && h.month === month);
     if (nationalIndex !== -1) {
-      setSingleDateError(holydaysLabels[13]); // MSG ERRORE: 'Esiste già una festività nazionale in questa data...'
+      setSingleDateError(dataLabel[myCountry][13]); // MSG ERRORE: 'Esiste già una festività nazionale in questa data...'
       return;
     }    
     
@@ -208,7 +320,7 @@ export default function HolydaysScreen({}: any) {
         
         // TROVATO = ERRORE E RETURN 
       if (sameCategoryDuplicate > -1) {
-        setSingleDateError(holydaysLabels[17]); // MSG ERRORE: 'Questa data esiste già ecc.'
+        setSingleDateError(dataLabel[myCountry][17]); // MSG ERRORE: 'Questa data esiste già ecc.'
         return;
       } else {
         // NON TROVATO = SCRITTURA NUOVO ITEM E RETURN
@@ -233,7 +345,7 @@ export default function HolydaysScreen({}: any) {
         sameCategoryDuplicate = personalHolydays.findIndex(h => h.day === day && h.month === month);
         if (sameCategoryDuplicate > -1) {
           // SE QUELLA DATA ESISTE GIA' = ERRORE
-          setSingleDateError(holydaysLabels[17]); // MSG ERRORE: 'Questa data esiste già ecc.'
+          setSingleDateError(dataLabel[myCountry][17]); // MSG ERRORE: 'Questa data esiste già ecc.'
           return;
         } else {
           // SE QUELLA DATA E' LIBERA = SOVRASCRITTURA
@@ -263,7 +375,7 @@ export default function HolydaysScreen({}: any) {
   
     // CONTROLLA COMPILAZIONE DELLA DESCRIZIONE NELLA FORM
     if (!singleDateDescription) {
-      setSingleDateError(holydaysLabels[12]); // MSG ERRORE 'Inserisci una descrizione'
+      setSingleDateError(dataLabel[myCountry][12]); // MSG ERRORE 'Inserisci una descrizione'
       return;
     }
 
@@ -440,15 +552,15 @@ export default function HolydaysScreen({}: any) {
     }
 
     Alert.alert(
-        holydaysLabels[7],
-        `${holydaysLabels[8]} ${itemDescription}?`,
+        dataLabel[myCountry][7],
+        `${dataLabel[myCountry][8]} ${itemDescription}?`,
         [
           {
-            text: holydaysLabels[9],
+            text: dataLabel[myCountry][9],
             style: "cancel"
           },
           { 
-            text: holydaysLabels[10], 
+            text: dataLabel[myCountry][10], 
             onPress: async () => {
               switch (type) {
                 case 'personal':
@@ -808,24 +920,24 @@ export default function HolydaysScreen({}: any) {
         showsVerticalScrollIndicator={false} >
 
         {/* TITOLO PAGINA  */}{/* LE MIE DATE */}
-        <Text style={[styles.sectionTitle, { flex:1, marginBottom:32, }]}> {holydaysLabels[0]} </Text> 
+        <Text style={[styles.sectionTitle, { flex:1, marginBottom:32, }]}>{dataLabel[myCountry][0]}</Text> 
 
-        {/* TOUCHABLE + GIORNI SPECIALI ########################################################################## */}
+        {/* PULSANTONE + GIORNI SPECIALI ########################################################################## */}
         <TouchableOpacity 
           style={styles.specialDays}
           onPress={ () => { 
             setSelectedRadioOption('single');           
-            setDatePickerSelected(new Date()); // SINGLE DATE: IMPOSTA A MESE CORRENTE 
-            setStartdate(null); // PERIOD: AZZERA SCELTA PRECEDENTE
-            setEndDate(null); // PERIOD: AZZERA SCELTA
+            setDatePickerSelected(new Date());  // SINGLE DATE: IMPOSTA A MESE CORRENTE 
+            setStartdate(null);                 // PERIOD: AZZERA SCELTA PRECEDENTE
+            setEndDate(null);                   // PERIOD: AZZERA SCELTA
             setSingleDateDescription(undefined);
-            setLeftRadioButtonActive(true); // RESETTA A ATTIVI ENTRAMBI I RADIOBUTTON
+            setLeftRadioButtonActive(true);     // RESETTA A ATTIVI ENTRAMBI I RADIOBUTTON
             setRightRadioButtonActive(true);
-            showModalSingleDate(); // APRE MODAL CON DATEPICKER
+            showModalSingleDate();              // --> APRE MODAL CON DATEPICKER
           }}
         >
           <IconSymbol name="plus" size={36} color={'#0088ff'}/>
-          <Text style={styles.specialDaysLabel}>{holydaysLabels[1]}</Text>
+          <Text style={styles.specialDaysLabel}>{dataLabel[myCountry][1]}</Text>
         </TouchableOpacity>
 
         {/* CARD GIORNI SPECIALI ############################################################################# */}
@@ -835,20 +947,20 @@ export default function HolydaysScreen({}: any) {
             {/* LABEL SEZIONE CON PULSANTE CANCELLAZIONE */}
             <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
               <Text style={{opacity:0}}>*</Text>
-              <Text style={[styles.listTitle, { textAlign:'center' } ]}>{holydaysLabels[4]}</Text>
+              <Text style={[styles.listTitle, { textAlign:'center' } ]}>{dataLabel[myCountry][4]}</Text>
               {personalHolydays ?                
                 <TouchableOpacity
                   onPress={ async () => {
                     Alert.alert(
-                        holydaysLabels[7],  // Attenzione
-                        holydaysLabels[18],// Vuoi eliminare tutte le date ecc.?
+                        dataLabel[myCountry][7],  // Attenzione
+                        dataLabel[myCountry][18],// Vuoi eliminare tutte le date ecc.?
                         [
                           {
-                            text: holydaysLabels[9], // Annulla
+                            text: dataLabel[myCountry][9], // Annulla
                             style: "cancel"
                           },
                           { 
-                            text: holydaysLabels[10], // Elimina
+                            text: dataLabel[myCountry][10], // Elimina
                             onPress: async () => {
                               setPersonalHolydays([]);
                               await saveData([], 'personalHolydays');
@@ -857,7 +969,7 @@ export default function HolydaysScreen({}: any) {
                         ]
                       );
                   }}>
-                  <IconSymbol size={Platform.OS === 'ios' ? 28 : 24} name="trash.circle.fill" color={colors.text} />
+                  <IconSymbol size={Platform.OS === 'ios' ? 20 : 26}  name="plus" color={colors.blueBar} style={{marginRight:8, transform: [{rotate: '45deg'}]}}/>
                 </TouchableOpacity>
               :
                 <Text style={{opacity:0}}>*</Text>
@@ -875,7 +987,7 @@ export default function HolydaysScreen({}: any) {
                     <View style={{flexDirection:'column'}} >
                       <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label} `}</Text>
                       <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
-                      <Text style={[styles.itemDescription, {maxWidth:240, fontStyle:'italic', fontWeight:400}]}>{holydaysLabels[15]}</Text>
+                      <Text style={[styles.itemDescription, {maxWidth:240, fontStyle:'italic', fontWeight:400}]}>{dataLabel[myCountry][15]}</Text>
                     </View>
                   </View>
                   <View>
@@ -903,20 +1015,20 @@ export default function HolydaysScreen({}: any) {
             {/* LABEL SEZIONE CON PULSANTE CANCELLAZIONE */}
             <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
               <Text style={{opacity:0}}>*</Text>
-              <Text style={[styles.listTitle, { textAlign:'center' } ]}>{holydaysLabels[3]}</Text>
+              <Text style={[styles.listTitle, { textAlign:'center' } ]}>{dataLabel[myCountry][3]}</Text>
               {personalHolydays ?                
                 <TouchableOpacity
                   onPress={ async () => {
                     Alert.alert(
-                        holydaysLabels[7],  // Attenzione
-                        holydaysLabels[18],// Vuoi eliminare tutte le date ecc.?
+                        dataLabel[myCountry][7],  // Attenzione
+                        dataLabel[myCountry][18],// Vuoi eliminare tutte le date ecc.?
                         [
                           {
-                            text: holydaysLabels[9], // Annulla
+                            text: dataLabel[myCountry][9], // Annulla
                             style: "cancel"
                           },
                           { 
-                            text: holydaysLabels[10], // Elimina
+                            text: dataLabel[myCountry][10], // Elimina
                             onPress: async () => {
                               setVacationPeriods([]);
                               await saveData([], 'vacationPeriods');
@@ -925,7 +1037,7 @@ export default function HolydaysScreen({}: any) {
                         ]
                       );
                   }}>
-                  <IconSymbol size={Platform.OS === 'ios' ? 28 : 24} name="trash.circle.fill" color={colors.text} />
+                  <IconSymbol size={Platform.OS === 'ios' ? 20 : 26} name="plus" color={colors.blueBar} style={{marginRight:8, transform: [{rotate: '45deg'}]}}/>
                 </TouchableOpacity>
               :
                 <Text style={{opacity:0}}>*</Text>
@@ -965,7 +1077,7 @@ export default function HolydaysScreen({}: any) {
         <View style={styles.listItem}>
           
           {/* TITOLO */}
-          <Text style={[ styles.listTitle, { textAlign:'center' } ]}>{holydaysLabels[2]}</Text>
+          <Text style={[ styles.listTitle, { textAlign:'center' } ]}>{dataLabel[myCountry][2]}</Text>
 
           {/* DROPDOWN PAESE */}
           <View style={styles.dropDownCountry}>
@@ -1023,7 +1135,7 @@ export default function HolydaysScreen({}: any) {
               <View style={styles.modalContainer}>
 
                 {/* TITOLO MODAL */}
-                <Text style={[styles.listTitle, { textAlign:'center', marginBottom:24, }]}>{holydaysLabels[4]}</Text>
+                <Text style={[styles.listTitle, { textAlign:'center', marginBottom:24, }]}>{dataLabel[myCountry][4]}</Text>
                 {singleDateError ? <Text style={styles.errorText}>{singleDateError}</Text> : null}
 
                 {/* RADIOBUTTON */}
@@ -1044,7 +1156,7 @@ export default function HolydaysScreen({}: any) {
                       :
                         styles.radioLabelInactive // RADIOBUTTON DISABLED
                       }>
-                        {holydaysLabels[5]}
+                        {dataLabel[myCountry][5]}
                     </Text>
                   </TouchableOpacity>
                   
@@ -1062,7 +1174,7 @@ export default function HolydaysScreen({}: any) {
                         selectedRadioOption === 'period' ? styles.radioLabelFocused : styles.radioLabelNotFocused
                       :
                         styles.radioLabelInactive}>
-                          {holydaysLabels[6]}
+                          {dataLabel[myCountry][6]}
                     </Text>
                   </TouchableOpacity>
 
@@ -1146,7 +1258,7 @@ export default function HolydaysScreen({}: any) {
                 {/* DESCRIZIONE */}
                 <TextInput
                   style={[styles.modalInput, {marginTop:24}]}
-                  placeholder={holydaysLabels[14]}
+                  placeholder={dataLabel[myCountry][14]}
                   placeholderTextColor={colors.black}
                   value={singleDateDescription}
                   onChangeText={setSingleDateDescription}

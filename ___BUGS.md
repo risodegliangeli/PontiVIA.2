@@ -2,12 +2,9 @@
 
 
 
-- ### DROPDOWN LUNGHEZZA PONTE
-  -- non salva nelle preferenze
-  -- check: inizio settimana
+- ### TRADUZIONE
 
 ---
-
 
 - ### CONDIVISIONE DATE PERSONALI
   -- con altri utenti che hanno PontiVIA! installato
@@ -25,7 +22,7 @@
 ---
 
 - #### ALERT eventi personali
-  aggiungere checkbox CAMPANELLA nelle due modal (giono singolo e periodo):
+  -- aggiungere checkbox CAMPANELLA nelle due modal (giono singolo e periodo):
   "Ricordami di questa data [ 7 ] giorni prima"
 
 ---
@@ -69,6 +66,13 @@
 
 # TICKET RISOLTI:
 
+
+
+- ### DROPDOWN LUNGHEZZA PONTE
+  -- non salva nelle preferenze
+  -- check: inizio settimana
+
+---
 
 - ### SALVATAGGIO LOCALE
   -- alla chiusura si perdono *date inserite* e *preferenze*

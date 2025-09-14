@@ -19,7 +19,7 @@ import {
   } from 'react-native';
   const { localizedDays } = useLocalizationData();
 
-const preferencesLabel = [
+const dataLabel = [
   'Imposta i tuoi filtri',
   'Durata del ponte',
   'Primo giorno della settimana',
@@ -30,7 +30,7 @@ const preferencesLabel = [
   ''
 ];
 
-const dataLabel = [
+const switchLabel = [
   'Pasqua',                           // 0
   "Lunedì dell'angelo",               // 1
   'Ascensione',                       // 2
@@ -52,17 +52,17 @@ export const PREFERENCES = {
   martedi:   { status: false, label: localizedDays[1].charAt(0).toUpperCase() + localizedDays[1].slice(1) },
   lunedi:    { status: false, label: localizedDays[0].charAt(0).toUpperCase() + localizedDays[0].slice(1) },
   // -----------------------------
-  pasqua: { status: true, label: dataLabel[0] },
-  lunediDellAngelo: { status: true, label: dataLabel[1] },
-  ascensione: { status: false, label: dataLabel[2] },
-  pentecoste: { status: false, label: dataLabel[3] },
-  lunediPentecoste: { status: false, label: dataLabel[4] },
-  corpusDomini: {status: false, label:dataLabel[9]},
+  pasqua: { status: true, label: switchLabel[0] },
+  lunediDellAngelo: { status: true, label: switchLabel[1] },
+  ascensione: { status: false, label: switchLabel[2] },
+  pentecoste: { status: false, label: switchLabel[3] },
+  lunediPentecoste: { status: false, label: switchLabel[4] },
+  corpusDomini: {status: false, label:switchLabel[9]},
   // -----------------------------
-  festivitaNazionali: { status: true, label: dataLabel[5] },
-  festivitaLocali: { status: true, label: dataLabel[6]},
-  festivitaPersonali: { status: true, label: dataLabel[7]},
-  feriePersonali: { status: true, label: dataLabel[8] },
+  festivitaNazionali: { status: true, label: switchLabel[5] },
+  festivitaLocali: { status: true, label: switchLabel[6]},
+  festivitaPersonali: { status: true, label: switchLabel[7]},
+  feriePersonali: { status: true, label: switchLabel[8] },
   bridgeDuration: 3, 
   firstDayOfWeek: 1,
 };
@@ -77,6 +77,7 @@ const savePreferences = async () => {
     const jsonValue = JSON.stringify(PREFERENCES);
     await AsyncStorage.setItem('PREFERENCES_KEY', jsonValue);
     console.log('Preferences saved successfully');
+    //console.log(jsonValue);
   } catch (e) {
     console.error('Failed to save preferences:', e);
   }
@@ -192,7 +193,7 @@ export default function Preferences() {
       color: colors.headerText,
       fontSize: 18,
       fontWeight: '600',
-      marginBottom: 0,
+      marginBottom: 16,
       paddingBottom: 8,
     },
     text: {
@@ -272,32 +273,36 @@ export default function Preferences() {
             borderWidth: 0,
             pointerEvents: 'box-none',
           }}>
-            <Text style={styles.sectionTitle}>{preferencesLabel[0]}</Text>
+            <Text style={styles.sectionTitle}>{dataLabel[0]}</Text>
           </View>
 
           {/* ==================== DROPDOWN DURATA PONTI ==================== */}
-          <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[1]}</Text>
-          <DropdownComponent 
-            selectedValue={PREFERENCES.bridgeDuration}
-            onChange={async (value) => {
-              PREFERENCES.bridgeDuration = value;
-              await savePreferences();
-            }}
-          />
+
+          <View style={styles.groupContainer}>
+            <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[1]}</Text>
+            <DropdownComponent 
+              selectedValue={parseInt(PREFERENCES.bridgeDuration)}
+              onChange={ async (value) => {
+                PREFERENCES.bridgeDuration = value;
+                savePreferences();
+              }}
+            />
+          </View>                   
+
           {/* ==================== DROPDOWN GIORNO SETTIMANA ==================== */}
-          <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[2]}</Text>
+          {/* <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[2]}</Text>
           <DropdownFDOW 
             selectedValue={PREFERENCES.firstDayOfWeek}
             onChange={async (value) => {
               PREFERENCES.firstDayOfWeek= value;
               await savePreferences();
             }}
-          />
+          /> */}
           {/* ==================== SETTIMANA ==================== */}
 
           <View style={styles.groupContainer}>
             <View style={{width:'100%'}}>
-              <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[3]}</Text>
+              <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[3]}</Text>
             </View>
             <PreferenceSwitch preferenceKey="domenica"  />
             <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
@@ -318,7 +323,7 @@ export default function Preferences() {
 
             <View style={styles.groupContainer}>
               <View style={{width:'100%'}}>
-                <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[4]}</Text>
+                <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[4]}</Text>
               </View>
               <PreferenceSwitch preferenceKey="festivitaNazionali" />
               <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
@@ -331,7 +336,7 @@ export default function Preferences() {
               <View style={styles.editLinkContainer}>
                 <TouchableOpacity onPress={handleEditHolydays} style={styles.editButton}>
                   <IconSymbol size={20} name="pencil" color={colors.text} />
-                  <Text style={styles.editText}>{preferencesLabel[5]}</Text>
+                  <Text style={styles.editText}>{dataLabel[5]}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -341,7 +346,7 @@ export default function Preferences() {
 
             <View style={styles.groupContainer}>
               <View style={{width:'100%'}}>
-                <Text style={[styles.listTitle, {textAlign:'center'}]}>{preferencesLabel[6]}</Text>
+                <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[6]}</Text>
               </View>
               <PreferenceSwitch preferenceKey="pasqua" />
               <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>

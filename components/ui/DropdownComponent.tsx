@@ -1,5 +1,5 @@
 import { Colors } from '@/constants/Colors';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, useColorScheme } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 
@@ -7,15 +7,21 @@ const useThemeColors = () => {
     const colorScheme = useColorScheme();
     return Colors[colorScheme ?? 'light'];
   };
-  
+
+const dataLabel = [
+  '1 giorno',
+  '2 giorni',
+  '3 giorni'
+];
+
 const data = [
-  { label: '1 giorno', value: 1 },
-  { label: '2 giorni', value: 2 },
-  { label: '3 giorni', value: 3 },
+  { label: dataLabel[0], value: 1 },
+  { label: dataLabel[1], value: 2 },
+  { label: dataLabel[2], value: 3 },
 ];
 
 interface DropDownComponentProps{
-  selectedValue: number; // Il valore selezionato arriva come stringa (es. '2')
+  selectedValue: number; // Il valore selezionato arriva come numero
   onChange: (value: number) => void;
 }
 
@@ -30,14 +36,14 @@ const DropdownComponent: React.FC<DropDownComponentProps> = ({selectedValue, onC
       padding: 0,
     },
     dropdown: {
-      height: 64,
+      height: 32,
       // borderColor: colors.disabled,
-      borderWidth: 0,
-      borderRadius: 24,
+      //borderWidth: 1,
+      borderRadius: 16,
       paddingHorizontal: 16,
-      paddingVertical:16,
+      //paddingTop:12,
       color: colors.textRed,
-      backgroundColor: colors.cardBackground,
+      backgroundColor: 'rgba(255,255,255,.25)',
       marginBottom: 24,
       // elevation: 2,
 
@@ -79,9 +85,13 @@ const DropdownComponent: React.FC<DropDownComponentProps> = ({selectedValue, onC
       fontSize: 16,
     },
   });
+  
+  useEffect(() => {
+    setValue(selectedValue);
+  }, [selectedValue]);
+
   return (
-    <View style={styles.container}>
-      {/* {renderLabel()} */}
+    // <View style={styles.container}>
       <Dropdown
         value={value} // VALORE DI DEFAULT
         // mode={'modal'}
@@ -103,11 +113,11 @@ const DropdownComponent: React.FC<DropDownComponentProps> = ({selectedValue, onC
         onChange={item => {
           setValue(item.value);
           setIsFocus(false);
-          console.log('(DropdownComponent) utente sceglie durata:', item.value);
+          //console.log('(DropdownComponent) utente sceglie durata:', item.value);
           onChange( item.value );
         }}
       />
-    </View>
+    // </View>
   );
 };
 

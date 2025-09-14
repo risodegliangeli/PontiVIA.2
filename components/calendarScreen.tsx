@@ -32,6 +32,14 @@ const useThemeColors = () => {
 
 const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
+const dataLabel = [
+  'Ponte!',
+  'PontiVIA! ha trovato questo ponte per te',
+  'ponti trovati!',
+  'ponte trovato!',
+
+];
+
 /* ============================================================================= 
 CALENDARSCREEN - print calendario
 ============================================================================= */
@@ -565,10 +573,10 @@ const CalendarScreen = (PREFERENCES: any) => {
                 onPress={ async () => {
                   try {
                     const eventDetails = {
-                      title: 'Ponte',
+                      title: dataLabel[0],    // Ponte!
                       startDate: bridgeStart,
                       endDate: bridgeEnds,
-                      notes: 'PontiVIA! ha trovato questo ponte per te',
+                      notes: dataLabel[1],    // PontiVIA! ha trovato questo ponte ecc..
                       allDay: false,
                     };
                     await Calendar.createEventInCalendarAsync(eventDetails);
@@ -610,7 +618,7 @@ const CalendarScreen = (PREFERENCES: any) => {
             <View>
               {month.bridges.length > 0 ? 
                 <View style={styles.bridgeYellowLabel}>
-                  <Text style={styles.cardLabelBridgeFound}>{month.bridges.length} {month.bridges.length > 1 ? 'ponti trovati!' : 'ponte trovato!'}</Text>
+                  <Text style={styles.cardLabelBridgeFound}>{month.bridges.length} {month.bridges.length > 1 ? dataLabel[2] : dataLabel[3]}</Text>
                 </View>
                 :
                 null
