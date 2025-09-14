@@ -2,11 +2,18 @@ import { PREFERENCES } from '@/app/(tabs)/preferences';
 import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useMemo, useRef, useCallback } from 'react';
+import { useEffect, useMemo, useRef, useCallback, useState } from 'react';
 import { Animated, Image, ImageBackground, StyleSheet, useColorScheme, useWindowDimensions, View, Text, Pressable } from 'react-native';
 import { MovingHands } from '@/components/ui/MovingHands'; // MIO
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// SPLASHSCREEN
+import * as SplashScreen from 'expo-splash-screen';
+import { useFonts } from 'expo-font';
+
+  // Keep the splash screen visible while we fetch resources
+SplashScreen.preventAutoHideAsync();
+// SPLASHSCREEN
 
 /* ###########################################################################################################
 
@@ -14,6 +21,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
                                       
 ########################################################################################################### */
 export default function HomeScreen() {
+
+  // SPLASHSCREEN
+  const [loaded, error] = useFonts({
+    SpaceMono: require('@/assets/fonts/SpaceMono-Regular.ttf'),
+  });
+
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
+  // SPLASHSCREEN
 
   const dataLabel: any = {
     'it-IT':[
