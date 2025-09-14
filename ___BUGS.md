@@ -2,7 +2,11 @@
 
 
 
-- ### TRADUZIONE
+- ### DARK MODE
+
+---
+
+- ### TRADUZIONI
 
 ---
 
