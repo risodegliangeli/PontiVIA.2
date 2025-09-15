@@ -4,26 +4,21 @@
     "description": "Il calendario smart che trova i ponti fra le festività",
     "slug": "pontivia",
     "owner": "risodegliangeli",
-    "version": "0.0.3",
-    "icon": "./assets/images/pontivia-splashscreen.png",
+    "version": "1.0.0",
+    "icon": "./assets/images/splash-cercaponti-icon1024.png",
     "scheme": "cercaponti",
     "userInterfaceStyle": "automatic",
-    "splash": {
-      "image": "./assets/images/pontivia-splashscreen.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#E35527"
-    },
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "com.angelieassociati.pontivia",
-      "buildNumber": "0.0.3",
+      "buildNumber": "1.0.0",
       "userInterfaceStyle": "automatic",
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/pontivia-splashscreen.png",
-        "backgroundColor": "#E35527"
+        "foregroundImage": "./assets/images/girl-icon-macos-129x129@2x.png",
+        "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
       "package": "com.angelieassociati.pontivia",
@@ -49,10 +44,10 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/pontivia-splashscreen.png",
-          "imageWidth": 204,
+          "image": "./assets/images/girl-icon-macos-129x129@2x.png",
+          "imageWidth": "204",
           "resizeMode": "contain",
-          "backgroundColor": "#E35527"
+          "backgroundColor": "#FFFFC5"
         }
       ]
     ],
