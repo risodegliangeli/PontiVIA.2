@@ -17,16 +17,16 @@ export const Colors = {
     blueBar: '#0088ff',
 
     // BOTTOMBAR
-    tabBarBackgroundIos: 'rgba(240, 240, 240, .45)', // iOS = FONDO SCURO
-    tabBarBackgroundAndroid: 'rgba(240, 240, 240, .9)', // Android = FONDO BIANCO
+    tabBarBackgroundIos: 'rgba(240, 240, 240, .8)', // iOS = FONDO SCURO
+    tabBarBackgroundAndroid: 'rgba(243, 243, 244, 1)', // Android = FONDO BIANCO
 
     tabBarBorderIos: 'rgba(255, 255, 255, .65)',
     tabBarBorderAndroid: 'rgba(255, 255, 255, 0.65)',
 
     tabBarInactiveItem: 'rgba(99, 99, 99, 1)',
 
-    tabBarFocusDotIos: 'rgba(255, 255, 255, 0.55)',
-    tabBarFocusDotAndroid: 'rgba(255, 255, 255, .55)',
+    tabBarFocusDotIos: 'rgba(219, 219, 219, 0.55)',
+    tabBarFocusDotAndroid: 'rgba(217,217,217,1)',
 
     tabBarActiveItem: 'rgba(0, 136, 255, 1)',
 
@@ -68,8 +68,8 @@ export const Colors = {
 
     // BOTTOMBAR
     tabBarBackground: 'rgba(51, 51, 51, .55)',
-    tabBarBackgroundIos: 'rgba(21, 21, 21, 0.35)',
-    tabBarBackgroundAndroid: 'rgba(21, 21, 21, 0.85)',
+    tabBarBackgroundIos: 'rgba(134,103,133,1)',
+    tabBarBackgroundAndroid: 'rgba(134,103,133,1)',
 
 
     // tabBarBorder: 'rgba(170, 170, 170, .55)',
@@ -78,8 +78,8 @@ export const Colors = {
 
     tabBarInactiveItem: 'rgba(255, 255, 255, 1)',
     //tabBarFocusDot: 'rgba(221, 221, 221, 1)',
-    tabBarFocusDotIos: 'rgba(155, 43, 43, 0.9)',
-    tabBarFocusDotAndroid: 'rgba(73, 73, 73, .7)',
+    tabBarFocusDotIos: 'rgba(215,191,214,1)',
+    tabBarFocusDotAndroid: 'rgba(215,191,214,1)',
 
 
     tabBarActiveItem: 'rgba(0, 136, 255, 1)',
@@ -93,7 +93,7 @@ export const Colors = {
     headerText: 'rgba(255, 255, 255, 1)',   // BIANCO
     textRed: '#FF778F',
     background: '#222220',
-    cardBackground: 'rgba(65, 65, 62, 1)', // SCURO 100% PER COPRIRE LO SFONDO
+    cardBackground: 'rgba(71,64,71, 1)', // SCURO 100% PER COPRIRE LO SFONDO
     dropdownBackground: 'rgba(255, 255, 255, 0.08)', // BACKGROUND DELLA DROPDOWN
     bridgeDay: 'rgba(255, 204, 51, 1)',
     bridgeBackground: 'rgba(255, 204, 51, 1)',  // PONTE EVIDENZIATO

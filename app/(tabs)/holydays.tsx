@@ -1125,6 +1125,7 @@ export default function HolydaysScreen({}: any) {
       minHeight:80,
       borderWidth: 2,
       borderColor: '#0088ff',
+      backgroundColor: useColorScheme() === 'dark' ? colors.tabBarFocusDotAndroid : 'transparent',
       borderStyle: 'dotted',
       borderRadius: 24,
       marginBottom:24,
@@ -1249,7 +1250,11 @@ export default function HolydaysScreen({}: any) {
                 style={styles.holidayRow }>
                   <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
                     <Image
-                      source={require('@/assets/images/icon_calendar-off.png')} 
+                      source={ useColorScheme() === 'dark' ?
+                        require('@/assets/images/icon_calendar-off-dark.png')
+                        :
+                        require('@/assets/images/icon_calendar-off.png')
+                      } 
                       style={{width:24, height:24, resizeMode:'contain'}}/>
                     <View style={{flexDirection:'column'}} >
                       <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label} `}</Text>
@@ -1376,7 +1381,7 @@ export default function HolydaysScreen({}: any) {
         </View>
 
         {/* BOTTOM SPACE ############################################################################# */}
-        <View style={{ height: 280 }} ><Text style={{fontSize:11}}>Prebuild 1.0.0@13092025 (c) Angeli & Associati</Text></View>
+        <View style={{ height: 280 }} ><Text style={{fontSize:12, color:colors.text}}>Prebuild 0.0.3@15092025 (c) Angeli & Associati</Text></View>
       </ScrollView>
 
       {/* MODAL GIORNO SINGOLO ############################################################################# */}
