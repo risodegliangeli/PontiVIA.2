@@ -10,10 +10,8 @@ export const Colors = {
   light: {
 
     // NUOVI
-    buttonsText: 'rgba(99, 99, 99, 1)',
-    fabBase: '#f0f0f0ff',
-    // barBase: 'rgba(240, 240, 240, .85)',
-    // mobileDot: 'rgba(224, 225, 226, 1)',
+    //buttonsText: 'rgba(99, 99, 99, 1)',
+    // fabBase: '#f0f0f0ff',
     blueBar: '#0088ff',
 
     // BOTTOMBAR
@@ -38,18 +36,18 @@ export const Colors = {
     textNegative: 'rgba(255, 255, 255, 1)', // BIANCO
     headerText: '#434300',
     textRed: '#FF778F',     // GIORNI ROSSI
-    background: '#FFFFC5',  // APP LIGHT
+    //background: '#FFFFC5',  // APP LIGHT
     cardBackground: 'rgba(252, 252, 249, .8)', // BAINCO 75%
     dropdownBackground: 'rgba(51, 51, 51, 0.06)', // BACKGROUND DELLA DROPDOWN
     bridgeDay: 'rgba(51, 51, 51,1)',
     bridgeBackground: '#FFCC33',  // PONTE EVIDENZIATO
     tint: tintColorLight,
-    logoColour: '',
-    tabIconDefault: 'rgba(165, 83, 0, 1)', // ICONA PICCOLA NON SELEZIONATA MARRONE 50%
-    tabIconSelected: 'rgba(255, 255, 255, 1)', // ICONA PICCOLA SELEZIONATA BIANCO 100%
-    tabCentralIconDefault: 'rgba(165, 83, 0, .3)', // ICONA CENTRALE NON SELEZIONATA
-    tabCentralIconSelected: 'rgba(254, 127, 0, 1)', // ICONA CENTRALE SELEZIONATA
-    confirmButton: tintColorLight,
+    //logoColour: '',
+    // tabIconDefault: 'rgba(165, 83, 0, 1)', // ICONA PICCOLA NON SELEZIONATA MARRONE 50%
+    // tabIconSelected: 'rgba(255, 255, 255, 1)', // ICONA PICCOLA SELEZIONATA BIANCO 100%
+    // tabCentralIconDefault: 'rgba(165, 83, 0, .3)', // ICONA CENTRALE NON SELEZIONATA
+    // tabCentralIconSelected: 'rgba(254, 127, 0, 1)', // ICONA CENTRALE SELEZIONATA
+    //confirmButton: tintColorLight,
     cancelButton: 'rgba(222, 222, 222, 1)',      // #dedede
     white: '#fff',
     black: '#333',
@@ -60,10 +58,8 @@ export const Colors = {
   //        DARK
   //
   // /////////////////////
-    buttonsText: 'rgba(221, 221, 221, 1)', // BOTTONI FAB
-    fabBase: 'rgba(21, 21, 21, 1)',
-    //barBase: '#1f1f1fff',
-    // mobileDot: 'rgba(224, 225, 226, 1)',
+    //buttonsText: 'rgba(221, 221, 221, 1)', // BOTTONI FAB
+    // fabBase: 'rgba(21, 21, 21, 1)',
     blueBar: '#0088ff',
 
     // BOTTOMBAR
@@ -72,12 +68,10 @@ export const Colors = {
     tabBarBackgroundAndroid: 'rgba(134,103,133,1)',
 
 
-    // tabBarBorder: 'rgba(170, 170, 170, .55)',
     tabBarBorderIos: 'rgba(255, 255, 255, .08)',
     tabBarBorderAndroid: 'rgba(255, 255, 255, 0.08)',
 
     tabBarInactiveItem: 'rgba(255, 255, 255, 1)',
-    //tabBarFocusDot: 'rgba(221, 221, 221, 1)',
     tabBarFocusDotIos: 'rgba(215,191,214,1)',
     tabBarFocusDotAndroid: 'rgba(215,191,214,1)',
 
@@ -92,18 +86,18 @@ export const Colors = {
     textNegative: 'rgba(255, 255, 255, 1)', // BIANCO
     headerText: 'rgba(255, 255, 255, 1)',   // BIANCO
     textRed: '#FF778F',
-    background: '#222220',
+    //background: '#222220',
     cardBackground: 'rgba(71,64,71, 1)', // SCURO 100% PER COPRIRE LO SFONDO
     dropdownBackground: 'rgba(255, 255, 255, 0.08)', // BACKGROUND DELLA DROPDOWN
     bridgeDay: 'rgba(255, 204, 51, 1)',
     bridgeBackground: 'rgba(255, 204, 51, 1)',  // PONTE EVIDENZIATO
     tint: tintColorDark,
-    logoColour: '',
-    tabIconDefault: 'rgba(102, 51, 0, 1)', // ICONA PICCOLA NON SELEZIONATA (MARRONE)
-    tabIconSelected: 'rgba(255, 255, 255, 1)',  // ICONA PICCOLA SELEZIONATA (BIANCO)
-    tabCentralIconDefault: 'rgba(102, 51, 0, .5)',  // ICONA CENTRALE NON SELEZIONATA
-    tabCentralIconSelected: 'rgba(185, 93, 0, 1)',  // ICONA CENTRALE SELEZIONATA
-    confirmButton: tintColorDark,
+    //logoColour: '',
+    // tabIconDefault: 'rgba(102, 51, 0, 1)', // ICONA PICCOLA NON SELEZIONATA (MARRONE)
+    // tabIconSelected: 'rgba(255, 255, 255, 1)',  // ICONA PICCOLA SELEZIONATA (BIANCO)
+    // tabCentralIconDefault: 'rgba(102, 51, 0, .5)',  // ICONA CENTRALE NON SELEZIONATA
+    // tabCentralIconSelected: 'rgba(185, 93, 0, 1)',  // ICONA CENTRALE SELEZIONATA
+    //confirmButton: tintColorDark,
     cancelButton: '#999',
     white: '#fff',
     black: '#333',
