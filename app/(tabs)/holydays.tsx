@@ -882,7 +882,7 @@ export default function HolydaysScreen({}: any) {
     },
     // TITOLO CARD
     listTitle: {
-      color: colors.headerText,
+      color: colors.text,
       fontSize: 18,
       fontWeight: '600',
       marginBottom: 10,
@@ -934,7 +934,7 @@ export default function HolydaysScreen({}: any) {
       alignItems: 'center',
     },
     modalContainer: {
-      backgroundColor: 'rgba(255, 255, 255, 1)',
+      backgroundColor: colors.modalBackground,
       width: '95%', // RIENTRATO RISPETTO AI BORDI SCREEN
       maxWidth:500, // CENTRATO SU TABLET
       paddingVertical: 24,
@@ -1125,9 +1125,9 @@ export default function HolydaysScreen({}: any) {
       minHeight:80,
       borderWidth: 2,
       borderColor: '#0088ff',
-      backgroundColor: useColorScheme() === 'dark' ? colors.tabBarFocusDotAndroid : 'transparent',
       borderStyle: 'dotted',
       borderRadius: 24,
+      backgroundColor: useColorScheme() === 'dark' ? colors.tabBarFocusDotAndroid : 'transparent',
       marginBottom:24,
       flexDirection: 'row',
       alignItems: 'center',
@@ -1249,13 +1249,17 @@ export default function HolydaysScreen({}: any) {
                 <View 
                 style={styles.holidayRow }>
                   <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
-                    <Image
-                      source={ useColorScheme() === 'dark' ?
-                        require('@/assets/images/icon_calendar-off-dark.png')
+                    {/* <Image
+                      source={
+                        useColorScheme() === 'dark' ?
+                          require('@/assets/images/icon_calendar-off-dark.png')
                         :
-                        require('@/assets/images/icon_calendar-off.png')
+                          require('@/assets/images/icon_calendar-off.png')
                       } 
-                      style={{width:24, height:24, resizeMode:'contain'}}/>
+                      style={{width:24, height:24, resizeMode:'contain'}}/> */}
+
+                      <View style={{width:32, height:32, borderRadius:24, backgroundColor: colors.dot32}}></View>
+
                     <View style={{flexDirection:'column'}} >
                       <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label} `}</Text>
                       <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
@@ -1320,9 +1324,15 @@ export default function HolydaysScreen({}: any) {
               <React.Fragment key={index}>
                 <View key={index} style={styles.holidayRow}>
                   <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
-                    <Image
-                      source={require('@/assets/images/icon_calendar_bridge-off.png')} 
-                      style={{width:24, height:24, resizeMode:'contain'}}/>
+                    {/* <Image
+                      source={
+                        useColorScheme() === 'dark' ?
+                          require('@/assets/images/icon_calendar_bridge-off-dark.png')
+                        :
+                          require('@/assets/images/icon_calendar_bridge-off.png')
+                      } 
+                      style={{width:24, height:24, resizeMode:'contain'}}/> */}
+                    <View style={{width:32, height:32, borderRadius:24, backgroundColor: colors.dot32}}></View>
                     <View style={{flexDirection:'column'}} >
                       <Text style={styles.itemDate}>
                         {`${period.startDay}.${period.startMonth}.${period.startYear} / ${period.endDay}.${period.endMonth}.${period.endYear}`}
@@ -1368,7 +1378,8 @@ export default function HolydaysScreen({}: any) {
               <View 
                 key={index} 
                 style={[styles.holidayRow, {justifyContent:'flex-start', alignItems:'flex-start'}]}>
-                  <IconSymbol name="calendar.circle" size={28} color={colors.text}  />
+                  {/* <IconSymbol name="calendar.circle" size={28} color={colors.text}  /> */}
+                  <View style={{width:32, height:32, borderRadius:24, backgroundColor: colors.dot32}}></View>
                   <View style={{flexDirection:'column'}}>
                     <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label}`}</Text>
                     <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
@@ -1381,7 +1392,7 @@ export default function HolydaysScreen({}: any) {
         </View>
 
         {/* BOTTOM SPACE ############################################################################# */}
-        <View style={{ height: 280 }} ><Text style={{fontSize:12, color:colors.text}}>Prebuild 0.0.3@15092025 (c) Angeli & Associati</Text></View>
+        <View style={{ height: 280 }} ><Text style={{fontSize:11}}>Prebuild 0.0.6@16092025 (c) Angeli & Associati</Text></View>
       </ScrollView>
 
       {/* MODAL GIORNO SINGOLO ############################################################################# */}
@@ -1403,11 +1414,9 @@ export default function HolydaysScreen({}: any) {
               backgroundColor: 'rgba(0, 0, 0, 0.75)'
             }}>
 
-
               <View style={styles.modalContainer}>
-
                 {/* TITOLO MODAL */}
-                <Text style={[styles.listTitle, { textAlign:'center', marginBottom:24, }]}>{dataLabel[myCountry][4]}</Text>
+                <Text style={[styles.listTitle, { color: colors.black, textAlign:'center', marginBottom:24, }]}>{dataLabel[myCountry][4]}</Text>
                 {singleDateError ? <Text style={styles.errorText}>{singleDateError}</Text> : null}
 
                 {/* RADIOBUTTON */}
@@ -1479,11 +1488,14 @@ export default function HolydaysScreen({}: any) {
                       styles={{
                         ...defaultStyles,
                         today: { borderWidth: 0, backgroundColor:'transparent'}, 
+                        today_label: { color: colors.black},
                         selected: { backgroundColor: colors.textRed, borderRadius:'10%' }, 
                         selected_label: { color: 'white' },
                         year_selector_label: { display:'none'},
                         month_selector_label: {fontSize: 14, fontWeight:600, textTransform:'capitalize'},
-                        day: {fontSize:16}
+                        day_label: {fontSize:16, color: colors.black},
+                        button_next: { backgroundColor: colors.black, borderRadius:'100%', },
+                        button_prev: { backgroundColor: colors.black, borderRadius:'100%', },
                       }}
                     />
                   : 
@@ -1498,7 +1510,6 @@ export default function HolydaysScreen({}: any) {
                         startDate && setPeriodStartDate(startDate);
                         endDate && setPeriodEndDate(endDate);
                       }}
-
                       containerHeight={265}
                       hideWeekdays={false}
                       disableMonthPicker={true}
@@ -1513,15 +1524,19 @@ export default function HolydaysScreen({}: any) {
                       styles={{
                         ...defaultStyles,
                         today: { borderWidth: 0, backgroundColor:'transparent'}, 
+                        today_label: { color: colors.black},
                         selected: { borderColor:colors.textRed, borderWidth:2, borderStyle:'dotted', borderRadius:'10%' },
                         selected_label: { color:colors.textRed},
                         range_start: { borderWidth:0, backgroundColor: colors.textRed, borderRadius:'10%' }, 
                         range_start_label: { color: 'white' },
                         range_end: { borderWidth:0, backgroundColor: colors.textRed, borderRadius:'10%' }, 
                         range_end_label: { color: 'white' },
-                        //year_selector_label: { display:'none'},
+                        range_fill: { backgroundColor: 'rgba(255,0,0,.25)',  },
+                        year_selector_label: { color: colors.black },
                         month_selector_label: {fontSize: 14, fontWeight:600, textTransform:'capitalize'},
-                        day: {fontSize:16}
+                        day_label: {fontSize:16, color: colors.black},
+                        button_next: { backgroundColor: colors.black, borderRadius:'100%', },
+                        button_prev: { backgroundColor: colors.black, borderRadius:'100%', },
                       }}
                     />
                 }
