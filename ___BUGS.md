@@ -3,6 +3,7 @@
 
 
 - ### TRADUZIONI
+  -- DrpDown Lingue: pulsante back - attualmente torna sempre a 'it-IT' 
 
 ---
 

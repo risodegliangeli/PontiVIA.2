@@ -33,13 +33,65 @@ const useThemeColors = () => {
 
 const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
-const dataLabel = [
-  'Ponte!',
-  'PontiVIA! ha trovato questo ponte per te',
-  'ponti trovati!',
-  'ponte trovato!',
-
-];
+const dataLabel: any = {
+  'it-IT': [
+    'Ponte!',                                   // 0
+    'PontiVIA! ha trovato questo ponte per te', // 1
+    'ponti trovati!',                           // 2
+    'ponte trovato!',                           // 3
+    'Dal ',                                     // 4
+    ' fino al ',                                // 5
+    ' giorni)',                                 // 6
+    'Il ',                                      // 7
+    ' (1 giorno)',                              // 8
+    ],
+  'en-IT':[
+    'Ponte!',                                   // 0
+    'PontiVIA! ha trovato questo ponte per te', // 1
+    'ponti trovati!',                           // 2
+    'ponte trovato!',                           // 3
+    'Dal ',                                     // 4
+    ' fino al ',                                // 5
+    ' giorni)',                                 // 6
+    'Il ',                                      // 7
+    ' (1 giorno)',                              // 8
+    'Possibile ponte!',                         // 9
+    ],
+  "de-AT":[
+    ],
+  "ch-CH":[
+    ],
+  "it-CH":[
+    ],
+  "fr-CH":[
+    ],
+  "de-CH":[
+    ],
+  "rm-CH":[
+    ],
+  "be-BE":[
+    ],
+  "fr-BE":[
+    ],
+  "nl-BE":[
+    ],
+  "en-GB":[
+    ],
+  "en-IE":[
+    ],
+  'fr-FR': [
+    ],
+  "de-DE":[
+    ],
+  'es-ES':[
+    ],
+  'ca-ES':[
+    ],
+  'nl-NL':[
+    ],
+  'pt-PT':[
+    ]
+};
 
 /* ============================================================================= 
 CALENDARSCREEN - print calendario
@@ -47,7 +99,7 @@ CALENDARSCREEN - print calendario
 const CalendarScreen = (PREFERENCES: any) => {
   const colors = useThemeColors();
 
-  const isAdvertising: boolean = false; // SE ATTIVA CAMPAGNA AdMob
+  const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
   const monthsToLoad = 3; // ADV OGNI x CARDS
 
   const { 
@@ -208,7 +260,7 @@ const CalendarScreen = (PREFERENCES: any) => {
     },
     adBanner: {
       width: '100%',
-      minHeight: 300,
+      minHeight: 1,
       alignItems: 'center',
       justifyContent: 'center',
       marginTop: 48, marginBottom:36,
@@ -577,10 +629,10 @@ const CalendarScreen = (PREFERENCES: any) => {
                 onPress={ async () => {
                   try {
                     const eventDetails = {
-                      title: dataLabel[0],    // Ponte!
+                      title: dataLabel[myCountry][0],    // Ponte!
                       startDate: bridgeStart,
                       endDate: bridgeEnds,
-                      notes: dataLabel[1],    // PontiVIA! ha trovato questo ponte ecc..
+                      notes: dataLabel[myCountry][1],    // PontiVIA! ha trovato questo ponte ecc..
                       allDay: false,
                     };
                     await Calendar.createEventInCalendarAsync(eventDetails);
@@ -622,7 +674,7 @@ const CalendarScreen = (PREFERENCES: any) => {
             <View>
               {month.bridges.length > 0 ? 
                 <View style={styles.bridgeYellowLabel}>
-                  <Text style={styles.cardLabelBridgeFound}>{month.bridges.length} {month.bridges.length > 1 ? dataLabel[2] : dataLabel[3]}</Text>
+                  <Text style={styles.cardLabelBridgeFound}>{month.bridges.length} {month.bridges.length > 1 ? dataLabel[myCountry][2] : dataLabel[3]}</Text>
                 </View>
                 :
                 null
@@ -756,18 +808,18 @@ const CalendarScreen = (PREFERENCES: any) => {
                             month.bridges.map( (interval: any, index: number) => {
                               if (isWithinInterval(day[0], { start: interval.da, end: interval.a })) {
                                 if (interval.length > 1) {
-                                  bridgeDescription += 'Dal '
-                                  bridgeDescription += interval.da.toLocaleDateString('it-IT', {day: "numeric", month: 'long', year: "numeric"})
-                                  bridgeDescription += ' fino al '
-                                  bridgeDescription += interval.a.toLocaleDateString('it-IT', {day: "numeric", month: 'long', year: "numeric"})
-                                  bridgeDescription += ' (' + interval.length + ' giorni)';
+                                  bridgeDescription += dataLabel[myCountry][4]; // Dal
+                                  bridgeDescription += interval.da.toLocaleDateString(myCountry, {day: "numeric", month: 'long', year: "numeric"})
+                                  bridgeDescription += dataLabel[myCountry][5]; // fino al
+                                  bridgeDescription += interval.a.toLocaleDateString(myCountry, {day: "numeric", month: 'long', year: "numeric"})
+                                  bridgeDescription += ' (' + interval.length + dataLabel[myCountry][6]; // giorni
                                   // PRIMO E ULTIMO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
                                   bridgeStartAt = month.bridges[index].da;
                                   bridgeEndsAt = month.bridges[index].a;
                                 } else {
-                                  bridgeDescription += 'Il '
+                                  bridgeDescription += dataLabel[myCountry][7]; // Il
                                   bridgeDescription += interval.da.toLocaleDateString('it-IT', {day: "numeric", month: 'long', year: "numeric"})
-                                  bridgeDescription += ' (1 giorno)';
+                                  bridgeDescription += dataLabel[myCountry][8]; // (1 giorno)
                                   // UNICO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
                                   bridgeStartAt = bridgeEndsAt = interval.da;
                                 }
@@ -826,8 +878,8 @@ const CalendarScreen = (PREFERENCES: any) => {
 
         {isAdvertising && 
           ((index +1)  % monthsToLoad === 0) && (
-            <View style={[styles.adBanner, {borderWidth:.5}]}>
-                <Text style={{color: colors.text}}>ADV</Text>
+            <View style={[styles.adBanner, {borderWidth:0}]}>
+                <Text style={{color: colors.text}}> </Text>
             </View>
           )
         }
