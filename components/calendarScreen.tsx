@@ -25,6 +25,7 @@ import * as Calendar from 'expo-calendar';
 const { localizedDays } = useLocalizationData();
 const { months: localizedMonths} = useLocalizationData();
 
+
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
   return Colors[colorScheme ?? 'light'];
@@ -45,7 +46,10 @@ CALENDARSCREEN - print calendario
 ============================================================================= */
 const CalendarScreen = (PREFERENCES: any) => {
   const colors = useThemeColors();
-  const monthsToLoad = 4; 
+
+  const isAdvertising: boolean = false; // SE ATTIVA CAMPAGNA AdMob
+  const monthsToLoad = 3; // ADV OGNI x CARDS
+
   const { 
     personalHolydays, 
     regionalHolydays, 
@@ -818,12 +822,16 @@ const CalendarScreen = (PREFERENCES: any) => {
           </View>
         </View>
       
-        {/* ADV */}
-        {((index +1)  % monthsToLoad === 0) && (
-          <View style={[styles.adBanner, {borderWidth:.5}]}>
-              <Text style={{color: colors.text}}>ADV</Text>
-          </View>
-        )}
+        {/* ADV SOLO SE isAdvertising = true*/}
+
+        {isAdvertising && 
+          ((index +1)  % monthsToLoad === 0) && (
+            <View style={[styles.adBanner, {borderWidth:.5}]}>
+                <Text style={{color: colors.text}}>ADV</Text>
+            </View>
+          )
+        }
+
 
       </React.Fragment>
     );

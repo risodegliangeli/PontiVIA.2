@@ -3,8 +3,8 @@ import DropdownCountry from '@/components/ui/DropdownCountry'; // COUNTRY PICKER
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
-import React, { useEffect, useState, Suspense, ReactNode } from 'react';
-import DateTimePicker, { DateType, useDefaultStyles, } from 'react-native-ui-datepicker';
+import React, { useEffect, useState, Suspense,  } from 'react';
+import DateTimePicker, { useDefaultStyles, } from 'react-native-ui-datepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   Alert,
@@ -17,7 +17,6 @@ import {
   TouchableOpacity,
   View,
   useColorScheme,
-  Image,
   Platform
 } from 'react-native';
 
@@ -482,7 +481,7 @@ export default function HolydaysScreen({}: any) {
   const [singleDateDay, setSingleDateDay] = useState<string | null>(null); // SERVE PER handleAddSingleDate
   const [singleDateMonth, setSingleDateMonth] = useState<string | null>(null); // idem
   const [singleDateDescription, setSingleDateDescription] = useState<string | undefined>(undefined);
-  const [singleDateType, setSingleDateType] = useState<HolidayType>('personal');
+  // const [singleDateType, setSingleDateType] = useState<HolidayType>('personal');
   const [singleDateError, setSingleDateError] = useState<string | null>(null);
 
   // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD FESTIVITA' SINGOLA
@@ -1324,14 +1323,6 @@ export default function HolydaysScreen({}: any) {
               <React.Fragment key={index}>
                 <View key={index} style={styles.holidayRow}>
                   <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
-                    {/* <Image
-                      source={
-                        useColorScheme() === 'dark' ?
-                          require('@/assets/images/icon_calendar_bridge-off-dark.png')
-                        :
-                          require('@/assets/images/icon_calendar_bridge-off.png')
-                      } 
-                      style={{width:24, height:24, resizeMode:'contain'}}/> */}
                     <View style={{width:32, height:32, borderRadius:24, backgroundColor: colors.dot32}}></View>
                     <View style={{flexDirection:'column'}} >
                       <Text style={styles.itemDate}>
@@ -1378,7 +1369,6 @@ export default function HolydaysScreen({}: any) {
               <View 
                 key={index} 
                 style={[styles.holidayRow, {justifyContent:'flex-start', alignItems:'flex-start'}]}>
-                  {/* <IconSymbol name="calendar.circle" size={28} color={colors.text}  /> */}
                   <View style={{width:32, height:32, borderRadius:24, backgroundColor: colors.dot32}}></View>
                   <View style={{flexDirection:'column'}}>
                     <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label}`}</Text>
@@ -1494,8 +1484,8 @@ export default function HolydaysScreen({}: any) {
                         year_selector_label: { display:'none'},
                         month_selector_label: {fontSize: 14, fontWeight:600, textTransform:'capitalize'},
                         day_label: {fontSize:16, color: colors.black},
-                        button_next: { backgroundColor: colors.black, borderRadius:'100%', },
-                        button_prev: { backgroundColor: colors.black, borderRadius:'100%', },
+                        button_next: { backgroundColor: colors.textNegative, borderRadius:'100%', },
+                        button_prev: { backgroundColor: colors.textNegative, borderRadius:'100%', },
                       }}
                     />
                   : 
@@ -1535,8 +1525,8 @@ export default function HolydaysScreen({}: any) {
                         year_selector_label: { color: colors.black },
                         month_selector_label: {fontSize: 14, fontWeight:600, textTransform:'capitalize'},
                         day_label: {fontSize:16, color: colors.black},
-                        button_next: { backgroundColor: colors.black, borderRadius:'100%', },
-                        button_prev: { backgroundColor: colors.black, borderRadius:'100%', },
+                        button_next: { backgroundColor: colors.textNegative, borderRadius:'100%', },
+                        button_prev: { backgroundColor: colors.textNegative, borderRadius:'100%', },
                       }}
                     />
                 }

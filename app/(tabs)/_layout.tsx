@@ -1,5 +1,4 @@
-// MY CUSTOM BAR
-// import CustomTabBar from '@/components/ui/CustomTabBar';
+// MY CUSTOM SPLITTED BAR
 import SplittedBar from '@/components/ui/SplittedBar';
 
 // CONTEXT
@@ -15,11 +14,6 @@ import MaskedView from "@react-native-masked-view/masked-view";
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from "expo-linear-gradient";
 import { easeGradient } from "react-native-easing-gradient";
-
-// const useThemeColors = () => {
-//   const colorScheme = useColorScheme();
-//   return Colors[colorScheme ?? 'light'];
-// };
 
 /* ###########################################################################################################
 
@@ -64,26 +58,6 @@ export default function TabLayout() {
     )
   };
 
-
-
-
-    //   <BlurView
-        // style={{ 
-        //   position: 'absolute',
-        //   left: 0, 
-        //   top: 0, 
-        //   width:'100%',
-        //   height:56,
-        //   }}
-    //     experimentalBlurMethod="dimezisBlurView"
-    //     intensity={8}
-    //     tint="default"
-    //     // blurType="none"
-    //     // borderRadius={10}
-    //   /> 
-    // );
-    //};
-
   return (
     <HolydaysProvider>
       <MenuProvider>
@@ -107,29 +81,6 @@ export default function TabLayout() {
                 headerBackground: () => (
                   <BlurPad/>
                 ),
-                // headerTitle: logo,
-                // headerStyle: {
-                //   height: 64,
-                //   //backgroundColor: 'transparent',
-                //   // elevation: 12, // Android shadow
-                //   // shadowColor: colors.black, // iOS shadow
-                //   // shadowOffset: {
-                //   //   width: 0,
-                //   //   height: 4, // Match elevation for iOS
-                //   // },
-                //   // shadowOpacity: 0.25,
-                //   // shadowRadius: 4// Match elevation for iOS
-                // },
-                // paddingTop: 69,
-                // tabBarIcon: ({ color }) => {
-                //   return < size={28} name="calendar" color={color} />;
-                // },
-                // tabBarActiveTintColor: '#FFF',
-                // tabBarInactiveTintColor: 'rgba(45, 115, 114, 1)',
-                // tabBarLabelStyle: {
-                //   fontSize: 12,
-                //   fontWeight: 'bold',
-                //   }
               }} />
             
             {/* ================================== INDEX ================================== */}
@@ -143,29 +94,6 @@ export default function TabLayout() {
                 headerBackground: () => (
                   <BlurPad/>
                 ),
-                // headerTitle: logo,
-                // headerStyle: {
-                //   height: 64,
-                //   //backgroundColor: 'transparent',
-                //   // elevation: 12, // Android shadow
-                //   // shadowColor: colors.black, // iOS shadow
-                //   // shadowOffset: {
-                //   //   width: 0,
-                //   //   height: 4, // Match elevation for iOS
-                //   // },
-                //   // shadowOpacity: 0.25,
-                //   // shadowRadius: 4// Match elevation for iOS
-                // },
-                // paddingTop: 69,
-                // tabBarIcon: ({ color }) => {
-                //   return <IconSymbol size={28} name="calendar" color={color} />;
-                // },
-                // tabBarActiveTintColor: '#FFF',
-                // tabBarInactiveTintColor: 'rgba(45, 115, 114, 1)',
-                // tabBarLabelStyle: {
-                //   fontSize: 12,
-                //   fontWeight: 'bold',
-                //   }
               }} />
 
             {/* ================================== PREFERENCES  ================================== */}
@@ -179,29 +107,6 @@ export default function TabLayout() {
                 headerBackground: () => (
                   <BlurPad/>
                 ),
-                // headerTitle: logo,
-                // headerStyle: {
-                //   height: 64,
-                //   //backgroundColor: 'transparent',
-                //   // elevation: 12, // Android shadow
-                //   // shadowColor: colors.black, // iOS shadow
-                //   // shadowOffset: {
-                //   //   width: 0,
-                //   //   height: 4, // Match elevation for iOS
-                //   // },
-                //   // shadowOpacity: 0.25,
-                //   // shadowRadius: 4// Match elevation for iOS
-                // },
-                // paddingTop: 69,
-                // tabBarIcon: ({ color }) => {
-                //   return <IconSymbol size={28} name="calendar" color={color} />;
-                // },
-                // tabBarActiveTintColor: '#FFF',
-                // tabBarInactiveTintColor: 'rgba(45, 115, 114, 1)',
-                // tabBarLabelStyle: {
-                //   fontSize: 12,
-                //   fontWeight: 'bold',
-                //   }
               }}
             />
           </Tabs>
@@ -211,28 +116,4 @@ export default function TabLayout() {
   );
 }
 
-// const styles = StyleSheet.create({
-//     container: {
-//         flex: 1
-//     },
-//     blurContainer: {
-//         position: 'absolute',
-//         bottom: 0,
-//         zIndex: 2,
-//     },
-//     linearGradient: {
-//         bottom: 0,
-//         position: 'absolute',
-//     },
-//     textContainer: {
-//         alignItems: 'center',
-//         justifyContent: 'center',
-//         flex: 1
-//     },
-//     text: {
-//         color: 'white',
-//         fontSize: 40,
-//         fontWeight: 'bold'
-//     }
-// })
 

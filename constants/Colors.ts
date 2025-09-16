@@ -55,7 +55,7 @@ export const Colors = {
     disabled: 'rgba(255, 255, 255, .6)',    // BIANCO 50%
     border: 'rgba(255, 255, 255, .08)',        // NERO 8%,  
     outsideMonth: 'rgba(255, 255, 255, .12)',  // NERO 12%,
-    textNegative: 'rgba(255, 255, 255, 1)', // BIANCO
+    textNegative: 'rgba(0,0,0, 1)', // BIANCO
     headerText: 'rgba(255, 255, 255, 1)',   // BIANCO
     textRed: '#FF778F',
     cardBackground: 'rgba(71,64,71, 1)', // SCURO 100% PER COPRIRE LO SFONDO

@@ -2,10 +2,6 @@
 
 
 
-- ### DARK MODE
-
----
-
 - ### TRADUZIONI
 
 ---
@@ -69,6 +65,18 @@
 
 
 # TICKET RISOLTI:
+
+
+
+
+
+
+
+
+- ### DARK MODE
+
+---
+
 
 
 

@@ -3,10 +3,15 @@ import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo, useRef, useCallback } from 'react';
-import { Animated, Image, ImageBackground, StyleSheet, useColorScheme, useWindowDimensions, View, Text, Pressable } from 'react-native';
+import { Animated, ImageBackground, StyleSheet, useColorScheme, Text, Pressable } from 'react-native';
+import { Colors } from '@/constants/Colors';
 import { MovingHands } from '@/components/ui/MovingHands'; // MIO
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const useThemeColors = () => {
+  const colorScheme = useColorScheme();
+  return Colors[colorScheme ?? 'light'];
+};
 
 /* ###########################################################################################################
 
@@ -14,6 +19,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
                                       
 ########################################################################################################### */
 export default function HomeScreen() {
+
+  const colors = useThemeColors();
 
   const dataLabel: any = {
     'it-IT':[
@@ -127,11 +134,10 @@ export default function HomeScreen() {
   const logoMarginTop = useRef(new Animated.Value(0)).current; // logo starts at marginTop 92
   const cardMarginTop = useRef(new Animated.Value(180)).current; // card starts at marginTop 300
   const logoOpacity = useRef(new Animated.Value(1)).current; // logo visible
-
   const animationStarted = useRef(false);
   const animationTimeout = useRef<NodeJS.Timeout | null>(null);
 
-  // Animation function
+  // ANIMAZIONE PARALLELA: DITO CHE SCOMPARE E CARDS CHE SI ALZANO
   const startAnimation = useCallback(() => {
     if (animationStarted.current) return;
     animationStarted.current = true;
@@ -155,7 +161,7 @@ export default function HomeScreen() {
     ]).start();
   }, [logoMarginTop, cardMarginTop, logoOpacity]);
 
-  // Start animation after 3500ms
+  // ANIMAZIONE DITO AL BOOT, SPARISCE DOPO 8 SEC.
   useEffect(() => {
     animationTimeout.current = setTimeout(() => {
       startAnimation();
@@ -171,33 +177,20 @@ export default function HomeScreen() {
     startAnimation();
   };
 
-  // console.log('personalHolydays: ', JSON.stringify(personalHolydays));
-  // console.log('vacationPeriods:', JSON.stringify(vacationPeriods));
-  // console.log('myCountry:', myCountry);
-
   return (  
       <ImageBackground 
-        source= {useColorScheme() === 'light' && 
-          require('@/assets/images/background-image_minified.jpg') 
-
-          }
+        source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg') }
         resizeMode="cover" 
-        style={styles.image}>
-          
+        style={styles.image} >
           <Animated.View 
             key='card'
-            style={[
-              styles.container,
-              { top:0,
-                marginTop: cardMarginTop }
-            ]}
+            style={[ styles.container, { top:0, marginTop: cardMarginTop } ]}
           >
             <CalendarScreen 
               key={calendarKey} 
               PREFERENCES={PREFERENCES}
             /> 
           </Animated.View>
-
           <Animated.View 
             key='logo'
             style={{
@@ -212,7 +205,7 @@ export default function HomeScreen() {
             <Pressable 
               onPress={handleLogoPress} 
               style={{width: '100%', alignItems: 'center'}}>
-              <Text style={{fontSize:18, fontWeight:600, color: '#0088FF', textAlign:'center'}}>{dataLabel[myCountry][0]}</Text>
+              <Text style={{fontSize:18, fontWeight:600, color: colors.blueBar, textAlign:'center'}}>{dataLabel[myCountry][0]}</Text>
               <MovingHands />
             </Pressable>
           </Animated.View>
