@@ -6,7 +6,7 @@
     "owner": "risodegliangeli",
     "version": "0.0.5",
     "icon": "./assets/images/pontivia-splashpage.png",
-        "scheme": "cercaponti",
+    "scheme": "cercaponti",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/pontivia-splashpage.png",
@@ -39,22 +39,21 @@
     },
     "plugins": [
       "expo-router",
-      [
-        "expo-calendar",
+      ["expo-calendar",
         {
           "calendarPermission": "L'app ha bisogno di poter accedere al calendario per gestire gli eventi",
           "remindersPermission": "L'app ha bisogno di poter accedere ai promemoria per gestire gli eventi"
         }
       ],
-      [
-        "expo-splash-screen",
+      ["expo-splash-screen",
         {
           "image": "./assets/images/pontivia-splashpage.png",
           "imageWidth": "204",
           "resizeMode": "contain",
           "backgroundColor": "#E35527"
         }
-      ]
+      ],
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true

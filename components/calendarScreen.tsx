@@ -22,9 +22,8 @@ import { addMonths, isWithinInterval } from "date-fns";
 import * as Calendar from 'expo-calendar';
 // -------------------
 
-const { localizedDays } = useLocalizationData();
-const { months: localizedMonths} = useLocalizationData();
-
+const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
+const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();

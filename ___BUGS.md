@@ -2,8 +2,56 @@
 
 
 
+
+- ### PONTI FUORI DAL MESE
+  -- eliminare segnalazione ponti che sono prima o dopo il mese corrente
+
+---
+
 - ### TRADUZIONI
   -- DrpDown Lingue: pulsante back - attualmente torna sempre a 'it-IT' 
+
+  -- traduzioni disponibili:
+
+  // 'it-IT' ITALIANO
+  // 'en-IT'
+  // "it-CH"  
+  // "ch-CH"   
+
+  // "de-AT" TEDESCO
+  // "de-CH"  
+  // "de-DE" 
+
+  // "fr-CH" FRANCESE
+  // "fr-BE"
+  // 'fr-FR'  
+  // "be-BE"  
+
+  // "en-GB" INGLESE
+  // "en-US"
+  // "en-IE"
+
+  // "nl-BE" OLANDESE
+  // 'nl-NL'  
+  
+  // 'es-ES' SPAGNOLO
+
+  // 'ca-ES' CATALANO
+
+  // 'pt-PT' PORTOGHESE
+
+  // "rm-CH" ROMANCIO
+
+
+
+
+
+
+
+
+
+
+
 
 ---
 
@@ -69,16 +117,9 @@
 
 
 
-
-
-
-
-
 - ### DARK MODE
 
 ---
-
-
 
 
 - ### DROPDOWN LUNGHEZZA PONTE
@@ -106,7 +147,6 @@
   -- impostare il radiobutton dell'altra catgoria com inactive
 
   ---
-
 
 - #### EDIT PERIODO
   -- idem questione index: verificare
@@ -163,17 +203,11 @@
 --- PENTECOSTE, ASCENSIONE idem-
 
 
-
 19)
 - cambiare evidenzazione PONTE
 
 20)
 -- cambiare evidenza FESTIVITA PERSONALI-
-
-
-
-
-
 
 
 

@@ -33,7 +33,7 @@ export const Colors = {
     white: '#fff',
     black: '#333',
     modalBackground: 'rgba(255,255,255,1)',
-    dot32: 'rgba(214,175,201,1)',
+    dot32: '#f79b84',
   },
   dark: {
   // /////////////////////
