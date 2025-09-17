@@ -1,56 +1,81 @@
 # TICKET APERTI:
 
 
+- ### FESTIVITA NAZIONALI EDITABILI
+  -- o perlomeno ogni data checkabile (on/off)
+  -- con pulsante di rollback per il ripristino
+
+
+---
+
+
+- ### TRADUZIONI
+  ##### impostare due variabili, una per le traduzioni (myLanguage) e una per la dropdown (myCountry)
+        -- myLanguage viene letto dal sistema 
+           ∟ NON cambia
+           ∟ agisce sulla lingua di tutte le schede
+           ∟ imposta la dropdown festività al boot
+
+        -- myCountry deriva da myLanguage e successivamente viene cambiato dall'utente
+           ∟ agisce sul calcolo delle festività
+           ∟ NON agisce sul linguaggio delle schede
+
+        -- raccogliere TUTTE le traduzioni nel Context!
+
+
+        -- holydays.tsx BOTTONE RESET DROPDOWN COUNTRY: RIPORTA LA SELEZIONE A ~~'ITALIA'~~
+
+
+
+        Tabella linguaggi e festivita:
+        const languageData = [
+          // Italiano
+          { label: 'Italiano (Italia)', value: 'it-IT', flag: '🇮🇹' },
+          { label: 'English (Italia)', value: 'en-IT', flag: '🇮🇹' },
+          { label: 'Italiano (Svizzera)', value: 'it-CH', flag: '🇨🇭' },
+          
+          { label: 'Romancio (Svizzera)', value: 'rm-CH', flag: '🇨🇭' },
+          
+          // Tedesco
+          { label: 'Deutsch (Deutschland)', value: 'de-DE', flag: '🇩🇪' },
+          { label: 'Deutsch (Schweiz)', value: 'de-CH', flag: '🇨🇭' },
+          { label: 'Deutsch (Österreich)', value: 'de-AT', flag: '🇦🇹' },
+          
+          // Francese
+          { label: 'Français (France)', value: 'fr-FR', flag: '🇫🇷' },
+          { label: 'Français (Belgique)', value: 'fr-BE', flag: '🇧🇪' },
+          { label: 'Français (Suisse)', value: 'fr-CH', flag: '🇨🇭' },
+          { label: 'Nederlands (België)', value: 'be-BE', flag: '🇧🇪' },
+          
+          // Inglese
+          { label: 'English (UK)', value: 'en-GB', flag: '🇬🇧' },
+          { label: 'English (US)', value: 'en-US', flag: '🇺🇸' }, // Aggiunta bandiera USA
+          { label: 'English (Ireland)', value: 'en-IE', flag: '🇮🇪' },
+          
+          // Olandese
+          { label: 'Nederlands (Nederland)', value: 'nl-NL', flag: '🇳🇱' },
+          { label: 'Nederlands (België)', value: 'nl-BE', flag: '🇧🇪' },
+          
+          // Spagnolo
+          { label: 'Español (España)', value: 'es-ES', flag: '🇪🇸' },
+          
+          // Catalano
+          { label: 'Català (España)', value: 'ca-ES', flag: '🇪🇸' },
+          
+          // Portoghese
+          { label: 'Português (Portugal)', value: 'pt-PT', flag: '🇵🇹' },
+
+          { label: 'Ελληνικά (Ελλάδα)', value: 'el-GR', flag: '🇬🇷' },  // Greco
+
+          { label: 'Hrvatski (Hrvatska)', value: 'hr-HR', flag: '🇭🇷' }, // Croato
+        ];
+
+
+---
 
 
 - ### PONTI FUORI DAL MESE
   -- eliminare segnalazione ponti che sono prima o dopo il mese corrente
-
----
-
-- ### TRADUZIONI
-  -- DrpDown Lingue: pulsante back - attualmente torna sempre a 'it-IT' 
-
-  -- traduzioni disponibili:
-
-  // 'it-IT' ITALIANO
-  // 'en-IT'
-  // "it-CH"  
-  // "ch-CH"   
-
-  // "de-AT" TEDESCO
-  // "de-CH"  
-  // "de-DE" 
-
-  // "fr-CH" FRANCESE
-  // "fr-BE"
-  // 'fr-FR'  
-  // "be-BE"  
-
-  // "en-GB" INGLESE
-  // "en-US"
-  // "en-IE"
-
-  // "nl-BE" OLANDESE
-  // 'nl-NL'  
-  
-  // 'es-ES' SPAGNOLO
-
-  // 'ca-ES' CATALANO
-
-  // 'pt-PT' PORTOGHESE
-
-  // "rm-CH" ROMANCIO
-
-
-
-
-
-
-
-
-
-
 
 
 ---

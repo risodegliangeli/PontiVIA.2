@@ -1,10 +1,7 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-
 import useLocalizationData from '@/app/data/data';
-// import { Locale } from 'date-fns';
-const { localHolydas } = useLocalizationData();
 
-// const [myCountry, setMyCountry] = useState ('');
+const { localHolydas } = useLocalizationData();
 
 // INTERFACCIA DI Holiday
 interface Holiday {

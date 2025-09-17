@@ -1,7 +1,7 @@
 import { Colors } from '@/constants/Colors';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, useColorScheme } from 'react-native';
+import { StyleSheet, View, useColorScheme, Text } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 
 // GESTIONE COLORI
@@ -12,18 +12,42 @@ const useThemeColors = () => {
   
 // VALORI DROPDOWN DURATA PONTE
 const countryNames = [
-  { label: 'Italia', value: 'it-IT' },
-  { label: 'Svizzera', value: 'ch-CH' },
-  { label: 'Austria', value: 'de-AT' },
-  { label: 'Francia', value: 'fr-FR' },
-  { label: 'Spagna', value: 'es-ES' },
-  { label: 'Portogallo', value: 'pt-PT' },
-  { label: 'Germania', value: 'de-DE' },
-  { label: 'Regno Unito', value: 'en-GB' },
-  { label: 'Irlanda', value: 'en-IE' },
-  { label: 'Belgio', value: 'be-BE' },
-  { label: 'Olanda', value: 'nl-NL' },
+  { label: 'Italia', value: 'it-IT', flag: '🇮🇹' },
+  { label: 'Switzerland', value: 'ch-CH', flag: '🇨🇭'},
+  { label: 'Österreich', value: 'de-AT', flag: '🇦🇹' },
+  { label: 'France', value: 'fr-FR', flag: '🇫🇷' },
+  { label: 'España', value: 'es-ES', flag: '🇪🇸'},
+  { label: 'Portugal', value: 'pt-PT', flag: '🇵🇹' },
+  { label: 'Deutschland', value: 'de-DE', flag: '🇩🇪' },
+  { label: 'UK', value: 'en-GB', flag: '🇬🇧' },
+  { label: 'Éire', value: 'en-IE', flag: '🇮🇪' },
+  { label: 'Belgium', value: 'be-BE', flag: '🇧🇪' },
+  { label: 'Nederland', value: 'nl-NL', flag: '🇳🇱' },
+  { label: 'Hrvatska', value: 'hr-HR', flag: '🇵🇹', disable: true },
+  { label: 'Ελλάδα', value: 'gr-GR', flag: '🇬🇷', disable: true },
 ];
+
+const countriesData = [
+  { label: 'Italia', value: 'it-IT', flag: '🇮🇹' 
+ },
+  { 
+    label: 'Germania', 
+    value: 'de-DE', 
+    flag: '🇩🇪' 
+  },
+  { 
+    label: 'Francia', 
+    value: 'fr-FR', 
+    flag: '🇫🇷',
+    disable: true // Esempio di voce disabilitata
+  },
+  { 
+    label: 'Spagna', 
+    value: 'es-ES', 
+    flag: '🇪🇸' 
+  },
+];
+
 
 interface DropdownCountryProps {
   selectedValue: string; // Il valore selezionato arriva come stringa (es. 'it-IT')
@@ -32,6 +56,28 @@ interface DropdownCountryProps {
 
 /* ================================================================ */
 const DropdownCountry: React.FC<DropdownCountryProps> = ({selectedValue, onChange}) => {
+
+
+
+
+  const renderItem = (item) => {
+    return (
+      <View style={[
+        styles.item, 
+        item.disable && styles.disabledItem
+      ]}>
+        <Text style={styles.flag}>{item.flag}</Text>
+        <Text style={[
+          styles.countryName, 
+          item.disable && styles.disabledText
+        ]}>
+          {item.label}
+        </Text>
+      </View>
+    );
+  };
+
+
 
   const { 
         myCountry, 
@@ -95,6 +141,29 @@ const DropdownCountry: React.FC<DropdownCountryProps> = ({selectedValue, onChang
       height: 40,
       fontSize: 16,
     },
+
+      item: {
+    paddingHorizontal: 17,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  flag: {
+    fontSize: 20,
+    marginRight: 12,
+  },
+  countryName: {
+    flex: 1,
+    fontSize: 16,
+    color: '#000',
+  },
+  disabledItem: {
+    opacity: 0.5,
+    backgroundColor: '#f8f8f8',
+  },
+  disabledText: {
+    color: '#999',
+  },
   });
 
   useEffect ( () => {
@@ -115,10 +184,11 @@ const DropdownCountry: React.FC<DropdownCountryProps> = ({selectedValue, onChang
         selectedTextStyle={styles.selectedTextStyle}
         // inputSearchStyle={styles.inputSearchStyle}
         iconStyle={styles.iconStyle}
-        data={countryNames}
+        data={countryNames}  //{countryNames}
         maxHeight={300}
         labelField="label"
         valueField="value"
+        renderItem={renderItem}
         placeholder={!isFocus ? 'Seleziona' : '...'}
         // searchPlaceholder="Search..."
         onFocus={() => setIsFocus(true)}

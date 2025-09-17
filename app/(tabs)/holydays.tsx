@@ -6,6 +6,7 @@ import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import React, { useEffect, useState, Suspense,  } from 'react';
 import DateTimePicker, { useDefaultStyles, } from 'react-native-ui-datepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getLocales,  } from 'expo-localization';
 import {
   Alert,
   ImageBackground,
@@ -709,17 +710,11 @@ export default function HolydaysScreen({}: any) {
             description: personalHolydays[index].description
           };
         }
-                  // SET RADIOBUTTON PERIOD = INACTIVE (E RADIOBUTTON SINGLE ATTIVO)
-                  // -- così si carica da solo il datepicker 'single'
-                  setLeftRadioButtonActive(true);
-                  setRightRadioButtonActive(false);
-
-      // console.log(`\titemToEdit: ${JSON.stringify(itemToEdit)}`);
+        // SET RADIOBUTTON PERIOD = INACTIVE (E RADIOBUTTON SINGLE ATTIVO)
+        // -- così si carica da solo il datepicker 'single'
+        setLeftRadioButtonActive(true);
+        setRightRadioButtonActive(false);
       break;
-
-      // NATIONAL -> NON SI FA NIENTE
-      // case 'national':
-      // return;
 
       // VACATION -> SI COPIANO I VALORI DAL RECORD DELL'ARRAY E SI APRE LA MODAL 'periodo'
       case 'vacation':
@@ -852,13 +847,14 @@ export default function HolydaysScreen({}: any) {
   const styles =StyleSheet.create({
     // SFONDO
     image: {      
-        flex: 1,
-        justifyContent: 'center',
-        width: '100%',
+      flex: 1,
+      justifyContent: 'center',
+      width: '100%',
       },
     // CONTENITORE PRINCIPALE
     container: {
-      flex: 1,
+      //flex: 1,
+      width:'100%',
       backgroundColor: 'transparent',
       paddingHorizontal: 12,
       paddingTop: 80,
@@ -874,7 +870,7 @@ export default function HolydaysScreen({}: any) {
     // WRAPPER TITOLO PAGINA
     sectionContainer: {
       width: '100%',
-      flex:1,
+      //flex:1,
       justifyContent:'center',
       alignItems:'center',
       alignContent:'center',
@@ -889,7 +885,8 @@ export default function HolydaysScreen({}: any) {
     },
     // CARD
     listItem: { 
-      flex:1,
+      //flex:1,
+      //width:'100%',
       backgroundColor: colors.cardBackground,
       paddingTop: 24,
       paddingBottom: 24,
@@ -1138,23 +1135,24 @@ export default function HolydaysScreen({}: any) {
       color: '#0088ff',
     },
     dropDownCountry: {
-      flex:1,
-      width:'100%',
+      //flex:1,
+      //width:'100%',
       flexDirection:'row',
-      justifyContent:'flex-end',
+      justifyContent:'center',
       alignItems:'center',
       gap:8,
     }
   });
 
-  // BOTTONE RESET DROPDOWN COUNTRY: RIPORTA LA SELEZIONE A 'ITALIA'
+  // BOTTONE RESET DROPDOWN COUNTRY: RIPORTA LA SELEZIONE AL PAESE LOCALIZZATO
   const ResetCountryButton = () => {
     return(
       <TouchableOpacity
         onPress={ 
           async () => {
-            setMyCountry('it-IT');
-            await saveData('it-IT', 'myCountry');
+            setMyCountry(getLocales()[0].languageTag);
+            await saveData(getLocales()[0].languageTag, 'myCountry');
+            console.log('dropDown ripristinato a:', getLocales()[0].languageTag);
           }
         }>
         <IconSymbol size={20} name="gobackward" color={colors.blueBar} style={{paddingBottom:8,}}/>

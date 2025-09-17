@@ -1,4 +1,6 @@
 
+  import { getLocales, } from 'expo-localization';
+
   /* ============================================================================= 
      NOME DEI MESI
      ============================================================================= */
@@ -142,7 +144,14 @@
 ########################################################################################################### */
 export default function useLocalizationData() {
 
-  const country = 'it-IT';
+  //
+  // IMPORTANTE
+  //
+  // LEGGE IL PAESE IN CUI SI TROVA L'APP (es. pt-PT)
+  const myLanguage = getLocales()[0].languageTag;
+  
+  // const country = 'it-IT'; // prima era forzato a 'it-IT'
+  const country = myLanguage;
 
   // GENERO I NOMI DEI MESI E DEI GIORNI
   const localizedDays = getLocalizedWeekdays(country);
