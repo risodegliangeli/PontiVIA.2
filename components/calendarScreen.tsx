@@ -20,10 +20,16 @@ import { useHolydays } from '@/context/HolydaysContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { addMonths, isWithinInterval } from "date-fns";
 import * as Calendar from 'expo-calendar';
+import { getLocales,  } from 'expo-localization';
+
 // -------------------
 
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
 const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
+
+const myLanguage: string = (getLocales()[0].languageTag).slice(0,2);  // LINGUA LOCALE
+
+console.log(Platform.OS, '[holydays.tsx] myLanguage.', myLanguage);
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -33,18 +39,7 @@ const useThemeColors = () => {
 const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
 const dataLabel: any = {
-  'it-IT': [
-    'Ponte!',                                   // 0
-    'PontiVIA! ha trovato questo ponte per te', // 1
-    'ponti trovati!',                           // 2
-    'ponte trovato!',                           // 3
-    'Dal ',                                     // 4
-    ' fino al ',                                // 5
-    ' giorni)',                                 // 6
-    'Il ',                                      // 7
-    ' (1 giorno)',                              // 8
-    ],
-  'en-IT':[
+  'it': [
     'Ponte!',                                   // 0
     'PontiVIA! ha trovato questo ponte per te', // 1
     'ponti trovati!',                           // 2
@@ -55,41 +50,70 @@ const dataLabel: any = {
     'Il ',                                      // 7
     ' (1 giorno)',                              // 8
     'Possibile ponte!',                         // 9
+    'Annulla', // Aggiunto per il bottone Annulla
+    'Aggiungi' // Aggiunto per il bottone Aggiungi
     ],
-  "de-AT":[
+  "fr":[
+    'Pont!',                                    // 0
+    'PontiVIA! a trouvé ce pont pour vous',     // 1
+    'ponts trouvés!',                           // 2
+    'pont trouvés!',                            // 3
+    'Du ',                                      // 4
+    ' au ',                                     // 5
+    ' jours)',                                  // 6
+    'Le ',                                      // 7
+    ' (1 jour)',                                // 8
+    'Pont possible!',                           // 9
+    'Annuler',
+    'Ajouter'
     ],
-  "ch-CH":[
+  'es':[
+    '¡Puente!',                                 // 0
+    '¡PontiVIA! encontró este puente para ti',  // 1
+    'puentes encontrados!',                     // 2
+    'puente encontrado!',                       // 3
+    'Del ',                                     // 4
+    ' al ',                                     // 5
+    ' días)',                                   // 6
+    'El ',                                      // 7
+    ' (1 día)',                                 // 8
+    '¡Posible puente!',                         // 9
+    'Cancelar',
+    'Añadir'
     ],
-  "it-CH":[
-    ],
-  "fr-CH":[
-    ],
-  "de-CH":[
-    ],
-  "rm-CH":[
-    ],
-  "be-BE":[
-    ],
-  "fr-BE":[
-    ],
-  "nl-BE":[
-    ],
-  "en-GB":[
-    ],
-  "en-IE":[
-    ],
-  'fr-FR': [
-    ],
-  "de-DE":[
-    ],
-  'es-ES':[
-    ],
-  'ca-ES':[
-    ],
-  'nl-NL':[
-    ],
-  'pt-PT':[
-    ]
+  "de":[
+    'Brücke!',                                   // 0
+    'PontiVIA! hat diese Brücke für dich gefunden', // 1
+    'Brücken gefunden!',                         // 2
+    'Brücke gefunden!',                          // 3
+    'Vom  ',                                     // 4
+    ' bis am ',                                  // 5
+    ' Tage)',                                    // 6
+    'Am ',                                       // 7
+    ' (1 Tag)',                                  // 8
+    'Mögliche Brücke!',                          // 9
+    'Abbrechen',
+    'Hinzufügen'
+    ],  
+  'en':[
+    'Bridge!',                                   // 0
+    'PontiVIA! found this bridge for you', // 1
+    'bridges found!',                           // 2
+    'bridge found!',                           // 3
+    'From ',                                     // 4
+    ' to ',                                // 5
+    ' days)',                                 // 6
+    'On ',                                      // 7
+    ' (1 day)',                              // 8
+    'Possible bridge!',                         // 9
+   'Cancel',
+    'Add'
+     ],
+  'nl':[],
+  'pt':[],
+  'hr': [],
+  'si': [],
+  'gr': []
 };
 
 /* ============================================================================= 
@@ -609,7 +633,7 @@ const CalendarScreen = (PREFERENCES: any) => {
               style={{width:48, height:48, resizeMode:'contain', marginRight: 16}}
             />
             <View style={{ flex:1, }}>
-              <Text style={[styles.monthTitle, {color: colors.black, paddingLeft:0}]}>Possibile ponte!</Text>
+              <Text style={[styles.monthTitle, {color: colors.black, paddingLeft:0}]}>{dataLabel[myLanguage][9]}</Text> 
               {
               title && <Text style={[styles.dayNumber, { color: colors.black, lineHeight: 22, textAlign:'left'}]}>
               {description}
@@ -621,17 +645,17 @@ const CalendarScreen = (PREFERENCES: any) => {
             <TouchableOpacity 
               style={styles.cancelButton} 
               onPress={() => setVisibleToast(false)}>
-              <Text style={styles.cancelButtonText}>Annulla</Text>
+              <Text style={styles.cancelButtonText}>{dataLabel[myLanguage][10]}</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.addButton} 
                 onPress={ async () => {
                   try {
                     const eventDetails = {
-                      title: dataLabel[myCountry][0],    // Ponte!
+                      title: dataLabel[myLanguage][0],    // Ponte!
                       startDate: bridgeStart,
                       endDate: bridgeEnds,
-                      notes: dataLabel[myCountry][1],    // PontiVIA! ha trovato questo ponte ecc..
+                      notes: dataLabel[myLanguage][1],    // PontiVIA! ha trovato questo ponte ecc..
                       allDay: false,
                     };
                     await Calendar.createEventInCalendarAsync(eventDetails);
@@ -642,7 +666,7 @@ const CalendarScreen = (PREFERENCES: any) => {
                     }
                 }}
               >
-              <Text style={styles.addButtonText}>Aggiungi </Text><IconSymbol name="calendar.badge.plus" size={24} color={colors.white} />
+              <Text style={styles.addButtonText}>{dataLabel[myLanguage][11]} </Text><IconSymbol name="calendar.badge.plus" size={24} color={colors.white} />
             </TouchableOpacity>
           </View> 
         </View>
@@ -673,7 +697,7 @@ const CalendarScreen = (PREFERENCES: any) => {
             <View>
               {month.bridges.length > 0 ? 
                 <View style={styles.bridgeYellowLabel}>
-                  <Text style={styles.cardLabelBridgeFound}>{month.bridges.length} {month.bridges.length > 1 ? dataLabel[myCountry][2] : dataLabel[3]}</Text>
+                  <Text style={styles.cardLabelBridgeFound}>{month.bridges.length} {month.bridges.length > 1 ? dataLabel[myLanguage][2] : dataLabel[myLanguage][3]}</Text>
                 </View>
                 :
                 null
@@ -791,7 +815,7 @@ const CalendarScreen = (PREFERENCES: any) => {
                               setToastBody( 
                                 <HolydayToast 
                                   title={day[2]} 
-                                  description={day[0].toLocaleDateString('it-IT', {day: "numeric", month: 'long', year: "numeric"})} />
+                                  description={day[0].toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})} />
                               );
                               setToastAnimation('fade');
                               setToastOnClose(undefined); 
@@ -804,21 +828,21 @@ const CalendarScreen = (PREFERENCES: any) => {
                             let bridgeDescription: string = '';
                             let bridgeStartAt: Date;
                             let bridgeEndsAt: Date;
-                            month.bridges.map( (interval: any, index: number) => {
+                            month.bridges.forEach( (interval: any, index: number) => {
                               if (isWithinInterval(day[0], { start: interval.da, end: interval.a })) {
                                 if (interval.length > 1) {
-                                  bridgeDescription += dataLabel[myCountry][4]; // Dal
-                                  bridgeDescription += interval.da.toLocaleDateString(myCountry, {day: "numeric", month: 'long', year: "numeric"})
-                                  bridgeDescription += dataLabel[myCountry][5]; // fino al
-                                  bridgeDescription += interval.a.toLocaleDateString(myCountry, {day: "numeric", month: 'long', year: "numeric"})
-                                  bridgeDescription += ' (' + interval.length + dataLabel[myCountry][6]; // giorni
+                                  bridgeDescription += dataLabel[myLanguage][4]; // Dal
+                                  bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                  bridgeDescription += dataLabel[myLanguage][5]; // fino al
+                                  bridgeDescription += interval.a.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                  bridgeDescription += ' (' + interval.length + dataLabel[myLanguage][6]; // giorni
                                   // PRIMO E ULTIMO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
                                   bridgeStartAt = month.bridges[index].da;
                                   bridgeEndsAt = month.bridges[index].a;
                                 } else {
-                                  bridgeDescription += dataLabel[myCountry][7]; // Il
-                                  bridgeDescription += interval.da.toLocaleDateString('it-IT', {day: "numeric", month: 'long', year: "numeric"})
-                                  bridgeDescription += dataLabel[myCountry][8]; // (1 giorno)
+                                  bridgeDescription += dataLabel[myLanguage][7]; // Il
+                                  bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                  bridgeDescription += dataLabel[myLanguage][8]; // (1 giorno)
                                   // UNICO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
                                   bridgeStartAt = bridgeEndsAt = interval.da;
                                 }
@@ -844,12 +868,12 @@ const CalendarScreen = (PREFERENCES: any) => {
                         }
                       }}
                     >
-                      {day[2] && day[2] !== 'Possibile ponte!' ? 
+                      {day[2] && day[2] !== dataLabel[myLanguage][9] ? // 'Possibile ponte!'
                         <View 
                           key={`redcircle.${day[0].toISOString()}.${dayIndex}`}
                           style={[ StyleSheet.absoluteFill, styles.redCircle ]} />
                         :
-                          day[2] === 'Possibile ponte!' ? 
+                          day[2] === dataLabel[myLanguage][9] ? // 'Possibile ponte!'
                             <View 
                               key={`yellowcircle.${day[0].toISOString()}.${dayIndex}`}
                               style={[ StyleSheet.absoluteFill, styles.yellowCircle ]} />

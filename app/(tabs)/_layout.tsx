@@ -1,3 +1,6 @@
+console.log('[(tabs)_Layout]');
+
+
 // MY CUSTOM SPLITTED BAR
 import SplittedBar from '@/components/ui/SplittedBar';
 

@@ -7,6 +7,7 @@ import { Animated, ImageBackground, StyleSheet, useColorScheme, Text, Pressable 
 import { Colors } from '@/constants/Colors';
 import { MovingHands } from '@/components/ui/MovingHands'; // MIO
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getLocales, } from 'expo-localization';
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -23,33 +24,16 @@ export default function HomeScreen() {
   const colors = useThemeColors();
 
   const dataLabel: any = {
-    'it-IT':[
-        'Nessun ponte in vista?\nScorri in avanti il calendario\ne imposta i filtri e le tue date',
-        'Prova',
-        'Prova'],
-    'en-IT':[
-        'Nessun ponte in vista?\nScorri in avanti il calendario\ne imposta i filtri e le tue date',
-        'Prova',
-        'Prova'],
-    "de-AT":[
-        'Keine Brücke in Sicht?\nBlättern Sie im Kalender vorwärts\nund stellen Sie die Filter und Ihre Daten ein',
-        '',
-        ''],
-    "ch-CH":[],
-    "be-BE":[],
-    "en-GB":[],
-    "en-IE":[],
-    'fr-FR': [
-        'Pas de pont en vue?\nFaites défiler le calendrier\net définissez les filtres et vos dates',
-        'Essai',
-        'Essai'],
-    "de-DE":[
-        'Keine Brücke in Sicht?\nBlättern Sie im Kalender vorwärts\nund stellen Sie die Filter und Ihre Daten ein',
-        '',
-        ''],
-    'es-ES':[],
-    'nl-NL':[],
-    'pt-PT':[]
+    'it': ['Nessun ponte in vista?\nScorri il calendario e imposta\ni filtri e i tuoi giorni'],
+    'fr': ['Pas de pont en vue?\nFaites défiler le calendrier\net définissez les filtres et vos dates'],
+    'es': ['¿Ningún puente a la vista?\nDesliza el calendario y configura\nlos filtros y tus días'],
+    'de': ['Keine Brücke in Sicht?\nBlättern Sie im Kalender vorwärts\nund stellen Sie die Filter und Ihre Daten ein'],
+    'en': ['No bridge in sight?\nScroll the calendar and set\nfilters and your days'],
+    'nl': ['Geen brug in zicht?\nScroll door de kalender en stel\nfilters en je dagen in'],
+    'pt': ['Nenhuma ponte à vista?\nDeslize o calendário e configure\nos filtros e seus dias'],
+    'hr': ['Nema mosta na vidiku?\nSkrolaj kalendar i postavi\nfiltere i svoje dane'],
+    'si': ['Ni mosta na vidiku?\nDrsaj po koledarju in nastavi\nfiltre in svoje dni'],
+    'gr': ['Καμία γέφυρα στον ορίζοντα;\nΚύλισε το ημερολόγιο και όρισε\nφίλτρα και τις μέρες σου']
   };
  
   const { 
@@ -59,41 +43,43 @@ export default function HomeScreen() {
     myCountry, setMyCountry
   } = useHolydays();
 
-  const loadData = async (key: string) => {
-    try {
-      const jsonValue = await AsyncStorage.getItem(key);
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch (e) {
-      console.error(`Errore ${key} nella lettura da locale:`, e);
-      return null;
-    }
-  };
+  // const loadData = async (key: string) => {
+  //   try {
+  //     const jsonValue = await AsyncStorage.getItem(key);
+  //     return jsonValue != null ? JSON.parse(jsonValue) : null;
+  //   } catch (e) {
+  //     console.error(`Errore ${key} nella lettura da locale:`, e);
+  //     return null;
+  //   }
+  // };
 
-  // INIZIALIZZAZIONE DATI DA LOCAL STORAGE ///////////////////////////
-  // 1) personalHolydays
-  // 2) vacationPeriods
-  // 3) myCountry
-  useEffect(() => {
-    // FUNZIONE DI LETTURA DA LOCAL STORAGE
-    const initializeData = async () => {
-      const storedPersonalHolydays = await loadData('personalHolydays');
-      // console.log('storedPersonalHolydays:', JSON.stringify(storedPersonalHolydays));
-        if (storedPersonalHolydays) {
-          setPersonalHolydays(storedPersonalHolydays);
-        }
-      const storedVacationPeriods = await loadData('vacationPeriods');
-      // console.log('storedVacationPeriods:', JSON.stringify(storedVacationPeriods));
-        if (storedVacationPeriods) {
-          setVacationPeriods(storedVacationPeriods);
-        }
-      const storedMyCountry = await loadData('myCountry');
-        if (storedMyCountry) {
-          setMyCountry(storedMyCountry);
-        }
-    };  
-    // CHIAMATA FUNZ. LETTURA
-    initializeData();
-  }, []);
+  // // INIZIALIZZAZIONE DATI DA LOCAL STORAGE ///////////////////////////
+  // // 1) personalHolydays
+  // // 2) vacationPeriods
+  // // 3) myCountry
+  // useEffect(() => {
+  //   // FUNZIONE DI LETTURA DA LOCAL STORAGE
+  //   const initializeData = async () => {
+  //     const storedPersonalHolydays = await loadData('personalHolydays');
+  //     // console.log('storedPersonalHolydays:', JSON.stringify(storedPersonalHolydays));
+  //       if (storedPersonalHolydays) {
+  //         setPersonalHolydays(storedPersonalHolydays);
+  //       }
+  //     const storedVacationPeriods = await loadData('vacationPeriods');
+  //     // console.log('storedVacationPeriods:', JSON.stringify(storedVacationPeriods));
+  //       if (storedVacationPeriods) {
+  //         setVacationPeriods(storedVacationPeriods);
+  //       }
+  //     const storedMyCountry = await loadData('myCountry');
+  //       if (storedMyCountry) {
+  //         setMyCountry(storedMyCountry);
+  //       }
+  //   };  
+  //   // CHIAMATA FUNZ. LETTURA
+  //   initializeData();
+  // }, []);
+
+  const myLanguage = (getLocales()[0].languageTag).slice(0,2); // 'it', 'fr', ecc
 
   // MEMORIZZA IL KEY DEL CALENDARIO
   // e forza il ricaricamento del calendario quando i dati cambiano.
@@ -205,7 +191,7 @@ export default function HomeScreen() {
             <Pressable 
               onPress={handleLogoPress} 
               style={{width: '100%', alignItems: 'center'}}>
-              <Text style={{fontSize:18, fontWeight:600, color: colors.blueBar, textAlign:'center'}}>{dataLabel[myCountry][0]}</Text>
+              <Text style={{fontSize:18, fontWeight:600, color: colors.blueBar, textAlign:'center'}}>{dataLabel[myLanguage][0]}</Text>
               <MovingHands />
             </Pressable>
           </Animated.View>

@@ -28,15 +28,28 @@
 
 
         Tabella linguaggi e festivita:
+
+        .slice(0,2) 
+        1 'it'
+        2 'fr'
+        3 'es'
+        4 'de'
+        5 'en'
+        6 'nl'
+        7 'pt'
+        8 'hr'
+        9 'si'
+        10 'gr'
+
         const languageData = [
-          // Italiano
+          // Italiano 'it'
           { label: 'Italiano (Italia)', value: 'it-IT', flag: '🇮🇹' },
           { label: 'English (Italia)', value: 'en-IT', flag: '🇮🇹' },
           { label: 'Italiano (Svizzera)', value: 'it-CH', flag: '🇨🇭' },
           
           { label: 'Romancio (Svizzera)', value: 'rm-CH', flag: '🇨🇭' },
           
-          // Tedesco
+          // Tedesco 'de'
           { label: 'Deutsch (Deutschland)', value: 'de-DE', flag: '🇩🇪' },
           { label: 'Deutsch (Schweiz)', value: 'de-CH', flag: '🇨🇭' },
           { label: 'Deutsch (Österreich)', value: 'de-AT', flag: '🇦🇹' },
