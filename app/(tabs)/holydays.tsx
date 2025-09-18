@@ -1116,16 +1116,26 @@ export default function HolydaysScreen({}: any) {
           </View>
 
           {nationalHolydays.map((holiday, index) => (
-            <React.Fragment key={index}>
+            <React.Fragment key={index} >
               <View 
                 key={index} 
-                style={[styles.holidayRow, {justifyContent:'flex-start', alignItems:'flex-start'}]}>
-                  <View style={{width:32, height:32, borderRadius:24, backgroundColor: colors.dot32}}></View>
-                  <View style={{flexDirection:'column'}}>
-                    <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label}`}</Text>
-                    <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
+                style={[styles.holidayRow, {justifyContent:'space-between', alignItems:'center'}]}>
+
+                  <View style={[styles.holidayRow, {justifyContent:'flex-start', alignItems:'flex-start'}]}>
+                    <View style={{width:32, height:32, borderRadius:24, backgroundColor: colors.dot32}}></View>
+                    <View style={{flexDirection:'column'}}>
+                      <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label}`}</Text>
+                      <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
+                    </View>
                   </View>
+                  <TouchableOpacity>
+                    <IconSymbol size={24} name="checkmark.circle.fill" color={colors.blueBar} style={{paddingBottom:8,}}/>
+                    {/* <IconSymbol size={24} name="xmark.circle" color={colors.disabled} style={{paddingBottom:8,}}/> */}
+                  </TouchableOpacity>
+
               </View> 
+
+
               {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
               {index !== nationalHolydays.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
             </React.Fragment>
@@ -1222,7 +1232,7 @@ export default function HolydaysScreen({}: any) {
                       maxDate={maxDate}
                       firstDayOfWeek={1}
                       //timeZone={'UTC'}
-                      locale={'it-IT'}
+                      locale={myLanguage}
                       style={{
                         backgroundColor: 'transparent',
                       }}
@@ -1233,7 +1243,7 @@ export default function HolydaysScreen({}: any) {
                         selected: { backgroundColor: colors.textRed, borderRadius:'10%' }, 
                         selected_label: { color: 'white' },
                         year_selector_label: { display:'none'},
-                        month_selector_label: {fontSize: 14, fontWeight:600, textTransform:'capitalize'},
+                        month_selector_label: {fontSize: 16, fontWeight:600, textTransform:'capitalize'},
                         day_label: {fontSize:16, color: colors.black},
                         button_next: { backgroundColor: colors.textNegative, borderRadius:'100%', },
                         button_prev: { backgroundColor: colors.textNegative, borderRadius:'100%', },
@@ -1258,7 +1268,7 @@ export default function HolydaysScreen({}: any) {
                       showOutsideDays={false}          
                       firstDayOfWeek={1}
                       // timeZone={'UTC'}
-                      locale={'it-IT'}
+                      locale={myLanguage}
                       style={{
                         backgroundColor: '#transparent',
                       }}
@@ -1273,8 +1283,8 @@ export default function HolydaysScreen({}: any) {
                         range_end: { borderWidth:0, backgroundColor: colors.textRed, borderRadius:'10%' }, 
                         range_end_label: { color: 'white' },
                         range_fill: { backgroundColor: 'rgba(255,0,0,.25)',  },
-                        year_selector_label: { color: colors.black },
-                        month_selector_label: {fontSize: 14, fontWeight:600, textTransform:'capitalize'},
+                        year_selector_label: { fontSize: 16, color: colors.black, fontWeight: 800},
+                        month_selector_label: {fontSize: 16, fontWeight:600, textTransform:'capitalize'},
                         day_label: {fontSize:16, color: colors.black},
                         button_next: { backgroundColor: colors.textNegative, borderRadius:'100%', },
                         button_prev: { backgroundColor: colors.textNegative, borderRadius:'100%', },

@@ -3,21 +3,108 @@ import { PREFERENCES } from '@/app/(tabs)/preferences';
 import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
 import { getLocales,  } from 'expo-localization';
 import { Platform } from 'react-native';
+import { da } from 'date-fns/locale';
 
 const { localHolydas: countryHolydays } = useLocalizationData();
 
-const myLanguage = getLocales()[0].languageTag;
+const myLanguage = (getLocales()[0].languageTag).slice(0,2);
         console.log(Platform.OS, '[calendarUtils.tsx] myLanguage:', myLanguage);
 
-const dataLabel = [
-    'Pasqua',                               // 0
-    'Lunedì dell\'Angelo',                  // 1
-    'Ascensione',                           // 2
-    "Pentecoste",                           // 3
-    "Lunedì di Pentecoste",                 // 4
-    "Corpus Domini",                        // 5
-    "Possibile ponte!"                      // 6
-];
+export function dataLabel(language: string, item: number) {
+    const countryLabels: any = {
+        'it':[
+            'Pasquaz',                               // 0
+            'Lunedì dell\'Angelo',                  // 1
+            'Ascensione',                           // 2
+            "Pentecoste",                           // 3
+            "Lunedì di Pentecoste",                 // 4
+            "Corpus Domini",                        // 5
+            "Possibile ponte!"                      // 6
+        ],
+        'fr': [
+            'Pâques',                                  // 0
+            'Lundi de Pâques',                         // 1
+            'Ascension',                               // 2
+            'Pentecôte',                               // 3
+            'Lundi de Pentecôte',                      // 4
+            'Fête-Dieu',                               // 5
+            'Pont possible!'                          // 6
+        ],
+        'es': [
+            'Pascua',                                   // 0
+            'Lunes de Pascua',                         // 1
+            'Ascensión',                               // 2
+            'Pentecostés',                             // 3
+            'Lunes de Pentecostés',                    // 4
+            'Corpus Christi',                          // 5
+            '¡Posible puente!'                         // 6
+        ],
+        'de': [
+            'Ostern',                                  // 0
+            'Ostermontag',                             // 1
+            'Christi Himmelfahrt',                     // 2
+            'Pfingsten',                               // 3
+            'Pfingstmontag',                           // 4
+            'Fronleichnam',                            // 5
+            'Mögliche Brücke!'                         // 6
+        ],
+        'en': [
+            'Easter',                                  // 0
+            'Easter Monday',                           // 1
+            'Ascension',                               // 2
+            'Pentecost',                               // 3
+            'Whit Monday',                             // 4
+            'Corpus Christi',                          // 5
+            'Possible bridge!'                         // 6
+        ],
+        'nl': [
+            'Pasen',                                   // 0
+            'Paasmaandag',                             // 1
+            'Hemelvaart',                              // 2
+            'Pinksteren',                              // 3
+            'Pinkstermaandag',                         // 4
+            'Sacramentsdag',                           // 5
+            'Mogelijke brug!'                          // 6
+        ],
+        'pt': [
+            'Páscoa',                                  // 0
+            'Segunda-feira de Páscoa',                 // 1
+            'Ascensão',                                // 2
+            'Pentecostes',                             // 3
+            'Segunda de Pentecostes',                  // 4
+            'Corpus Christi',                          // 5
+            'Ponte possível!'                          // 6
+        ],
+        'hr': [
+            'Uskrs',                                   // 0
+            'Uskršnji ponedjeljak',                    // 1
+            'Uzašašće',                                // 2
+            'Duhovi',                                  // 3
+            'Duhovni ponedjeljak',                     // 4
+            'Tijelovo',                                // 5
+            'Moguć most!'                              // 6
+        ],
+        'si': [
+            'Velika noč',                              // 0
+            'Velikonočni ponedeljek',                  // 1
+            'Vnebovzetje',                             // 2
+            'Binkošti',                                // 3
+            'Binkošti ponedeljek',                     // 4
+            'Rešnje telo',                             // 5
+            'Možen most!'                              // 6
+        ],
+        'gr': [
+            'Πάσχα',                                   // 0
+            'Δευτέρα του Πάσχα',                       // 1
+            'Ανάληψη',                                 // 2
+            'Πεντηκοστή',                              // 3
+            'Δευτέρα της Πεντηκοστής',                 // 4
+            'Θεοφάνεια',                               // 5
+            'Πιθανή γέφυρα!'                           // 6
+        ]
+    };
+    return countryLabels[language][item];
+}
 
 /* ============================================================================= 
     CREA UNA DATA A MEZZOGIORNO UTC
@@ -103,7 +190,7 @@ const getCountryNationalHolidays = (
     PREFERENCES.pasqua.status && holidays.push({ 
         day: dayOfEaster, 
         month: monthOfEaster - 1, 
-        description: dataLabel[0] 
+        description: dataLabel(myLanguage,0) 
     });
 
     let currentPasqua = createUTCDate(year, monthOfEaster - 1, dayOfEaster);
@@ -114,7 +201,7 @@ const getCountryNationalHolidays = (
         holidays.push({ 
             day: easterMonday.getUTCDate(), 
             month: easterMonday.getUTCMonth(), 
-            description: dataLabel[1] });
+            description: dataLabel(myLanguage,1) });
     }
 
     // ASCENSIONE (39 giorni dopo Pasqua)
@@ -123,7 +210,7 @@ const getCountryNationalHolidays = (
         holidays.push({ 
             day: ascensione.getUTCDate(), 
             month: ascensione.getUTCMonth(), 
-            description: dataLabel[2] 
+            description: dataLabel(myLanguage,2) 
         });
     }
 
@@ -133,7 +220,7 @@ const getCountryNationalHolidays = (
         holidays.push({ 
             day: pentecoste.getUTCDate(), 
             month: pentecoste.getUTCMonth(), 
-            description: dataLabel[3] 
+            description: dataLabel(myLanguage,3) 
         });
     }
 
@@ -143,7 +230,7 @@ const getCountryNationalHolidays = (
         holidays.push({ 
             day: lunediPentecoste.getUTCDate(), 
             month: lunediPentecoste.getUTCMonth(), 
-            description: dataLabel[4] 
+            description: dataLabel(myLanguage,4) 
         });
     }
 
@@ -153,7 +240,7 @@ const getCountryNationalHolidays = (
         holidays.push({ 
             day: corpusDomini.getUTCDate(), 
             month: corpusDomini.getUTCMonth(), 
-            description: dataLabel[5]
+            description: dataLabel(myLanguage,5)
         });
     }
 

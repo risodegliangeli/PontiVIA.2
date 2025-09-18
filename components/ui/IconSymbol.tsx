@@ -28,7 +28,9 @@ const MAPPING = {
   'multiply': 'close',
   'bell': 'notifications',  // CAMPANELLA OUTILNED
   'bell.circle.fill': 'circle-notifications', // CAMPANELLA FILLED
-  'calendar.badge.plus' : 'edit-calendar'
+  'calendar.badge.plus' : 'edit-calendar',
+  'checkmark.circle.fill': 'check-circle',
+  'xmark.circle': 'cancel'
 
 } as IconMapping;
 

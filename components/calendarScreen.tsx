@@ -10,7 +10,6 @@ import {
   View,
   useColorScheme
 } from 'react-native';
-// -------------------
 import useLocalizationData from '@/app/data/data';
 import { createCalendarGrid, createUTCDate } from '@/components/calendarUtils';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -22,14 +21,10 @@ import { addMonths, isWithinInterval } from "date-fns";
 import * as Calendar from 'expo-calendar';
 import { getLocales,  } from 'expo-localization';
 
-// -------------------
-
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
 const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
 
 const myLanguage: string = (getLocales()[0].languageTag).slice(0,2);  // LINGUA LOCALE
-
-
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -577,17 +572,6 @@ const CalendarScreen = (PREFERENCES: any) => {
   ============================================================================= */
   const renderMonthCard = useCallback(({ item: month, index }) => {
 
-
-
-
-
-    console.log(Platform.OS, '[calendarScreen.tsx] myLanguage (paese localizzato):', myLanguage);
-    console.log(Platform.OS, '[calendarScreen.tsx] myCountry (paese delle festivita):', myCountry);
-
-
-
-
-    
     // MAPPA CONNESSIONI GRAFICHE TRA CERCHIETTI GIALLI
     const bridgeConnectionMap = createBridgeConnectionMap(month); 
 
