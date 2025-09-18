@@ -20,7 +20,7 @@
            ∟ agisce sul calcolo delle festività
            ∟ NON agisce sul linguaggio delle schede
 
-        -- raccogliere TUTTE le traduzioni nel Context!
+        ~~-- raccogliere TUTTE le traduzioni nel Context!~~
 
 
         -- holydays.tsx BOTTONE RESET DROPDOWN COUNTRY: RIPORTA LA SELEZIONE A ~~'ITALIA'~~

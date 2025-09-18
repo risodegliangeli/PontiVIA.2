@@ -1,6 +1,9 @@
 /* FUNZIONE ESTERNALIZZATA PERCHE' RICHIAMATA 
 DA  preferences.tsx E calendarUtils.tsx
- */
+
+
+NB QUESTO FILES POTREBBE RACCOGLIERE TUTTE LE function() CHE FORNISCONO 
+LE LABEL ALLE PAGINE*/
 
 
 export function dataLabel(language: string, item: number) {
