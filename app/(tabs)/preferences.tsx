@@ -6,6 +6,8 @@ import { Suspense, useState, useEffect } from 'react';
 import { Colors } from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getLocales,  } from 'expo-localization';
+import { dataLabel as switchNames } from '@/components/dataLabel';
 import {
   ImageBackground,
   ScrollView,
@@ -17,31 +19,105 @@ import {
   View,
   ViewStyle,
   } from 'react-native';
-  const { localizedDays } = useLocalizationData();
 
-const dataLabel = [
-  'Imposta i tuoi filtri',
-  'Durata del ponte',
-  'Primo giorno della settimana',
-  'Giorni della settimana festivi',
-  'Altri giorni festivi',
-  'Modifica lista',
-  'Festività religiose',
-  ''
-];
+const { localizedDays } = useLocalizationData();
+const myLanguage = (getLocales()[0].languageTag).slice(0,2);
 
-const switchLabel = [
-  'Pasqua',                           // 0
-  "Lunedì dell'angelo",               // 1
-  'Ascensione',                       // 2
-  'Pentecoste',                       // 3
-  'Lunedì di pentecoste',             // 4 
-  'Festività nazionali',              // 5
-  'Festività locali',                 // 6
-  'Giorni speciali',              // 7
-  'Periodi di ferie',                 // 8
-  'Corpus Domini'                     // 9
-];
+
+
+const dataLabel: any = {
+  'it': [
+    'Imposta i tuoi filtri',
+    'Durata del ponte',
+    'Primo giorno della settimana',
+    'Giorni della settimana festivi',
+    'Altri giorni festivi',
+    'Modifica lista',
+    'Festività religiose',
+  ],
+  'fr': [
+    'Configurez vos filtres',                    // 0
+    'Durée du pont',                             // 1
+    'Premier jour de la semaine',                // 2
+    'Jours fériés de la semaine',                // 3
+    'Autres jours fériés',                       // 4
+    'Modifier la liste',                         // 5
+    'Fêtes religieuses',                         // 6
+  ],
+  'es': [
+    'Configura tus filtros',                     // 0
+    'Duración del puente',                       // 1
+    'Primer día de la semana',                   // 2
+    'Días festivos de la semana',                // 3
+    'Otros días festivos',                       // 4
+    'Editar lista',                              // 5
+    'Festividades religiosas',                   // 6
+  ],
+  'de': [
+    'Stellen Sie Ihre Filter ein',               // 0
+    'Dauer der Brücke',                          // 1
+    'Erster Tag der Woche',                      // 2
+    'Feiertage der Woche',                       // 3
+    'Andere Feiertage',                          // 4
+    'Liste bearbeiten',                          // 5
+    'Religiöse Feiertage',                       // 6
+  ],
+  'en': [
+    'Set your filters',                          // 0
+    'Bridge duration',                           // 1
+    'First day of the week',                     // 2
+    'Weekly holidays',                           // 3
+    'Other holidays',                            // 4
+    'Edit list',                                 // 5
+    'Religious holidays',                        // 6
+  ],
+  'nl': [
+    'Stel je filters in',                        // 0
+    'Duur van de brug',                          // 1
+    'Eerste dag van de week',                    // 2
+    'Weekdagen feestdagen',                      // 3
+    'Andere feestdagen',                         // 4
+    'Lijst bewerken',                            // 5
+    'Religieuze feestdagen',                     // 6
+  ],
+  'pt': [
+    'Configure seus filtros',                    // 0
+    'Duração da ponte',                          // 1
+    'Primeiro dia da semana',                    // 2
+    'Dias feriados da semana',                   // 3
+    'Outros feriados',                           // 4
+    'Editar lista',                              // 5
+    'Feriados religiosos',                       // 6
+  ],
+  'hr': [
+    'Postavi svoje filtrove',                    // 0
+    'Trajanje mosta',                            // 1
+    'Prvi dan u tjednu',                         // 2
+    'Praznici u tjednu',                         // 3
+    'Ostali praznici',                           // 4
+    'Uredi listu',                               // 5
+    'Vjerski praznici',                          // 6
+  ],
+  'si': [
+    'Nastavi svoje filtre',                      // 0
+    'Trajanje mosta',                            // 1
+    'Prvi dan v tednu',                          // 2
+    'Tedni prazniki',                            // 3
+    'Ostali prazniki',                           // 4
+    'Uredi seznam',                              // 5
+    'Verski prazniki',                           // 6
+  ],
+  'gr': [
+    'Ρύθμισε τα φίλτρα σου',                     // 0
+    'Διάρκεια γέφυρας',                          // 1
+    'Πρώτη μέρα της εβδομάδας',                  // 2
+    'Αργίες της εβδομάδας',                      // 3
+    'Άλλες αργίες',                              // 4
+    'Επεξεργασία λίστας',                        // 5
+    'Θρησκευτικές γιορτές',                      // 6
+  ]
+};
+
 
 export const PREFERENCES = {
   domenica:  { status: true, label: localizedDays[6].charAt(0).toUpperCase() + localizedDays[6].slice(1) },
@@ -51,18 +127,18 @@ export const PREFERENCES = {
   mercoledi: { status: false, label: localizedDays[2].charAt(0).toUpperCase() + localizedDays[2].slice(1) },
   martedi:   { status: false, label: localizedDays[1].charAt(0).toUpperCase() + localizedDays[1].slice(1) },
   lunedi:    { status: false, label: localizedDays[0].charAt(0).toUpperCase() + localizedDays[0].slice(1) },
-  // -----------------------------
-  pasqua: { status: true, label: switchLabel[0] },
-  lunediDellAngelo: { status: true, label: switchLabel[1] },
-  ascensione: { status: false, label: switchLabel[2] },
-  pentecoste: { status: false, label: switchLabel[3] },
-  lunediPentecoste: { status: false, label: switchLabel[4] },
-  corpusDomini: {status: false, label:switchLabel[9]},
-  // -----------------------------
-  festivitaNazionali: { status: true, label: switchLabel[5] },
-  festivitaLocali: { status: true, label: switchLabel[6]},
-  festivitaPersonali: { status: true, label: switchLabel[7]},
-  feriePersonali: { status: true, label: switchLabel[8] },
+
+  pasqua: { status: true, label: switchNames(myLanguage,0) },
+  lunediDellAngelo: { status: true, label: switchNames(myLanguage,1) },
+  ascensione: { status: false, label: switchNames(myLanguage,2) },
+  pentecoste: { status: false, label: switchNames(myLanguage,3) },
+  lunediPentecoste: { status: false, label: switchNames(myLanguage,4) },
+  corpusDomini: {status: false, label: switchNames(myLanguage,5)}, 
+
+  festivitaNazionali: { status: true, label: switchNames(myLanguage,7)}, 
+  festivitaLocali: { status: true, label: switchNames(myLanguage,8)}, 
+  festivitaPersonali: { status: true, label: switchNames(myLanguage,9)}, 
+  feriePersonali: { status: true, label: switchNames(myLanguage,10)}, 
   bridgeDuration: 3, 
   firstDayOfWeek: 1,
 };
@@ -273,13 +349,13 @@ export default function Preferences() {
             borderWidth: 0,
             pointerEvents: 'box-none',
           }}>
-            <Text style={styles.sectionTitle}>{dataLabel[0]}</Text>
+            <Text style={styles.sectionTitle}>{dataLabel[myLanguage][0]}</Text>
           </View>
 
           {/* ==================== DROPDOWN DURATA PONTI ==================== */}
 
           <View style={styles.groupContainer}>
-            <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[1]}</Text>
+            <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[myLanguage][1]}</Text>
             <DropdownComponent 
               selectedValue={parseInt(PREFERENCES.bridgeDuration)}
               onChange={ async (value) => {
@@ -302,7 +378,7 @@ export default function Preferences() {
 
           <View style={styles.groupContainer}>
             <View style={{width:'100%'}}>
-              <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[3]}</Text>
+              <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[myLanguage][3]}</Text>
             </View>
             <PreferenceSwitch preferenceKey="domenica"  />
             <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
@@ -323,7 +399,7 @@ export default function Preferences() {
 
             <View style={styles.groupContainer}>
               <View style={{width:'100%'}}>
-                <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[4]}</Text>
+                <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[myLanguage][4]}</Text>
               </View>
               <PreferenceSwitch preferenceKey="festivitaNazionali" />
               <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
@@ -336,7 +412,7 @@ export default function Preferences() {
               <View style={styles.editLinkContainer}>
                 <TouchableOpacity onPress={handleEditHolydays} style={styles.editButton}>
                   <IconSymbol size={20} name="pencil" color={colors.text} />
-                  <Text style={styles.editText}>{dataLabel[5]}</Text>
+                  <Text style={styles.editText}>{dataLabel[myLanguage][5]}</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -346,7 +422,7 @@ export default function Preferences() {
 
             <View style={styles.groupContainer}>
               <View style={{width:'100%'}}>
-                <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[6]}</Text>
+                <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[myLanguage][6]}</Text>
               </View>
               <PreferenceSwitch preferenceKey="pasqua" />
               <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
@@ -361,7 +437,7 @@ export default function Preferences() {
               <PreferenceSwitch preferenceKey="corpusDomini" /> 
             </View>
           </Suspense>
-          <View style={{ height: 180 }} />
+          <View style={{ height: 240 }} />
         </ScrollView>
     </ImageBackground>
   );
