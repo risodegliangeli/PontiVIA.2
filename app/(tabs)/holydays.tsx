@@ -143,7 +143,7 @@ const dataLabel: any = {
     'Lange periodes',                           // 3
     'Jouw speciale dagen',                     // 4
     'Eén dag',                                  // 5
-    'Een periode van meerdere dagen',                   // 6
+    'Periode van meerdere dagen',                   // 6
     'Let op',                                 // 7
     'Wil je de dag verwijderen',                   // 8
     'Annuleren',                                    // 9
@@ -178,9 +178,69 @@ const dataLabel: any = {
     'Já existe um evento nesta data',     // 17
     'Deseja excluir todas as datas desta seção?'// 18],
     ],
-  'hr': [],
-  'si': [],
-  'gr': []
+  'hr': [
+    'Moji datumi',                                    // 0
+    'Dodaj svoje posebne dane',                       // 1
+    'Nacionalni praznici',                            // 2
+    'Dugi periodi',                                   // 3
+    'Tvoji posebni dani',                             // 4
+    'Jedan dan',                                      // 5
+    'Period od više dana',                            // 6
+    'Pažnja',                                         // 7
+    'Želiš li obrisati dan',                          // 8
+    'Otkaži',                                         // 9
+    'Obriši',                                         // 10
+    'Spremi',                                         // 11
+    'Unesi opis',                                     // 12
+    'Već postoji nacionalni praznik na ovaj datum',   // 13
+    'Opis',                                           // 14
+    '(ponavlja se svake godine)',                     // 15
+    'Tvoji posebni dani',                             // 16
+    'Na ovaj datum već postoji događaj',              // 17
+    'Želiš li obrisati sve datume iz ove sekcije?'   // 18
+  ],
+  'si': [
+    'Moji datumi',                                    // 0
+    'Dodaj svoje posebne dni',                        // 1
+    'Državni prazniki',                               // 2
+    'Dolga obdobja',                                  // 3
+    'Tvoji posebni dnevi',                            // 4
+    'En dan',                                         // 5
+    'Obdobje več dni',                                // 6
+    'Pozor',                                          // 7
+    'Ali želiš izbrisati dan',                        // 8
+    'Prekliči',                                       // 9
+    'Izbriši',                                        // 10
+    'Shrani',                                         // 11
+    'Vnesi opis',                                     // 12
+    'Na ta datum že obstaja državni praznik',         // 13
+    'Opis',                                           // 14
+    '(se ponavlja vsako leto)',                       // 15
+    'Tvoji posebni dnevi',                            // 16
+    'Na ta datum že obstaja dogodek',                 // 17
+    'Ali želiš izbrisati vse datume iz tega odseka?' // 18
+  ],
+  'gr': [
+    'Οι ημερομηνίες μου',                             // 0
+    'Πρόσθεσε τις ξεχωριστές σου μέρες',              // 1
+    'Εθνικές γιορτές',                                // 2
+    'Μακρές περίοδοι',                                // 3
+    'Οι ξεχωριστές σου μέρες',                        // 4
+    'Μία μέρα',                                       // 5
+    'Περίοδος περισσότερων ημερών',                   // 6
+    'Προσοχή',                                        // 7
+    'Θέλεις να διαγράψεις τη μέρα',                   // 8
+    'Ακύρωση',                                        // 9
+    'Διαγραφή',                                       // 10
+    'Αποθήκευση',                                     // 11
+    'Εισάγετε περιγραφή',                             // 12
+    'Υπάρχει ήδη εθνική γιορτή σε αυτή την ημερομηνία', // 13
+    'Περιγραφή',                                      // 14
+    '(επαναλαμβάνεται κάθε χρόνο)',                   // 15
+    'Οι ξεχωριστές σου μέρες',                        // 16
+    'Σε αυτή την ημερομηνία υπάρχει ήδη γεγονός',     // 17
+    'Θέλεις να διαγράψεις όλες τις ημερομηνίες από αυτό το τμήμα?' // 18
+  ]
 };
 
 type Holiday = {  // DEFINIZIONE DI holiday
@@ -999,17 +1059,7 @@ export default function HolydaysScreen({}: any) {
                 <View 
                 style={styles.holidayRow }>
                   <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
-                    {/* <Image
-                      source={
-                        useColorScheme() === 'dark' ?
-                          require('@/assets/images/icon_calendar-off-dark.png')
-                        :
-                          require('@/assets/images/icon_calendar-off.png')
-                      } 
-                      style={{width:24, height:24, resizeMode:'contain'}}/> */}
-
-                      <View style={{width:32, height:32, borderRadius:24, backgroundColor: colors.dot32}}></View>
-
+                    <View style={{width:32, height:32, borderRadius:24, backgroundColor: colors.dot32}}></View>
                     <View style={{flexDirection:'column'}} >
                       <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label} `}</Text>
                       <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
@@ -1019,10 +1069,10 @@ export default function HolydaysScreen({}: any) {
                   <View>
                   <View style={styles.itemActions}>
                     <TouchableOpacity onPress={() => handleEdit('personal', index)}>
-                      <IconSymbol name="pencil" size={20} color={colors.text} />
+                      <IconSymbol name="pencil" size={20} color={colors.blueBar} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => handleDelete('personal', index)} style={{ marginLeft: 12 }}>
-                      <IconSymbol name="trash" size={20} color={colors.text} />
+                      <IconSymbol name="trash" size={20} color={colors.blueBar} />
                     </TouchableOpacity>
                   </View>
                   </View>
@@ -1084,10 +1134,10 @@ export default function HolydaysScreen({}: any) {
                   </View>
                   <View style={styles.itemActions}>
                     <TouchableOpacity onPress={() => handleEdit('vacation', index)}>
-                      <IconSymbol name="pencil" size={20} color={colors.text} />
+                      <IconSymbol name="pencil" size={20} color={colors.blueBar} />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => handleDelete('vacation', index)} style={{ marginLeft: 12 }}>
-                      <IconSymbol name="trash" size={20} color={colors.text} />
+                      <IconSymbol name="trash" size={20} color={colors.blueBar} />
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -1308,7 +1358,7 @@ export default function HolydaysScreen({}: any) {
                     style={styles.cancelButton} 
                     onPress={resetSingleDateForm}
                     >
-                    <Text style={styles.cancelButtonText}>Annulla</Text>
+                    <Text style={styles.cancelButtonText}>{dataLabel[myLanguage][9]}</Text>
                   </TouchableOpacity>
                   <TouchableOpacity 
                     style={styles.addButton} 
@@ -1316,7 +1366,7 @@ export default function HolydaysScreen({}: any) {
                       // console.log('chiusura modal + operazione scrittura', selectedRadioOption);
                       selectedRadioOption === 'single' ? handleAddSingleDate() : handleAddPeriod();
                       }}>
-                    <Text style={styles.addButtonText}>Salva</Text>
+                    <Text style={styles.addButtonText}>{dataLabel[myLanguage][11]}</Text>
                   </TouchableOpacity>
                 </View>
               </View>

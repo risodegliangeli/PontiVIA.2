@@ -13,7 +13,7 @@ const myLanguage = (getLocales()[0].languageTag).slice(0,2);
 export function dataLabel(language: string, item: number) {
     const countryLabels: any = {
         'it':[
-            'Pasquaz',                               // 0
+            'Pasquazzz',                               // 0
             'Lunedì dell\'Angelo',                  // 1
             'Ascensione',                           // 2
             "Pentecoste",                           // 3

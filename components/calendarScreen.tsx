@@ -104,11 +104,76 @@ const dataLabel: any = {
    'Cancel',
     'Add'
      ],
-  'nl':[],
-  'pt':[],
-  'hr': [],
-  'si': [],
-  'gr': []
+  'nl':[
+    'Brug!',                                    // 0
+    'PontiVIA! vond deze brug voor jou',       // 1
+    'bruggen gevonden!',                       // 2
+    'brug gevonden!',                          // 3
+    'Van ',                                    // 4
+    ' tot ',                                   // 5
+    ' dagen)',                                 // 6
+    'Op ',                                     // 7
+    ' (1 dag)',                                // 8
+    'Mogelijke brug!',                         // 9
+    'Annuleren',                               // 10
+    'Toevoegen',                               // 11
+    ],
+  'pt':[
+    'Ponte!',                                  // 0
+    'PontiVIA! encontrou esta ponte para você', // 1
+    'pontes encontradas!',                     // 2
+    'ponte encontrada!',                       // 3
+    'De ',                                     // 4
+    ' até ',                                   // 5
+    ' dias)',                                  // 6
+    'Em ',                                     // 7
+    ' (1 dia)',                                // 8
+    'Ponte possível!',                         // 9
+    'Cancelar',                                // 10
+    'Adicionar',                               // 11
+  ],
+  'hr': [
+    'Most!',                                   // 0
+    'PontiVIA! je pronašao ovaj most za tebe', // 1
+    'mostovi pronađeni!',                      // 2
+    'most pronađen!',                          // 3
+    'Od ',                                     // 4
+    ' do ',                                    // 5
+    ' dana)',                                  // 6
+    'Na ',                                     // 7
+    ' (1 dan)',                                // 8
+    'Moguć most!',                             // 9
+    'Otkaži',                                  // 10
+    'Dodaj',                                   // 11
+  ],
+  'si': [
+    'Most!',                                   // 0
+    'PontiVIA! je našel ta most za tebe',      // 1
+    'mostovi najdeni!',                        // 2
+    'most najden!',                            // 3
+    'Od ',                                     // 4
+    ' do ',                                    // 5
+    ' dni)',                                   // 6
+    'Na ',                                     // 7
+    ' (1 dan)',                                // 8
+    'Možen most!',                             // 9
+    'Prekliči',                                // 10
+    'Dodaj',                                   // 11
+  ],
+  'gr': [
+    'Γέφυρα!',                                 // 0
+    'Το PontiVIA! βρήκε αυτή τη γέφυρα για σας', // 1
+    'γέφυρες βρέθηκαν!',                       // 2
+    'γέφυρα βρέθηκε!',                         // 3
+    'Από ',                                    // 4
+    ' έως ',                                   // 5
+    ' μέρες)',                                 // 6
+    'Στις ',                                   // 7
+    ' (1 μέρα)',                               // 8
+    'Πιθανή γέφυρα!',                          // 9
+    'Ακύρωση',                                 // 10
+    'Προσθήκη',                                // 11
+  ]
 };
 
 /* ============================================================================= 

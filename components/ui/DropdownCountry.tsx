@@ -189,7 +189,7 @@ const DropdownCountry: React.FC<DropdownCountryProps> = ({selectedValue, onChang
         labelField="label"
         valueField="value"
         renderItem={renderItem}
-        placeholder={!isFocus ? 'Seleziona' : '...'}
+        placeholder={!isFocus ? 'Select' : '...'}
         // searchPlaceholder="Search..."
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
