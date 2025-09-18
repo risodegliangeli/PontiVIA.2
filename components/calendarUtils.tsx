@@ -1,12 +1,13 @@
-// LIBRARY GESTIONE DATE
 import { addDays } from 'date-fns';
-
-// PREFERENCES
 import { PREFERENCES } from '@/app/(tabs)/preferences';
-
-// localHolydas
 import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
-  const { localHolydas: countryHolydays } = useLocalizationData();
+import { getLocales,  } from 'expo-localization';
+import { Platform } from 'react-native';
+
+const { localHolydas: countryHolydays } = useLocalizationData();
+
+const myLanguage = getLocales()[0].languageTag;
+        console.log(Platform.OS, '[calendarUtils.tsx] myLanguage:', myLanguage);
 
 const dataLabel = [
     'Pasqua',                               // 0
@@ -14,7 +15,8 @@ const dataLabel = [
     'Ascensione',                           // 2
     "Pentecoste",                           // 3
     "Lunedì di Pentecoste",                 // 4
-    "Corpus Domini"                         // 5
+    "Corpus Domini",                        // 5
+    "Possibile ponte!"                      // 6
 ];
 
 /* ============================================================================= 
@@ -234,8 +236,8 @@ const getDayType = (date: Date, holidays: { day: number; month: number; descript
 /* ============================================================================= 
 CONTEGGIO DEI PONTI
 ============================================================================== */
-// CONTEGGIA TUTTI I ONTI ALL'INTERNO DI CIASCUN MESE E LI AGGIUNGE
-// IN FONDO ALL'ARRAY 'grid'
+// CONTEGGIA TUTTI I PONTI ALL'INTERNO DI CIASCUNA CARD E LI AGGIUNGE IN FONDO ALL'ARRAY 'grid'
+// 
 const countBridges = (monthTable: any[]) => {
   const bridges: Array<{ da: Date; a: Date; length: number }> = [];
   let currentBridge: { start: Date; days: Date[] } | null = null;
@@ -462,7 +464,7 @@ const createCalendarGrid = (
                             if (monthData.table[idx][1] === undefined) {
                                 // ponte
                                 monthData.table[idx][1] = -1 ; 
-                                monthData.table[idx][2] = "Possibile ponte!"; 
+                                monthData.table[idx][2] = '_'; //dataLabel[6]; // basta che la cell[2] non sia vuota
                             }
                         });
                     }

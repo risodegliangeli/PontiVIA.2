@@ -29,7 +29,7 @@ const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI M
 
 const myLanguage: string = (getLocales()[0].languageTag).slice(0,2);  // LINGUA LOCALE
 
-console.log(Platform.OS, '[holydays.tsx] myLanguage.', myLanguage);
+
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -50,8 +50,8 @@ const dataLabel: any = {
     'Il ',                                      // 7
     ' (1 giorno)',                              // 8
     'Possibile ponte!',                         // 9
-    'Annulla', // Aggiunto per il bottone Annulla
-    'Aggiungi' // Aggiunto per il bottone Aggiungi
+    'Annulla',                                  // 10
+    'Aggiungi'                                  // 11
     ],
   "fr":[
     'Pont!',                                    // 0
@@ -576,6 +576,17 @@ const CalendarScreen = (PREFERENCES: any) => {
         2025-05-26T12:00:00.000Z,   1,        "Ferragosto",     false],
   ============================================================================= */
   const renderMonthCard = useCallback(({ item: month, index }) => {
+
+
+
+
+
+    console.log(Platform.OS, '[calendarScreen.tsx] myLanguage (paese localizzato):', myLanguage);
+    console.log(Platform.OS, '[calendarScreen.tsx] myCountry (paese delle festivita):', myCountry);
+
+
+
+
     
     // MAPPA CONNESSIONI GRAFICHE TRA CERCHIETTI GIALLI
     const bridgeConnectionMap = createBridgeConnectionMap(month); 
@@ -868,12 +879,12 @@ const CalendarScreen = (PREFERENCES: any) => {
                         }
                       }}
                     >
-                      {day[2] && day[2] !== dataLabel[myLanguage][9] ? // 'Possibile ponte!'
+                      {day[2] && day[1] !== -1 ? // se cell[2] non è vuota ma cell[1] != -1 : festivita
                         <View 
                           key={`redcircle.${day[0].toISOString()}.${dayIndex}`}
                           style={[ StyleSheet.absoluteFill, styles.redCircle ]} />
                         :
-                          day[2] === dataLabel[myLanguage][9] ? // 'Possibile ponte!'
+                          day[1] === -1 ? // se cell[2] non è vuota ma cell[1] = -1 : ponte
                             <View 
                               key={`yellowcircle.${day[0].toISOString()}.${dayIndex}`}
                               style={[ StyleSheet.absoluteFill, styles.yellowCircle ]} />
@@ -901,9 +912,7 @@ const CalendarScreen = (PREFERENCES: any) => {
 
         {isAdvertising && 
           ((index +1)  % monthsToLoad === 0) && (
-            <View style={[styles.adBanner, {borderWidth:0}]}>
-                <Text style={{color: colors.text}}> </Text>
-            </View>
+            <View style={[styles.adBanner, {borderWidth:0}]} />
           )
         }
 
