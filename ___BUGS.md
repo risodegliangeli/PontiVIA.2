@@ -2,7 +2,7 @@
 
 
 - ### FESTIVITA NAZIONALI EDITABILI
-  -- o perlomeno ogni data checkabile (on/off)
+  ~~-- o perlomeno ogni data checkabile (on/off)~~
   -- con pulsante di rollback per il ripristino
 
 
