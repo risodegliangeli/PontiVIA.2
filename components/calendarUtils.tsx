@@ -8,36 +8,14 @@ import { PREFERENCES } from '@/app/(tabs)/preferences';
 import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
   const { localHolydas: countryHolydays } = useLocalizationData();
 
-const dataLabel = {
-    'it-IT':[
-        'Pasqua',                               // 0
-        'Lunedì dell\'Angelo',                  // 1
-        'Ascensione',                           // 2
-        "Pentecoste",                           // 3
-        "Lunedì di Pentecoste",                 // 4
-        "Corpus Domini",                        // 5
-        "Possibile ponte!"
-        ],
-    'en-IT':[
-        'Pasqua',                               // 0
-        'Lunedì dell\'Angelo',                  // 1
-        'Ascensione',                           // 2
-        "Pentecoste",                           // 3
-        "Lunedì di Pentecoste",                 // 4
-        "Corpus Domini",                        // 5
-        "Possibile ponte!"
-        ],
-    "de-AT":[],
-    "ch-CH":[],
-    "be-BE":[],
-    "en-GB":[],
-    "en-IE":[],
-    'fr-FR': [],
-    "de-DE":[],
-    'es-ES':[],
-    'nl-NL':[],
-    'pt-PT':[]
-};
+const dataLabel = [
+    'Pasqua',                               // 0
+    'Lunedì dell\'Angelo',                  // 1
+    'Ascensione',                           // 2
+    "Pentecoste",                           // 3
+    "Lunedì di Pentecoste",                 // 4
+    "Corpus Domini"                         // 5
+];
 
 /* ============================================================================= 
     CREA UNA DATA A MEZZOGIORNO UTC
@@ -123,7 +101,7 @@ const getCountryNationalHolidays = (
     PREFERENCES.pasqua.status && holidays.push({ 
         day: dayOfEaster, 
         month: monthOfEaster - 1, 
-        description: dataLabel[myCountry][0] 
+        description: dataLabel[0] 
     });
 
     let currentPasqua = createUTCDate(year, monthOfEaster - 1, dayOfEaster);
@@ -134,7 +112,7 @@ const getCountryNationalHolidays = (
         holidays.push({ 
             day: easterMonday.getUTCDate(), 
             month: easterMonday.getUTCMonth(), 
-            description: dataLabel[myCountry][1] });
+            description: dataLabel[1] });
     }
 
     // ASCENSIONE (39 giorni dopo Pasqua)
@@ -143,7 +121,7 @@ const getCountryNationalHolidays = (
         holidays.push({ 
             day: ascensione.getUTCDate(), 
             month: ascensione.getUTCMonth(), 
-            description: dataLabel[myCountry][2] 
+            description: dataLabel[2] 
         });
     }
 
@@ -163,7 +141,7 @@ const getCountryNationalHolidays = (
         holidays.push({ 
             day: lunediPentecoste.getUTCDate(), 
             month: lunediPentecoste.getUTCMonth(), 
-            description: dataLabel[myCountry][4] 
+            description: dataLabel[4] 
         });
     }
 
@@ -173,7 +151,7 @@ const getCountryNationalHolidays = (
         holidays.push({ 
             day: corpusDomini.getUTCDate(), 
             month: corpusDomini.getUTCMonth(), 
-            description: dataLabel[myCountry][5]
+            description: dataLabel[5]
         });
     }
 
@@ -484,7 +462,7 @@ const createCalendarGrid = (
                             if (monthData.table[idx][1] === undefined) {
                                 // ponte
                                 monthData.table[idx][1] = -1 ; 
-                                monthData.table[idx][2] = dataLabel[myCountry][6]; 
+                                monthData.table[idx][2] = "Possibile ponte!"; 
                             }
                         });
                     }
