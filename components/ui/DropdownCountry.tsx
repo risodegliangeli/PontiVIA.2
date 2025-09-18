@@ -27,28 +27,6 @@ const countryNames = [
   { label: 'Ελλάδα', value: 'gr-GR', flag: '🇬🇷', disable: true },
 ];
 
-const countriesData = [
-  { label: 'Italia', value: 'it-IT', flag: '🇮🇹' 
- },
-  { 
-    label: 'Germania', 
-    value: 'de-DE', 
-    flag: '🇩🇪' 
-  },
-  { 
-    label: 'Francia', 
-    value: 'fr-FR', 
-    flag: '🇫🇷',
-    disable: true // Esempio di voce disabilitata
-  },
-  { 
-    label: 'Spagna', 
-    value: 'es-ES', 
-    flag: '🇪🇸' 
-  },
-];
-
-
 interface DropdownCountryProps {
   selectedValue: string; // Il valore selezionato arriva come stringa (es. 'it-IT')
   onChange: (value: string) => void;

@@ -2,6 +2,9 @@ import { Colors } from '@/constants/Colors';
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import React, { useEffect, useRef, useState } from 'react';
+import { getLocales,  } from 'expo-localization';
+import { splittedBarLabel as splittedLabels } from '@/components/dataLabel';
+
 import {
   Animated,
   Dimensions,
@@ -14,6 +17,7 @@ import {
   View
 } from 'react-native';
 import { easeGradient } from 'react-native-easing-gradient';
+
 
 const w = Dimensions.get('window').width;
 
@@ -29,10 +33,12 @@ const useThemeColors = () => {
 ########################################################################################################### */
 export default function CustomTabBar({ route, focused: isFocused, event, state, descriptors, navigation}) {
 
-  // DIMENSIONI WINDOW
-  const windowWidth: number = Dimensions.get('window').width;
+  const myLanguage = (getLocales()[0].languageTag).slice(0,2);
 
   const [splittedTotalWidth, setSplittedTotalWidth] = useState<number>(0);
+
+// DIMENSIONI WINDOW
+  const windowWidth: number = Dimensions.get('window').width;
   
   useEffect( () => {
     if (windowWidth >= 320 && windowWidth <= 360) {
@@ -50,10 +56,17 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
 
   const splittedFromBottom: number = 28;
   const itemsInternalPadding: number = 3;
-  const splittedLabels =  [
-    '', 
-    'Le mie date', 
-    'Filtri'];
+  // const splittedLabels =  [
+  //   '', 
+  //   'Le mie date', 
+  //   'Filtri'];
+
+  const [label, setLabel] = useState([splittedLabels(myLanguage,0), splittedLabels(myLanguage,1)]);
+
+  // AGGIORNA QND CAMBIA LINGUA
+  useEffect( () => {
+    setLabel([splittedLabels(myLanguage,0), splittedLabels(myLanguage,1)]);
+  }, [myLanguage]);
 
   // GESTIONE COLORI
   const colors = useThemeColors();  
@@ -86,7 +99,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
       return (
         <>
           <Image style={styles.doubleItemsIcon} source={require("@/assets/images/icon_calendar-on.png")} />
-          <Text style={styles.labelSelected}>{splittedLabels[1]}</Text> 
+          <Text style={styles.labelSelected}>{label[0]}</Text> 
         </>
       )
     } else {
@@ -100,7 +113,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
               require("@/assets/images/icon_calendar-off.png") // ICONA NERA
             }
           />
-          <Text style={styles.labelNotSelected}>{splittedLabels[1]}</Text> 
+          <Text style={styles.labelNotSelected}>{splittedLabels(myLanguage,0)}</Text> 
         </>
         ) 
     }
@@ -110,7 +123,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
       return (
         <>
           <Image style={styles.doubleItemsIcon} source={require("@/assets/images/icon_wand-on.png")} />
-          <Text style={styles.labelSelected}>{splittedLabels[2]}</Text> 
+          <Text style={styles.labelSelected}>{splittedLabels(myLanguage,1)}</Text> 
         </>
       )
     } else {
@@ -124,7 +137,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
               require("@/assets/images/icon_wand-off.png")
             }
           />
-          <Text style={styles.labelNotSelected}>{splittedLabels[2]}</Text> 
+          <Text style={styles.labelNotSelected}>{splittedLabels(myLanguage,1)}</Text> 
         </>
         ) 
 

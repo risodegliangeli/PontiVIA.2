@@ -6,8 +6,57 @@ NB QUESTO FILES POTREBBE RACCOGLIERE TUTTE LE function() CHE FORNISCONO
 LE LABEL ALLE PAGINE*/
 
 
-export function dataLabel(language: string, item: number) {
-    const countryLabels: any = {
+
+// USATA IN splittedBar.tsx
+export function splittedBarLabel(language, item) {
+    const countryLabels = {
+        'it':[
+            'Le mie date', 
+            'Filtri'
+        ],
+        'fr': [
+            'Mes Dates', 
+            'Filtres'
+        ],
+        'es': [
+            'Mis Fechas', 
+            'Filtri'
+        ],
+        'de': [
+            'Meine Daten', 
+            'Filtros'
+        ],
+        'en': [
+            'My Dates', 
+            'Filters'
+        ],
+        'nl': [
+            'Mijn Data', 
+            'Filters'
+        ],
+        'pt': [
+            'Minhas Datas', 
+            'Filtros'
+        ],
+        'hr': [
+            'Moji datumi',                               // Le mie date
+            'Filteri',                                   // Filtri        
+            ],
+        'si': [
+            'Moji datumi',                               // Le mie date
+            'Filtri',                                    // Filtri        
+            ],
+        'gr': [
+            'Οι ημερομηνίες μου',                        // Le mie date
+            'Φίλτρα',                                    // Filtri        
+            ],
+    };
+    return countryLabels[language][item];
+}
+
+// USATA IN calendarUtils.tsx e preferences.tsx
+export function dataLabel(language, item) {
+    const countryLabels = {
         'it':[
             'Pasqua',                               // 0
             'Lunedì dell\'Angelo',                  // 1

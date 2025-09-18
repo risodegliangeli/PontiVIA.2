@@ -2,7 +2,7 @@
 
 
 - ### FESTIVITA NAZIONALI EDITABILI
-  -- o perlomeno ogni data checkabile (on/off)
+-- o perlomeno ogni data checkabile (on/off)
   -- con pulsante di rollback per il ripristino
 
 
@@ -11,6 +11,10 @@
 
 - ### TRADUZIONI
   ##### impostare due variabili, una per le traduzioni (myLanguage) e una per la dropdown (myCountry)
+        -- tradurre SplittedBar
+        -- tradurre DropdownComponent
+
+
         -- myLanguage viene letto dal sistema 
            ∟ NON cambia
            ∟ agisce sulla lingua di tutte le schede
@@ -20,11 +24,10 @@
            ∟ agisce sul calcolo delle festività
            ∟ NON agisce sul linguaggio delle schede
 
-        ~~-- raccogliere TUTTE le traduzioni nel Context!~~
+        ~~-- raccogliere TUTTE le traduzioni nel Context~~
 
 
-        -- holydays.tsx BOTTONE RESET DROPDOWN COUNTRY: RIPORTA LA SELEZIONE A ~~'ITALIA'~~
-
+        -- holydays.tsx BOTTONE RESET DROPDOWN COUNTRY: RIPORTA LA SELEZIONE A ~~'ITALIA'~
 
 
         Tabella linguaggi e festivita:
