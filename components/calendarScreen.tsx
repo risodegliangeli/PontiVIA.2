@@ -390,19 +390,20 @@ const CalendarScreen = (PREFERENCES: any) => {
       transform: [{ translateY: '-50%' }, { translateX: '-50%' }],
       width:36,
       height:36,
-      borderWidth:1,
+      borderWidth:3,
       borderColor: colors.textRed,
       borderRadius: 36,
       },
-    yellowCircle: {
+    yellowCircle: { // NON E' PIU YELLOW MA BLUE
       position:'absolute',
       width:36,
       height:36,
       left: '50%',
       top: '50%',
       transform: [{ translateY: '-50%' }, { translateX: '-50%' }],
-      borderWidth:2,
-      borderColor: colors.bridgeBackground,
+      backgroundColor: colors.bridgeBackground,
+      // borderWidth:2,
+      // borderColor: colors.bridgeBackground,
       borderRadius: 48,
       },
     // touchable: {
@@ -478,15 +479,15 @@ const CalendarScreen = (PREFERENCES: any) => {
         },
     bridgeConnectorHorizontal: {
       position: 'absolute',
-      height: 2,
+      height: 16,
       backgroundColor: colors.bridgeBackground,
       top: '50%',
-      transform: [{ translateY: -1 }],
+      transform: [{ translateY: -8 }],
       zIndex: 0,
     },
     bridgeConnectorVertical: {
       position: 'absolute',
-      width: 2,
+      width: 8,
       backgroundColor: colors.bridgeBackground,
       left: '50%',
       transform: [{ translateX: -1 }],
@@ -640,11 +641,9 @@ const CalendarScreen = (PREFERENCES: any) => {
     // MAPPA CONNESSIONI GRAFICHE TRA CERCHIETTI GIALLI
     const bridgeConnectionMap = createBridgeConnectionMap(month); 
 
-    /* 
-    
-              REACT COMPONENT PER TOAST CON FESTIVITA 
-    
-    */
+    /* -----------------------------------------------------
+    MODAL CHE MOSTRA UN GIORNO FESTIVO (usa SimpleToast.tsx)
+    ----------------------------------------------------- */
     interface HolydayToastInterface {
       title: string;
       description: string;
@@ -673,11 +672,9 @@ const CalendarScreen = (PREFERENCES: any) => {
       )
     }
     
-    /* 
-    
-              REACT COMPONENT PER TOAST CON POSSIBILE PONTE 
-    
-    */
+    /* -----------------------------------------------------
+    MODAL CHE MOSTRA UN POSSIBILE PONTE (usa SimpleToast.tsx)
+    ------------------------------------------------------ */
     interface BridgeHolydayInterface {
       title: string;
       description: string;
@@ -701,6 +698,8 @@ const CalendarScreen = (PREFERENCES: any) => {
               }
             </View>
           </View>
+
+          {/* PULSANTI ANNULLA/AGGIUNGI */}
           <View style={[styles.modalButtons, {marginTop:24}]}>
             <TouchableOpacity 
               style={styles.cancelButton} 
@@ -738,22 +737,16 @@ const CalendarScreen = (PREFERENCES: any) => {
         <View style={styles.card}>
           
           <View style={{ flex:1, flexDirection:'row', justifyContent:'space-between', }}>
-            {/* 
 
-            BLOCCHETTO MESE/ANNO 
-
-            */}
+            {/* BLOCCHETTO MESE/ANNO */}
             <View>
               <Text style={styles.monthTitle}>
                 {localizedMonths[month.m - 1].label.charAt(0).toUpperCase() + localizedMonths[month.m - 1].label.slice(1)}
               </Text>
               <Text style={styles.yearTitle}>{month.y}</Text>
             </View>
-            {/* 
 
-            LABEL PONTI TROVATI 
-
-            */}
+            {/* LABEL PONTI TROVATI */}
             <View>
               {month.bridges.length > 0 ? 
                 <View style={styles.bridgeYellowLabel}>
@@ -764,11 +757,8 @@ const CalendarScreen = (PREFERENCES: any) => {
               }
             </View>
           </View>
-          {/* 
-          
-          INIZIALI GIORNI DELLA SETTIMANA 
-          
-          */}
+
+          {/* INIZIALI GIORNI DELLA SETTIMANA */}
           <View style={styles.weekDaysHeader}>
             {localizedDays.map((dayName, i) => (
                 <Text key={i} style={styles.weekDayText}>{dayName.substring(0,2).toUpperCase()}</Text>
@@ -779,11 +769,7 @@ const CalendarScreen = (PREFERENCES: any) => {
           <View style={{width:'100%', height: 1, backgroundColor: 'rgba(0,0,0,.05)', marginBottom: 0, }}></View>
           <View style={{width:'100%', height: 1, backgroundColor: colors.white, marginBottom: 12, }}></View>
           
-          {/* 
-          
-          INTERNO DELLA CARD 
-          
-          */}
+          {/* INTERNO DELLA CARD */}
           <View style={{borderBottomLeftRadius: 16, borderBottomRightRadius: 16, overflow: 'hidden'}}>
             <View style={styles.daysGrid}>
 
@@ -796,35 +782,30 @@ const CalendarScreen = (PREFERENCES: any) => {
                   <View key={`day-container-${day[0]}-${dayIndex}`} style={styles.dayCell}>
 
                     {/* CONNETTORI TRA I CERCHIETTI DEL PONTE */}
-                    {day[1] === -1 && (
+                    {/* {day[1] === -1 && (
                       <>
-                        {/* Connettore orizzontale destro */}
                         {connections.right && (
                           <View 
                             style={[
                               styles.bridgeConnectorHorizontal,
                               {
                                 right: 0,
-                                width: '20%',
+                                width: '15%',
                               }
                             ]} 
                           />
                         )}
-                        
-                        {/* Connettore orizzontale sinistro */}
                         {connections.left && (
                           <View 
                             style={[
                               styles.bridgeConnectorHorizontal,
                               {
                                 left: 0,
-                                width: '20%',
+                                width: '15%',
                               }
                             ]} 
                           />
                         )}
-                        
-                        {/* Connettore verticale basso */}
                         {connections.bottom && (
                           <View 
                             style={[
@@ -836,8 +817,6 @@ const CalendarScreen = (PREFERENCES: any) => {
                             ]} 
                           />
                         )}
-                        
-                        {/* Connettore verticale alto */}
                         {connections.top && (
                           <View 
                             style={[
@@ -850,7 +829,9 @@ const CalendarScreen = (PREFERENCES: any) => {
                           />
                         )}
                       </>
-                    )}
+                    )} */}
+
+                      {/* TUTTI I GIORNI SONO TOUCHABLEOPACITY */}
                       <TouchableOpacity 
                       key={`key,${day[0]},${dayIndex}`}
                       style={[styles.squaredTouchable, !day[3] && styles.dayCellOutsideMonth, ]}
@@ -860,11 +841,7 @@ const CalendarScreen = (PREFERENCES: any) => {
                       onPress={() => {
                         if (day[2] != undefined) {
                           if (day[1] > 0) {
-                            /* 
-                            
-                            SimpleToast --> FESTIVITA' 
-                            
-                            */
+                            /*  MODAL/SimpleToast --> FESTIVITA' */
                               setVisibleToast(true); 
                               setToastPosition('center');
                               setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
@@ -880,11 +857,7 @@ const CalendarScreen = (PREFERENCES: any) => {
                               setToastAnimation('fade');
                               setToastOnClose(undefined); 
                           } else {
-                            /* 
-                            
-                            SimpleToast --> POSSIBILE PONTE 
-                            
-                            */
+                            /* MODAL/SimpleToast --> POSSIBILE PONTE */
                             let bridgeDescription: string = '';
                             let bridgeStartAt: Date;
                             let bridgeEndsAt: Date;
@@ -944,7 +917,7 @@ const CalendarScreen = (PREFERENCES: any) => {
                         style={[ 
                           styles.dayNumber,
                             day[1] ===  1 && [styles.dayNumberHoliday, styles.dayNumberBold],
-                            day[1] === -1 && styles.dayNumberBridge,
+                            day[1] === -1 && [styles.dayNumberBridge, styles.dayNumberBold, {color: 'white'}],
                           ]} 
                       >
                         {day[0].getUTCDate()}
@@ -964,8 +937,6 @@ const CalendarScreen = (PREFERENCES: any) => {
             <View style={[styles.adBanner, {borderWidth:0}]} />
           )
         }
-
-
       </React.Fragment>
     );
     

@@ -9,12 +9,10 @@ const useThemeColors = () => {
   };
 
 const dataLabel = [
-  '1 😊',
-  '2 😀😀',
-  '3 🤪🤪🤪'
+  '1 giorno 😊',
+  '2 giorni 😀',
+  '3 giorni 🤪'
 ];
-
-//😏 😊😃
 
 const data = [
   { label: dataLabel[0], value: 1 },

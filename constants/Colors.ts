@@ -27,7 +27,7 @@ export const Colors = {
     cardBackground: 'rgba(252, 252, 249, .8)', // BAINCO 75%
     dropdownBackground: 'rgba(51, 51, 51, 0.06)', // BACKGROUND DELLA DROPDOWN
     bridgeDay: 'rgba(51, 51, 51,1)',
-    bridgeBackground: '#FFCC33',  // PONTE EVIDENZIATO
+    bridgeBackground: '#0088ff',  // PONTE EVIDENZIATO
     tint: tintColorLight,
     cancelButton: 'rgba(222, 222, 222, 1)',      // #dedede
     white: '#fff',
@@ -61,7 +61,7 @@ export const Colors = {
     cardBackground: 'rgba(71,64,71, 1)', // SCURO 100% PER COPRIRE LO SFONDO
     dropdownBackground: 'rgba(255, 255, 255, 0.08)', // BACKGROUND DELLA DROPDOWN
     bridgeDay: 'rgba(255, 204, 51, 1)',
-    bridgeBackground: 'rgba(255, 204, 51, 1)',  // PONTE EVIDENZIATO
+    bridgeBackground: '#43a7ff', //'rgba(255, 204, 51, 1)',  // PONTE EVIDENZIATO
     tint: tintColorDark,
     cancelButton: '#999',
     white: '#fff',

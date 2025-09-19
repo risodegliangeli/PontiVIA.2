@@ -204,7 +204,7 @@ const getDayType = (date: Date, holidays: { day: number; month: number; descript
     const dayOfWeek = getUTCDayOfWeek(date); // 0 = Domenica, 6 = Sabato
 
     // 1) CONTROLLO: FESTIVITA NAZIONALE/PERSONALE/LOCALE/PASQUA?
-    let foundHoliday: { day: number; month: number; description: string } | undefined = undefined; // <-- corretto da copilot
+    let foundHoliday: { day: number; month: number; description: string } | undefined = undefined; 
 
     // Controlla sempre le festività personali e locali se gli switch sono attivi
     if (PREFERENCES.festivitaPersonali.status || PREFERENCES.festivitaLocali.status || PREFERENCES.festivitaNazionali.status || PREFERENCES.feriePersonali.status) {
