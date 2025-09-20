@@ -54,7 +54,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
   const singleItemImageSize: string = '60%';
   const doubleItemsImageSize: string = '35%';
 
-  const splittedFromBottom: number = 56;
+  const splittedFromBottom: number = Platform.OS === 'ios' ? 28 : 56;
   const itemsInternalPadding: number = 3;
   // const splittedLabels =  [
   //   '', 

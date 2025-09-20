@@ -235,66 +235,59 @@ CONTEGGIO DEI PONTI
 // CONTEGGIA TUTTI I PONTI ALL'INTERNO DI CIASCUNA CARD E LI AGGIUNGE IN FONDO ALL'ARRAY 'grid'
 // 
 const countBridges = (monthTable: any[]) => {
-  const bridges: Array<{ da: Date; a: Date; length: number }> = [];
-  let currentBridge: { start: Date; days: Date[] } | null = null;
-  const sortedDays = [...monthTable].sort((a, b) => a[0].getTime() - b[0].getTime());
-  
-  sortedDays.forEach((day) => {
-    const [date, type] = day;
-    
-    if (type === -1) { // PONTE
-      if (!currentBridge) {
-        // INIZIA UN NUOVO 'PONTE'
-        currentBridge = {
-          start: new Date(date),
-          days: [new Date(date)]
-        };
-      } else {
-        // Verifica se questo giorno è consecutivo al ponte corrente
-        const lastBridgeDay = currentBridge.days[currentBridge.days.length - 1];
-        const nextDay = new Date(lastBridgeDay);
-        nextDay.setDate(nextDay.getDate() + 1);
-        
-        if (date.getTime() === nextDay.getTime()) {
-          // Giorno consecutivo, aggiungi al ponte corrente
-          currentBridge.days.push(new Date(date));
+    const bridges: Array<{ da: Date; a: Date; length: number }> = [];
+    let currentBridge: { start: Date; days: Date[] } | null = null;
+    // Filtra solo i giorni che appartengono al mese corrente (isCurrentMonth === true)
+    const currentMonthDays = monthTable.filter(day => day[3] === true);
+    const sortedDays = [...currentMonthDays].sort((a, b) => a[0].getTime() - b[0].getTime());
+
+    sortedDays.forEach((day) => {
+        const [date, type] = day;
+        if (type === -1) { // PONTE
+            if (!currentBridge) {
+                currentBridge = {
+                    start: new Date(date),
+                    days: [new Date(date)]
+                };
+            } else {
+                const lastBridgeDay = currentBridge.days[currentBridge.days.length - 1];
+                const nextDay = new Date(lastBridgeDay);
+                nextDay.setDate(nextDay.getDate() + 1);
+                if (date.getTime() === nextDay.getTime()) {
+                    currentBridge.days.push(new Date(date));
+                } else {
+                    bridges.push({
+                        da: currentBridge.start,
+                        a: currentBridge.days[currentBridge.days.length - 1],
+                        length: currentBridge.days.length
+                    });
+                    currentBridge = {
+                        start: new Date(date),
+                        days: [new Date(date)]
+                    };
+                }
+            }
         } else {
-          // Non è consecutivo, chiudi il ponte corrente e iniziane uno nuovo
-          bridges.push({
+            if (currentBridge) {
+                bridges.push({
+                    da: currentBridge.start,
+                    a: currentBridge.days[currentBridge.days.length - 1],
+                    length: currentBridge.days.length
+                });
+                currentBridge = null;
+            }
+        }
+    });
+
+    if (currentBridge) {
+        bridges.push({
             da: currentBridge.start,
             a: currentBridge.days[currentBridge.days.length - 1],
             length: currentBridge.days.length
-          });
-          
-          currentBridge = {
-            start: new Date(date),
-            days: [new Date(date)]
-          };
-        }
-      }
-    } else {
-      // Non è un ponte, chiudi il ponte corrente se esiste
-      if (currentBridge) {
-        bridges.push({
-          da: currentBridge.start,
-          a: currentBridge.days[currentBridge.days.length - 1],
-          length: currentBridge.days.length
         });
-        currentBridge = null;
-      }
     }
-  });
-  
-  // Chiudi l'ultimo ponte se rimane aperto
-  if (currentBridge) {
-    bridges.push({
-      da: currentBridge.start,
-      a: currentBridge.days[currentBridge.days.length - 1],
-      length: currentBridge.days.length
-    });
-  }
-  
-  return bridges;
+
+    return bridges;
 };
 
 /* ============================================================================= 

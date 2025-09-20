@@ -1,6 +1,8 @@
 # TICKET APERTI:
 
 
+
+
 - ### FESTIVITA NAZIONALI EDITABILI
 -- o perlomeno ogni data checkabile (on/off)
   -- con pulsante di rollback per il ripristino
@@ -90,8 +92,6 @@
 ---
 
 
-- ### PONTI FUORI DAL MESE
-  -- eliminare segnalazione ponti che sono prima o dopo il mese corrente
 
 
 ---
@@ -156,6 +156,16 @@
 
 # TICKET RISOLTI:
 
+
+- ### PONTI FUORI DAL MESE
+  -- eliminare segnalazione ponti che sono prima o dopo il mese corrente
+
+---
+
+- ### MODALITA' DI NAVIGAZIONE SU ANDROID
+  -- applicare SafeArea alla SplittedBar
+
+---
 
 
 - ### DARK MODE

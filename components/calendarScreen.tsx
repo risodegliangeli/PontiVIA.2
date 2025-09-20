@@ -390,11 +390,12 @@ const CalendarScreen = (PREFERENCES: any) => {
       transform: [{ translateY: '-50%' }, { translateX: '-50%' }],
       width:36,
       height:36,
-      borderWidth:3,
-      borderColor: colors.textRed,
+      borderWidth:.5,
+      borderColor: colors.disabled,
+      backgroundColor: colors.textRed,
       borderRadius: 36,
       },
-    yellowCircle: { // NON E' PIU YELLOW MA BLUE
+    yellowCircle: { // NON E' PIU YELLOW MA BLUE...
       position:'absolute',
       width:36,
       height:36,
@@ -406,17 +407,23 @@ const CalendarScreen = (PREFERENCES: any) => {
       // borderColor: colors.bridgeBackground,
       borderRadius: 48,
       },
-    // touchable: {
-    //   backgroundColor:'transparent',
-    //   width: '100%',
-    //   height: '100%',
-    //   position: 'absolute',
-    //   top:0,
-    //   left:0, 
-    //   zIndex: 10, // Assicura che sia sopra tutto
-    //   justifyContent: 'center',
-    //   alignItems: 'center',   
-    // },
+    yellowBadge: {
+      position:'absolute',
+      top:'15%', 
+      right:'15%',
+      height:10, 
+      width:10,
+      borderRadius:'100%',
+      backgroundColor: '#ffcc00',
+      elevation:12,
+      shadowColor: colors.black, // iOS shadow
+      shadowOffset: {
+        width: 1,
+        height: 4, // Match elevation for iOS
+      },
+      shadowOpacity: 0.75,
+      shadowRadius: 4 // Match elevation for iOS
+    },
     squaredTouchable: {
       position: 'absolute',
       width:'99%', height:'100%', //borderRadius:20,
@@ -455,17 +462,17 @@ const CalendarScreen = (PREFERENCES: any) => {
       width:'auto',
       marginRight: 4,
     },
-        cancelButtonText: {
-          color: colors.text,
-          fontSize: 16,
-          fontWeight: 'bold',
-        },    
+    cancelButtonText: {
+      color: colors.text,
+      fontSize: 16,
+      fontWeight: 'bold',
+    },    
     addButton: {
       flex: 1,
       flexDirection:'row',
       padding: 10,
       maxHeight:46,
-      backgroundColor: colors.textRed,
+      backgroundColor: colors.bridgeBackground,
       borderRadius: 8,
       alignItems: 'center',
       justifyContent:'center',
@@ -907,17 +914,36 @@ const CalendarScreen = (PREFERENCES: any) => {
                           style={[ StyleSheet.absoluteFill, styles.redCircle ]} />
                         :
                           day[1] === -1 ? // se cell[2] non è vuota ma cell[1] = -1 : ponte
+                          <>
                             <View 
                               key={`yellowcircle.${day[0].toISOString()}.${dayIndex}`}
                               style={[ StyleSheet.absoluteFill, styles.yellowCircle ]} />
+                            <View 
+                              style={styles.yellowBadge}/>
+                          </>  
                           : 
                           null
                       }
                       <Text 
                         style={[ 
                           styles.dayNumber,
-                            day[1] ===  1 && [styles.dayNumberHoliday, styles.dayNumberBold],
-                            day[1] === -1 && [styles.dayNumberBridge, styles.dayNumberBold, {color: 'white'}],
+                            // day[1] ===  1 && [styles.dayNumberHoliday, styles.dayNumberBold],
+                            // day[1] === -1 && [styles.dayNumberBridge, styles.dayNumberBold, {color: colors.white}],
+
+                            // SE day[2] (ESISTE DESCRIZIONE) 
+                            day[2] ?
+                              // SE day[1]>0 SOLO FESTIVITA
+                              day[1] === 1 ?
+                                [styles.dayNumberHoliday, styles.dayNumberBold, {color: 'white'}]
+                                :
+                                // SE day[2]<0 ALLORA PONTE
+                                [styles.dayNumberBridge, styles.dayNumberBold, {color: colors.white}]
+                            :
+                            // ALTRIMENTI NON ESISTE DESCRIZIONE GIORNO NORMALE
+                              day[1] === 1 ?
+                                [styles.dayNumberHoliday, styles.dayNumberBold]
+                                :
+                                [styles.dayNumber, ]
                           ]} 
                       >
                         {day[0].getUTCDate()}
