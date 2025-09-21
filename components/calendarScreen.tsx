@@ -429,6 +429,9 @@ const CalendarScreen = (PREFERENCES: any) => {
       width:10,
       borderRadius:'100%',
       backgroundColor: '#ffcc00',
+      
+     
+      
       elevation:12,
       shadowColor: colors.black, // iOS shadow
       shadowOffset: {
