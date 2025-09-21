@@ -390,12 +390,20 @@ const CalendarScreen = (PREFERENCES: any) => {
       transform: [{ translateY: '-50%' }, { translateX: '-50%' }],
       width:36,
       height:36,
-      borderWidth:.5,
+      //borderWidth:.5,
       borderColor: colors.disabled,
       backgroundColor: colors.textRed,
       borderRadius: 36,
+      elevation:6,
+      shadowColor: colors.black, // iOS shadow
+      shadowOffset: {
+        width: 1,
+        height: 2, // Match elevation for iOS
       },
-    yellowCircle: { // NON E' PIU YELLOW MA BLUE...
+      shadowOpacity: 0.25,
+      shadowRadius: 4 // Match elevation for iOS
+      },
+    yellowCircle: { // NON E' PIU YELLOW MA BLUE... ;-)
       position:'absolute',
       width:36,
       height:36,
@@ -403,9 +411,15 @@ const CalendarScreen = (PREFERENCES: any) => {
       top: '50%',
       transform: [{ translateY: '-50%' }, { translateX: '-50%' }],
       backgroundColor: colors.bridgeBackground,
-      // borderWidth:2,
-      // borderColor: colors.bridgeBackground,
       borderRadius: 48,
+      elevation:6,
+      shadowColor: colors.black, // iOS shadow
+      shadowOffset: {
+        width: 1,
+        height: 2, // Match elevation for iOS
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4 // Match elevation for iOS
       },
     yellowBadge: {
       position:'absolute',
@@ -849,20 +863,20 @@ const CalendarScreen = (PREFERENCES: any) => {
                         if (day[2] != undefined) {
                           if (day[1] > 0) {
                             /*  MODAL/SimpleToast --> FESTIVITA' */
-                              setVisibleToast(true); 
-                              setToastPosition('center');
-                              setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
-                              setOverlayBackground('rgba(50, 50, 50, 0.05)') // COLORE OVERLAY
-                              setToastRadius([12,12,12,12]); // STONDATURA
-                              setPaddingFromTop(48); // MARGINE TOP
-                              setPaddingFromBottom(48); // MARGINE BOTTTOM
-                              setToastBody( 
-                                <HolydayToast 
-                                  title={day[2]} 
-                                  description={day[0].toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})} />
-                              );
-                              setToastAnimation('fade');
-                              setToastOnClose(undefined); 
+                            setVisibleToast(true); 
+                            setToastPosition('center');
+                            setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
+                            setOverlayBackground('rgba(50, 50, 50, 0.05)') // COLORE OVERLAY
+                            setToastRadius([12,12,12,12]); // STONDATURA
+                            setPaddingFromTop(48); // MARGINE TOP
+                            setPaddingFromBottom(48); // MARGINE BOTTTOM
+                            setToastBody( 
+                              <HolydayToast 
+                                title={day[2]} 
+                                description={day[0].toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})} />
+                            );
+                            setToastAnimation('fade');
+                            setToastOnClose(undefined); 
                           } else {
                             /* MODAL/SimpleToast --> POSSIBILE PONTE */
                             let bridgeDescription: string = '';
@@ -927,22 +941,21 @@ const CalendarScreen = (PREFERENCES: any) => {
                       <Text 
                         style={[ 
                           styles.dayNumber,
-                            // day[1] ===  1 && [styles.dayNumberHoliday, styles.dayNumberBold],
-                            // day[1] === -1 && [styles.dayNumberBridge, styles.dayNumberBold, {color: colors.white}],
-
                             // SE day[2] (ESISTE DESCRIZIONE) 
                             day[2] ?
-                              // SE day[1]>0 SOLO FESTIVITA
+                              // + SE day[1]>0 = SOLO FESTIVITA
                               day[1] === 1 ?
                                 [styles.dayNumberHoliday, styles.dayNumberBold, {color: 'white'}]
                                 :
-                                // SE day[2]<0 ALLORA PONTE
+                                // SE day[1] DIVERSO DA 1 (E SE day[2] ESISTE NON PUO' CHE ESSERE -1) = PONTE
                                 [styles.dayNumberBridge, styles.dayNumberBold, {color: colors.white}]
                             :
-                            // ALTRIMENTI NON ESISTE DESCRIZIONE GIORNO NORMALE
+                            // ALTRIMENTI SE NON ESISTE day[2] DESCRIZIONE
+                              // day[1] =1 FESTIVO
                               day[1] === 1 ?
                                 [styles.dayNumberHoliday, styles.dayNumberBold]
                                 :
+                                // day[1] != \ GIORNO NORMALE
                                 [styles.dayNumber, ]
                           ]} 
                       >
