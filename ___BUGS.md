@@ -157,6 +157,10 @@
 # TICKET RISOLTI:
 
 
+- ### ROVESCIARE PULSANTIERA
+  -- 1 -2
+
+
 - ### PONTI FUORI DAL MESE
   -- eliminare segnalazione ponti che sono prima o dopo il mese corrente
 

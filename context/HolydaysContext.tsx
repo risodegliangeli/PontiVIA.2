@@ -79,7 +79,7 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
 
   // DEFINIZIONI COSTANTI
   const [personalHolydays, setPersonalHolydays] = useState<Holiday[]>([]);
-  // const [regionalHolydays, setRegionalHolydays] = useState<Holiday[]>([]);
+  const [ vacationdisabledHolydays, toggleHolydaysDisabled ] = useState();
   const [vacationPeriods, setVacationPeriods] = useState<VacationPeriod[]>([]);
   const [nationalHolydays, setNationalHolydays] = useState<Holiday[]>([]); // NON LO INIZILIZZO ADESSO, LO FA holydays.tsx ALLA CHIAMATA
   const [myCountry, setMyCountry] = useState(myLanguage); // VALORE DELLA DROPDOWN, INIZIALMENTE = locale

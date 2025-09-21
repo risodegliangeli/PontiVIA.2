@@ -1177,8 +1177,12 @@ export default function HolydaysScreen({}: any) {
                       <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
                     </View>
                   </View>
-                  <TouchableOpacity>
-                    <IconSymbol size={24} name="checkmark.circle.fill" color={colors.disabled} style={{paddingBottom:8,}}/>
+                  <TouchableOpacity
+                    onPress={ () => 
+                      // RENDE DISABLED LA RIGA DELLA FESTIVITA' CHE NON SARA' CONTEGGIATA
+                      null
+                    } >
+                    <IconSymbol size={24} name="checkmark.circle.fill" color={colors.blueBar} style={{paddingBottom:8,}}/>
                     {/* <IconSymbol size={24} name="xmark.circle" color={colors.disabled} style={{paddingBottom:8,}}/> */}
                   </TouchableOpacity>
 

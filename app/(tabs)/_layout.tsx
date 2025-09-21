@@ -73,6 +73,20 @@ export default function TabLayout() {
             }} 
             >
 
+            {/* ================================== INDEX ================================== */}
+            <Tabs.Screen
+              name="index"
+              options={{
+                title: '',
+                headerTitleAlign: 'center',
+                headerShown: true,
+                headerTransparent: true,
+                headerBackground: () => (
+                  <BlurPad/>
+                ),
+              }} />
+              
+              
             {/* ================================== HOLYDAYS LIST  ================================== */}
             <Tabs.Screen
               name="holydays"
@@ -86,18 +100,7 @@ export default function TabLayout() {
                 ),
               }} />
             
-            {/* ================================== INDEX ================================== */}
-            <Tabs.Screen
-              name="index"
-              options={{
-                title: '',
-                headerTitleAlign: 'center',
-                headerShown: true,
-                headerTransparent: true,
-                headerBackground: () => (
-                  <BlurPad/>
-                ),
-              }} />
+
 
             {/* ================================== PREFERENCES  ================================== */}
             <Tabs.Screen
