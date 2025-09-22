@@ -1,16 +1,82 @@
 # TICKET APERTI:
 
 
-- ### SimpleToast FESTIVITA EDITABILE
-  -- aggiungere pulsante 'modifica' nel toast
+- ### DatepickerSelector
+  -- quando si edita una data prvedere il corretto posizionamento dello switch
+  (Un giorno / Più giorni) e disabilitare l'altro pulsante
 
+---
+
+- ### SimpleToast FESTIVITA: EDITABILE
+  -- aggiungere pulsante 'modifica' (o cancella) nel toast
+
+---
 
 - ### FESTIVITA NAZIONALI EDITABILI
 -- o perlomeno ogni data checkabile (on/off)
   -- con pulsante di rollback per il ripristino
 
+---
+
+- ### CONDIVISIONE DATE PERSONALI
+  -- con altri utenti che hanno PontiVIA! installato
+  -- se non installato te lo fa installare
 
 ---
+
+- ### ADV AdMob
+  -- aggiungere
+
+---
+
+- #### ALERT possibili ponti
+
+---
+
+- #### ALERT eventi personali
+  -- aggiungere checkbox CAMPANELLA nelle due modal (giono singolo e periodo):
+  "Ricordami di questa data [ 7 ] giorni prima"
+
+---
+
+- #### FESTIVI GERMANIA 
+  -- per ciascun Land
+
+---
+
+- #### ANNO BISESTILE
+  -- aggiungere nel datepicker del giorno singolo
+
+---
+
+- #### TOOLTIP
+  aggiungere a fianco delle label delle PREFERENCES
+
+---
+
+- #### geolocalizzazione per santo del giorno
+
+---
+
+- #### inserimento date PERS/LOC: non segnala i duplicati nelle altre categorie e nei nazionali, -> R.246 A) NUOVO
+
+--- 
+ 
+- #### SPLASH ICON & SCREEN
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////
+
+
+# TICKET RISOLTI:
 
 
 - ### TRADUZIONI
@@ -90,73 +156,6 @@
           { label: 'Hrvatski (Hrvatska)', value: 'hr-HR', flag: '🇭🇷' }, // Croato
         ];
 
-
----
-
-
-
-
----
-
-- ### CONDIVISIONE DATE PERSONALI
-  -- con altri utenti che hanno PontiVIA! installato
-  -- se non installato te lo fa installare
-
----
-
-- ### ADV AdMob
-  -- aggiungere
-
----
-
-- #### ALERT possibili ponti
-
----
-
-- #### ALERT eventi personali
-  -- aggiungere checkbox CAMPANELLA nelle due modal (giono singolo e periodo):
-  "Ricordami di questa data [ 7 ] giorni prima"
-
----
-
-- #### FESTIVI GERMANIA 
-  -- per ciascun Land
-
----
-
-- #### ANNO BISESTILE
-  -- aggiungere nel datepicker del giorno singolo
-
----
-
-- #### TOOLTIP
-  aggiungere a fianco delle label delle PREFERENCES
-
----
-
-- #### geolocalizzazione per santo del giorno
-
----
-
-- #### inserimento date PERS/LOC: non segnala i duplicati nelle altre categorie e nei nazionali, -> R.246 A) NUOVO
-
---- 
- 
-- #### SPLASH ICON & SCREEN
-
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////
-
-
-# TICKET RISOLTI:
 
 
 - ### ROVESCIARE PULSANTIERA

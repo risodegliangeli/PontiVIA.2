@@ -293,11 +293,6 @@ const CalendarScreen = (PREFERENCES: any) => {
       shadowOpacity: 0.45,
       shadowRadius: 2 // Match elevation for iOS
     },
-    // cardLabelNoneFound: {
-    //   fontSize:12,
-    //   fontStyle:'italic',
-    //   color: colors.disabled,
-    // },
     cardLabelBridgeFound: {
       fontSize:13,
       fontWeight:600,
@@ -351,12 +346,12 @@ const CalendarScreen = (PREFERENCES: any) => {
     },
     adBanner: {
       width: '100%',
-      minHeight: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      marginTop: 48, marginBottom:36,
       color: colors.text,
-      padding: 15,
+      // minHeight: 12,
+      //marginTop: 48, marginBottom:36,
+      //padding: 15,
     },
     loadingContainer: {
       flex: 1,
@@ -506,22 +501,6 @@ const CalendarScreen = (PREFERENCES: any) => {
       fontSize: 16,
       fontWeight: 'bold',
     },
-    // bridgeConnectorHorizontal: {
-    //   position: 'absolute',
-    //   height: 16,
-    //   backgroundColor: colors.bridgeBackground,
-    //   top: '50%',
-    //   transform: [{ translateY: -8 }],
-    //   zIndex: 0,
-    // },
-    // bridgeConnectorVertical: {
-    //   position: 'absolute',
-    //   width: 8,
-    //   backgroundColor: colors.bridgeBackground,
-    //   left: '50%',
-    //   transform: [{ translateX: -1 }],
-    //   zIndex: 0,
-    // },
   });
 
   /* ============================================================================= 

@@ -152,7 +152,7 @@ const savePreferences = async () => {
   try {
     const jsonValue = JSON.stringify(PREFERENCES);
     await AsyncStorage.setItem('PREFERENCES_KEY', jsonValue);
-    console.log('Preferences saved successfully');
+    //console.log('Preferences saved successfully');
     //console.log(jsonValue);
   } catch (e) {
     console.error('Failed to save preferences:', e);
