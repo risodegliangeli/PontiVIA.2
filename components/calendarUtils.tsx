@@ -6,14 +6,10 @@ import { Platform } from 'react-native';
 //import { da } from 'date-fns/locale'; // importa il Danese???
 import { dataLabel } from '@/components/dataLabel';
 
-
-
-
 const { localHolydas: countryHolydays } = useLocalizationData();
 
 const myLanguage = (getLocales()[0].languageTag).slice(0,2);
-        console.log(Platform.OS, '[calendarUtils.tsx] myLanguage:', myLanguage);
-
+        // console.log(Platform.OS, '[calendarUtils.tsx] myLanguage:', myLanguage);
 
 /* ============================================================================= 
     CREA UNA DATA A MEZZOGIORNO UTC

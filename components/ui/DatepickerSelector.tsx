@@ -57,6 +57,47 @@ const DatepicketSelector: React.FC<DatepickerSelectorInterface> = ({
   });
 
   const styles = StyleSheet.create({
+    container: {
+      width: windowWidth,
+      height: sliderHeigth,
+      backgroundColor: colors.white,
+      borderWidth:1,
+      //borderBottomWidth:0,
+      borderColor:colors.textRed,
+      borderRadius: sliderHeigth,
+      // borderTopLeftRadius: sliderHeigth/8,
+      // borderTopRightRadius: sliderHeigth/8,
+    },
+    focusedDot: {
+      alignContent: 'center',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '50%',
+      height: '100%',
+      backgroundColor: colors.textRed,
+      borderRadius: sliderHeigth,
+      // borderTopLeftRadius: sliderHeigth/8,
+      // borderTopRightRadius: sliderHeigth/8,
+      transform: [{ translateX }],
+      elevation:6,
+      shadowColor: colors.black, // iOS shadow
+      shadowOffset: {
+        width: 1,
+        height: 2, // Match elevation for iOS
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 4 // Match elevation for iOS
+    },
+    touchables: {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: sliderHeigth,
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      alignItems: 'center',
+    },
     buttonOn: {
       fontSize:16,
       fontWeight: 600,
@@ -71,50 +112,11 @@ const DatepicketSelector: React.FC<DatepickerSelectorInterface> = ({
 
   return (
       <View
-        style={{
-          //marginTop: 100,
-          width: windowWidth,
-          height: sliderHeigth,
-          backgroundColor: colors.white,
-          borderWidth:1,
-          borderBottomWidth:0,
-          borderColor:colors.textRed,
-          borderTopLeftRadius: sliderHeigth/8,
-          borderTopRightRadius: sliderHeigth/8,
-        }}>
+        style={styles.container}>
         {/* FOCUSED SLIDE */}
-        <Animated.View
-          style={{
-            alignContent: 'center',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '50%',
-            height: '100%',
-            backgroundColor: colors.textRed,
-            borderTopLeftRadius: sliderHeigth/8,
-            borderTopRightRadius: sliderHeigth/8,
-            transform: [{ translateX }],
-            elevation:6,
-            shadowColor: colors.black, // iOS shadow
-            shadowOffset: {
-              width: 1,
-              height: 2, // Match elevation for iOS
-            },
-            shadowOpacity: 0.25,
-            shadowRadius: 4 // Match elevation for iOS
-          }}>
-        </Animated.View>
-        <View
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: sliderHeigth,
-            flexDirection: 'row',
-            justifyContent: 'space-around',
-            alignItems: 'center',
-          }}>
+        <Animated.View style={styles.focusedDot} />
+        {/* WRAPPER PULSANTI */}
+        <View style={styles.touchables}>
           <TouchableOpacity onPress={buttonLeftAction}>
             <Text style={sliderTargetValue === 0 ? styles.buttonOn : styles.buttonOff}>
               {buttonLeft}

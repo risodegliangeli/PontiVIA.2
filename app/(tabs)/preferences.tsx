@@ -243,10 +243,11 @@ export default function Preferences() {
 
   const styles = StyleSheet.create({
     scrollview: {
-      flex:0, 
+      width:'100%',
       backgroundColor: 'transparent',
       paddingHorizontal:12, 
       paddingTop: 80,
+      maxWidth: 600,
     },
     sectionTitle: {
       fontSize: 24,
@@ -286,7 +287,6 @@ export default function Preferences() {
       marginBottom: 20,
       width: '100%',
     },
-
     preferenceRow: {
       flexDirection: 'row',
       justifyContent: 'space-between',
@@ -336,7 +336,7 @@ export default function Preferences() {
         null // SFONDO NERO
         }
       resizeMode="cover" 
-      style={styles.image}>
+      style={[styles.image, {alignItems:'center'}]}>
         <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
           {/* ==================== TITOLO PAGINA + PULSANTE RESET ==================== */}
           <View style={{

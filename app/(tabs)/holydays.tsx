@@ -760,22 +760,6 @@ export default function HolydaysScreen({}: any) {
       paddingHorizontal: 12,
       borderRadius: 12,
     },
-    // modalTitle: {
-    //   fontSize: 16,
-    //   fontWeight: 'bold',
-    //   marginBottom: 20,
-    //   textAlign: 'center',
-    // },
-    // modalLabel: {
-    //   fontSize: 16,
-    //   marginBottom: 5,
-    //   marginTop: 10,
-    // },
-    // dateInputContainer: {
-    //   flexDirection: 'row',
-    //   alignItems: 'center',
-    //   marginBottom: 15,
-    // },
     datePickerWrapper: {
       borderWidth: 1,
       borderColor: colors.textRed,
@@ -788,39 +772,13 @@ export default function HolydaysScreen({}: any) {
       borderWidth: 1,
       borderColor: colors.textRed,
       borderRadius: 99,
-      padding: 10,
+      paddingVertical: 10,
+      paddingHorizontal: 24,
       fontSize: 16,
       marginBottom: 12,
       height:50,
       color: colors.black,
     },
-    // dateAndMonthContainer: {
-    //   flex:1, 
-    //   flexDirection:'row', 
-    //   alignItems:'flex-start',
-    //   alignContent:'flex-start',
-    //   justifyContent:'space-between', 
-    //   width: '100%',
-    // },
-    // dropdownContainer: { 
-    //   minWidth: `${calc(100%-48)}`, 
-    //   flex:1, 
-    //   flexDirection:'column', 
-    //   justifyContent:'flex-end', 
-    //   alignItems:'center',
-    //   alignContent:'flex-end',
-    // },
-    // dateInput: {
-    //   width: 60,
-    //   textAlign: 'center',
-    //   marginBottom: 0,
-    //   marginRight:8,
-    //   color: colors.black,
-    // },
-    // dateSeparator: {
-    //   fontSize: 20,
-    //   marginHorizontal: 5,
-    // },
     // Nuovi stili per i pulsanti data
     dateButton: {
       flexDirection: 'row',
@@ -842,7 +800,7 @@ export default function HolydaysScreen({}: any) {
       width:'100%',
       flexDirection: 'row',
       justifyContent: 'space-around',
-      marginBottom: 0,
+      marginBottom: 12,
     },
       radioOption: {
         flexDirection: 'row',
@@ -891,7 +849,6 @@ export default function HolydaysScreen({}: any) {
         fontWeight: 800,
         color: colors.textRed,
       },
-
     // PULSANTI ADD/CANCEL
     modalButtons: {
       flexDirection: 'row',
@@ -901,7 +858,7 @@ export default function HolydaysScreen({}: any) {
       addButton: {
         backgroundColor: colors.textRed,
         padding: 15,
-        borderRadius: 99,
+        borderRadius: 6,
         alignItems: 'center',
         flex: 1,
         marginLeft: 10,
@@ -914,7 +871,7 @@ export default function HolydaysScreen({}: any) {
       cancelButton: {
         backgroundColor: colors.cancelButton,
         padding: 15,
-        borderRadius: 99,
+        borderRadius: 6,
         alignItems: 'center',
         flex: 1,
         marginRight: 10,
@@ -983,12 +940,12 @@ export default function HolydaysScreen({}: any) {
   // GESTIONE SLIDER PER SELEZIONARE GIORNO/PERIODO NEL DATEPICKER
   const [sliderTargetValue, setSliderTargetValue] = useState(0);
   const buttonLeftAction = () => {
-    sliderTargetValue === 1 && console.log('Un giorno'); // ESEGUE SOLO SE VALORE ERA IMPOSTATO SULL'ALTRO
+    //sliderTargetValue === 1 && console.log('Un giorno'); // ESEGUE SOLO SE VALORE ERA IMPOSTATO SULL'ALTRO
     sliderTargetValue === 1 && setSliderTargetValue(0);
     sliderTargetValue === 1 && setSelectedRadioOption('single');
     };
   const buttonRightAction = () => {
-    sliderTargetValue === 0 && console.log('Piu giorni');
+    //sliderTargetValue === 0 && console.log('Piu giorni');
     sliderTargetValue === 0 && setSliderTargetValue(1);
     sliderTargetValue === 0 && setSelectedRadioOption('period');
     };
@@ -1036,136 +993,140 @@ export default function HolydaysScreen({}: any) {
 
         {/* CARD GIORNI SPECIALI ############################################################################# */}
         {personalHolydays.length > 0 && (
-          <View style={styles.listItem}>
+          <Suspense>
+            <View style={styles.listItem}>
 
-            {/* LABEL SEZIONE CON PULSANTE CANCELLAZIONE */}
-            <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
-              <Text style={{opacity:0}}>*</Text>
-              <Text style={[styles.listTitle, { textAlign:'center' } ]}>{dataLabel[myLanguage][4]}</Text>
-              {personalHolydays ?                
-                <TouchableOpacity
-                  onPress={ async () => {
-                    Alert.alert(
-                        dataLabel[myLanguage][7],  // Attenzione
-                        dataLabel[myLanguage][18],// Vuoi eliminare tutte le date ecc.?
-                        [
-                          {
-                            text: dataLabel[myLanguage][9], // Annulla
-                            style: "cancel"
-                          },
-                          { 
-                            text: dataLabel[myLanguage][10], // Elimina
-                            onPress: async () => {
-                              setPersonalHolydays([]);
-                              await saveData([], 'personalHolydays');
-                            }
-                          }
-                        ]
-                      );
-                  }}>
-                  <IconSymbol size={Platform.OS === 'ios' ? 20 : 26}  name="plus" color={colors.blueBar} style={{marginRight:8, transform: [{rotate: '45deg'}]}}/>
-                </TouchableOpacity>
-              :
+              {/* LABEL SEZIONE CON PULSANTE CANCELLAZIONE */}
+              <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
                 <Text style={{opacity:0}}>*</Text>
-              }
-            </View>
+                <Text style={[styles.listTitle, { textAlign:'center' } ]}>{dataLabel[myLanguage][4]}</Text>
+                {personalHolydays ?                
+                  <TouchableOpacity
+                    onPress={ async () => {
+                      Alert.alert(
+                          dataLabel[myLanguage][7],  // Attenzione
+                          dataLabel[myLanguage][18],// Vuoi eliminare tutte le date ecc.?
+                          [
+                            {
+                              text: dataLabel[myLanguage][9], // Annulla
+                              style: "cancel"
+                            },
+                            { 
+                              text: dataLabel[myLanguage][10], // Elimina
+                              onPress: async () => {
+                                setPersonalHolydays([]);
+                                await saveData([], 'personalHolydays');
+                              }
+                            }
+                          ]
+                        );
+                    }}>
+                    <IconSymbol size={Platform.OS === 'ios' ? 20 : 26}  name="plus" color={colors.blueBar} style={{marginRight:8, transform: [{rotate: '45deg'}]}}/>
+                  </TouchableOpacity>
+                :
+                  <Text style={{opacity:0}}>*</Text>
+                }
+              </View>
 
-            {personalHolydays.sort((a, b) => a.day - b.day).sort((a, b) => a.month - b.month).map((holiday, index) => (
-              <React.Fragment key={index}>
-                <View 
-                style={styles.holidayRow }>
-                  <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
-                    {/* <View style={{width:32, height:32, borderRadius:24, backgroundColor: colors.dot32}}></View> */}
-                    <View style={{width:44, height:44, borderRadius:24, backgroundColor: colors.dot32}}>
-                      <Text style={styles.dot32text}>{holiday.day}</Text>
+              {personalHolydays.sort((a, b) => a.day - b.day).sort((a, b) => a.month - b.month).map((holiday, index) => (
+                <React.Fragment key={index}>
+                  <View 
+                  style={styles.holidayRow }>
+                    <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
+                      {/* <View style={{width:32, height:32, borderRadius:24, backgroundColor: colors.dot32}}></View> */}
+                      <View style={{width:44, height:44, borderRadius:24, backgroundColor: colors.dot32}}>
+                        <Text style={styles.dot32text}>{holiday.day}</Text>
+                      </View>
+                      <View style={{flexDirection:'column'}} >
+                        <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label} `}</Text>
+                        <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
+                        <Text style={[styles.itemDescription, {maxWidth:240, fontStyle:'italic', fontWeight:400}]}>{dataLabel[myLanguage][15]}</Text>
+                      </View>
                     </View>
-                    <View style={{flexDirection:'column'}} >
-                      <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label} `}</Text>
-                      <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
-                      <Text style={[styles.itemDescription, {maxWidth:240, fontStyle:'italic', fontWeight:400}]}>{dataLabel[myLanguage][15]}</Text>
+                    <View>
+                    <View style={styles.itemActions}>
+                      <TouchableOpacity onPress={() => handleEdit('personal', index)}>
+                        <IconSymbol name="pencil" size={20} color={colors.blueBar} />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => handleDelete('personal', index)} style={{ marginLeft: 12 }}>
+                        <IconSymbol name="trash" size={20} color={colors.blueBar} />
+                      </TouchableOpacity>
+                    </View>
                     </View>
                   </View>
-                  <View>
-                  <View style={styles.itemActions}>
-                    <TouchableOpacity onPress={() => handleEdit('personal', index)}>
-                      <IconSymbol name="pencil" size={20} color={colors.blueBar} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleDelete('personal', index)} style={{ marginLeft: 12 }}>
-                      <IconSymbol name="trash" size={20} color={colors.blueBar} />
-                    </TouchableOpacity>
-                  </View>
-                  </View>
-                </View>
-                {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
-                {index !== personalHolydays.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
-              </React.Fragment>
-            ))}
-          </View>
+                  {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
+                  {index !== personalHolydays.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
+                </React.Fragment>
+              ))}
+            </View>
+          </Suspense>
         )}
 
         {/* PERIODI PIU' LUNGHI ########################################################################## */}
         {vacationPeriods.length > 0 && (
-          <View style={styles.listItem}>
+          <Suspense>
+            <View style={styles.listItem}>
 
-            {/* LABEL SEZIONE CON PULSANTE CANCELLAZIONE */}
-            <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
-              <Text style={{opacity:0}}>*</Text>
-              <Text style={[styles.listTitle, { textAlign:'center' } ]}>{dataLabel[myLanguage][3]}</Text>
-              {personalHolydays ?                
-                <TouchableOpacity
-                  onPress={ async () => {
-                    Alert.alert(
-                        dataLabel[myLanguage][7],  // Attenzione
-                        dataLabel[myLanguage][18],// Vuoi eliminare tutte le date ecc.?
-                        [
-                          {
-                            text: dataLabel[myLanguage][9], // Annulla
-                            style: "cancel"
-                          },
-                          { 
-                            text: dataLabel[myLanguage][10], // Elimina
-                            onPress: async () => {
-                              setVacationPeriods([]);
-                              await saveData([], 'vacationPeriods');
-                            }
-                          }
-                        ]
-                      );
-                  }}>
-                  <IconSymbol size={Platform.OS === 'ios' ? 20 : 26} name="plus" color={colors.blueBar} style={{marginRight:8, transform: [{rotate: '45deg'}]}}/>
-                </TouchableOpacity>
-              :
+              {/* LABEL SEZIONE CON PULSANTE CANCELLAZIONE */}
+              <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
                 <Text style={{opacity:0}}>*</Text>
-              }
-            </View>
+                <Text style={[styles.listTitle, { textAlign:'center' } ]}>{dataLabel[myLanguage][3]}</Text>
+                {personalHolydays ?                
+                  <TouchableOpacity
+                    onPress={ async () => {
+                      Alert.alert(
+                          dataLabel[myLanguage][7],  // Attenzione
+                          dataLabel[myLanguage][18],// Vuoi eliminare tutte le date ecc.?
+                          [
+                            {
+                              text: dataLabel[myLanguage][9], // Annulla
+                              style: "cancel"
+                            },
+                            { 
+                              text: dataLabel[myLanguage][10], // Elimina
+                              onPress: async () => {
+                                setVacationPeriods([]);
+                                await saveData([], 'vacationPeriods');
+                              }
+                            }
+                          ]
+                        );
+                    }}>
+                    <IconSymbol size={Platform.OS === 'ios' ? 20 : 26} name="plus" color={colors.blueBar} style={{marginRight:8, transform: [{rotate: '45deg'}]}}/>
+                  </TouchableOpacity>
+                :
+                  <Text style={{opacity:0}}>*</Text>
+                }
+              </View>
 
-            {vacationPeriods.sort((a, b) => a.startDay - b.startDay).sort((a, b) => a.startMonth - b.startMonth).sort((a, b) => a.startYear - b.startYear).map((period, index) => (
-              <React.Fragment key={index}>
-                <View key={index} style={styles.holidayRow}>
-                  <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
-                    <View style={{width:44, height:44, borderRadius:24, backgroundColor: colors.dot32}}>
-                      <Text style={[styles.dot32text, {paddingTop:4, paddingBottom:0}]}>---</Text>
-                    </View>                      
-                    <View style={{flexDirection:'column'}} >
-                      <Text style={styles.itemDate}>
-                        {`${period.startDay}.${period.startMonth}.${period.startYear} / ${period.endDay}.${period.endMonth}.${period.endYear}`}
-                      </Text>
-                      <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{period.description}</Text>
+              {vacationPeriods.sort((a, b) => a.startDay - b.startDay).sort((a, b) => a.startMonth - b.startMonth).sort((a, b) => a.startYear - b.startYear).map((period, index) => (
+                <React.Fragment key={index}>
+                  <View key={index} style={styles.holidayRow}>
+                    <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
+                      <View style={{width:44, height:44, borderRadius:24, backgroundColor: colors.dot32}}>
+                        <Text style={[styles.dot32text, {paddingTop:4, paddingBottom:0}]}>---</Text>
+                      </View>                      
+                      <View style={{flexDirection:'column'}} >
+                        <Text style={styles.itemDate}>
+                          {`${period.startDay}.${period.startMonth}.${period.startYear} / ${period.endDay}.${period.endMonth}.${period.endYear}`}
+                        </Text>
+                        <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{period.description}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.itemActions}>
+                      <TouchableOpacity onPress={() => handleEdit('vacation', index)}>
+                        <IconSymbol name="pencil" size={20} color={colors.blueBar} />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => handleDelete('vacation', index)} style={{ marginLeft: 12 }}>
+                        <IconSymbol name="trash" size={20} color={colors.blueBar} />
+                      </TouchableOpacity>
                     </View>
                   </View>
-                  <View style={styles.itemActions}>
-                    <TouchableOpacity onPress={() => handleEdit('vacation', index)}>
-                      <IconSymbol name="pencil" size={20} color={colors.blueBar} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleDelete('vacation', index)} style={{ marginLeft: 12 }}>
-                      <IconSymbol name="trash" size={20} color={colors.blueBar} />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                {index !== vacationPeriods.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
-              </React.Fragment>
-            ))}
-          </View>
+                  {index !== vacationPeriods.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
+                </React.Fragment>
+              ))}
+            </View>
+          </Suspense>
         )}    
         
         {/* FESTIVITA NAZIONALI ############################################################################# */}
@@ -1248,8 +1209,9 @@ export default function HolydaysScreen({}: any) {
                 <Text style={[styles.listTitle, { color: colors.black, textAlign:'center', marginBottom:12, }]}>{dataLabel[myLanguage][4]}</Text>
                 {singleDateError ? <Text style={styles.errorText}>{singleDateError}</Text> : null}
 
-                {/* RADIOBUTTON (ORA --> SLIDER) */}
+                {/* EX RADIOBUTTON (ORA --> SLIDER) */}
                 <View style={styles.radioContainer}>
+
                   {/* SLIDER CHE SOSTITUISCE I RADIOBUTTON*/}
                   <DatepicketSelector
                     windowWidth={300}
@@ -1309,8 +1271,8 @@ export default function HolydaysScreen({}: any) {
                         setDatePickerSelected( date );
                         setSingleDateDay( new Date(date).getDate() );                        
                         setSingleDateMonth( new Date(date).getMonth()); 
-                      } }
-                      containerHeight={265}
+                        }}
+                      containerHeight={240}
                       hideWeekdays={true}
                       disableMonthPicker={true}
                       disableYearPicker={true}
@@ -1322,6 +1284,8 @@ export default function HolydaysScreen({}: any) {
                       locale={myLanguage}
                       // style={{
                       //   backgroundColor: 'transparent',
+                      //   borderWidth:1,
+                      //   padding:0
                       // }}
                       styles={{
                         ...defaultStyles,
@@ -1348,7 +1312,7 @@ export default function HolydaysScreen({}: any) {
                         startDate && setPeriodStartDate(startDate);
                         endDate && setPeriodEndDate(endDate);
                       }}
-                      containerHeight={265}
+                      containerHeight={240}
                       hideWeekdays={false}
                       disableMonthPicker={true}
                       disableYearPicker={true}
