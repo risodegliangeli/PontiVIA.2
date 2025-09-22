@@ -23,7 +23,6 @@ import { getLocales,  } from 'expo-localization';
 
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
 const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
-
 const myLanguage: string = (getLocales()[0].languageTag).slice(0,2);  // LINGUA LOCALE
 
 const useThemeColors = () => {
@@ -247,7 +246,6 @@ const CalendarScreen = (PREFERENCES: any) => {
       backgroundColor: colors.cardBackground,
       borderRadius: 24,
       borderWidth: 0,
-
     },
     monthTitle: {
       fontSize: 16,
@@ -277,24 +275,34 @@ const CalendarScreen = (PREFERENCES: any) => {
       textAlign: 'center',
       color: colors.disabled,
       fontSize: 12,
-    },    bridgeYellowLabel: {
-      marginRight:18,
+    },    
+    // LABEL PONTI TROVATI
+    bridgeYellowLabel: {
+      marginRight:-16,
       paddingHorizontal:16,
       paddingVertical:4,
-      borderWidth:1,
-      borderRadius:24,
-      borderColor: colors.bridgeBackground,
+      borderTopLeftRadius:24,
+      borderBottomLeftRadius:24,
+      backgroundColor: colors.bridgeBackground,
+      elevation:6,
+      shadowColor: colors.black, // iOS shadow
+      shadowOffset: {
+        width: 1,
+        height: 2, // Match elevation for iOS
+      },
+      shadowOpacity: 0.45,
+      shadowRadius: 2 // Match elevation for iOS
     },
-    cardLabelNoneFound: {
-      fontSize:12,
-      fontStyle:'italic',
-      color: colors.disabled,
-    },
+    // cardLabelNoneFound: {
+    //   fontSize:12,
+    //   fontStyle:'italic',
+    //   color: colors.disabled,
+    // },
     cardLabelBridgeFound: {
-      fontSize:12,
-      color: colors.text,
+      fontSize:13,
+      fontWeight:600,
+      color: colors.white,
     },
-
     daysGrid: {
       flexDirection: 'row',
       flexWrap: 'wrap',
@@ -390,18 +398,18 @@ const CalendarScreen = (PREFERENCES: any) => {
       transform: [{ translateY: '-50%' }, { translateX: '-50%' }],
       width:36,
       height:36,
-      //borderWidth:.5,
-      borderColor: colors.disabled,
-      backgroundColor: colors.textRed,
+      borderWidth:2,
+      borderColor: colors.textRed,
       borderRadius: 36,
-      elevation:6,
-      shadowColor: colors.black, // iOS shadow
-      shadowOffset: {
-        width: 1,
-        height: 2, // Match elevation for iOS
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 4 // Match elevation for iOS
+      // backgroundColor: colors.textRed,
+      // elevation:6,
+      // shadowColor: colors.black, // iOS shadow
+      // shadowOffset: {
+      //   width: 1,
+      //   height: 2, // Match elevation for iOS
+      // },
+      // shadowOpacity: 0.25,
+      // shadowRadius: 4 // Match elevation for iOS
       },
     yellowCircle: { // NON E' PIU YELLOW MA BLUE... ;-)
       position:'absolute',
@@ -423,23 +431,20 @@ const CalendarScreen = (PREFERENCES: any) => {
       },
     yellowBadge: {
       position:'absolute',
-      top:'15%', 
-      right:'15%',
-      height:10, 
-      width:10,
+      top:'20%', 
+      right:'20%',
+      height:6, 
+      width:6,
       borderRadius:'100%',
-      backgroundColor: '#ffcc00',
-      
-     
-      
-      elevation:12,
-      shadowColor: colors.black, // iOS shadow
-      shadowOffset: {
-        width: 1,
-        height: 4, // Match elevation for iOS
-      },
-      shadowOpacity: 0.75,
-      shadowRadius: 4 // Match elevation for iOS
+      backgroundColor: '#ffffff66',
+      // elevation:12,
+      // shadowColor: colors.black, // iOS shadow
+      // shadowOffset: {
+      //   width: 1,
+      //   height: 4, // Match elevation for iOS
+      // },
+      // shadowOpacity: 0.75,
+      // shadowRadius: 4 // Match elevation for iOS
     },
     squaredTouchable: {
       position: 'absolute',
@@ -496,27 +501,27 @@ const CalendarScreen = (PREFERENCES: any) => {
       alignContent:'center',
       marginLeft: 4,
     },
-        addButtonText: {
-          color: colors.white,
-          fontSize: 16,
-          fontWeight: 'bold',
-        },
-    bridgeConnectorHorizontal: {
-      position: 'absolute',
-      height: 16,
-      backgroundColor: colors.bridgeBackground,
-      top: '50%',
-      transform: [{ translateY: -8 }],
-      zIndex: 0,
+    addButtonText: {
+      color: colors.white,
+      fontSize: 16,
+      fontWeight: 'bold',
     },
-    bridgeConnectorVertical: {
-      position: 'absolute',
-      width: 8,
-      backgroundColor: colors.bridgeBackground,
-      left: '50%',
-      transform: [{ translateX: -1 }],
-      zIndex: 0,
-    },
+    // bridgeConnectorHorizontal: {
+    //   position: 'absolute',
+    //   height: 16,
+    //   backgroundColor: colors.bridgeBackground,
+    //   top: '50%',
+    //   transform: [{ translateY: -8 }],
+    //   zIndex: 0,
+    // },
+    // bridgeConnectorVertical: {
+    //   position: 'absolute',
+    //   width: 8,
+    //   backgroundColor: colors.bridgeBackground,
+    //   left: '50%',
+    //   transform: [{ translateX: -1 }],
+    //   zIndex: 0,
+    // },
   });
 
   /* ============================================================================= 
@@ -715,11 +720,9 @@ const CalendarScreen = (PREFERENCES: any) => {
             />
             <View style={{ flex:1, }}>
               <Text style={[styles.monthTitle, {color: colors.black, paddingLeft:0}]}>{dataLabel[myLanguage][9]}</Text> 
-              {
-              title && <Text style={[styles.dayNumber, { color: colors.black, lineHeight: 22, textAlign:'left'}]}>
-              {description}
-              </Text>
-              }
+              { title && <Text style={[styles.dayNumber, { color: colors.black, lineHeight: 22, textAlign:'left'}]}>
+                {description}
+                </Text> }
             </View>
           </View>
 
@@ -935,8 +938,8 @@ const CalendarScreen = (PREFERENCES: any) => {
                             <View 
                               key={`yellowcircle.${day[0].toISOString()}.${dayIndex}`}
                               style={[ StyleSheet.absoluteFill, styles.yellowCircle ]} />
-                            <View 
-                              style={styles.yellowBadge}/>
+                            {/*<View 
+                              style={styles.yellowBadge}/>*/}
                           </>  
                           : 
                           null
@@ -948,7 +951,7 @@ const CalendarScreen = (PREFERENCES: any) => {
                             day[2] ?
                               // + SE day[1]>0 = SOLO FESTIVITA
                               day[1] === 1 ?
-                                [styles.dayNumberHoliday, styles.dayNumberBold, {color: 'white'}]
+                                [styles.dayNumberHoliday, styles.dayNumberBold, {color: colors.textRed}]
                                 :
                                 // SE day[1] DIVERSO DA 1 (E SE day[2] ESISTE NON PUO' CHE ESSERE -1) = PONTE
                                 [styles.dayNumberBridge, styles.dayNumberBold, {color: colors.white}]

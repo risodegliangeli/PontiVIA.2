@@ -7,6 +7,8 @@ import React, { useEffect, useState, Suspense,  } from 'react';
 import DateTimePicker, { useDefaultStyles, } from 'react-native-ui-datepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales,  } from 'expo-localization';
+import DatepicketSelector from '@/components/ui/DatepickerSelector';
+
 import {
   Alert,
   ImageBackground,
@@ -38,7 +40,7 @@ const dataLabel: any = {
     'I periodi lunghi',                           // 3
     'I tuoi giorni speciali',                     // 4
     'Un giorno',                                  // 5
-    'Un periodo di più giorni',                   // 6
+    'Più giorni',                                 // 6
     'Attenzione',                                 // 7
     'Vuoi eliminare il giorno',                   // 8
     'Annulla',                                    // 9
@@ -59,7 +61,7 @@ const dataLabel: any = {
     'Les longues périodes',                           // 3
     'Tes jours spéciaux',                     // 4
     'Un jour',                                  // 5
-    'Une période de plusieurs jours',                   // 6
+    'Plusieurs jours',                   // 6
     'Attention',                                 // 7
     'Voulez-vous supprimer le jour',                   // 8
     'Annuler',                                    // 9
@@ -80,7 +82,7 @@ const dataLabel: any = {
     'Los períodos largos',                           // 3
     'Tus días especiales',                     // 4
     'Un día',                                  // 5
-    'Un período de varios días',                   // 6
+    'Varios días',                   // 6
     'Atención',                                 // 7
     '¿Quieres eliminar el día',                   // 8
     'Cancelar',                                    // 9
@@ -272,6 +274,8 @@ const saveData = async (data: any, key: string) => {
     console.error(`Errore ${key} nel salvataggio locale: `, e);
   }
 };
+
+
 
 /* ###########################################################################################################
 
@@ -666,7 +670,6 @@ export default function HolydaysScreen({}: any) {
       },
     // CONTENITORE PRINCIPALE
     container: {
-      //flex: 1,
       width:'100%',
       backgroundColor: 'transparent',
       paddingHorizontal: 12,
@@ -683,7 +686,6 @@ export default function HolydaysScreen({}: any) {
     // WRAPPER TITOLO PAGINA
     sectionContainer: {
       width: '100%',
-      //flex:1,
       justifyContent:'center',
       alignItems:'center',
       alignContent:'center',
@@ -698,8 +700,6 @@ export default function HolydaysScreen({}: any) {
     },
     // CARD
     listItem: { 
-      //flex:1,
-      //width:'100%',
       backgroundColor: colors.cardBackground,
       paddingTop: 24,
       paddingBottom: 24,
@@ -734,13 +734,13 @@ export default function HolydaysScreen({}: any) {
     dot32text:{
       height:'100%',
       fontSize:26,
-      fontWeight:useColorScheme() === 'dark' ? 200 : 300,
+      fontWeight: useColorScheme() === 'dark' ? 200 : 300,
       color: 'rgba(255,255,255,1)',
       textAlign:'center',
       justifyContent:'center',
       alignContent:'center',
       alignItems:'center',
-      paddingTop:Platform.OS === 'ios' ? 6:3,
+      paddingTop: Platform.OS === 'ios' ? 6:3,
       letterSpacing:-.5,
       borderWidth:0    
     },
@@ -760,26 +760,27 @@ export default function HolydaysScreen({}: any) {
       paddingHorizontal: 12,
       borderRadius: 12,
     },
-    modalTitle: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      marginBottom: 20,
-      textAlign: 'center',
-    },
-    modalLabel: {
-      fontSize: 16,
-      marginBottom: 5,
-      marginTop: 10,
-    },
-    dateInputContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 15,
-    },
+    // modalTitle: {
+    //   fontSize: 16,
+    //   fontWeight: 'bold',
+    //   marginBottom: 20,
+    //   textAlign: 'center',
+    // },
+    // modalLabel: {
+    //   fontSize: 16,
+    //   marginBottom: 5,
+    //   marginTop: 10,
+    // },
+    // dateInputContainer: {
+    //   flexDirection: 'row',
+    //   alignItems: 'center',
+    //   marginBottom: 15,
+    // },
     datePickerWrapper: {
       borderWidth: 1,
       borderColor: colors.textRed,
-      borderRadius: 5,
+      borderBottomLeftRadius: 6,
+      borderBottomRightRadius: 6,
       padding:8,
       backgroundColor:'transparent',
     },
@@ -793,33 +794,33 @@ export default function HolydaysScreen({}: any) {
       height:50,
       color: colors.black,
     },
-    dateAndMonthContainer: {
-      flex:1, 
-      flexDirection:'row', 
-      alignItems:'flex-start',
-      alignContent:'flex-start',
-      justifyContent:'space-between', 
-      width: '100%',
-    },
-    dropdownContainer: { 
-      minWidth: 'calc(100%-48)', 
-      flex:1, 
-      flexDirection:'column', 
-      justifyContent:'flex-end', 
-      alignItems:'center',
-      alignContent:'flex-end',
-    },
-    dateInput: {
-      width: 60,
-      textAlign: 'center',
-      marginBottom: 0,
-      marginRight:8,
-      color: colors.black,
-    },
-    dateSeparator: {
-      fontSize: 20,
-      marginHorizontal: 5,
-    },
+    // dateAndMonthContainer: {
+    //   flex:1, 
+    //   flexDirection:'row', 
+    //   alignItems:'flex-start',
+    //   alignContent:'flex-start',
+    //   justifyContent:'space-between', 
+    //   width: '100%',
+    // },
+    // dropdownContainer: { 
+    //   minWidth: `${calc(100%-48)}`, 
+    //   flex:1, 
+    //   flexDirection:'column', 
+    //   justifyContent:'flex-end', 
+    //   alignItems:'center',
+    //   alignContent:'flex-end',
+    // },
+    // dateInput: {
+    //   width: 60,
+    //   textAlign: 'center',
+    //   marginBottom: 0,
+    //   marginRight:8,
+    //   color: colors.black,
+    // },
+    // dateSeparator: {
+    //   fontSize: 20,
+    //   marginHorizontal: 5,
+    // },
     // Nuovi stili per i pulsanti data
     dateButton: {
       flexDirection: 'row',
@@ -841,7 +842,7 @@ export default function HolydaysScreen({}: any) {
       width:'100%',
       flexDirection: 'row',
       justifyContent: 'space-around',
-      marginBottom: 42,
+      marginBottom: 0,
     },
       radioOption: {
         flexDirection: 'row',
@@ -930,17 +931,6 @@ export default function HolydaysScreen({}: any) {
       fontSize:16,
       fontWeight:600,
     },
-    // button: {
-    //   borderRadius: 6,
-    //   width: 220,
-    //   margin: 20,
-    // },
-    // buttonContainer: {
-    //   margin: 20,
-    //   justifyContent: 'center',
-    //   alignItems: 'center',
-    // },
-    
     // PULSANTONE AGGIUNGI GIORNI SPECIALI
     specialDays: {
       flex:1,
@@ -968,7 +958,7 @@ export default function HolydaysScreen({}: any) {
       gap:8,
     }
   });
-
+  
   // BOTTONE RESET DROPDOWN COUNTRY: RIPORTA LA SELEZIONE AL PAESE LOCALIZZATO
   const ResetCountryButton = () => {
     return(
@@ -989,6 +979,20 @@ export default function HolydaysScreen({}: any) {
   const [selectedRadioOption, setSelectedRadioOption] = useState<'single' | 'period'>('single'); // STATO INIZIALE DEL RADIOBUTTON
   const [leftRadioButtonActive, setLeftRadioButtonActive] = useState<boolean>(true);    // FLAG PER DISATTIVARE IL RADIOBUTTON SINISTRO (da resettare a ogni [+ Aggiungi] )
   const [rightRadioButtonActive, setRightRadioButtonActive] = useState<boolean>(true);  // FLAG PER DISATTIVARE IL RADIOBUTTON DESTRO (da resettare a ogni [+ Aggiungi] )
+
+  // GESTIONE SLIDER PER SELEZIONARE GIORNO/PERIODO NEL DATEPICKER
+  const [sliderTargetValue, setSliderTargetValue] = useState(0);
+  const buttonLeftAction = () => {
+    sliderTargetValue === 1 && console.log('Un giorno'); // ESEGUE SOLO SE VALORE ERA IMPOSTATO SULL'ALTRO
+    sliderTargetValue === 1 && setSliderTargetValue(0);
+    sliderTargetValue === 1 && setSelectedRadioOption('single');
+    };
+  const buttonRightAction = () => {
+    sliderTargetValue === 0 && console.log('Piu giorni');
+    sliderTargetValue === 0 && setSliderTargetValue(1);
+    sliderTargetValue === 0 && setSelectedRadioOption('period');
+    };
+
 
   /* ============================================================================= 
   * useEffect * AL CAMBIO DI myCountry
@@ -1073,22 +1077,10 @@ export default function HolydaysScreen({}: any) {
                   <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
                     {/* <View style={{width:32, height:32, borderRadius:24, backgroundColor: colors.dot32}}></View> */}
                     <View style={{width:44, height:44, borderRadius:24, backgroundColor: colors.dot32}}>
-                      <Text style={{
-                        height:'100%',
-                        fontSize:26,
-                        fontWeight:200,
-                        color: 'rgba(255,255,255,.75)',
-                        textAlign:'center',
-                        justifyContent:'center',
-                        alignContent:'center',
-                        alignItems:'center',
-                        paddingTop:Platform.OS === 'ios' ? 6:3,
-                        letterSpacing:-.5,
-                        borderWidth:0
-                        }}>{holiday.day}</Text>
+                      <Text style={styles.dot32text}>{holiday.day}</Text>
                     </View>
                     <View style={{flexDirection:'column'}} >
-                      <Text style={styles.itemDate}>{`${months[holiday.month]?.label} `}</Text>
+                      <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label} `}</Text>
                       <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
                       <Text style={[styles.itemDescription, {maxWidth:240, fontStyle:'italic', fontWeight:400}]}>{dataLabel[myLanguage][15]}</Text>
                     </View>
@@ -1152,8 +1144,9 @@ export default function HolydaysScreen({}: any) {
                 <View key={index} style={styles.holidayRow}>
                   <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
                     <View style={{width:44, height:44, borderRadius:24, backgroundColor: colors.dot32}}>
-                      <Text style={[styles.dot32text, {paddingTop:0, paddingBottom:18}]}>...</Text>
-                    </View>                      <View style={{flexDirection:'column'}} >
+                      <Text style={[styles.dot32text, {paddingTop:4, paddingBottom:0}]}>---</Text>
+                    </View>                      
+                    <View style={{flexDirection:'column'}} >
                       <Text style={styles.itemDate}>
                         {`${period.startDay}.${period.startMonth}.${period.startYear} / ${period.endDay}.${period.endMonth}.${period.endYear}`}
                       </Text>
@@ -1205,7 +1198,7 @@ export default function HolydaysScreen({}: any) {
                     </View>
                     <View style={{flexDirection:'column'}}>
                       {/* <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label}`}</Text> */}
-                      <Text style={styles.itemDate}>{months[holiday.month]?.label}</Text>
+                      <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label}`}</Text>
                       <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
                     </View>
                   </View>
@@ -1228,7 +1221,7 @@ export default function HolydaysScreen({}: any) {
         </View>
 
         {/* BOTTOM SPACE ############################################################################# */}
-        <View style={{ height: 280 }} ><Text style={{fontSize:11}}>Prebuild 0.0.6@16092025 (c) Angeli & Associati</Text></View>
+        <View style={{ height: 280 }} ><Text style={{fontSize:11}}>Prebuild 0.0.9@22092025 (c) Angeli & Associati</Text></View>
       </ScrollView>
 
       {/* MODAL DATEPICKER ############################################################################# */}
@@ -1252,14 +1245,23 @@ export default function HolydaysScreen({}: any) {
 
               <View style={styles.modalContainer}>
                 {/* TITOLO MODAL */}
-                <Text style={[styles.listTitle, { color: colors.black, textAlign:'center', marginBottom:24, }]}>{dataLabel[myLanguage][4]}</Text>
+                <Text style={[styles.listTitle, { color: colors.black, textAlign:'center', marginBottom:12, }]}>{dataLabel[myLanguage][4]}</Text>
                 {singleDateError ? <Text style={styles.errorText}>{singleDateError}</Text> : null}
 
-                {/* RADIOBUTTON */}
+                {/* RADIOBUTTON (ORA --> SLIDER) */}
                 <View style={styles.radioContainer}>
+                  {/* SLIDER CHE SOSTITUISCE I RADIOBUTTON*/}
+                  <DatepicketSelector
+                    windowWidth={300}
+                    buttonLeft={dataLabel[myLanguage][5]}
+                    buttonRight={dataLabel[myLanguage][6]}
+                    buttonLeftAction={buttonLeftAction}
+                    buttonRightAction={buttonRightAction}
+                    sliderTargetValue={sliderTargetValue}
+                  />
 
                   {/* LEFT */}
-                  <TouchableOpacity
+                  {/* <TouchableOpacity
                     style={styles.radioOption}
                     onPress={() => {
                       leftRadioButtonActive ? setSelectedRadioOption('single') : null;
@@ -1275,10 +1277,10 @@ export default function HolydaysScreen({}: any) {
                       }>
                         {dataLabel[myLanguage][5]}
                     </Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
                   
                   {/* RIGHT */}
-                  <TouchableOpacity
+                  {/* <TouchableOpacity
                     style={styles.radioOption}
                     onPress={() => {
                       rightRadioButtonActive ? setSelectedRadioOption('period') : null;
@@ -1293,7 +1295,7 @@ export default function HolydaysScreen({}: any) {
                         styles.radioLabelInactive}>
                           {dataLabel[myLanguage][6]}
                     </Text>
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
 
                 </View>
 
@@ -1318,9 +1320,9 @@ export default function HolydaysScreen({}: any) {
                       firstDayOfWeek={1}
                       //timeZone={'UTC'}
                       locale={myLanguage}
-                      style={{
-                        backgroundColor: 'transparent',
-                      }}
+                      // style={{
+                      //   backgroundColor: 'transparent',
+                      // }}
                       styles={{
                         ...defaultStyles,
                         today: { borderWidth: 0, backgroundColor:'transparent'}, 
@@ -1354,9 +1356,9 @@ export default function HolydaysScreen({}: any) {
                       firstDayOfWeek={1}
                       // timeZone={'UTC'}
                       locale={myLanguage}
-                      style={{
-                        backgroundColor: '#transparent',
-                      }}
+                      // style={{
+                      //   backgroundColor: 'transparent',
+                      // }}
                       styles={{
                         ...defaultStyles,
                         today: { borderWidth: 0, backgroundColor:'transparent'}, 

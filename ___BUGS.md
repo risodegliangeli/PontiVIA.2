@@ -1,6 +1,8 @@
 # TICKET APERTI:
 
 
+- ### SimpleToast FESTIVITA EDITABILE
+  -- aggiungere pulsante 'modifica' nel toast
 
 
 - ### FESTIVITA NAZIONALI EDITABILI
