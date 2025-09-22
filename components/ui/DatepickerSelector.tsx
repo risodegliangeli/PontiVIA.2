@@ -9,6 +9,8 @@ import {
   useColorScheme
 } from 'react-native';
 import { Colors } from '@/constants/Colors';
+import { holydayLabels as dataLabel,  } from '@/components/dataLabel';
+import { getLocales } from 'expo-localization';
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -41,6 +43,7 @@ const DatepicketSelector: React.FC<DatepickerSelectorInterface> = ({
   const colors = useThemeColors();
   const animatedValue = useRef(new Animated.Value(1)).current;
   const sliderHeigth = 48;
+  const myLanguage: string = (getLocales()[0].languageTag).slice(0,2); // 'it', 'fr', 'de', ecc
 
   useEffect(() => {
     Animated.timing(animatedValue, {
@@ -111,6 +114,7 @@ const DatepicketSelector: React.FC<DatepickerSelectorInterface> = ({
   });
 
   return (
+    <View style={{width:'100%', flexDirection:'column', alignItems:'center'}}>
       <View
         style={styles.container}>
         {/* FOCUSED SLIDE */}
@@ -129,6 +133,12 @@ const DatepicketSelector: React.FC<DatepickerSelectorInterface> = ({
           </TouchableOpacity>        
         </View>
       </View>
+      <View style={{width:'100%', paddingVertical: 8, }}>                  
+        <Text style={{textAlign:'center', color: colors.disabled}}>
+          {sliderTargetValue === 0 ? dataLabel(myLanguage, 19) : dataLabel(myLanguage, 20)}
+          </Text>
+      </View>  
+    </View>
   );
 }
 

@@ -586,7 +586,7 @@ export default function HolydaysScreen({}: any) {
       width:'100%',
       flexDirection: 'row',
       justifyContent: 'space-around',
-      marginBottom: 12,
+      marginBottom: 8,
     },
       radioOption: {
         flexDirection: 'row',
@@ -703,6 +703,7 @@ export default function HolydaysScreen({}: any) {
   });
   
   // BOTTONE RESET DROPDOWN COUNTRY: RIPORTA LA SELEZIONE AL PAESE LOCALIZZATO
+  
   const ResetCountryButton = () => {
     return(
       <TouchableOpacity
@@ -735,7 +736,6 @@ export default function HolydaysScreen({}: any) {
     sliderTargetValue === 0 && setSliderTargetValue(1);
     sliderTargetValue === 0 && setSelectedRadioOption('period');
     };
-
 
   /* ============================================================================= 
   * useEffect * AL CAMBIO DI myCountry
@@ -1007,7 +1007,6 @@ export default function HolydaysScreen({}: any) {
                     buttonRightAction={buttonRightAction}
                     sliderTargetValue={sliderTargetValue}
                   />
-
                   {/* LEFT */}
                   {/* <TouchableOpacity
                     style={styles.radioOption}
@@ -1044,10 +1043,9 @@ export default function HolydaysScreen({}: any) {
                           {dataLabel(myLanguage, 6]}
                     </Text>
                   </TouchableOpacity> */}
-
                 </View>
 
-                <View style={styles.datePickerWrapper}> 
+                 <View style={styles.datePickerWrapper}> 
                 {selectedRadioOption === 'single' ? 
                     <DateTimePicker // SINGLE //////////////////////////////
                       mode="single"

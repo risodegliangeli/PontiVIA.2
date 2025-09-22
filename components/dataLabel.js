@@ -1,6 +1,9 @@
 // TRADUZIONI
 // NB QUESTO FILE RACCOGLIE TUTTE LE function() CHE FORNISCONO LE LABEL ALLE PAGINE*/
 
+
+
+
 // USATA IN splittedBar.tsx
 export function splittedBarLabel(language, item) {
     const countryLabels = {
@@ -224,7 +227,9 @@ export function holydayLabels(language,item) {
         '(ripete ogni anno)',                         // 15
         'I tuoi giorni speciali',                     // 16
         'In questa data è già presente un evento',     // 17
-        'Vuoi eliminare tutte le date di questa sezione?'// 18],
+        'Vuoi eliminare tutte le date di questa sezione?',// 18],
+        '(es. una data fissa che ricorre ogni anno)',  // 19
+        '(es. un periodo di ferie)'                    // 20
         ],
     "fr":[
         'Mes dates',                                // 0
@@ -245,7 +250,9 @@ export function holydayLabels(language,item) {
         '(se répète chaque année)',                         // 15
         'Tes jours spéciaux',                     // 16
         'Un événement est déjà présent à cette date',     // 17
-        'Voulez-vous supprimer toutes les dates de cette section ?'// 18],
+        'Voulez-vous supprimer toutes les dates de cette section ?',// 18],
+        '(ex. une date fixe qui revient chaque année)',      // 19
+        '(ex. une période de vacances)'                      // 20
         ],  
     'es':[
         'Mis fechas',                                // 0
@@ -254,7 +261,7 @@ export function holydayLabels(language,item) {
         'Los períodos largos',                           // 3
         'Tus días especiales',                     // 4
         'Un día',                                  // 5
-        'Varios días',                   // 6
+        'Màs días',                   // 6
         'Atención',                                 // 7
         '¿Quieres eliminar el día',                   // 8
         'Cancelar',                                    // 9
@@ -266,7 +273,9 @@ export function holydayLabels(language,item) {
         '(se repite cada año)',                         // 15
         'Tus días especiales',                     // 16
         'Ya hay un evento presente en esta fecha',     // 17
-        '¿Quieres eliminar todas las fechas de esta sección?'// 18],
+        '¿Quieres eliminar todas las fechas de esta sección?',// 18],
+        '(ej. una fecha fija que se repite cada año)',      // 19
+        '(ej. un período de vacaciones)'                    // 20
         ],  
     "de":[
         'Meine Termine',                                // 0
@@ -275,7 +284,7 @@ export function holydayLabels(language,item) {
         'Die langen Zeiträume',                           // 3
         'Deine besonderen Tage',                     // 4
         'Ein Tag',                                  // 5
-        'Ein mehrtägiger Zeitraum',                   // 6
+        'Mehrere Tage',                   // 6
         'Vorsicht!',                                 // 7
         'Möchtest du den Tag löschen',                   // 8
         'Abbrchen',                                    // 9
@@ -287,7 +296,9 @@ export function holydayLabels(language,item) {
         '(wiederholt sich jedes Jahr)',                         // 15
         'Deine besonderen Tage',                     // 16
         'An diesem Datum ist bereits ein Ereignis vorhanden',     // 17
-        'Möchtest du alle Termine in diesem Bereich löschen?'// 18],
+        'Möchtest du alle Termine in diesem Bereich löschen?',// 18],
+        '(z.B. ein festes Datum, das jedes Jahr wiederkehrt)', // 19
+        '(z.B. eine Ferienzeit)'                            // 20
         ],
     "en":[
         'My dates',                                // 0
@@ -296,7 +307,7 @@ export function holydayLabels(language,item) {
         'Long periods',                           // 3
         'Your special days',                     // 4
         'One day',                                  // 5
-        'A multi-day period',                   // 6
+        'Multiple days',                   // 6
         'Attention',                                 // 7
         'Do you want to delete the day',                   // 8
         'Cancel',                                    // 9
@@ -308,7 +319,9 @@ export function holydayLabels(language,item) {
         '(repeats every year)',                         // 15
         'Your special days',                     // 16
         'An event already exists on this date',     // 17
-        'Do you want to delete all dates in this section?'// 18],
+        'Do you want to delete all dates in this section?',// 18],
+        '(e.g. a fixed date that recurs every year)',       // 19
+        '(e.g. a holiday period)'                           // 20
         ],
     "nl":[
         'Mijn datums',                                // 0
@@ -317,7 +330,7 @@ export function holydayLabels(language,item) {
         'Lange periodes',                           // 3
         'Jouw speciale dagen',                     // 4
         'Eén dag',                                  // 5
-        'Periode van meerdere dagen',                   // 6
+        'Meerdere dagen',                   // 6
         'Let op',                                 // 7
         'Wil je de dag verwijderen',                   // 8
         'Annuleren',                                    // 9
@@ -329,7 +342,9 @@ export function holydayLabels(language,item) {
         '(herhaalt elk jaar)',                         // 15
         'Jouw speciale dagen',                     // 16
         'Er is al een evenement op deze datum',     // 17
-        'Wil je alle datums in deze sectie verwijderen?'// 18],
+        'Wil je alle datums in deze sectie verwijderen?',// 18],
+        '(bijv. een vaste datum die elk jaar terugkeert)',  // 19
+        '(bijv. een vakantieperiode)'                       // 20
         ],
     'pt':[
         'Minhas datas',                                // 0
@@ -338,7 +353,7 @@ export function holydayLabels(language,item) {
         'Períodos longos',                           // 3
         'Seus dias especiais',                     // 4
         'Um dia',                                  // 5
-        'Um período de vários dias',                   // 6
+        'Vários dias',                   // 6
         'Atenção',                                 // 7
         'Deseja excluir o dia',                   // 8
         'Cancelar',                                    // 9
@@ -350,7 +365,9 @@ export function holydayLabels(language,item) {
         '(repete todos os anos)',                         // 15
         'Seus dias especiais',                     // 16
         'Já existe um evento nesta data',     // 17
-        'Deseja excluir todas as datas desta seção?'// 18],
+        'Deseja excluir todas as datas desta seção?',// 18],
+        '(ex. uma data fixa que se repete todo ano)',       // 19
+        '(ex. um período de férias)'                        // 20
         ],
     'hr': [
         'Moji datumi',                                    // 0
@@ -359,7 +376,7 @@ export function holydayLabels(language,item) {
         'Dugi periodi',                                   // 3
         'Tvoji posebni dani',                             // 4
         'Jedan dan',                                      // 5
-        'Period od više dana',                            // 6
+        'Više dana',                            // 6
         'Pažnja',                                         // 7
         'Želiš li obrisati dan',                          // 8
         'Otkaži',                                         // 9
@@ -371,7 +388,9 @@ export function holydayLabels(language,item) {
         '(ponavlja se svake godine)',                     // 15
         'Tvoji posebni dani',                             // 16
         'Na ovaj datum već postoji događaj',              // 17
-        'Želiš li obrisati sve datume iz ove sekcije?'   // 18
+        'Želiš li obrisati sve datume iz ove sekcije?',   // 18
+        '(npr. fiksni datum koji se ponavlja svake godine)', // 19
+        '(npr. period odmora)'                               // 20
     ],
     'si': [
         'Moji datumi',                                    // 0
@@ -380,7 +399,7 @@ export function holydayLabels(language,item) {
         'Dolga obdobja',                                  // 3
         'Tvoji posebni dnevi',                            // 4
         'En dan',                                         // 5
-        'Obdobje več dni',                                // 6
+        'Več dni',                                // 6
         'Pozor',                                          // 7
         'Ali želiš izbrisati dan',                        // 8
         'Prekliči',                                       // 9
@@ -392,7 +411,9 @@ export function holydayLabels(language,item) {
         '(se ponavlja vsako leto)',                       // 15
         'Tvoji posebni dnevi',                            // 16
         'Na ta datum že obstaja dogodek',                 // 17
-        'Ali želiš izbrisati vse datume iz tega odseka?' // 18
+        'Ali želiš izbrisati vse datume iz tega odseka?', // 18
+        '(npr. fiksni datum, ki se ponavlja vsako leto)',   // 19
+        '(npr. počitniško obdobje)'                         // 20
     ],
     'gr': [
         'Οι ημερομηνίες μου',                             // 0
@@ -401,7 +422,7 @@ export function holydayLabels(language,item) {
         'Μακρές περίοδοι',                                // 3
         'Οι ξεχωριστές σου μέρες',                        // 4
         'Μία μέρα',                                       // 5
-        'Περίοδος περισσότερων ημερών',                   // 6
+        'Περισσότερες μέρες',                   // 6
         'Προσοχή',                                        // 7
         'Θέλεις να διαγράψεις τη μέρα',                   // 8
         'Ακύρωση',                                        // 9
@@ -413,9 +434,10 @@ export function holydayLabels(language,item) {
         '(επαναλαμβάνεται κάθε χρόνο)',                   // 15
         'Οι ξεχωριστές σου μέρες',                        // 16
         'Σε αυτή την ημερομηνία υπάρχει ήδη γεγονός',     // 17
-        'Θέλεις να διαγράψεις όλες τις ημερομηνίες από αυτό το τμήμα?' // 18
+        'Θέλεις να διαγράψεις όλες τις ημερομηνίες από αυτό το τμήμα?', // 18
+        '(π.χ. μια σταθερή ημερομηνία που επαναλαμβάνεται κάθε χρόνο)', // 19
+        '(π.χ. μια περίοδος διακοπών)'                       // 20
     ]
     };
     return dataLabel[language][item];
 }
-
