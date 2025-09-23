@@ -271,7 +271,6 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
       borderWidth:.25,
       backgroundColor: colors.tabBarFocusDotIos,
       borderColor: 'rgba(255, 255, 255, 1)',
-      
       //elevation:12, 
       shadowColor: colors.black, // iOS shadow
       shadowOffset: {

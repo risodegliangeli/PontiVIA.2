@@ -149,6 +149,8 @@ export default function HolydaysScreen({}: any) {
     setSingleDateDescription(undefined); // AZZERA CAMPO DESCRIZIONE
     setSingleDateError(null);     // AZZER ERRORE
     setInitialIndex(null);  // VARIABILE USATA (SE DIVERSA DA null) PER L'EDIT DI UN RECORD
+    setLeftRadioButtonActive(true); // SERVONO PER POSIZIONARE IL DATEPICKERSLIDER IN CASO DI EDIT
+    setRightRadioButtonActive(true); // SI RIPORTANO ENTRAMBI A TRUE ( = SLIEDR LIBERO DI MUOVERSI)
   }
   
   /* ============================================================================= 
@@ -544,129 +546,136 @@ export default function HolydaysScreen({}: any) {
       maxWidth:500, // CENTRATO SU TABLET
       paddingVertical: 24,
       paddingHorizontal: 12,
-      borderRadius: 12,
+      borderRadius: 8,
     },
     datePickerWrapper: {
       borderWidth: 1,
       borderColor: colors.textRed,
-      borderBottomLeftRadius: 6,
-      borderBottomRightRadius: 6,
+      borderRadius: 8,
+      // borderBottomLeftRadius: 6,
+      // borderBottomRightRadius: 6,
       padding:8,
       backgroundColor:'transparent',
     },
-    modalInput: {
-      borderWidth: 1,
-      borderColor: colors.textRed,
-      borderRadius: 99,
-      paddingVertical: 10,
-      paddingHorizontal: 24,
-      fontSize: 16,
-      marginBottom: 12,
-      height:50,
-      color: colors.black,
-    },
     // Nuovi stili per i pulsanti data
-    dateButton: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      borderWidth: 1,
-      borderColor: colors.textRed,
-      borderRadius: 5,
-      padding: 12,
-      marginBottom: 15,
-      backgroundColor: colors.textNegative,
-    },
-    dateButtonText: {
-      fontSize: 16,
-      color: colors.black,
-    },
-    // RADIOBUTTON
-    radioContainer: {
-      width:'100%',
-      flexDirection: 'row',
-      justifyContent: 'space-around',
-      marginBottom: 8,
-    },
-      radioOption: {
-        flexDirection: 'row',
-        alignItems: 'center',
-      },
-      // (SOLO CIRCOLETTO ESTERNO)
-      radioButton: {
-        height: 20,
-        width: 20,
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: '#333',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: 8,
-      },
-      radioButtonDisabled: {
-        height: 20,
-        width: 20,
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: '#999',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginRight: 8,
-      },
-      // PALLINO NERO ACCESO
-      radioButtonSelected: {
-        height: 10,
-        width: 10,
-        borderRadius: 5,
-        backgroundColor: colors.textRed,
-      },
-      radioLabelNotFocused: {
-        fontSize: 16,
-        fontWeight: 400,
-        color: colors.black,
-      },
-      radioLabelInactive: {
-              fontSize: 16,
-        fontWeight: 400,
-        color: '#999999',
-      },
-      radioLabelFocused:{
-        fontSize: 16,
-        fontWeight: 800,
-        color: colors.textRed,
-      },
+    // dateButton: {
+    //   flexDirection: 'row',
+    //   justifyContent: 'space-between',
+    //   alignItems: 'center',
+    //   borderWidth: 1,
+    //   borderColor: colors.textRed,
+    //   borderRadius: 5,
+    //   padding: 12,
+    //   marginBottom: 15,
+    //   backgroundColor: colors.textNegative,
+    // },
+    // dateButtonText: {
+    //   fontSize: 16,
+    //   color: colors.black,
+    // },
+    // // RADIOBUTTON
+    // radioContainer: {
+    //   width:'100%',
+    //   flexDirection: 'row',
+    //   justifyContent: 'space-around',
+    //   //marginBottom: 8,
+    // },
+    //   radioOption: {
+    //     flexDirection: 'row',
+    //     alignItems: 'center',
+    //   },
+    //   // (SOLO CIRCOLETTO ESTERNO)
+    //   radioButton: {
+    //     height: 20,
+    //     width: 20,
+    //     borderRadius: 10,
+    //     borderWidth: 1,
+    //     borderColor: '#333',
+    //     alignItems: 'center',
+    //     justifyContent: 'center',
+    //     marginRight: 8,
+    //   },
+    //   radioButtonDisabled: {
+    //     height: 20,
+    //     width: 20,
+    //     borderRadius: 10,
+    //     borderWidth: 1,
+    //     borderColor: '#999',
+    //     alignItems: 'center',
+    //     justifyContent: 'center',
+    //     marginRight: 8,
+    //   },
+    //   // PALLINO NERO ACCESO
+    //   radioButtonSelected: {
+    //     height: 10,
+    //     width: 10,
+    //     borderRadius: 5,
+    //     backgroundColor: colors.textRed,
+    //   },
+    //   radioLabelNotFocused: {
+    //     fontSize: 16,
+    //     fontWeight: 400,
+    //     color: colors.black,
+    //   },
+    //   radioLabelInactive: {
+    //           fontSize: 16,
+    //     fontWeight: 400,
+    //     color: '#999999',
+    //   },
+    //   radioLabelFocused:{
+    //     fontSize: 16,
+    //     fontWeight: 800,
+    //     color: colors.textRed,
+    //   },
     // PULSANTI ADD/CANCEL
     modalButtons: {
       flexDirection: 'row',
       justifyContent: 'space-between',
-      marginTop: 20,
+      marginTop: 24,
     },
       addButton: {
-        backgroundColor: colors.textRed,
-        padding: 15,
-        borderRadius: 6,
+        //backgroundColor: colors.white,
+        padding: 16,
+        borderRadius: 8,
+        borderWidth: 1,
+        borderColor: colors.blueBar,
         alignItems: 'center',
         flex: 1,
         marginLeft: 10,
       },
       addButtonText: {
-        color: colors.white,
+        color: colors.blueBar,
         fontSize: 16,
         fontWeight: 'bold',
       },
       cancelButton: {
-        backgroundColor: colors.cancelButton,
-        padding: 15,
-        borderRadius: 6,
+        //backgroundColor: colors.cancelButton,
+        padding: 16,
+        borderRadius: 8,
+        borderWidth:1,
+        borderColor: colors.disabled,
         alignItems: 'center',
         flex: 1,
         marginRight: 10,
       },
       cancelButtonText: {
-        color: colors.text,
+        color: colors.disabled,
         fontSize: 16,
         fontWeight: 'bold',
       },
+    // DESCRIZIONE
+    modalInput: {
+      borderWidth: 1,
+      borderColor: colors.textRed,
+      borderRadius: 8,
+      paddingVertical: 10,
+      paddingHorizontal: 12,
+      fontSize: 16,
+      marginBottom: 12,
+      height:50,
+      color: colors.black,
+    },
+
     errorText: {
       color: 'red',
       marginBottom: 16,
@@ -727,12 +736,10 @@ export default function HolydaysScreen({}: any) {
   // GESTIONE SLIDER PER SELEZIONARE GIORNO/PERIODO NEL DATEPICKER
   const [sliderTargetValue, setSliderTargetValue] = useState(0);
   const buttonLeftAction = () => {
-    //sliderTargetValue === 1 && console.log('Un giorno'); // ESEGUE SOLO SE VALORE ERA IMPOSTATO SULL'ALTRO
     sliderTargetValue === 1 && setSliderTargetValue(0);
     sliderTargetValue === 1 && setSelectedRadioOption('single');
     };
   const buttonRightAction = () => {
-    //sliderTargetValue === 0 && console.log('Piu giorni');
     sliderTargetValue === 0 && setSliderTargetValue(1);
     sliderTargetValue === 0 && setSelectedRadioOption('period');
     };
@@ -1006,6 +1013,8 @@ export default function HolydaysScreen({}: any) {
                     buttonLeftAction={buttonLeftAction}
                     buttonRightAction={buttonRightAction}
                     sliderTargetValue={sliderTargetValue}
+                    leftRadioButtonActive={leftRadioButtonActive}
+                    rightRadioButtonActive={rightRadioButtonActive}
                   />
                   {/* LEFT */}
                   {/* <TouchableOpacity
@@ -1045,7 +1054,7 @@ export default function HolydaysScreen({}: any) {
                   </TouchableOpacity> */}
                 </View>
 
-                 <View style={styles.datePickerWrapper}> 
+                <View style={styles.datePickerWrapper}> 
                 {selectedRadioOption === 'single' ? 
                     <DateTimePicker // SINGLE //////////////////////////////
                       mode="single"
@@ -1073,7 +1082,7 @@ export default function HolydaysScreen({}: any) {
                       // }}
                       styles={{
                         ...defaultStyles,
-                        today: { borderWidth: 0, backgroundColor:'transparent'}, 
+                        today: { borderWidth: 0, backgroundColor:'transparent', }, 
                         today_label: { color: colors.black},
                         selected: { backgroundColor: colors.textRed, borderRadius:'10%' }, 
                         selected_label: { color: 'white' },

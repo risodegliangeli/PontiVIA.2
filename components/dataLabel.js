@@ -1,10 +1,7 @@
 // TRADUZIONI
 // NB QUESTO FILE RACCOGLIE TUTTE LE function() CHE FORNISCONO LE LABEL ALLE PAGINE*/
 
-
-
-
-// USATA IN splittedBar.tsx
+// LABEL USATE IN splittedBar.tsx
 export function splittedBarLabel(language, item) {
     const countryLabels = {
         'it':[
@@ -51,7 +48,7 @@ export function splittedBarLabel(language, item) {
     return countryLabels[language][item];
 }
 
-// USATA IN index.tsx
+// LABEL USATE IN index.tsx
 export function indexLabels(language, item) {
   const dataLabel = {
     'it': ['Nessun ponte in vista?\nScorri il calendario e imposta\ni filtri e i tuoi giorni'],
@@ -68,7 +65,7 @@ export function indexLabels(language, item) {
 return dataLabel[language][item];
 }
 
-// USATA IN calendarUtils.tsx e preferences.tsx
+// LABEL USATE IN calendarUtils.tsx e preferences.tsx
 export function dataLabel(language, item) {
     const countryLabels = {
         'it':[
@@ -205,7 +202,7 @@ export function dataLabel(language, item) {
     return countryLabels[language][item];
 }
 
-// USATA IN holydays.tsx
+// LABEL USATE IN holydays.tsx
 export function holydayLabels(language,item) {
     const dataLabel = {
     'it':[
@@ -228,7 +225,7 @@ export function holydayLabels(language,item) {
         'I tuoi giorni speciali',                     // 16
         'In questa data è già presente un evento',     // 17
         'Vuoi eliminare tutte le date di questa sezione?',// 18],
-        '(es. una data fissa che ricorre ogni anno)',  // 19
+        '(es. un evento che ricorre ogni anno)',  // 19
         '(es. un periodo di ferie)'                    // 20
         ],
     "fr":[

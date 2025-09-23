@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   useColorScheme
 } from 'react-native';
 import { Colors } from '@/constants/Colors';
-import { holydayLabels as dataLabel,  } from '@/components/dataLabel';
+import { holydayLabels as dataLabel } from '@/components/dataLabel';
 import { getLocales } from 'expo-localization';
 
 const useThemeColors = () => {
@@ -19,40 +19,47 @@ const useThemeColors = () => {
 
 interface DatepickerSelectorInterface {
   windowWidth: number;
-  buttonLeft: string; 
+  buttonLeft: string;
   buttonRight: string;
   buttonLeftAction: () => void;
-  buttonRightAction: () => void; 
+  buttonRightAction: () => void;
   sliderTargetValue: number;
+  leftRadioButtonActive: boolean;
+  rightRadioButtonActive: boolean;
 }
 
-/* ===========================================
-
-                    MAIN
-
-=========================================== */
 const DatepicketSelector: React.FC<DatepickerSelectorInterface> = ({
   windowWidth,
-  buttonLeft, 
+  buttonLeft,
   buttonRight,
   buttonLeftAction,
   buttonRightAction,
-  sliderTargetValue
-  }) => {
-
+  sliderTargetValue,
+  leftRadioButtonActive,
+  rightRadioButtonActive,
+}) => {
   const colors = useThemeColors();
-  const animatedValue = useRef(new Animated.Value(1)).current;
   const sliderHeigth = 48;
-  const myLanguage: string = (getLocales()[0].languageTag).slice(0,2); // 'it', 'fr', 'de', ecc
+  const myLanguage: string = (getLocales()[0].languageTag).slice(0, 2);
+  const initialPosition = leftRadioButtonActive ? 0 : 1; // 0=sinistra, 1=destra
+
+  // VARIABILE PER DEETERMINARE MODALITA' DI EDITING
+  const isEditingMode = !leftRadioButtonActive || !rightRadioButtonActive;
+
+  // Inizializza il valore animato
+  const animatedValue = useRef(new Animated.Value(initialPosition)).current;
 
   useEffect(() => {
-    Animated.timing(animatedValue, {
-      toValue: sliderTargetValue,
-      duration: 350,
-      easing: Easing.elastic(1.5),
-      useNativeDriver: false,
-    }).start();
-  }, [sliderTargetValue, animatedValue]);
+    // L'animazione parte solo se NON siamo in modalità di modifica
+    if (!isEditingMode) {
+      Animated.timing(animatedValue, {
+        toValue: sliderTargetValue,
+        duration: 350,
+        easing: Easing.elastic(1.5),
+        useNativeDriver: false,
+      }).start();
+    }
+  }, [sliderTargetValue, animatedValue, isEditingMode]);
 
   const translateX = animatedValue.interpolate({
     inputRange: [0, 1],
@@ -64,12 +71,9 @@ const DatepicketSelector: React.FC<DatepickerSelectorInterface> = ({
       width: windowWidth,
       height: sliderHeigth,
       backgroundColor: colors.white,
-      borderWidth:1,
-      //borderBottomWidth:0,
-      borderColor:colors.textRed,
+      borderWidth: 1,
+      borderColor: colors.textRed,
       borderRadius: sliderHeigth,
-      // borderTopLeftRadius: sliderHeigth/8,
-      // borderTopRightRadius: sliderHeigth/8,
     },
     focusedDot: {
       alignContent: 'center',
@@ -79,17 +83,17 @@ const DatepicketSelector: React.FC<DatepickerSelectorInterface> = ({
       height: '100%',
       backgroundColor: colors.textRed,
       borderRadius: sliderHeigth,
-      // borderTopLeftRadius: sliderHeigth/8,
-      // borderTopRightRadius: sliderHeigth/8,
       transform: [{ translateX }],
-      elevation:6,
-      shadowColor: colors.black, // iOS shadow
+      elevation: 6,
+      shadowColor: colors.black,
       shadowOffset: {
         width: 1,
-        height: 2, // Match elevation for iOS
+        height: 2,
       },
       shadowOpacity: 0.25,
-      shadowRadius: 4 // Match elevation for iOS
+      shadowRadius: 4,
+      // Nascondi la focusedDot in modalità di modifica
+      opacity: isEditingMode ? 0 : 1,
     },
     touchables: {
       position: 'absolute',
@@ -102,45 +106,74 @@ const DatepicketSelector: React.FC<DatepickerSelectorInterface> = ({
       alignItems: 'center',
     },
     buttonOn: {
-      fontSize:16,
-      fontWeight: 600,
+      fontSize: 16,
+      fontWeight: '600',
       color: colors.white,
     },
     buttonOff: {
-      fontSize:16,
-      fontWeight: 600,
+      fontSize: 16,
+      fontWeight: '600',
       color: colors.blueBar,
     },
   });
 
+  // DIDASCALIA SOTTO LO SWITCH
+  let labelText = '';
+  if (isEditingMode) {
+    if (leftRadioButtonActive) {
+      labelText = dataLabel(myLanguage, 19);
+    } else {
+      labelText = dataLabel(myLanguage, 20);
+    }
+  } else {
+    labelText = sliderTargetValue === 0 ? dataLabel(myLanguage, 19) : dataLabel(myLanguage, 20);
+  }
+
   return (
-    <View style={{width:'100%', flexDirection:'column', alignItems:'center'}}>
-      <View
-        style={styles.container}>
-        {/* FOCUSED SLIDE */}
+    <View style={{ width: '100%', flexDirection: 'column', alignItems: 'center' }}>
+      <View style={styles.container}>
         <Animated.View style={styles.focusedDot} />
-        {/* WRAPPER PULSANTI */}
         <View style={styles.touchables}>
-          <TouchableOpacity onPress={buttonLeftAction}>
-            <Text style={sliderTargetValue === 0 ? styles.buttonOn : styles.buttonOff}>
+          {/* PULSANTE SIN */}
+          <TouchableOpacity
+            disabled={!leftRadioButtonActive}
+            onPress={buttonLeftAction}>
+            <Text
+              style={[
+                isEditingMode ?
+                  { color: leftRadioButtonActive ? colors.blueBar : colors.disabled }
+                  : 
+                  sliderTargetValue === 0 ? styles.buttonOn : styles.buttonOff
+                ]}
+                >
               {buttonLeft}
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={buttonRightAction}>
-            <Text style={sliderTargetValue === 1 ? styles.buttonOn : styles.buttonOff}>
+          {/* PULSANTE DX */}
+          <TouchableOpacity
+            disabled={!rightRadioButtonActive}
+            onPress={buttonRightAction}>
+            <Text
+              style={[
+                isEditingMode
+                  ? { color: rightRadioButtonActive ? colors.blueBar : colors.disabled }
+                  : sliderTargetValue === 1
+                    ? styles.buttonOn
+                    : styles.buttonOff
+              ]}
+            >
               {buttonRight}
             </Text>
-          </TouchableOpacity>        
+          </TouchableOpacity>
         </View>
       </View>
-      <View style={{width:'100%', paddingVertical: 8, }}>                  
-        <Text style={{textAlign:'center', color: colors.disabled}}>
-          {sliderTargetValue === 0 ? dataLabel(myLanguage, 19) : dataLabel(myLanguage, 20)}
-          </Text>
-      </View>  
+      <View style={{ width: '100%', paddingVertical: 8 }}>
+        <Text style={{ textAlign: 'center', color: colors.disabled }}>
+          {labelText}
+        </Text>
+      </View>
     </View>
   );
-}
+};
 
 export default DatepicketSelector;
-
