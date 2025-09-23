@@ -18,7 +18,6 @@ import {
 } from 'react-native';
 import { easeGradient } from 'react-native-easing-gradient';
 
-
 const w = Dimensions.get('window').width;
 
 const useThemeColors = () => {
@@ -37,7 +36,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
 
   const [splittedTotalWidth, setSplittedTotalWidth] = useState<number>(0);
 
-// DIMENSIONI WINDOW
+  // DIMENSIONI WINDOW
   const windowWidth: number = Dimensions.get('window').width;
   
   useEffect( () => {
@@ -53,13 +52,8 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
 
   const singleItemImageSize: string = '60%';
   const doubleItemsImageSize: string = '35%';
-
-  const splittedFromBottom: number = Platform.OS === 'ios' ? 28 : 56;
+  const splittedFromBottom: number = Platform.OS === 'ios' ? 28 : 64;
   const itemsInternalPadding: number = 3;
-  // const splittedLabels =  [
-  //   '', 
-  //   'Le mie date', 
-  //   'Filtri'];
 
   const [label, setLabel] = useState([splittedLabels(myLanguage,0), splittedLabels(myLanguage,1)]);
 
@@ -350,7 +344,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
       outputRange: [
         doubleItemsSize/2 - itemsInternalPadding,
         doubleItemsSize/2 - itemsInternalPadding,
-        splittedBarHeigth - itemsInternalPadding *2 - 2
+        splittedBarHeigth - itemsInternalPadding * 2 - 2
       ],
     });
 
