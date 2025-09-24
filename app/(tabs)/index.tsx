@@ -2,11 +2,11 @@ import { PREFERENCES } from '@/app/(tabs)/preferences';
 import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useMemo, useRef, useCallback } from 'react';
-import { Animated, ImageBackground, StyleSheet, useColorScheme, Text, Pressable } from 'react-native';
+import { useEffect, useMemo, useRef,  } from 'react';
+import { Animated, Easing, ImageBackground, StyleSheet, useColorScheme, Text, Pressable, TouchableOpacity } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { MovingHands } from '@/components/ui/MovingHands'; // MIO
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales, } from 'expo-localization';
 import { indexLabels as dataLabel } from '@/components/dataLabel';
 
@@ -50,54 +50,56 @@ export default function HomeScreen() {
     myCountry]
   );
 
-  const styles = StyleSheet.create({
-    // CALENDARIO
-    container: {
-      flex: 1,
-      width: '100%',
-      maxWidth:600,
-      paddingHorizontal:12,      
-      marginTop: 0,
-      alignItems:'center'
-    }, 
-    // IMMAGINE DI SFONDO
-    image: {      
-      flex: 1,
-      width: '100%',
-      alignItems:'center'
-    },
-  });
-
-  // Animations
+  // ANIMAZIONI
   const logoMarginTop = useRef(new Animated.Value(0)).current; // logo starts at marginTop 92
-  const cardMarginTop = useRef(new Animated.Value(180)).current; // card starts at marginTop 300
-  const logoOpacity = useRef(new Animated.Value(1)).current; // logo visible
-  const animationStarted = useRef(false);
+  const logoSize = new Animated.Value(1); // TESTO E MANINA INIZIALM. VISIBILI
+  const cardMarginTop = useRef(new Animated.Value(180)).current; // LE CARD PARTONO SPOSTATE VERSO IL BASSO
   const animationTimeout = useRef<NodeJS.Timeout | null>(null);
+  const cloud01Anim = new Animated.Value(0); // NUVOLETTA 1
+  const cloud02Anim = new Animated.Value(0); // NUVOLETTA 2
+  // const animationStarted = useRef(false);
 
-  // ANIMAZIONE PARALLELA: DITO CHE SCOMPARE E CARDS CHE SI ALZANO
-  const startAnimation = useCallback(() => {
-    if (animationStarted.current) return;
-    animationStarted.current = true;
+  // ANIMAZIONE //////////////////////////////////////////////////////
+  const startAnimation = () => {
 
-    Animated.parallel([
-      Animated.timing(logoMarginTop, {
-        toValue: -999, // move logo up out of the screen
-        duration: 700,
-        useNativeDriver: false,
-      }),
-      Animated.timing(logoOpacity, {
+      Animated.timing(logoSize, { // 1) TESTO E MANINA SI RIDUCONO (NON CAMBIA OPACITY)
         toValue: 0,
-        duration: 500,
-        useNativeDriver: false,
-      }),
-      Animated.timing(cardMarginTop, {
-        toValue: 0,
-        duration: 700,
-        useNativeDriver: false,
-      }),
-    ]).start();
-  }, [logoMarginTop, cardMarginTop, logoOpacity]);
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+
+      Animated.timing(cloud01Anim, { // 2) NUVOLETTA 01 APPARE E SCOMPARE
+        toValue: 1,
+        duration: 200,
+        easing: Easing.elastic(1.5),
+        useNativeDriver: true,
+      }).start( () => { cloud01Anim.setValue(0);} );
+
+      setTimeout(() => {
+        Animated.timing(cloud02Anim, { // 3) NUVOLETTA 02 APPARTE E SCOMPARE RITARDATA
+          toValue: 1,
+          duration: 150,
+          easing: Easing.elastic(2),
+          useNativeDriver: true,
+        }).start( () => { cloud02Anim.setValue(0); });
+      }, 125);
+
+      setTimeout(() => {
+        Animated.timing( logoMarginTop, {
+          toValue: -500,
+          duration:300,
+          useNativeDriver: true,
+        }).start();
+      }, 500);
+
+      setTimeout(() => {
+        Animated.timing(cardMarginTop, { // SPOSTA IN ALTO LE CARD
+          toValue: 0,
+          duration: 700,
+          useNativeDriver: true,
+        }).start()
+      }, 500);
+  }
 
   // ANIMAZIONE DITO AL BOOT, SPARISCE DOPO 8 SEC.
   useEffect(() => {
@@ -109,43 +111,127 @@ export default function HomeScreen() {
     };
   }, [startAnimation]);
 
-  // Handler for logo press
+  // CLICCANDO SUL LOGO PARTE SUBITO L'ANIMAZIONE
   const handleLogoPress = () => {
-    if (animationTimeout.current) clearTimeout(animationTimeout.current);
+    if (animationTimeout.current) clearTimeout(animationTimeout.current); // AZZERA IL TIMER
     startAnimation();
   };
+
+  // FOGLI DI STILE
+  const styles = StyleSheet.create({
+    // CONTAINER CARDS CALENDARIO
+    container: {
+      transform: [
+        { translateY: cardMarginTop }
+      ],
+      flex: 1,
+      width: '100%',
+      maxWidth:600,
+      paddingHorizontal:12,      
+      alignItems:'center',
+    }, 
+    // IMMAGINE DI SFONDO
+    image: {      
+      flex: 1,
+      width: '100%',
+      alignItems:'center'
+    },
+    // CONTAINER ESTERNO DEL WRAPPER 
+    wrapperContainer: {
+      position:'absolute',
+      top:92,
+      width:'100%',
+      alignContent:'flex-start',
+      transform: [
+        { translateY: logoMarginTop }
+      ]      
+    },
+    // WRAPPER TESTO E MANINA
+    welcome: {
+      width:'100%',
+      height: 180,
+      alignItems:'center',      
+      transform: [
+        { scale: logoSize.interpolate({ inputRange: [0, 1], outputRange: [0, 1], }), },
+      ],
+    },
+    // TESTO DI WELCOME
+    welcomeText: {
+      fontSize:18, 
+      fontWeight:600, 
+      color: colors.blueBar, 
+      textAlign:'center'
+    },
+    // NUVOLETTA 1
+    cloud01: {            
+      width: '35%',
+      resizeMode: 'contain',
+      position: 'absolute',
+      opacity: cloud01Anim,
+      transform: [
+        { scale: cloud01Anim.interpolate({ inputRange: [0, 1], outputRange: [0, 1], }), },
+      ],
+    },
+    // NUVOLETTA 2
+    cloud02: {
+      width: '35%',
+      resizeMode: 'contain',
+      position: 'absolute',
+      opacity: cloud02Anim,
+      transform: [
+        {scale: cloud02Anim.interpolate({ inputRange: [0, 1], outputRange: [0, 1], }), },
+      ],
+    }
+  });
 
   return (  
       <ImageBackground 
         source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg') }
         resizeMode="cover" 
         style={styles.image} >
+
+          {/* CARD CALENDARIO */}
           <Animated.View 
             key='card'
-            style={[ styles.container, { top:0, marginTop: cardMarginTop } ]}
-          >
+            style={styles.container} // MARGINTOP = ANIMATO
+            >
             <CalendarScreen 
               key={calendarKey} 
               PREFERENCES={PREFERENCES}
             /> 
           </Animated.View>
+
+          {/* CONTAINER TESTO, MANINA E NUVOLETTE CHE A FINE ANIMAZIONE ESCE DALLA VIEW */}
           <Animated.View 
             key='logo'
-            style={{
-              position:'absolute',
-              top:92,
-              marginTop: logoMarginTop,
-              width:'100%',
-              alignContent:'flex-start',
-              opacity: logoOpacity,
-              zIndex: 10,
-            }}>
-            <Pressable 
+            style={styles.wrapperContainer}>
+
+            {/* PULSANTE TRASP PER FAR PARTIRE SUBITO L'ANIMAZIONE */}
+            <TouchableOpacity 
               onPress={handleLogoPress} 
-              style={{width: '100%', alignItems: 'center'}}>
-              <Text style={{fontSize:18, fontWeight:600, color: colors.blueBar, textAlign:'center'}}>{dataLabel(myLanguage, 0)}</Text>
-              <MovingHands />
-            </Pressable>
+              style={{alignItems:'center'}}>
+
+                {/* WRAPPER TESTO E MANINA */}
+                <Animated.View style={styles.welcome}>
+                  {/* TESTO WELCOME */}
+                  <Text style={styles.welcomeText}>{dataLabel(myLanguage, 0)}</Text>
+                  {/* MANINA ANIMATA */}
+                  <MovingHands />
+                </Animated.View>
+
+              {/* NUVOLETTA 1 */}
+              <Animated.Image
+                source={require('@/assets/images/cloud_01.png')}
+                style={styles.cloud01}
+              />
+
+              {/* NUVOLETTA 2 */}
+              <Animated.Image
+                source={require('@/assets/images/cloud_02.png')}
+                style={styles.cloud02}
+              />            
+            </TouchableOpacity>
+
           </Animated.View>
 
           {/* STATUSBAR */}
