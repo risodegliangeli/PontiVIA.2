@@ -8,6 +8,7 @@ import DateTimePicker, { useDefaultStyles, } from 'react-native-ui-datepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales,  } from 'expo-localization';
 import DatepicketSelector from '@/components/ui/DatepickerSelector';
+import NewDatepicker from '@/components/NewDatepicker';
 import { holydayLabels as dataLabel } from '@/components/dataLabel';
 
 import {
@@ -541,13 +542,18 @@ export default function HolydaysScreen({}: any) {
       alignItems: 'center',
     },
     modalContainer: {
-      backgroundColor: colors.modalBackground,
-      width: '95%', // RIENTRATO RISPETTO AI BORDI SCREEN
-      maxWidth:500, // CENTRATO SU TABLET
-      paddingVertical: 24,
-      paddingHorizontal: 12,
-      borderRadius: 8,
-    },
+      width:'95%',
+      //minHeight:400,
+      backgroundColor:'white',
+      borderRadius:24,
+      flexDirection:'column',
+      gap:24,
+      alignItems:'center', // HOR
+      justifyContent:'center',
+      alignContent:'center',
+      paddingHorizontal:20,
+      paddingVertical:24,
+    }, 
     datePickerWrapper: {
       borderWidth: 1,
       borderColor: colors.textRed,
@@ -557,76 +563,6 @@ export default function HolydaysScreen({}: any) {
       padding:8,
       backgroundColor:'transparent',
     },
-    // Nuovi stili per i pulsanti data
-    // dateButton: {
-    //   flexDirection: 'row',
-    //   justifyContent: 'space-between',
-    //   alignItems: 'center',
-    //   borderWidth: 1,
-    //   borderColor: colors.textRed,
-    //   borderRadius: 5,
-    //   padding: 12,
-    //   marginBottom: 15,
-    //   backgroundColor: colors.textNegative,
-    // },
-    // dateButtonText: {
-    //   fontSize: 16,
-    //   color: colors.black,
-    // },
-    // // RADIOBUTTON
-    // radioContainer: {
-    //   width:'100%',
-    //   flexDirection: 'row',
-    //   justifyContent: 'space-around',
-    //   //marginBottom: 8,
-    // },
-    //   radioOption: {
-    //     flexDirection: 'row',
-    //     alignItems: 'center',
-    //   },
-    //   // (SOLO CIRCOLETTO ESTERNO)
-    //   radioButton: {
-    //     height: 20,
-    //     width: 20,
-    //     borderRadius: 10,
-    //     borderWidth: 1,
-    //     borderColor: '#333',
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    //     marginRight: 8,
-    //   },
-    //   radioButtonDisabled: {
-    //     height: 20,
-    //     width: 20,
-    //     borderRadius: 10,
-    //     borderWidth: 1,
-    //     borderColor: '#999',
-    //     alignItems: 'center',
-    //     justifyContent: 'center',
-    //     marginRight: 8,
-    //   },
-    //   // PALLINO NERO ACCESO
-    //   radioButtonSelected: {
-    //     height: 10,
-    //     width: 10,
-    //     borderRadius: 5,
-    //     backgroundColor: colors.textRed,
-    //   },
-    //   radioLabelNotFocused: {
-    //     fontSize: 16,
-    //     fontWeight: 400,
-    //     color: colors.black,
-    //   },
-    //   radioLabelInactive: {
-    //           fontSize: 16,
-    //     fontWeight: 400,
-    //     color: '#999999',
-    //   },
-    //   radioLabelFocused:{
-    //     fontSize: 16,
-    //     fontWeight: 800,
-    //     color: colors.textRed,
-    //   },
     // PULSANTI ADD/CANCEL
     modalButtons: {
       flexDirection: 'row',
@@ -978,10 +914,10 @@ export default function HolydaysScreen({}: any) {
         <View style={{ height: 280 }} ><Text style={{fontSize:11}}>Prebuild 0.0.9@22092025 (c) Angeli & Associati</Text></View>
       </ScrollView>
 
-      {/* MODAL DATEPICKER ############################################################################# */}
+      {/* vecchio MODAL DATEPICKER ############################################################################# */}
       <Suspense>
           <Modal
-            visible={isModalSingleDateVisible}
+            visible={false} //{isModalSingleDateVisible}
             // presentationStyle="fullScreen"
             transparent={true}
             // backdropColor={'rgba(0, 0, 0, .25)'} // NON FUNZIONA TRASPARENZA
@@ -995,7 +931,7 @@ export default function HolydaysScreen({}: any) {
               justifyContent:'center',
               alignItems:'center',
               backgroundColor: 'rgba(0, 0, 0, 0.75)'
-            }}>
+              }}>
 
               <View style={styles.modalContainer}>
                 {/* TITOLO MODAL */}
@@ -1015,7 +951,7 @@ export default function HolydaysScreen({}: any) {
                     sliderTargetValue={sliderTargetValue}
                     leftRadioButtonActive={leftRadioButtonActive}
                     rightRadioButtonActive={rightRadioButtonActive}
-                  />
+                  /> 
                   {/* LEFT */}
                   {/* <TouchableOpacity
                     style={styles.radioOption}
@@ -1164,7 +1100,41 @@ export default function HolydaysScreen({}: any) {
                   </TouchableOpacity>
                 </View>
               </View>
-        </View>
+            </View>
+          </Modal>
+      </Suspense>
+
+      {/* nuovo MODAL DATEPICKR ###################################################################### */}
+      <Suspense>
+          <Modal
+            visible={isModalSingleDateVisible}
+            // presentationStyle="fullScreen"
+            transparent={true}
+            // backdropColor={'rgba(0, 0, 0, .25)'} // NON FUNZIONA TRASPARENZA
+            animationType="none"
+            onRequestClose={hideModalSingleDate} 
+            hardwareAccelerated={true}
+            >
+            <View style={{
+              flex:1,
+              flexDirection:'column',
+              justifyContent:'center',
+              alignItems:'center',
+              backgroundColor: 'rgba(0, 0, 0, 0.75)'
+              }}>
+                <View style={styles.modalContainer}>
+                  <NewDatepicker
+                    language={'it-IT'}
+                    startDate={new Date()}
+                    // endDate={null}
+                    //description={'Sant Ambrogio (Milano)'}
+                    //repeatOnDate={true}
+                    //repeatOnDay={false}
+                    onCancel={() => setIsModalSingleDateVisible(false)}
+                    onConfirm={ () => null }
+                  />      
+                </View>
+            </View>
           </Modal>
       </Suspense>
     </ImageBackground>
