@@ -1,10 +1,12 @@
 import {useState, useEffect, } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet,  } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import { addDays, getWeekOfMonth, getDay, differenceInDays } from 'date-fns';
+import { addDays, getWeekOfMonth, getDay, differenceInDays, startOfMonth } from 'date-fns';
 import { getLocales,  } from 'expo-localization';
 import useLocalizationData from '@/app/data/data';
 import DateTimePicker from 'react-native-ui-datepicker'; // https://www.npmjs.com/package/react-native-ui-datepicker
+import { IconSymbol } from '@/components/ui/IconSymbol';
+
 
 // LABEL LOCALIZZATE
 const dataLabel: any = {
@@ -54,6 +56,20 @@ onConfirm: (
 const createUTCDate = (inputDate: Date) => {
   return new Date(Date.UTC( inputDate.getFullYear(), inputDate.getMonth(), inputDate.getDate(), 12, 0, 0)); // 12:00 UTC
 };
+
+/* =========================================================
+    CALCOLA LA RICORRENZA DI UNA DATA ALL'INTERNO DEL MESE
+========================================================= */
+function getWeekdayRecurrence(targetDate: Date) {
+    const targetDayOfWeek = getDay(targetDate);
+    const firstDayOfMonth = startOfMonth(targetDate);
+    const startDayOfWeek = getDay(firstDayOfMonth);
+    const daysToAdd = (targetDayOfWeek - startDayOfWeek + 7) % 7;
+    const firstOccurrence = addDays(firstDayOfMonth, daysToAdd);
+    const daysDifference = differenceInDays(targetDate, firstOccurrence);
+    const recurrenceNumber = (daysDifference / 7) + 1;
+    return recurrenceNumber;
+}
 
 /* =========================================================
 
@@ -157,7 +173,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   // ASSEMBLA LE LABEL DEI RADIOBUTTON OGNI VOLTA CHE CAMBIANO myStartDate O myEndDate
   useEffect( () => {
     setUpperRadioButtonLabel(`${dataLabel[language][9]} ${myStartDate.getDate()} di ${ months[myStartDate.getMonth()].label }`);
-    setLowerRadioButtonLabel(`${dataLabel[language][9]} ${dataLabel[language][9 + getWeekOfMonth(myStartDate)]} ${localizedDays[getDay(myStartDate) === 0 ? 6 : getDay(myStartDate) - 1]} di ${ months[myStartDate.getMonth()].label } `);
+    setLowerRadioButtonLabel(`${dataLabel[language][9]} ${dataLabel[language][9 + getWeekdayRecurrence(myStartDate)]} ${localizedDays[getDay(myStartDate) === 0 ? 6 : getDay(myStartDate) - 1]} di ${ months[myStartDate.getMonth()].label } `);
   }, [myStartDate, myEndDate]);
 
   // ICONE USATE NELLO SCRIPT
@@ -388,7 +404,8 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={item => {
-                  setValue(item.value);
+                  setValue(item.value);   // AGGIORNA DATA NEL FIELD
+
                 }}                
                 //search
                 //maxHeight={300}
@@ -466,13 +483,11 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
           </View>}          
           {/* PULSANTI ANNULLA-SALVA GENERALI */}
           <View style={styles.modalButtons}>
-            {/* ANNULLA */}
             <TouchableOpacity 
               style={styles.cancelButton} 
               onPress={ () => onCancel() }>
               <Text style={styles.cancelButtonText}>{dataLabel[language][5]}</Text>
             </TouchableOpacity>
-            {/* SALVA */}
             <TouchableOpacity 
               style={styles.addButton} 
               onPress={ () => 
@@ -511,7 +526,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
             locale={language}
             style={{
             //   backgroundColor: 'transparent',
-            //   borderWidth:1,
+            //  borderWidth:1,
             //   paddingTop: 24
             }}
             //navigationPosition={'right'}
@@ -533,23 +548,25 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               button_prev: { backgroundColor: '#FF778F', borderRadius:'100%', },
             }}
           />
-          <View style={styles.modalButtons}>
+          <View style={[styles.modalButtons, {marginTop:0}]}>
             {/* CHIUDE CALENDARIO */}
             <TouchableOpacity 
-              style={[styles.cancelButton, {borderWidth:1}]} 
+              //style={[styles.cancelButton, {borderWidth:1}]} 
               onPress={ () => 
                 setDatepickerVisible(false) // CHIUDE IL DATEPICKER E LASCIA INVARIATO
               }>
-              <Text style={styles.cancelButtonText}>{dataLabel[language][16]}</Text>
+              {/*<Text style={styles.cancelButtonText}>{dataLabel[language][16]}</Text>*/}
+              <IconSymbol size={32} name="xmark" color={'#969696'} style={{marginLeft:12}} />
             </TouchableOpacity>
             {/* CONFERMA CALENDARIO */}
             <TouchableOpacity 
-              style={[styles.addButton, {borderWidth:1}]} 
+              //style={[styles.addButton, {borderWidth:1}]} 
               onPress={ () => {
                 datepickerCaller === 'startDate' ? setMyStartDate(selectedDate) : setMyEndDate(selectedDate); // AGGIORNA LA VARIABILE CHIAMANTE
                 setDatepickerVisible(false) // CHIUDE IL DATEPICKER
               }}>
-              <Text style={styles.addButtonText}>{dataLabel[language][17]}</Text>
+              {/*<Text style={styles.addButtonText}>{dataLabel[language][17]}</Text>*/}
+              <IconSymbol size={32} name="checkmark" color={'#0088ff'} style={{marginRight:12}} />
             </TouchableOpacity>
           </View>
         </View>

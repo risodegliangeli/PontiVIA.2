@@ -7,10 +7,9 @@ import React, { useEffect, useState, Suspense,  } from 'react';
 import DateTimePicker, { useDefaultStyles, } from 'react-native-ui-datepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales,  } from 'expo-localization';
-import DatepicketSelector from '@/components/ui/DatepickerSelector';
-import NewDatepicker from '@/components/NewDatepicker';
+import DatepicketSelector from '@/components/ui/DatepickerSelector'; // --> MUORE COL REFACTORING
+import NewDatepicker from '@/components/NewDatepicker'; // MIO DATEPICKER
 import { holydayLabels as dataLabel } from '@/components/dataLabel';
-
 import {
   Alert,
   ImageBackground,
@@ -25,25 +24,40 @@ import {
   Platform
 } from 'react-native';
 
+// GESTIONE COLORI
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
   return Colors[colorScheme ?? 'light'];
 };
 
+// LEGGE LINGUA DI SISTEMA
 const myLanguage: string = (getLocales()[0].languageTag).slice(0,2); // 'it', 'fr', 'de', ecc
 
+// LEGGE NOMI DEI MESI LOCALIZZATI DA data.tsx
 const { months } = useLocalizationData();
 
+// TYPE HOLYDAY (vecchio)
 type Holiday = {  // DEFINIZIONE DI holiday
-  day: number;
-  month: number;
-  description: string;
+  day: number;            // GIORNO
+  month: number;          // MESE
+  description: string;    // DESCRIZIONE
 };
-
 type HolidayType = 'personal' | 'regional' | 'national';
-
 type ItemType = HolidayType | 'vacation';
 
+// TYPE NewHoliday (nuovo)
+type NewHolyday = {
+  startDate: Date;
+  endDate: Date | null;
+  description: string;
+  repeatOnDate: boolean;
+  repeatOnDay: boolean;
+};
+type NewHolydayType = 'repeatOnDate' | 'repeatOnDay';
+
+
+
+// INTERFACCIA VacationPeriod
 interface VacationPeriod {
   startDay: number;
   startMonth: number;
@@ -73,32 +87,30 @@ export default function HolydaysScreen({}: any) {
 
   const colors = useThemeColors();
 
+  // RICEVE DAL CONTEXT
   const { personalHolydays, setPersonalHolydays,
-          //regionalHolydays, setRegionalHolydays,
+          newPersonalHolydays, setNewPersonalHolydays,
           nationalHolydays, setNationalHolydays,
           vacationPeriods, setVacationPeriods,
           myCountry, setMyCountry,
           } = useHolydays();
-          
+  
+
+
+
+
+  /* ============================================================================= 
+   GESTIONE MODAL NEWDATEPICKER
+   ============================================================================= */
   const [isModalSingleDateVisible, setIsModalSingleDateVisible] = useState(false);
 
-  // MODAL SINGOLA DATA: STATUS DEI DATI DEL FORM
+  /*  VALORI VECCHIA MODAL */
   const [singleDateDay, setSingleDateDay] = useState<string | null>(null); // SERVE PER handleAddSingleDate
   const [singleDateMonth, setSingleDateMonth] = useState<string | null>(null); // idem
   const [singleDateDescription, setSingleDateDescription] = useState<string | undefined>(undefined);
-  // const [singleDateType, setSingleDateType] = useState<HolidayType>('personal');
-  const [singleDateError, setSingleDateError] = useState<string | null>(null);
-
-  // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD FESTIVITA' SINGOLA
-  const [initialType, setInitialType] = useState<HolidayType>();
-  const [initialIndex, setInitialIndex] = useState<number | null>(null);
-
-  // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD PERIODO VACANZA
-  const [initialPeriodIndex, setInitialPeriodIndex] = useState<number | null>(null);
+  const [singleDateError, setSingleDateError] = useState<string | null>(null);  
   
-  /* ============================================================================= 
-   VALORI NUOVA MODAL
-   ============================================================================= */
+  /*  VALORI NUOVA MODAL  */
   const [datePickerSelected, setDatePickerSelected] = useState<Date | null>(null); // DATA SELEZIONATA SU PICKER SINGLE DAY
   
   const [startDate, setStartdate] = useState<Date | null>(null); // DATA INIZIO SELEZIONATA SU PICKER PERIOD
@@ -112,21 +124,32 @@ export default function HolydaysScreen({}: any) {
   const [periodStartDate, setPeriodStartDate] = useState<Date | null>(null);
   const [periodEndDate, setPeriodEndDate] = useState<Date | null>(null);
 
-  /* ============================================================================= 
-     GESTIONE SHOW/HIDE MODAL
-  ============================================================================= */
+  // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD FESTIVITA' SINGOLA
+  const [initialType, setInitialType] = useState<HolidayType>();
+  const [initialIndex, setInitialIndex] = useState<number | null>(null);
+
+  // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD PERIODO VACANZA
+  const [initialPeriodIndex, setInitialPeriodIndex] = useState<number | null>(null);
+
+  // SERVE PER VISUALIZZARE IL TOAST DI ERRORE
+  const [errorVisible, setErrorVisible] = useState(false);
+
+
+  // MSG SERVIZIO, CANCELLARE
+  const [msgServizio, setMsgServizio] = useState<string>('****');
+
+  /* GESTIONE SHOW/HIDE MODAL */
   const showModalSingleDate = () => {
     setSingleDateDay('');
     setSingleDateMonth('');
     setIsModalSingleDateVisible(true);
   };
+
   const hideModalSingleDate = () => {
     setIsModalSingleDateVisible(false);
   };
 
-  /* ============================================================================= 
-     RESET MODAL GIORNO SINGOLO avviene sempre alla chiusura della modal 
-  ============================================================================= */
+  /* RESET MODAL GIORNO SINGOLO avviene sempre alla chiusura della modal */
   const resetSingleDateForm = () => {
     hideModalSingleDate();        // CHIUDE MODAL
     setPeriodStartDate(null);     // AZZERA VARIABILI PERIOD
@@ -155,7 +178,7 @@ export default function HolydaysScreen({}: any) {
   }
   
   /* ============================================================================= 
-    AGGIUNGI GIORNO SINGOLO 
+    AGGIUNGI GIORNO SINGOLO --> MUORE COL REFACTORING
   ============================================================================= */
   const handleAddSingleDate = async () => {
 
@@ -241,8 +264,21 @@ export default function HolydaysScreen({}: any) {
     return;
   }
 
+  /* WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW 
+    NUOVO --> AGGIUNGI EVENTO
+  WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW */
+  const handleAddEvent = async () => {
+
+
+
+    
+  }
+
+
+
+
   /* ============================================================================= 
-    AGGIUNGI PERIODO FESTIVI
+    AGGIUNGI PERIODO FESTIVI. --> MUORE COL REFACTORING
    ============================================================================= */
   const handleAddPeriod = async () => {
   
@@ -689,6 +725,29 @@ export default function HolydaysScreen({}: any) {
     async () => await saveData(myCountry, 'myCountry');
   }, [myCountry]);
 
+  /* ============================================================================= 
+  GESTIONE DATI IN ARRIVO DAL NEWDATEPICKER
+  ============================================================================= */
+  const handleDatePickerOutput = (
+          myStartDate: Date, // DATI RICEVUTI DAL COMPONENT
+          myEndDate: Date, 
+          myDescription: string, 
+          upperRadioButtonActive: boolean, 
+          lowerRadioButtonActive: boolean
+          ) => {
+    console.log("startDate:", myStartDate?.toLocaleDateString());
+    console.log("endDate:", myEndDate?.toLocaleDateString());
+    console.log("description:", myDescription);
+    console.log(`${!upperRadioButtonActive && !lowerRadioButtonActive ? 'Giorno singolo' : upperRadioButtonActive ? 'Ricorre/tipo 1' : 'Ricorre/ tipo 2'}`);
+    
+    
+    
+    
+    setIsModalSingleDateVisible(false); // CHIUSURA (CHE POI VA DELEGATA A handleAddSingleDay / handleAddPeriod)
+  };
+
+
+
   return (
     <ImageBackground 
       source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg')}
@@ -910,8 +969,22 @@ export default function HolydaysScreen({}: any) {
           ))}
         </View>
 
-        {/* BOTTOM SPACE ############################################################################# */}
-        <View style={{ height: 280 }} ><Text style={{fontSize:11}}>Prebuild 0.0.9@22092025 (c) Angeli & Associati</Text></View>
+        {/* BOTTOM INFO ############################################################################# */}
+        <View style={{ flex:1, }} >
+          <Text style={{fontSize:12}}>Prebuild 0.0.9@22092025 (c) Angeli & Associati</Text>
+          <Text style={{fontSize:12}}>
+            personalHolydays: {JSON.stringify(personalHolydays)}
+          </Text>
+          <Text style={{fontSize:12}}>
+            newPersonalHolydays: {JSON.stringify(newPersonalHolydays)}
+          </Text>
+          <Text style={{fontSize:12}}>
+            {msgServizio}
+          </Text>
+        </View>
+      
+        {/* SPACER */}
+        <View style={{height:500}}></View>
       </ScrollView>
 
       {/* vecchio MODAL DATEPICKER ############################################################################# */}
@@ -952,42 +1025,6 @@ export default function HolydaysScreen({}: any) {
                     leftRadioButtonActive={leftRadioButtonActive}
                     rightRadioButtonActive={rightRadioButtonActive}
                   /> 
-                  {/* LEFT */}
-                  {/* <TouchableOpacity
-                    style={styles.radioOption}
-                    onPress={() => {
-                      leftRadioButtonActive ? setSelectedRadioOption('single') : null;
-                    }} >
-                    <View style={ leftRadioButtonActive ?  styles.radioButton : styles.radioButtonDisabled}>
-                      {selectedRadioOption === 'single' && <View style={styles.radioButtonSelected}/>}
-                    </View>
-                    <Text style={
-                      leftRadioButtonActive ? // RADIOBUTTON ATTIVO
-                        selectedRadioOption === 'single' ? styles.radioLabelFocused : styles.radioLabelNotFocused
-                      :
-                        styles.radioLabelInactive // RADIOBUTTON DISABLED
-                      }>
-                        {dataLabel(myLanguage, 5]}
-                    </Text>
-                  </TouchableOpacity> */}
-                  
-                  {/* RIGHT */}
-                  {/* <TouchableOpacity
-                    style={styles.radioOption}
-                    onPress={() => {
-                      rightRadioButtonActive ? setSelectedRadioOption('period') : null;
-                    }} >
-                    <View style={rightRadioButtonActive ? styles.radioButton : styles.radioButtonDisabled}>
-                      {selectedRadioOption === 'period' && <View style={styles.radioButtonSelected}/>}
-                    </View>
-                    <Text style={
-                      rightRadioButtonActive ?
-                        selectedRadioOption === 'period' ? styles.radioLabelFocused : styles.radioLabelNotFocused
-                      :
-                        styles.radioLabelInactive}>
-                          {dataLabel(myLanguage, 6]}
-                    </Text>
-                  </TouchableOpacity> */}
                 </View>
 
                 <View style={styles.datePickerWrapper}> 
@@ -1126,17 +1163,63 @@ export default function HolydaysScreen({}: any) {
                   <NewDatepicker
                     language={'it-IT'}
                     startDate={new Date()}
-                    // endDate={null}
-                    //description={'Sant Ambrogio (Milano)'}
-                    //repeatOnDate={true}
-                    //repeatOnDay={false}
-                    onCancel={() => setIsModalSingleDateVisible(false)}
-                    onConfirm={ () => null }
-                  />      
+                    endDate={null}
+                    description={''}
+                    repeatOnDate={false}
+                    repeatOnDay={false}
+                    onCancel={ () => setIsModalSingleDateVisible(false) } // CHIUDE LA MODAL
+                    onConfirm={(
+                              myStartDate, 
+                              myEndDate, 
+                              myDescription, 
+                              upperRadioButtonActive, 
+                              lowerRadioButtonActive) => 
+                        handleDatePickerOutput(myStartDate, myEndDate, myDescription, upperRadioButtonActive, lowerRadioButtonActive) 
+                      } />      
                 </View>
             </View>
           </Modal>
       </Suspense>
+
+      {/* TOAST CON MSG ERRORE SOVRAPPOSTO ALLA MODAL */}
+      <Suspense>
+        {errorVisible && 
+          <View style={{
+            position:'absolute',
+            top:0,
+            left:0,
+            width:'100%',
+            height:'100%',
+            flexDirection:'column',
+            justifyContent:'center',
+            alignItems:'center',
+            elevation:8,
+            shadowColor: colors.black, 
+            shadowOffset: {
+            width: 4,
+            height: 8, 
+              },
+            shadowOpacity: 0.45,
+            shadowRadius: 8 
+            }}>
+            <TouchableOpacity 
+              onPress={ () => setErrorVisible(false)}
+              style={{
+                width:'80%',
+                backgroundColor:colors.textRed,
+                paddingHorizontal:24,
+                paddingVertical:32,
+                borderRadius:12,
+                flexDirection:'row',
+                justifyContent:'space-between',
+                }}>
+              <Text style={{fontSize:16, fontWeight:600, color:colors.white}}>Messaggio di errore</Text>
+              <IconSymbol size={24} name="plus" color={colors.white} style={{transform: [{rotate:'45deg'}]}}/>
+            </TouchableOpacity>
+          </View>
+        }
+      </Suspense>
+
     </ImageBackground>
   );
 }

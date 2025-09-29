@@ -30,7 +30,9 @@ const MAPPING = {
   'bell.circle.fill': 'circle-notifications', // CAMPANELLA FILLED
   'calendar.badge.plus' : 'edit-calendar',
   'checkmark.circle.fill': 'check-circle',
-  'xmark.circle': 'cancel'
+  'xmark.circle': 'cancel',
+  'xmark': 'close',     // X CHIUSURA
+  'checkmark': 'check'  // CHECK CONFERMA
 
 } as IconMapping;
 
