@@ -102,8 +102,9 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
       const storedPersonalHolydays = await loadData('personalHolydays');              
         if (storedPersonalHolydays) { setPersonalHolydays(storedPersonalHolydays); }  // OLD --> MORIRA' COL REFACTORING
 
-      const newStoredPersonalHolydays = await loadData('newPersonalHolydays');        
-        if (newStoredPersonalHolydays) { setPersonalHolydays(newStoredPersonalHolydays); }  // NEW
+      // PRIMA DI PROPAGARE IL CONTEXT VA DEFINITA LA PAGINA holydays.tsx
+      // const newStoredPersonalHolydays = await loadData('newPersonalHolydays');        
+      //   if (newStoredPersonalHolydays) { setNewPersonalHolydays(newStoredPersonalHolydays); }  // NEW
 
       const storedMyCountry = await loadData('myCountry');
         if (storedMyCountry) { setMyCountry(storedMyCountry); } // OK CONTINUA

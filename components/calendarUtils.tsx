@@ -13,7 +13,7 @@ const myLanguage = (getLocales()[0].languageTag).slice(0,2);
 
 /* ============================================================================= 
     CREA UNA DATA A MEZZOGIORNO UTC
-============================================================================= */
+============================================================================= */ 
 const createUTCDate = (year: Number, month: Number, day: Number) => {
     const date = new Date(Date.UTC(Number(year), Number(month), Number(day), 12, 0, 0)); // 12:00 UTC
     return date;

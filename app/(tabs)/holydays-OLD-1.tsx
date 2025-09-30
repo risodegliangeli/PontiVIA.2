@@ -977,7 +977,7 @@ export default function HolydaysScreen({}: any) {
           async () => {
             setMyCountry(getLocales()[0].languageTag);
             await saveData(getLocales()[0].languageTag, 'myCountry');
-            console.log('dropDown ripristinato a:', getLocales()[0].languageTag);
+            //console.log('dropDown ripristinato a:', getLocales()[0].languageTag);
           }
         }>
         <IconSymbol size={20} name="gobackward" color={colors.blueBar} style={{paddingBottom:8,}}/>

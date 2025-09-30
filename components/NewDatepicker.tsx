@@ -40,6 +40,8 @@ endDate: Date | null;
 description: string | undefined;
 repeatOnDate: boolean | null;
 repeatOnDay: boolean | null;
+isError: boolean;
+errorMsg: string | null;
 onCancel: () => null;
 onConfirm: (
   startDate: Date, 
@@ -54,7 +56,8 @@ onConfirm: (
     CREA UNA DATA ALLE 12:00:00 UTC
 ========================================================= */
 const createUTCDate = (inputDate: Date) => {
-  return new Date(Date.UTC( inputDate.getFullYear(), inputDate.getMonth(), inputDate.getDate(), 12, 0, 0)); // 12:00 UTC
+  if (!inputDate) return null;
+  return new Date(Date.UTC(inputDate.getFullYear(), inputDate.getMonth(), inputDate.getDate(), 12, 0, 0, 0)); // 12:00 UTC
 };
 
 /* =========================================================
@@ -73,9 +76,9 @@ function getWeekdayRecurrence(targetDate: Date) {
 
 /* =========================================================
 
-      NewDatepicker - 2025 G. Angeli 
+              NewDatepicker - 2025 G. Angeli 
 
-      MAIN
+                          MAIN
 
 ========================================================= */
 const NewDatepicker: React.FC<NewDatepickerInterface> = ({
@@ -83,11 +86,13 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   startDate,
   endDate,
   description,
+  isError,
+  errorMsg,
   repeatOnDate,
   repeatOnDay,
   onCancel,
   onConfirm
-  }) => {
+}) => {
   
   // SE NON VIENE PASSATO UN language SI PRENDE QUELLO DI SISTEMA
   if (!language) language = (getLocales()[0].languageTag);
@@ -343,6 +348,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       paddingHorizontal:24,
       paddingVertical:24,
       flexDirection:'column',
+      //gap:20,
       justifyContent:'space-between',
       width:'100%',
       flex:1,
@@ -358,6 +364,12 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       },
       shadowOpacity: 0.25,
       shadowRadius: 16 // Match elevation for iOS
+    },
+    errorMsg: {
+      fontSize:16,
+      fontWeight:600,
+      textAlign:'center',
+      color: '#cc0000',
     }
   })
 
@@ -367,6 +379,10 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       <View style={styles.modalContainer}>
         {/* TITOLO MODAL */}
         <Text style={styles.listTitle}>{dataLabel[language][0]}</Text>
+
+        {/* ERRORE <-- IN ARRIVO DAL CHIAMANTE */}
+        {isError && <Text style={styles.errorMsg}>{errorMsg}</Text>}
+
         {/* INPUT TEXT  */}
         <TextInput
           key={'description'}
@@ -492,7 +508,12 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               style={styles.addButton} 
               onPress={ () => 
               myDescription ?
-                onConfirm(myStartDate, myEndDate, myDescription, upperRadioButtonActive, lowerRadioButtonActive) 
+                onConfirm(
+                  createUTCDate(myStartDate), 
+                  myEndDate && createUTCDate(myEndDate), 
+                  myDescription, 
+                  upperRadioButtonActive, 
+                  lowerRadioButtonActive) 
               :
                 setDescriptionAlert(true)
               }>
@@ -505,12 +526,13 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       {/* CALENDARIO */}
       {datepickerVisible && 
         <View style={styles.datepickerContainer}>
+
           <DateTimePicker
             mode="single"
             calendar="gregory"
             date={selectedDate}
             minDate={datepickerCaller === 'endDate' ? myStartDate : null}
-            onChange={( {date } ) => {
+            onChange={({date}) => {
               setSelectedDate(createUTCDate(date));
               datepickerCaller === 'startDate' ? setMyStartDate(date) : setMyEndDate(date); // IL CHIAMANTE RICEVE L'AGGIORNAMENTO
               }}
@@ -526,7 +548,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
             locale={language}
             style={{
             //   backgroundColor: 'transparent',
-            //  borderWidth:1,
+            // borderWidth:1,
             //   paddingTop: 24
             }}
             //navigationPosition={'right'}
@@ -547,7 +569,10 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               button_next_image:{color:'red'},
               button_prev: { backgroundColor: '#FF778F', borderRadius:'100%', },
             }}
-          />
+          />          
+          
+          <View style={{width: '100%', height:1, backgroundColor:'#dedede', marginBottom: 24}} />
+          
           <View style={[styles.modalButtons, {marginTop:0}]}>
             {/* CHIUDE CALENDARIO */}
             <TouchableOpacity 
@@ -556,7 +581,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                 setDatepickerVisible(false) // CHIUDE IL DATEPICKER E LASCIA INVARIATO
               }>
               {/*<Text style={styles.cancelButtonText}>{dataLabel[language][16]}</Text>*/}
-              <IconSymbol size={32} name="xmark" color={'#969696'} style={{marginLeft:12}} />
+              <IconSymbol size={24} name="xmark" color={'#969696'} style={{marginLeft:0}} />
             </TouchableOpacity>
             {/* CONFERMA CALENDARIO */}
             <TouchableOpacity 
@@ -566,11 +591,13 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                 setDatepickerVisible(false) // CHIUDE IL DATEPICKER
               }}>
               {/*<Text style={styles.addButtonText}>{dataLabel[language][17]}</Text>*/}
-              <IconSymbol size={32} name="checkmark" color={'#0088ff'} style={{marginRight:12}} />
+              <IconSymbol size={24} name="checkmark" color={'#0088ff'} style={{marginRight:0}} />
             </TouchableOpacity>
           </View>
+
         </View>
       }
+      
     </View>
   );
 }

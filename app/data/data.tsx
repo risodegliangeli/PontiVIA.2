@@ -1,4 +1,4 @@
-console.log('[Data]');
+// console.log('[Data]');
 
 import { getLocales, } from 'expo-localization';
 

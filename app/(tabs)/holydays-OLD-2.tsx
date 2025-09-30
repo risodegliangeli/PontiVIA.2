@@ -36,7 +36,7 @@ const myLanguage: string = (getLocales()[0].languageTag).slice(0,2); // 'it', 'f
 // LEGGE NOMI DEI MESI LOCALIZZATI DA data.tsx
 const { months } = useLocalizationData();
 
-// TYPE HOLYDAY (vecchio)--> MUORE COL REFACTORING
+// TYPE HOLYDAY (vecchio)
 type Holiday = {  // DEFINIZIONE DI holiday
   day: number;            // GIORNO
   month: number;          // MESE
@@ -53,8 +53,11 @@ type NewHolyday = {
   repeatOnDate: boolean;
   repeatOnDay: boolean;
 };
+type NewHolydayType = 'repeatOnDate' | 'repeatOnDay';
 
-// INTERFACCIA VacationPeriod --> MUORE COL REFACTORING
+
+
+// INTERFACCIA VacationPeriod
 interface VacationPeriod {
   startDay: number;
   startMonth: number;
@@ -85,13 +88,17 @@ export default function HolydaysScreen({}: any) {
   const colors = useThemeColors();
 
   // RICEVE DAL CONTEXT
-  const { personalHolydays, setPersonalHolydays, // --> MUORE COL REFACTORING
-          newPersonalHolydays, setNewPersonalHolydays, // NUOVO
+  const { personalHolydays, setPersonalHolydays,
+          newPersonalHolydays, setNewPersonalHolydays,
           nationalHolydays, setNationalHolydays,
-          vacationPeriods, setVacationPeriods, // --> MUORE COL REFACTORING
+          vacationPeriods, setVacationPeriods,
           myCountry, setMyCountry,
           } = useHolydays();
   
+
+
+
+
   /* ============================================================================= 
    GESTIONE MODAL NEWDATEPICKER
    ============================================================================= */
@@ -127,9 +134,6 @@ export default function HolydaysScreen({}: any) {
   // SERVE PER VISUALIZZARE IL TOAST DI ERRORE
   const [errorVisible, setErrorVisible] = useState(false);
 
-  // All'inizio del componente HolydaysScreen, aggiungi:
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [toastIsError, setToastIsError] = useState<boolean>(false);
 
   // MSG SERVIZIO, CANCELLARE
   const [msgServizio, setMsgServizio] = useState<string>('****');
@@ -260,225 +264,18 @@ export default function HolydaysScreen({}: any) {
     return;
   }
 
+  /* WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW 
+    NUOVO --> AGGIUNGI EVENTO
+  WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW */
+  const handleAddEvent = async () => {
 
 
 
-
-/* WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW 
-
-    AGGIUNGI EVENTO (refactored)
-
-WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW */
-
-// FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
-const normalizeDate = (date: Date | null): Date | null => {
-  console.log('NORMALIZE DATE');
-   if (!date) return null;
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0));
-  // const normalized = new Date(date);
-  // normalized.setHours(12, 0, 0, 0);
-  // return normalized;
-};
-
-// Funzione per mostrare il messaggio di errore nel componente DatePicker
-const showToast = (message: string, isError: boolean) => {
-  setToastMessage(message);
-  setToastIsError(isError);
-  setErrorVisible(true);
-  // setTimeout(() => {  // Nasconde il toast dopo 4 secondi
-  //   setErrorVisible(false);
-  //   setToastMessage(null);
-  // }, 4000); 
-};
-
-// Funzione per verificare se una data è compresa in un periodo
-/* L'endDate è normalizzata e rappresenta il giorno successivo 
-all'ultimo giorno del periodo (per come viene calcolata)
-Per i periodi, il date picker imposta l'endDate al giorno successivo, 
-quindi togliamo 1ms per includere l'ultimo giorno */
-const isDateInRange = (date: Date, start: Date, end: Date): boolean => {
-  const normDate = normalizeDate(date)!.getTime();
-  const normStart = normalizeDate(start)!.getTime();
-  const normEnd = normalizeDate(end)!.getTime() - 1; 
-  return normDate >= normStart && normDate <= normEnd;
-};
-
-/* ============================================================================= 
-          HANDLE ADD EVENT (nuovo)
-============================================================================= */
-const handleAddEvent = async (
-    myStartDate: Date, 
-    myEndDate: Date | null, 
-    myDescription: string, 
-    upperRadioButtonActive: boolean, // Corrisponde a repeatOnDate
-    lowerRadioButtonActive: boolean // Corrisponde a repeatOnDay
-  ) => {
-
-      // Normalizza le date
-  const startDate = normalizeDate(myStartDate)!;
-  let endDate = normalizeDate(myEndDate);
-  
-  // GIORNO SINGOLO O PERIODO?
-  const isSingleDay = !endDate || startDate.getTime() === endDate.getTime();
-  // GIORNO SINGOLO endDate = null
-  if (isSingleDay) {
-    endDate = null;
-  }
-  // console.log(`isSingleDay: ${isSingleDay}`);
-
-  // Crea il nuovo oggetto NewHolyday
-  const newEvent: NewHolyday = {
-    startDate: startDate,
-    endDate: endDate,
-    description: myDescription.trim(),
-    repeatOnDate: upperRadioButtonActive, 
-    repeatOnDay: lowerRadioButtonActive,
-  };
-
-// A) CONTROLLO SOVRAPPOSIZIONE con nationalHolydays 
-// A.1 e A.2.1) Controllo se la startDate coincide con una festività nazionale
-// Estrai Giorno e Mese dall'evento inserito
-const nationalDay = startDate.getDate();
-const nationalMonth = startDate.getMonth(); // NIENTE +1, nationalHolydays è già 0 based
-
-// Cerca una ricorrenza annuale nell'array nationalHolydays
-const isNationalHolyday = nationalHolydays.find(h => h.day === nationalDay && h.month === nationalMonth);
-  //console.log(`duplicato in nationalHolydays: ${JSON.stringify(isNationalHolyday)}`);
-
-if (isNationalHolyday) {
-  const msg = `${dataLabel(myLanguage, 13)}: ${isNationalHolyday.description}`; // 'Esiste già una festività nazionale in questa data...'
-  if (isSingleDay) {
-    // A.1) Giorno singolo e data coincide: ERRORE
-    showToast(msg, true); // APRE MESSAGGIO DI ERRORE NEL COMPONENTE DATEPICKER
-    return;
-  } else {
-    // A.2.1) Periodo e startDate coincide: ERRORE
-    // Il requisito era "generare un errore nel caso in cui startDate sia uguale a una data di 'nationalHolydays'"
-    showToast(`La data di inizio del periodo coincide con una festività nazionale: ${isNationalHolyday.description}`, true);
-    return;
-  }
-} 
-  
-  // // A.2.2) Se è un periodo, controllo se comprende altre date nazionali (solo SEGNALAZIONE)
-
-  // if (!isSingleDay && endDate) {
-  //   // Genera un array di giorni compresi nel periodo
-  //   const daysInPeriod: any[] = [];
-  //   let currentDay = new Date(startDate);
     
-  //   // Si ferma al giorno prima dell'endDate (che è il giorno successivo all'ultimo)
-  //   while (currentDay.getTime() < endDate.getTime()) {
-  //     daysInPeriod.push({
-  //       day: currentDay.getDate(),
-  //       month: currentDay.getMonth(),
-  //     });
-  //     currentDay.setDate(currentDay.getDate() + 1); // Passa al giorno successivo
-  //   }
-
-  //   const nationalOverlap = nationalHolydays.find(h => 
-  //     daysInPeriod.some(day => day.day === h.day && day.month === h.month)
-  //   );
-
-  //   if (nationalOverlap) {
-  //     // A.2.2) Periodo e include festività nazionale: SEGNALAZIONE
-  //     const overlapMsg = `Attenzione, il periodo include la festività nazionale: ${nationalOverlap.description}.`;
-  //     showToast(overlapMsg, false); // false = SEGNALAZIONE (Toast bianco)
-  //     // Non fa 'return', procede all'aggiunta dopo la segnalazione
-  //   }
-  // }
-
-
-  /* ============================================================================= 
-    B) CONTROLLO SOVRAPPOSIZIONE con newPersonalHolydays
-  ============================================================================= */
-  // Funzione helper per confrontare date (solo giorno e mese se entrambi sono 'repeatOnDate')
-  const isDateDuplicate = (existingEvent: NewHolyday, newDate: Date): boolean => {
-    const existingDate = normalizeDate(existingEvent.startDate)!;
-
-    // Se entrambi ripetono annualmente, controlla solo giorno e mese
-    if (existingEvent.repeatOnDate && newEvent.repeatOnDate) {
-      return existingDate.getDate() === newDate.getDate() && 
-             existingDate.getMonth() === newDate.getMonth();
-    }
-    // Altrimenti, controlla l'uguaglianza completa della data
-    return existingDate.getTime() === newDate.getTime();
-  };
-
-  // B.1) Se giorno singolo (endDate = null)
-  if (isSingleDay) {
-    // B.1.1) Controllo duplicato: la startDate è già la startDate di un evento esistente?
-    const startOverlap = newPersonalHolydays.find(h => isDateDuplicate(h, startDate));
-    if (startOverlap) {
-      showToast(`Questa data è già presente: ${startOverlap.description}`, true);
-      return;
-    }
-
-    // B.1.2) Controllo periodo: la startDate è compresa in un periodo esistente?
-    const periodOverlap = newPersonalHolydays.find(h => 
-      h.endDate !== null && isDateInRange(startDate, h.startDate, h.endDate)
-    );
-    if (periodOverlap) {
-      showToast(`Questa data fa parte di un periodo esistente: ${periodOverlap.description}`, true);
-      return;
-    }
-
-  } else if (!isSingleDay && endDate) { 
-    
-    // B.2) Se periodo (endDate != null)
-    
-    // B.2.1) Controllo giorni singoli: un giorno del periodo corrisponde alla startDate di un evento singolo esistente?
-    let currentDay = new Date(startDate);
-    let singleOverlap: NewHolyday | undefined = undefined;
-
-    while (currentDay.getTime() < endDate.getTime()) {
-      singleOverlap = newPersonalHolydays.find(h => 
-        h.endDate === null && isDateDuplicate(h, currentDay)
-      );
-      if (singleOverlap) break;
-      currentDay.setDate(currentDay.getDate() + 1);
-    }
-
-    if (singleOverlap) {
-      showToast(`Attenzione, l'evento si sovrappone a ${singleOverlap.description}`, true);
-      return;
-    }
-
-    // B.2.2) Controllo sovrapposizione periodo: il periodo si sovrappone a un periodo esistente?
-    const periodOverlap = newPersonalHolydays.find(h => {
-      // Cerca periodi esistenti
-      if (h.endDate) {
-        // Un periodo si sovrappone se:
-        // 1. L'inizio del nuovo periodo è compreso nel vecchio periodo
-        const startOverlap = isDateInRange(startDate, h.startDate, h.endDate);
-        // 2. La fine del nuovo periodo è compresa nel vecchio periodo
-        const endOverlap = isDateInRange(endDate, h.startDate, h.endDate);
-        // 3. Il vecchio periodo è interamente compreso nel nuovo periodo (il nuovo inizia prima e finisce dopo)
-        const engulfing = startDate.getTime() <= h.startDate.getTime() && endDate.getTime() >= h.endDate.getTime();
-
-        return startOverlap || endOverlap || engulfing;
-      }
-      return false;
-    });
-
-    if (periodOverlap) {
-      showToast(`L'evento si sovrappone a un evento esistente: ${periodOverlap.description}`, true);
-      return;
-    }
   }
 
-  // NESSUN ERRORE: AGGIUNGI L'EVENTO
-  let tempNewPersonalHolydays = [...newPersonalHolydays, newEvent];
-  setNewPersonalHolydays(tempNewPersonalHolydays);
-  await saveData(tempNewPersonalHolydays, 'newPersonalHolydays'); // SALVATAGGIO LOCAL STORAGE
 
-  console.log('Nuovo evento aggiunto:', newEvent);
-  console.log(JSON.stringify(newPersonalHolydays));
 
-  // AZZERA LE VARIABILI DI ERRORE E CHIUDE LA MODAL
-  setToastMessage('');
-  setToastIsError(false);
-  setIsModalSingleDateVisible(false);
-};
 
   /* ============================================================================= 
     AGGIUNGI PERIODO FESTIVI. --> MUORE COL REFACTORING
@@ -750,7 +547,7 @@ if (isNationalHolyday) {
       color: colors.text,
     },
     itemDescription: {
-      fontSize: 16,
+      fontSize: 14,
       paddingLeft:12,
       color: colors.text,
     },
@@ -759,33 +556,9 @@ if (isNationalHolyday) {
       alignItems: 'center',
       marginRight:12,
     },
-    dot32: {
-      position:'absolute', 
-      top:0, 
-      width:44, 
-      height:44, 
-      borderRadius:24, 
-      backgroundColor: colors.dot32, 
-      borderWidth:0, 
-      borderColor: colors.cardBackground,
-      elevation:6,
-      shadowColor: colors.black, // iOS shadow
-      shadowOffset: {
-        width: 1,
-        height: 2, // Match elevation for iOS
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 2 // Match elevation for iOS
-    },
-    dot32noshadow: {
-      width:44, 
-      height:44, 
-      borderRadius:24, 
-      backgroundColor: colors.dot32
-    },
     dot32text:{
       height:'100%',
-      fontSize:24,
+      fontSize:26,
       fontWeight: useColorScheme() === 'dark' ? 200 : 300,
       color: 'rgba(255,255,255,1)',
       textAlign:'center',
@@ -794,7 +567,7 @@ if (isNationalHolyday) {
       alignItems:'center',
       paddingTop: Platform.OS === 'ios' ? 6:3,
       letterSpacing:-.5,
-      // borderWidth:1    
+      borderWidth:0    
     },
     // MODAL
     modalOverlay: {
@@ -911,6 +684,7 @@ if (isNationalHolyday) {
   });
   
   // BOTTONE RESET DROPDOWN COUNTRY: RIPORTA LA SELEZIONE AL PAESE LOCALIZZATO
+  
   const ResetCountryButton = () => {
     return(
       <TouchableOpacity
@@ -918,7 +692,7 @@ if (isNationalHolyday) {
           async () => {
             setMyCountry(getLocales()[0].languageTag);
             await saveData(getLocales()[0].languageTag, 'myCountry');
-            //console.log('dropDown ripristinato a:', getLocales()[0].languageTag);
+            // console.log('dropDown ripristinato a:', getLocales()[0].languageTag);
           }
         }>
         <IconSymbol size={20} name="gobackward" color={colors.blueBar} style={{paddingBottom:8,}}/>
@@ -951,6 +725,29 @@ if (isNationalHolyday) {
     async () => await saveData(myCountry, 'myCountry');
   }, [myCountry]);
 
+  /* ============================================================================= 
+  GESTIONE DATI IN ARRIVO DAL NEWDATEPICKER
+  ============================================================================= */
+  const handleDatePickerOutput = (
+          myStartDate: Date, // DATI RICEVUTI DAL COMPONENT
+          myEndDate: Date, 
+          myDescription: string, 
+          upperRadioButtonActive: boolean, 
+          lowerRadioButtonActive: boolean
+          ) => {
+    console.log("startDate:", myStartDate?.toLocaleDateString());
+    console.log("endDate:", myEndDate?.toLocaleDateString());
+    console.log("description:", myDescription);
+    console.log(`${!upperRadioButtonActive && !lowerRadioButtonActive ? 'Giorno singolo' : upperRadioButtonActive ? 'Ricorre/tipo 1' : 'Ricorre/ tipo 2'}`);
+    
+    
+    
+    
+    setIsModalSingleDateVisible(false); // CHIUSURA (CHE POI VA DELEGATA A handleAddSingleDay / handleAddPeriod)
+  };
+
+
+
   return (
     <ImageBackground 
       source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg')}
@@ -961,16 +758,6 @@ if (isNationalHolyday) {
         style={styles.container} 
         showsVerticalScrollIndicator={false} >
 
-        {/* BOTTOM INFO ############################################################################# */}
-        <View style={{ flex:1, }} >
-          <Text style={{fontSize:12}}>
-            - - - personalHolydays: {JSON.stringify(personalHolydays)}
-          </Text>
-          <Text style={{fontSize:12}}>
-            - - - newPersonalHolydays: {JSON.stringify(newPersonalHolydays)}
-          </Text>
-        </View>        
-        
         {/* TITOLO PAGINA  */}{/* LE MIE DATE */}
         <Text style={[styles.sectionTitle, { flex:1, marginBottom:32, }]}>{dataLabel(myLanguage, 0)}</Text> 
 
@@ -993,7 +780,7 @@ if (isNationalHolyday) {
         </TouchableOpacity>
 
         {/* CARD GIORNI SPECIALI ############################################################################# */}
-        {newPersonalHolydays.length > 0 && (
+        {personalHolydays.length > 0 && (
           <Suspense>
             <View style={styles.listItem}>
 
@@ -1015,8 +802,8 @@ if (isNationalHolyday) {
                             { 
                               text: dataLabel(myLanguage, 10), // Elimina
                               onPress: async () => {
-                                setNewPersonalHolydays([]);
-                                await saveData([], 'newPersonalHolydays');
+                                setPersonalHolydays([]);
+                                await saveData([], 'personalHolydays');
                               }
                             }
                           ]
@@ -1029,37 +816,19 @@ if (isNationalHolyday) {
                 }
               </View>
 
-              {newPersonalHolydays.sort((a: any, b: any) => a.startDate - b.startDate).map((holiday, index) => (
+              {personalHolydays.sort((a, b) => a.day - b.day).sort((a, b) => a.month - b.month).map((holiday, index) => (
                 <React.Fragment key={index}>
-                  <View style={styles.holidayRow }>
+                  <View 
+                  style={styles.holidayRow }>
                     <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
-                      
-                      {holiday.endDate ? // STAMPA CERCHIETTO SOTTO IN OGNI CASO, SE = PERIODO SPOSTATTO VERSO IL BASSO
-                        <View style={[styles.dot32noshadow, {marginLeft:6}]} />
-                          :
-                        <View style={styles.dot32noshadow} />
-                      }
-                      
-                      <View style={styles.dot32}>
-                        {holiday.repeatOnDate || holiday.repeatOnDay ? // SE RIPETE (endDate = null) SCRIVI NUMERO, ALTRIMENTI SIMBOLO
-                          <IconSymbol size={26} name="goforward" color={colors.white} style={{marginTop:8, marginLeft:8}}/>
-                          :                          
-                          <Text style={styles.dot32text}>{holiday.startDate.getDate()}</Text>
-
-                        }
+                      {/* <View style={{width:32, height:32, borderRadius:24, backgroundColor: colors.dot32}}></View> */}
+                      <View style={{width:44, height:44, borderRadius:24, backgroundColor: colors.dot32}}>
+                        <Text style={styles.dot32text}>{holiday.day}</Text>
                       </View>
                       <View style={{flexDirection:'column'}} >
-                        {!holiday.endDate ? // GIORNO SINGOLO = DATA SINGOLA, PERIODO 0 DOPPIA DATA
-                          <Text style={styles.itemDate}>{`${holiday.startDate.getDate()} ${months[holiday.startDate.getMonth()]?.label}`}</Text>
-                        :
-                        <Text style={styles.itemDate}>
-                          {`${holiday.startDate.getDate()} ${months[holiday.startDate.getMonth()]?.label.slice(0,3)} ${holiday.startDate.getFullYear()} - `}
-                          {`${holiday.endDate.getDate()} ${months[holiday.endDate.getMonth()]?.label.slice(0,3)} ${holiday.endDate.getFullYear()}`}
-                        </Text>
-                        }
-                        
+                        <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label} `}</Text>
                         <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
-                        <Text style={[styles.itemDescription, {maxWidth:240, fontStyle:'italic', fontWeight:400}]}>{holiday.repeatOnDate && '(ripete 1)'}{holiday.repeatOnDay && '(ripete 2)'}</Text>
+                        <Text style={[styles.itemDescription, {maxWidth:240, fontStyle:'italic', fontWeight:400}]}>{dataLabel(myLanguage, 15)}</Text>
                       </View>
                     </View>
                     <View>
@@ -1200,7 +969,19 @@ if (isNationalHolyday) {
           ))}
         </View>
 
-
+        {/* BOTTOM INFO ############################################################################# */}
+        <View style={{ flex:1, }} >
+          <Text style={{fontSize:12}}>Prebuild 0.0.9@22092025 (c) Angeli & Associati</Text>
+          <Text style={{fontSize:12}}>
+            personalHolydays: {JSON.stringify(personalHolydays)}
+          </Text>
+          <Text style={{fontSize:12}}>
+            newPersonalHolydays: {JSON.stringify(newPersonalHolydays)}
+          </Text>
+          <Text style={{fontSize:12}}>
+            {msgServizio}
+          </Text>
+        </View>
       
         {/* SPACER */}
         <View style={{height:500}}></View>
@@ -1363,7 +1144,7 @@ if (isNationalHolyday) {
       {/* nuovo MODAL DATEPICKR ###################################################################### */}
       <Suspense>
           <Modal
-            visible={isModalSingleDateVisible}  
+            visible={isModalSingleDateVisible}
             // presentationStyle="fullScreen"
             transparent={true}
             // backdropColor={'rgba(0, 0, 0, .25)'} // NON FUNZIONA TRASPARENZA
@@ -1384,73 +1165,61 @@ if (isNationalHolyday) {
                     startDate={new Date()}
                     endDate={null}
                     description={''}
-                    isError={toastIsError}
-                    errorMsg={toastMessage}
                     repeatOnDate={false}
                     repeatOnDay={false}
-                    onCancel={ () => {
-                        setToastMessage('');
-                        setToastIsError(false);
-                        setIsModalSingleDateVisible(false);
-                    }} 
+                    onCancel={ () => setIsModalSingleDateVisible(false) } // CHIUDE LA MODAL
                     onConfirm={(
-                        myStartDate, 
-                        myEndDate, 
-                        myDescription, 
-                        upperRadioButtonActive, 
-                        lowerRadioButtonActive) => 
-                      handleAddEvent(myStartDate, myEndDate, myDescription, upperRadioButtonActive, lowerRadioButtonActive) 
-                    } />      
+                              myStartDate, 
+                              myEndDate, 
+                              myDescription, 
+                              upperRadioButtonActive, 
+                              lowerRadioButtonActive) => 
+                        handleDatePickerOutput(myStartDate, myEndDate, myDescription, upperRadioButtonActive, lowerRadioButtonActive) 
+                      } />      
                 </View>
             </View>
           </Modal>
       </Suspense>
 
-      {/* nuovo TOAST CON MSG ERRORE SOVRAPPOSTO ALLA MODAL */}
-      {/* <Suspense>
-        {toastIsError &&
-          <View 
-            key={'toast'}
-            style={{
-              position:'absolute',
-              top:0,
-              left:0,
-              width:'100%',
-              height:'100%',
-              flexDirection:'column',
-              justifyContent:'center',
-              alignItems:'center',
-              elevation:8,
-              shadowColor: colors.black, 
-              shadowOffset: {
-              width: 4,
-              height: 8, 
-                },
-              shadowOpacity: 0.45,
-              shadowRadius: 8 
-              }}>
-              <TouchableOpacity 
-                onPress={ () => setErrorVisible(false)}
-                style={{
-                  width:'80%',
-                  backgroundColor: toastIsError ? colors.textRed : colors.white, 
-                  paddingHorizontal:24,
-                  paddingVertical:32,
-                  borderRadius:12,
-                  flexDirection:'row',
-                  justifyContent:'space-between',
-                  //zIndex:999,
-                  }}>
-                <Text style={{fontSize:16, fontWeight:600, color:colors.white}}>{toastMessage}</Text>
-                <IconSymbol size={24} name="plus" color={colors.white} style={{transform: [{rotate:'45deg'}]}}/>
-              </TouchableOpacity>
+      {/* TOAST CON MSG ERRORE SOVRAPPOSTO ALLA MODAL */}
+      <Suspense>
+        {errorVisible && 
+          <View style={{
+            position:'absolute',
+            top:0,
+            left:0,
+            width:'100%',
+            height:'100%',
+            flexDirection:'column',
+            justifyContent:'center',
+            alignItems:'center',
+            elevation:8,
+            shadowColor: colors.black, 
+            shadowOffset: {
+            width: 4,
+            height: 8, 
+              },
+            shadowOpacity: 0.45,
+            shadowRadius: 8 
+            }}>
+            <TouchableOpacity 
+              onPress={ () => setErrorVisible(false)}
+              style={{
+                width:'80%',
+                backgroundColor:colors.textRed,
+                paddingHorizontal:24,
+                paddingVertical:32,
+                borderRadius:12,
+                flexDirection:'row',
+                justifyContent:'space-between',
+                }}>
+              <Text style={{fontSize:16, fontWeight:600, color:colors.white}}>Messaggio di errore</Text>
+              <IconSymbol size={24} name="plus" color={colors.white} style={{transform: [{rotate:'45deg'}]}}/>
+            </TouchableOpacity>
           </View>
         }
-      </Suspense> */}
+      </Suspense>
 
     </ImageBackground>
   );
 }
-
-
-

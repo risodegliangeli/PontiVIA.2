@@ -1,4 +1,4 @@
-console.log('[(tabs)_Layout]');
+// console.log('[(tabs)_Layout]');
 
 
 // MY CUSTOM SPLITTED BAR
