@@ -96,15 +96,29 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
   const [nationalHolydays, setNationalHolydays] = useState<Holiday[]>([]); // NON LO INIZILIZZO ADESSO, LO FA holydays.tsx ALLA CHIAMATA
   const [myCountry, setMyCountry] = useState(myLanguage); // VALORE DELLA DROPDOWN (es: 'it-IT), INIZIALMENTE = locale
   
+  // CONVERTE I VALORI DI TIPO string IN VALORI TIPO Data PER startDate E endDate
+  const convertDates = (holydaysArray: any) => {
+  if (!holydaysArray || !Array.isArray(holydaysArray)) return holydaysArray;
+
+  return holydaysArray.map(holiday => ({
+    ...holiday,
+    startDate: new Date(holiday.startDate), 
+    endDate: holiday.endDate && new Date(holiday.endDate), // SOLO SE != null
+  }));
+};
+
+
   // INIZIALIZZAZIONE DATI DA LOCAL STORAGE ///////////////////////////
   useEffect(() => {
     const initializeData = async () => {
       const storedPersonalHolydays = await loadData('personalHolydays');              
         if (storedPersonalHolydays) { setPersonalHolydays(storedPersonalHolydays); }  // OLD --> MORIRA' COL REFACTORING
 
-      // PRIMA DI PROPAGARE IL CONTEXT VA DEFINITA LA PAGINA holydays.tsx
-      // const newStoredPersonalHolydays = await loadData('newPersonalHolydays');        
-      //   if (newStoredPersonalHolydays) { setNewPersonalHolydays(newStoredPersonalHolydays); }  // NEW
+      const newStoredPersonalHolydays = await loadData('newPersonalHolydays');        
+        if (newStoredPersonalHolydays) { 
+          const holydaysWithDates = convertDates(newStoredPersonalHolydays);
+          setNewPersonalHolydays(holydaysWithDates); 
+        }  // NEW
 
       const storedMyCountry = await loadData('myCountry');
         if (storedMyCountry) { setMyCountry(storedMyCountry); } // OK CONTINUA

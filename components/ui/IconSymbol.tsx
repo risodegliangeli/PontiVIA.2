@@ -33,7 +33,7 @@ const MAPPING = {
   'xmark.circle': 'cancel',
   'xmark': 'close',     // X CHIUSURA
   'checkmark': 'check',  // CHECK CONFERMA
-  'goforward':'refresh'
+  'repeat':'repeat'
 
 } as IconMapping;
 
