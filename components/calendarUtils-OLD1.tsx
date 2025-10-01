@@ -15,7 +15,7 @@ const myLanguage = (getLocales()[0].languageTag).slice(0,2);
     CREA UNA DATA A MEZZOGIORNO UTC
 ============================================================================= */ 
 const createUTCDate = (year: Number, month: Number, day: Number) => {
-    const date = new Date(Date.UTC(Number(year), Number(month), Number(day), 12, 0, 0, 0)); // 12:00 UTC
+    const date = new Date(Date.UTC(Number(year), Number(month), Number(day), 12, 0, 0)); // 12:00 UTC
     return date;
 };
 
@@ -27,13 +27,12 @@ const getDaysInMonth = (year: number, month: number) => {
 };
 
 /* ============================================================================= 
-    CALCOLA GIORNO DELLA SETTIMANA PER UNA DTERMINATA DATA
+    GIORNO DELLA SETTIMANA PER UNA DATA
 ============================================================================= */
 const getUTCDayOfWeek = (date: Date) => {
     return date.getUTCDay();
 };
 
-// TYPE Holiday (VECCHIO)
 interface Holiday {
     day: number;
     month: number;
@@ -41,7 +40,6 @@ interface Holiday {
     description: string;
     }
 
-// TYPE VacationPeriod (VECCHIO)
 interface VacationPeriod {
     startDay: number;
     startMonth: number;
@@ -51,16 +49,6 @@ interface VacationPeriod {
     endYear: number;
     description: string;
     }
-
-// TYPE NewHoliday (NUOVO)
-type NewHolyday = {
-  startDate: Date;
-  endDate: Date | null;
-  description: string;
-  repeatOnDate: boolean;
-  repeatOnDay: boolean;
-};
-
 
 /* ============================================================================= 
     ARRAY CON LE FESTIVITA' NAZIONALI + PASQUA + LUNEDI DELL'ANGELO
@@ -238,8 +226,10 @@ const getDayType = (date: Date, holidays: { day: number; month: number; descript
 };
 
 /* ============================================================================= 
-CONTEGGIO DEI PONTI. // CONTEGGIA TUTTI I PONTI ALL'INTERNO DI CIASCUNA CARD E LI AGGIUNGE IN FONDO ALL'ARRAY 'grid'
+CONTEGGIO DEI PONTI
 ============================================================================== */
+// CONTEGGIA TUTTI I PONTI ALL'INTERNO DI CIASCUNA CARD E LI AGGIUNGE IN FONDO ALL'ARRAY 'grid'
+// 
 const countBridges = (monthTable: any[]) => {
     const bridges: Array<{ da: Date; a: Date; length: number }> = [];
     let currentBridge: { start: Date; days: Date[] } | null = null;
@@ -304,10 +294,12 @@ const countBridges = (monthTable: any[]) => {
         "y":2025, // ANNO
         "m":8, // MESE
         "table":[..., ..., ...] // TABELLA GIORNI
-        "bridges": [{0: da, a, length}, {1: da, a, length}, ...]
+
+            <--- qui inserire un oggetto "bridges": [{0: da, a, length}, {1: da, a, length}, ...]
+
             },
-        {...},
-        {...}]
+        {},
+        {}]
 ============================================================================= */
 const createCalendarGrid = (
         startDate: Date, 

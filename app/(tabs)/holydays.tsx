@@ -307,6 +307,13 @@ export default function HolydaysScreen({}: any) {
       justifyContent:'center',
       alignItems:'center',
       gap:8,
+    },
+    backgroundModal: {
+      flex:1,
+      flexDirection:'column',
+      justifyContent:'center',
+      alignItems:'center',
+      backgroundColor: 'rgba(0, 0, 0, 0.75)'
     }
   });
 
@@ -315,7 +322,7 @@ export default function HolydaysScreen({}: any) {
     newPersonalHolydays, setNewPersonalHolydays, // NUOVO
     personalHolydays, setPersonalHolydays, // --> MUORE COL REFACTORING
     nationalHolydays, setNationalHolydays,
-    vacationPeriods, setVacationPeriods, // --> MUORE COL REFACTORING
+    // vacationPeriods, setVacationPeriods, // --> MUORE COL REFACTORING
     myCountry, setMyCountry,
     } = useHolydays();
   
@@ -323,12 +330,6 @@ export default function HolydaysScreen({}: any) {
    GESTIONE MODAL NEWDATEPICKER
    ============================================================================= */
   const [isModalSingleDateVisible, setIsModalSingleDateVisible] = useState(false);
-
-  /*  VALORI VECCHIA MODAL */
-  // const [singleDateDay, setSingleDateDay] = useState<string | null>(null); // SERVE PER handleAddSingleDate
-  // const [singleDateMonth, setSingleDateMonth] = useState<string | null>(null); // idem
-  // const [singleDateDescription, setSingleDateDescription] = useState<string>('');
-  // const [singleDateError, setSingleDateError] = useState<string | null>(null);  
 
   /* VALORI NUOVA MODAL DATEPICKER */
   const [dpickerStartDate, setDpickerStartDate] = useState<Date>();
@@ -379,121 +380,6 @@ export default function HolydaysScreen({}: any) {
     setIsModalSingleDateVisible(false);
   };
 
-  /* RESET MODAL GIORNO SINGOLO avviene sempre alla chiusura della modal */
-  // const resetSingleDateForm = () => {
-  //   hideModalSingleDate();        // CHIUDE MODAL
-  //   setPeriodStartDate(null);     // AZZERA VARIABILI PERIOD
-  //   setPeriodEndDate(null);       //
-  //   setSingleDateDay(null);       // AZZERA VARIABILI GIORNO SINGOLO
-  //   setSingleDateMonth(null);
-  //   setSingleDateDescription(undefined); // AZZERA CAMPO DESCRIZIONE
-  //   setSingleDateError(null);     // AZZER ERRORE
-  //   setInitialIndex(null);        // VARIABILE USATA (SE DIVERSA DA null) PER L'EDIT DI UN RECORD
-  // };
-
-  // AZZERAMENTO STATUS, CHIUSURA MODAL E RETURN
-  // const clearData = () => {
-  //   hideModalSingleDate();        // CHIUDE MODAL
-  //   setInitialType(undefined);
-  //   setInitialIndex(null);
-  //   setPeriodStartDate(null);     // AZZERA VARIABILI PERIOD
-  //   setPeriodEndDate(null);       //
-  //   setSingleDateDay(null);       // AZZERA VARIABILI GIORNO SINGOLO
-  //   setSingleDateMonth(null);
-  //   setSingleDateDescription(undefined); // AZZERA CAMPO DESCRIZIONE
-  //   setSingleDateError(null);     // AZZER ERRORE
-  //   setInitialIndex(null);  // VARIABILE USATA (SE DIVERSA DA null) PER L'EDIT DI UN RECORD
-  //   setLeftRadioButtonActive(true); // SERVONO PER POSIZIONARE IL DATEPICKERSLIDER IN CASO DI EDIT
-  //   setRightRadioButtonActive(true); // SI RIPORTANO ENTRAMBI A TRUE ( = SLIEDR LIBERO DI MUOVERSI)
-  // }
-  
-  /* ============================================================================= 
-    AGGIUNGI GIORNO SINGOLO --> MUORE COL REFACTORING
-  ============================================================================= */
-  // const handleAddSingleDate = async () => {
-
-  //   // CONTROLLA COMPILAZIONE DELLA DESCRIZIONE NELLA FORM
-  //   if (!singleDateDescription) {
-  //     setSingleDateError(dataLabel(myLanguage, 12)); // MSG ERRORE 'Inserisci una descrizione ecc...'
-  //     return;
-  //   }
-
-  //   // CONTROLLA SE ESISTE GIA' QUEL GIORNO TRA LE FESTIVITA NAZIONALI
-  //   const nationalIndex = nationalHolydays.findIndex(h => h.day === day && h.month === month);
-  //   if (nationalIndex !== -1) {
-  //     setSingleDateError(dataLabel(myLanguage, 13)); // MSG ERRORE: 'Esiste già una festività nazionale in questa data...'
-  //     return;
-  //   }    
-    
-  //   // SE DESCRIZIONE = OK E DATA NON PRESENTE TRA LE FEST. NAZIONALI -->    
-    
-  //   // PRELEVA I VALORI DALLE VARIABILI DALLA FORM
-  //   const day = parseInt(singleDateDay);
-  //   const month = parseInt(singleDateMonth);
-  //   // E ASSEGNA I VALORI ALLA COSTANTE newHolyday
-  //   const newHoliday: Holiday = { day, month, description: singleDateDescription.trim() };
-
-  //   // CONTROLLO: E' UN NUOVO ITEM O SI EDITA UN ITEM ESISTENTE? -->
-
-  //   // NUOVO ITEM 
-  //   if (initialIndex === null) {
-  //     //console.log('\t- nuovo item');
-
-  //     // CERCA SE ESISTE GIA' ITEM CON STESSO GIORNO E MESE
-  //     let sameCategoryDuplicate = 0;
-  //     sameCategoryDuplicate = personalHolydays.findIndex(h => h.day === day && h.month === month);
-  //     //console.log('\t- item stessa data/mese?', sameCategoryDuplicate);
-        
-  //       // TROVATO = ERRORE E RETURN 
-  //     if (sameCategoryDuplicate > -1) {
-  //       setSingleDateError(dataLabel(myLanguage, 17)); // MSG ERRORE: 'Questa data esiste già ecc.'
-  //       return;
-  //     } else {
-  //       // NON TROVATO = SCRITTURA NUOVO ITEM E RETURN
-  //       //console.log('\t- scrittura su personalHolydays');
-  //       let tempPersonalHolydays = [...personalHolydays, newHoliday];
-  //         setPersonalHolydays(tempPersonalHolydays);
-  //         await saveData(tempPersonalHolydays, 'personalHolydays'); // SALVATAGGIO LOCAL STORAGE
-  //       setSingleDateError(null); // RESETTA EVENTUALI MSG DI ERRORE
-  //     }
-
-  //   } else {
-
-  //     // EDIT //
-  //     // SE GIORNO O MESE INIZIALI SONO DIVERSI DA QUELLI DELL'initialIndex
-  //     let presentDay = personalHolydays[initialIndex].day;
-  //     let presentMonth = personalHolydays[initialIndex].month;
-
-  //     if (presentDay != day || presentMonth != month) {
-  //       // ATTENZIONE: L'UTENTE HA MODIFICATO LA DATA
-  //       // SI CERCA SE LA NUOVA DATA ESISTE
-  //       let sameCategoryDuplicate = 0;
-  //       sameCategoryDuplicate = personalHolydays.findIndex(h => h.day === day && h.month === month);
-  //       if (sameCategoryDuplicate > -1) {
-  //         // SE QUELLA DATA ESISTE GIA' = ERRORE
-  //         setSingleDateError(dataLabel(myLanguage, 17)); // MSG ERRORE: 'Questa data esiste già ecc.'
-  //         return;
-  //       } else {
-  //         // SE QUELLA DATA E' LIBERA = SOVRASCRITTURA
-  //         let tempPersonalHolydays = personalHolydays.map((h, i) => i === initialIndex ? newHoliday : h);
-  //           setPersonalHolydays(tempPersonalHolydays);
-  //           await saveData(tempPersonalHolydays, 'personalHolydays'); // SALVATAGGIO LOCAL STORAGE
-  //       }
-  //     } else {
-  //       // L'UTENTE NON HA MODIFICATO LA DATA
-  //       // SI SOVRASCRIVE
-  //       let tempPersonalHolydays = personalHolydays.map((h, i) => i === initialIndex ? newHoliday : h);
-  //         setPersonalHolydays(tempPersonalHolydays);
-  //         await saveData(tempPersonalHolydays, 'personalHolydays'); // SALVATAGGIO LOCAL STORAGE
-  //     }
-  //   }
-
-  //   // AZZERAMENTO VARIABILI E CHIUSURA MODAL
-  //   clearData();
-
-  //   return;
-  // }
-
   /* WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW 
 
       AGGIUNGI EVENTO (refactored)
@@ -502,23 +388,19 @@ export default function HolydaysScreen({}: any) {
 
   // FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
   const normalizeDate = (date: Date | null): Date | null => {
-    console.log('NORMALIZE DATE');
     if (!date) return null;
-      return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0));
-    // const normalized = new Date(date);
-    // normalized.setHours(12, 0, 0, 0);
-    // return normalized;
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0));
   };
 
-  // Funzione per mostrare il messaggio di errore nel componente DatePicker
+  // MOSTRA MESSAGGIO ERRORE TEMPORIZZATO NEL DATEPICKER
   const showToast = (message: string, isError: boolean) => {
     setDpickerToastMessage(message);
     setDpickerToastIsError(isError);
     setErrorVisible(true);
-    // setTimeout(() => {  // Nasconde il toast dopo 4 secondi
-    //   setErrorVisible(false);
-    //   setDpickerToastMessage(null);
-    // }, 4000); 
+    setTimeout(() => {  // Nasconde il toast dopo 4 secondi
+      setErrorVisible(false);
+      setDpickerToastMessage(null);
+    }, 5000); 
   };
 
   /* Funzione per verificare se una data è compresa in un periodo
@@ -544,17 +426,17 @@ export default function HolydaysScreen({}: any) {
       lowerRadioButtonActive: boolean // Corrisponde a repeatOnDay
     ) => {
 
-        // Normalizza le date
+    // Normalizza le date
     const startDate = normalizeDate(myStartDate)!;
     let endDate = normalizeDate(myEndDate);
     
     // GIORNO SINGOLO O PERIODO?
     const isSingleDay = !endDate || startDate.getTime() === endDate.getTime();
+
     // GIORNO SINGOLO endDate = null
     if (isSingleDay) {
       endDate = null;
     }
-    // console.log(`isSingleDay: ${isSingleDay}`);
 
     // Crea il nuovo oggetto NewHolyday
     const newEvent: NewHolyday = {
@@ -566,6 +448,7 @@ export default function HolydaysScreen({}: any) {
     };
 
   // A) CONTROLLO SOVRAPPOSIZIONE con nationalHolydays 
+
   // A.1 e A.2.1) Controllo se la startDate coincide con una festività nazionale
   // Estrai Giorno e Mese dall'evento inserito
   const nationalDay = startDate.getDate();
@@ -573,49 +456,47 @@ export default function HolydaysScreen({}: any) {
 
   // Cerca una ricorrenza annuale nell'array nationalHolydays
   const isNationalHolyday = nationalHolydays.find(h => h.day === nationalDay && h.month === nationalMonth);
-    //console.log(`duplicato in nationalHolydays: ${JSON.stringify(isNationalHolyday)}`);
 
   if (isNationalHolyday) {
     const msg = `${dataLabel(myLanguage, 13)} (${isNationalHolyday.description})`; // 'Esiste già una festività nazionale in questa data...'
     if (isSingleDay) {
       // A.1) Giorno singolo e data coincide: ERRORE
-      showToast(msg, true); // APRE MESSAGGIO DI ERRORE NEL COMPONENTE DATEPICKER
-      return;
-    } else {
+        showToast(msg, true); // MESSAGGIO DI ERRORE
+        return;
+      } else {
       // A.2.1) Periodo e startDate coincide: ERRORE
-      // Il requisito era "generare un errore nel caso in cui startDate sia uguale a una data di 'nationalHolydays'"
-      showToast(`La data di inizio del periodo coincide con una festività nazionale: ${isNationalHolyday.description}`, true);
-      return;
+        showToast(`La data di inizio del periodo coincide con una festività nazionale: ${isNationalHolyday.description}`, true);
+        return;
     }
   } 
     
     // // A.2.2) Se è un periodo, controllo se comprende altre date nazionali (solo SEGNALAZIONE)
 
-    // if (!isSingleDay && endDate) {
-    //   // Genera un array di giorni compresi nel periodo
-    //   const daysInPeriod: any[] = [];
-    //   let currentDay = new Date(startDate);
+    if (!isSingleDay && endDate) {
+      // Genera un array di giorni compresi nel periodo
+      const daysInPeriod: any[] = [];
+      let currentDay = new Date(startDate);
       
-    //   // Si ferma al giorno prima dell'endDate (che è il giorno successivo all'ultimo)
-    //   while (currentDay.getTime() < endDate.getTime()) {
-    //     daysInPeriod.push({
-    //       day: currentDay.getDate(),
-    //       month: currentDay.getMonth(),
-    //     });
-    //     currentDay.setDate(currentDay.getDate() + 1); // Passa al giorno successivo
-    //   }
+      // Si ferma al giorno prima dell'endDate (che è il giorno successivo all'ultimo)
+      while (currentDay.getTime() < endDate.getTime()) {
+        daysInPeriod.push({
+          day: currentDay.getDate(),
+          month: currentDay.getMonth(),
+        });
+        currentDay.setDate(currentDay.getDate() + 1); // Passa al giorno successivo
+      }
 
-    //   const nationalOverlap = nationalHolydays.find(h => 
-    //     daysInPeriod.some(day => day.day === h.day && day.month === h.month)
-    //   );
+      const nationalOverlap = nationalHolydays.find(h => 
+        daysInPeriod.some(day => day.day === h.day && day.month === h.month)
+      );
 
-    //   if (nationalOverlap) {
-    //     // A.2.2) Periodo e include festività nazionale: SEGNALAZIONE
-    //     const overlapMsg = `Attenzione, il periodo include la festività nazionale: ${nationalOverlap.description}.`;
-    //     showToast(overlapMsg, false); // false = SEGNALAZIONE (Toast bianco)
-    //     // Non fa 'return', procede all'aggiunta dopo la segnalazione
-    //   }
-    // }
+      if (nationalOverlap) {
+        // A.2.2) Periodo e include festività nazionale: SEGNALAZIONE
+        const overlapMsg = `Attenzione, il periodo include la festività nazionale: ${nationalOverlap.description}.`;
+        showToast(overlapMsg, false); // false = SEGNALAZIONE (Toast bianco)
+        // Non fa 'return', procede all'aggiunta dopo la segnalazione
+      }
+    }
 
 
     /* ============================================================================= 
@@ -638,7 +519,7 @@ export default function HolydaysScreen({}: any) {
     if (isSingleDay) {
       // B.1.1) Controllo duplicato: la startDate è già la startDate di un evento esistente?
       const startOverlap = newPersonalHolydays.find(h => isDateDuplicate(h, startDate));
-      if (startOverlap) {
+      if (startOverlap && initialIndex === null) {
         showToast(`Questa data è già presente: ${startOverlap.description}`, true);
         return;
       }
@@ -669,7 +550,7 @@ export default function HolydaysScreen({}: any) {
       }
 
       if (singleOverlap) {
-        showToast(`Attenzione, l'evento si sovrappone a ${singleOverlap.description}`, true);
+        showToast(`${initialIndex} Attenzione, l'evento si sovrappone a ${singleOverlap.description}`, true);
         return;
       }
 
@@ -690,193 +571,46 @@ export default function HolydaysScreen({}: any) {
         return false;
       });
 
-      if (periodOverlap) {
-        showToast(`L'evento si sovrappone a un evento esistente: ${periodOverlap.description}`, true);
+      if (periodOverlap && initialIndex === null) {
+        showToast(`Il periodo è in conflitto con ${periodOverlap.description}`, true);
         return;
       }
     }
 
-    // NESSUN ERRORE: AGGIUNGI L'EVENTO
-    let tempNewPersonalHolydays = [...newPersonalHolydays, newEvent];
-    setNewPersonalHolydays(tempNewPersonalHolydays);
+    // NESSUN ERRORE: AGGIUNGI/SOSTITUISCI L'EVENTO
+    let tempNewPersonalHolydays: any[] = [];
+    if (initialIndex === null) {
+      console.log('- - - nuovo item');
+      tempNewPersonalHolydays = [...newPersonalHolydays, newEvent];
+      setNewPersonalHolydays(tempNewPersonalHolydays);
+    } else {
+      console.log('- - - edit item esistente');
+      tempNewPersonalHolydays = newPersonalHolydays.map((h, i) => i === initialIndex ? newEvent : h);
+      setNewPersonalHolydays(tempNewPersonalHolydays);
+    }
     await saveData(tempNewPersonalHolydays, 'newPersonalHolydays'); // SALVATAGGIO LOCAL STORAGE
-
-    console.log('Nuovo evento aggiunto:', newEvent);
-    console.log('tempNewPersonalHolydays:', JSON.stringify(tempNewPersonalHolydays));
+    console.log('Item:', JSON.stringify(newEvent, null, 2));
 
     // AZZERA LE VARIABILI DI ERRORE E CHIUDE LA MODAL
+    setInitialIndex(null);
     setDpickerToastMessage('');
     setDpickerToastIsError(false);
     setIsModalSingleDateVisible(false);
   };
 
-  /* ============================================================================= 
-    AGGIUNGI PERIODO FESTIVI. --> MUORE COL REFACTORING
-   ============================================================================= */
-  // const handleAddPeriod = async () => {
-  
-  //   // CONTROLLA COMPILAZIONE DELLA DESCRIZIONE NELLA FORM
-  //   if (!singleDateDescription) {
-  //     setSingleDateError(dataLabel(myLanguage, 12)); // MSG ERRORE 'Inserisci una descrizione'
-  //     return;
-  //   }
-
-  //   // PRELEVA DATI DALLA FORM
-  //   const startDay = periodStartDate?.getDate();
-  //   const startMonth = periodStartDate?.getMonth() + 1;
-  //   const startYear = periodStartDate?.getFullYear(); 
-
-  //   const adjustedEndDate = new Date(periodEndDate);
-  //   if (periodEndDate?.getHours() === 0 && periodEndDate.getMinutes() === 0 && periodEndDate.getSeconds() === 0) {
-  //     adjustedEndDate.setDate(adjustedEndDate.getDate() - 1);
-  //   }
-
-  //   const endDay = periodEndDate?.getDate();
-  //   const endMonth = periodEndDate?.getMonth() + 1;
-  //   const endYear = periodEndDate?.getFullYear();   
-  
-  //   const newPeriod: VacationPeriod = { startDay, startMonth, startYear, endDay, endMonth, endYear, description: singleDateDescription.trim() };
-
-  //   // MODIFICA ITEM = SOVRASCRITTURA
-  //   if (initialPeriodIndex !== null) {
-  //     let tempVacationPeriods = vacationPeriods.map((period, index) => index === initialPeriodIndex ? newPeriod : period);
-  //       setVacationPeriods(tempVacationPeriods);
-  //       await saveData(tempVacationPeriods, 'vacationPeriods'); 
-  //   } else {
-  //     // NUOVO ITEM = AGGIUNTA ALL'ARRAY
-  //     let tempVacationPeriods = [...vacationPeriods, newPeriod];
-  //       setVacationPeriods(tempVacationPeriods);
-  //       await saveData(tempVacationPeriods, 'vacationPeriods'); 
-  //   }
-
-  //   setInitialPeriodIndex(null); // Resetta l'indice dopo il salvataggio
-
-  //   // AZZERA VARIABILI E CHIUDE MODAL
-  //   clearData();
-  // };
-
-  /* ============================================================================= 
-   EDIT ITEM (SINGOLO E PERIODO)
-   ============================================================================= */
-  // LA FUNZIONE RICEVE CATEGORIA 'type' E INDICE 'index' DEL RECORD DA EDITARE
-  // const handleEdit = (type: ItemType, index: number) => {
-
-  //   // DEFINISCE E AZZERA I CONTENITORI COI VALORI DA EDITARE, GIORNO SINGOLO E PERIODO
-  //   let itemToEdit: { 
-  //     day: number; 
-  //     month: number; 
-  //     description: string | undefined } | null = null; // singolo
-  //   let periodToEdit: {
-  //     startDay: number; 
-  //     startMonth: number; 
-  //     startYear: number; 
-  //     endDay: number; 
-  //     endMonth: number; 
-  //     endYear: number; 
-  //     description: string | undefined} | null = null; // periodo
-  
-  //   // SI COPIANO I VALORI DAL RECORD N. index IN itemToEdit O IN periodToEdit
-  //   switch (type) {
-  //     case 'personal':
-  //       if (personalHolydays[index]) {
-  //         itemToEdit = {
-  //           day: personalHolydays[index].day,
-  //           month: personalHolydays[index].month,
-  //           description: personalHolydays[index].description
-  //         };
-  //       }
-  //       // SET RADIOBUTTON PERIOD = INACTIVE (E RADIOBUTTON SINGLE ATTIVO)
-  //       // -- così si carica da solo il datepicker 'single'
-  //       setLeftRadioButtonActive(true);
-  //       setRightRadioButtonActive(false);
-  //     break;
-
-  //     // VACATION -> SI COPIANO I VALORI DAL RECORD DELL'ARRAY E SI APRE LA MODAL 'periodo'
-  //     case 'vacation':
-  //       setInitialPeriodIndex(index);
-
-  //       if (JSON.stringify(vacationPeriods[index])) {
-  //         periodToEdit = {
-  //           startDay: vacationPeriods[index].startDay,
-  //           startMonth: vacationPeriods[index].startMonth,
-  //           startYear: vacationPeriods[index].startYear,
-  //           endDay: vacationPeriods[index].endDay,
-  //           endMonth: vacationPeriods[index].endMonth,
-  //           endYear: vacationPeriods[index].endYear,
-  //           description: vacationPeriods[index].description
-  //         };
-  //       }
-  //       // VISUALIZZA MODAL PERIODO
-  //       //showModalSingleDate();
-  //     break;
-
-  //     default:
-  //       console.warn('Impossibile modificare l\'elemento:', type);
-  //     return;
-  //   }
-
-  //   // CASO 1) ITEM SINGOLO (itemToEdit != null)
-  //   if (itemToEdit) {
-  //     setDatePickerSelected(
-  //       new Date(
-  //         new Date().getFullYear(),
-  //         itemToEdit.month ,
-  //         itemToEdit.day
-  //       )
-  //     );
-  //     setSingleDateDay(itemToEdit.day.toString());
-  //     setSingleDateMonth((itemToEdit.month).toString());
-  //     setSingleDateDescription(itemToEdit.description);
-  //     setSelectedRadioOption('single');
-
-  //     // SI INIZIALIZZANO initialType E initialIndex CON CATEGORIA E POSIZIONE DI PROVENIENZA
-  //     // SERVIRANNO ALLA FUNZIONE handleAddSingleDate PER I CONFRONTI
-  //     setInitialType(type as HolidayType);
-  //     setInitialIndex(index);
-
-  //     setIsModalSingleDateVisible(true);
-
-  //   } else if (periodToEdit) {
-  //   // CASO 2) PERIODO (periodToEdit != null)
-  //     let sd: Date = new Date(
-  //         periodToEdit.startYear, 
-  //         periodToEdit.startMonth - 1, 
-  //         periodToEdit.startDay
-  //       )
-  //     setStartdate(sd);
-  //     setPeriodStartDate(sd);
-
-  //     let ed: Date = new Date(
-  //         periodToEdit.endYear, 
-  //         periodToEdit.endMonth - 1, 
-  //         periodToEdit.endDay
-  //       )
-  //     setEndDate(ed);
-  //     setPeriodEndDate(ed);
-      
-  //     setSingleDateDescription(periodToEdit?.description);
-  //     setSelectedRadioOption('period');
-  //                 // AGGIUNGERE:
-  //                 // RADIOBUTTON SINGLE = INACTIVE
-  //                 // -- quindi si carica da solo il datepicker 'single'
-  //                 setLeftRadioButtonActive(false);
-  //                 setRightRadioButtonActive(true);
-  //     setIsModalSingleDateVisible(true);
-  //   }
-  // };
-
-
-  /* ============================================================================= 
-   EDIT ITEM (SINGOLO E PERIODO) - REFACTORED
-   ============================================================================= */
+/* ============================================================================= 
+  EDIT ITEM (SINGOLO E PERIODO) - REFACTORED
+  ============================================================================= */
 // LA FUNZIONE RICEVE SOLO L'INDICE 'index' DEL RECORD DA EDITARE DA newPersonalHolydays
 const handleEdit = (index: number) => {
+  console.log('HANDLE EDIT');
   // Controlla se l'indice è valido
   if (index === null || index < 0 || index >= newPersonalHolydays.length) {
     console.warn('Indice non valido per la modifica:', index);
     return;
   }
-  setInitialIndex(index);
+  setInitialIndex(index); // INDEX, SERVE PER L'EDIT
+
   const itemToEdit: NewHolyday = newPersonalHolydays[index];
   const isPeriod = itemToEdit.endDate !== null;
   
@@ -930,9 +664,9 @@ const handleEdit = (index: number) => {
   }
   
   // GESTIONE STATI DELLE RADIOBUTTON DELLA MODAL, ATTIVO, FOCUSED E DISABILITATO
-  const [selectedRadioOption, setSelectedRadioOption] = useState<'single' | 'period'>('single'); // STATO INIZIALE DEL RADIOBUTTON
-  const [leftRadioButtonActive, setLeftRadioButtonActive] = useState<boolean>(true);    // FLAG PER DISATTIVARE IL RADIOBUTTON SINISTRO (da resettare a ogni [+ Aggiungi] )
-  const [rightRadioButtonActive, setRightRadioButtonActive] = useState<boolean>(true);  // FLAG PER DISATTIVARE IL RADIOBUTTON DESTRO (da resettare a ogni [+ Aggiungi] )
+  // const [selectedRadioOption, setSelectedRadioOption] = useState<'single' | 'period'>('single'); // STATO INIZIALE DEL RADIOBUTTON
+  // const [leftRadioButtonActive, setLeftRadioButtonActive] = useState<boolean>(true);    // FLAG PER DISATTIVARE IL RADIOBUTTON SINISTRO (da resettare a ogni [+ Aggiungi] )
+  // const [rightRadioButtonActive, setRightRadioButtonActive] = useState<boolean>(true);  // FLAG PER DISATTIVARE IL RADIOBUTTON DESTRO (da resettare a ogni [+ Aggiungi] )
 
   // GESTIONE SLIDER PER SELEZIONARE GIORNO/PERIODO NEL DATEPICKER
   const [sliderTargetValue, setSliderTargetValue] = useState(0);
@@ -1022,17 +756,18 @@ const handleEdit = (index: number) => {
                 }
               </View>
 
+              {/* LISTA RIGHE */}
               {newPersonalHolydays.sort((a: any, b: any) => a.startDate - b.startDate).map((holiday, index) => (
                 <React.Fragment key={index}>
                   <View style={styles.holidayRow }>
                     <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
                       
+                      {/* CERCHIO COLORATO CON DATA */}
                       {holiday.endDate ? // STAMPA CERCHIETTO SOTTO IN OGNI CASO, SE = PERIODO SPOSTATTO VERSO DX
                         <View style={[styles.dot32noshadow, {marginLeft:6}]} />
                           :
                         <View style={styles.dot32noshadow} />
                       }
-                      
                       <View style={styles.dot32}>
                         <Text style={styles.dot32text}>{holiday.startDate.getDate()}</Text>
                       </View>
@@ -1045,7 +780,6 @@ const handleEdit = (index: number) => {
                           {`${holiday.endDate.getDate()} ${months[holiday.endDate.getMonth()]?.label.slice(0,3)} ${holiday.endDate.getFullYear()}`}
                         </Text>
                         }
-                        
                         <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
                         <View style={{flexDirection:'row', alignItems:'flex-end'}}>
                           {(holiday.repeatOnDate || holiday.repeatOnDay) && <IconSymbol size={16} name="repeat" color={colors.text} style={{marginTop:8, marginLeft:10, marginRight:4, }}/>}
@@ -1065,7 +799,7 @@ const handleEdit = (index: number) => {
                     </View>
                   </View>
                   {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
-                  {index !== personalHolydays.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
+                  {index !== newPersonalHolydays.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
                 </React.Fragment>
               ))}
             </View>
@@ -1134,42 +868,38 @@ const handleEdit = (index: number) => {
             visible={isModalSingleDateVisible}  
             presentationStyle="fullScreen"
             transparent={false}
-            //backdropColor={'rgba(0, 0, 0, .25)'} // NON FUNZIONA TRASPARENZA
+            // backdropColor={'rgba(0, 0, 0, .25)'} // NON FUNZIONA TRASPARENZA
             animationType="none"
             onRequestClose={hideModalSingleDate} 
             hardwareAccelerated={true}
             >
-            <View style={{
-              flex:1,
-              flexDirection:'column',
-              justifyContent:'center',
-              alignItems:'center',
-              backgroundColor: 'rgba(0, 0, 0, 0.75)'
-              }}>
-                <View style={styles.modalContainer}>
-                  <NewDatepicker
-                    language={myCountry}
-                    startDate={dpickerStartDate}
-                    endDate={dpickerEndDate}
-                    description={dpickerDescription}
-                    isError={dpickerToastIsError}
-                    errorMsg={dpickerToastMessage}
-                    repeatOnDate={dpickerRepeatOnDate}
-                    repeatOnDay={dpickerRepeatOnDay}
-                    onCancel={ () => {
-                        setDpickerToastMessage('');
-                        setDpickerToastIsError(false);
-                        setIsModalSingleDateVisible(false);
-                    }} 
-                    onConfirm={(
-                        myStartDate, 
-                        myEndDate, 
-                        myDescription, 
-                        upperRadioButtonActive, 
-                        lowerRadioButtonActive) => 
-                      handleAddEvent(myStartDate, myEndDate, myDescription, upperRadioButtonActive, lowerRadioButtonActive) 
-                    } />      
-                </View>
+            <View style={styles.backgroundModal}>
+              <View style={styles.modalContainer}>
+                <NewDatepicker
+                  language={myCountry}                    // LINGUA
+                  startDate={dpickerStartDate}            // DATA INIZIO
+                  endDate={dpickerEndDate}                // DATA FINE O null
+                  description={dpickerDescription}        // DESCRIZIONE
+                  isError={dpickerToastIsError}           // PASSA AL COMPONENT FLAG DI ERRORE
+                  errorMsg={dpickerToastMessage}          // PASSA AL COMPONENT MSG DI ERRORE
+                  repeatOnDate={dpickerRepeatOnDate}      // RIPETE IN QUELLA DATA
+                  repeatOnDay={dpickerRepeatOnDay}        // RIPETE QUEL GIORNO DELL'ANNO
+                  initialIndex={initialIndex}             // VALORIZZATO SE EDIT
+                  onCancel={ () => {
+                      setInitialIndex(null);              // SE ERA UN EDIT AZZERA IL FLAG
+                      setDpickerToastMessage('');         // AZZERA MSG ERRORE
+                      setDpickerToastIsError(false);      // AZZERA FLAG ERRORE
+                      setIsModalSingleDateVisible(false); // CHIUDE MODAL
+                  }} 
+                  onConfirm={(
+                    myStartDate, 
+                    myEndDate, 
+                    myDescription, 
+                    upperRadioButtonActive, 
+                    lowerRadioButtonActive) => 
+                    handleAddEvent(myStartDate, myEndDate, myDescription, upperRadioButtonActive, lowerRadioButtonActive, ) 
+                }/>      
+              </View>
             </View>
           </Modal>
       </Suspense>

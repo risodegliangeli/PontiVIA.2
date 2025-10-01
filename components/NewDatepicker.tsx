@@ -29,6 +29,8 @@ const dataLabel: any = {
     'di',                      // 15
     'Chiudi',                  // 16
     'Ok',                      // 17
+    'Aggiorna',                // 18 usato in alternativa a Aggiungi se EDIT
+    'Modifica evento',         // 19   :    :    :
   ],
 }; 
 
@@ -42,6 +44,7 @@ repeatOnDate: boolean | null;
 repeatOnDay: boolean | null;
 isError: boolean;
 errorMsg: string | null;
+initialIndex: number | null; // USATO IN CASO DI EDIT PER CAMBIARE PULSANTE Aggiungi
 onCancel: () => null;
 onConfirm: (
   startDate: Date, 
@@ -90,10 +93,15 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   errorMsg,
   repeatOnDate,
   repeatOnDay,
+  initialIndex,
   onCancel,
   onConfirm
 }) => {
-  
+
+  console.log( `- - NEWDATEPICKER` );
+  console.log( `- - startDate: ${startDate.toLocaleDateString()}, endDate: ${endDate?.toLocaleDateString()}` );
+  console.log( `- - difference: ${differenceInDays(endDate, startDate)}`);
+
   // SE NON VIENE PASSATO UN language SI PRENDE QUELLO DI SISTEMA
   if (!language) language = (getLocales()[0].languageTag);
 
@@ -117,7 +125,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   const [datepickerVisible, setDatepickerVisible] = useState(false); // CALENDARIO
 
   // DROPDOWN GIORNI DI DURATA EVENTO
-  const [value, setValue] = useState(1);          // DURATA SELEZIONATA
+  const [value, setValue] = useState<number | null>(1);          // DURATA SELEZIONATA
   const [isFocus, setIsFocus] = useState(false);  // FOCUS DELLA DROPDOWN
 
   // LABEL DURATA EVENTO
@@ -151,7 +159,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
         setToDate(true);
       break;
       case null: 
-        setMyEndDate(myStartDate); 
+        initialIndex === null ? setMyEndDate(myStartDate) : setMyEndDate(endDate) ; 
         setToDate(true);
       break;
       default:
@@ -378,7 +386,9 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       {/* MODAL */}
       <View style={styles.modalContainer}>
         {/* TITOLO MODAL */}
-        <Text style={styles.listTitle}>{dataLabel[language][0]}</Text>
+        <Text style={styles.listTitle}>
+          {initialIndex !== null ? dataLabel[language][19] : dataLabel[language][0]}
+          </Text>
 
         {/* ERRORE <-- IN ARRIVO DAL CHIAMANTE */}
         {isError && <Text style={styles.errorMsg}>{errorMsg}</Text>}
@@ -517,7 +527,9 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               :
                 setDescriptionAlert(true)
               }>
-              <Text style={styles.addButtonText}>{dataLabel[language][6]}</Text>
+              <Text style={styles.addButtonText}>
+                {initialIndex !== null ? dataLabel[language][18] : dataLabel[language][6]}
+                </Text>
             </TouchableOpacity>
           </View>
         </View>

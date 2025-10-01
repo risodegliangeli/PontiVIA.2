@@ -223,10 +223,10 @@ export function holydayLabels(language,item) {
         'Descrizione',                                // 14
         '(ripete ogni anno)',                         // 15
         'I tuoi giorni speciali',                     // 16
-        'In questa data è già presente un evento',     // 17
-        'Vuoi eliminare tutte le date di questa sezione?',// 18],
-        '(es. un evento che ricorre ogni anno)',  // 19
-        '(es. un periodo di ferie)'                    // 20
+        'In questa data è già presente un evento',    // 17
+        'Vuoi eliminare tutte le date di questa sezione?',// 18
+        '(es. un evento che ricorre ogni anno)',      // 19
+        '(es. un periodo di ferie)'                   // 20
         ],
     "fr":[
         'Mes dates',                                // 0
