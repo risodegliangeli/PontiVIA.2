@@ -783,7 +783,7 @@ const handleEdit = (index: number) => {
                         <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
                         <View style={{flexDirection:'row', alignItems:'flex-end'}}>
                           {(holiday.repeatOnDate || holiday.repeatOnDay) && <IconSymbol size={16} name="repeat" color={colors.text} style={{marginTop:8, marginLeft:10, marginRight:4, }}/>}
-                          <Text style={[styles.itemDescription, {paddingLeft: 0, maxWidth:240, fontStyle:'italic', fontWeight:400}]}>{holiday.repeatOnDate && 'ripete ogni anno'}{holiday.repeatOnDay && 'ripete 2'}</Text>
+                          <Text style={[styles.itemDescription, {paddingLeft: 0, maxWidth:240, fontStyle:'italic', fontWeight:400}]}>{(holiday.repeatOnDate || holiday.repeatOnDay) && 'ripete ogni anno'}</Text>
                         </View>
                       </View>
                     </View>

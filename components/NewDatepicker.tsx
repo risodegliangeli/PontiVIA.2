@@ -121,7 +121,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   // SWITCH VISIBILE/NON VISIBILE PER I SINGOLI ELEMENTI
   const [toDate, setToDate] = useState( myEndDate ? true : false); // SECONDA DATA
   const [radioButton, setRadioButton] = useState( repeatOnDate || repeatOnDay ? true : false); // GRUPPO RADIOBUTTON
-  const [rotateArrow, setRotateArrow] = useState<string>('0deg');
+  //const [rotateArrow, setRotateArrow] = useState<string>('0deg');
   const [datepickerVisible, setDatepickerVisible] = useState(false); // CALENDARIO
 
   // DROPDOWN GIORNI DI DURATA EVENTO
@@ -191,8 +191,17 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
 
   // ICONE USATE NELLO SCRIPT
   const IcoCalendar = <Image source={require('@/assets/images/ico_calendar_picker.png')} style={{width:13, height:14, resizeMode:'contain'}}/>;
-  const IcoRepeat = <Image source={require('@/assets/images/ico_repeat_picker.png')} style={{width:13, height:14, resizeMode:'contain'}}/>;
-  const IcoArrow = <Image source={require('@/assets/images/arrow_down.png')} style={{ width:24, height:24, resizeMode:'contain', transform: [{rotate: rotateArrow}]}}/>
+  const IcoRepeat = <Image 
+    style={{width:13, height:14, resizeMode:'contain'}}
+    source={
+      radioButton ? require('@/assets/images/ico_repeat_picker.png') : require('@/assets/images/ico_repeat_picker_black.png')
+    }/>;
+  const IcoArrow = <Image 
+  source={
+    radioButton ? require('@/assets/images/ico_arrow_blue.png') : require('@/assets/images/ico_arrow_black.png')
+  } 
+  style={{ width:24, height:24, resizeMode:'contain', }
+}/>
 
   // STILI
   const styles = StyleSheet.create({
@@ -460,17 +469,22 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               onPress={ () => {
                 if (!radioButton) { 
                   setRadioButton(true)  // SE GRUPPO RADIOBUTTON SPENTO LO SI ACCENDE
-                  setRotateArrow('180deg'); // SI RUOTA LA FRECCIA
+                  //setRotateArrow('180deg'); // SI RUOTA LA FRECCIA
                   setUpperRadioButtonActive(true) // E SI IMPOSTA true IL PRIMO
                 } else {
                   setRadioButton(false) // ALTRIMENTI SI SPEGNE IL GRUPPO
-                  setRotateArrow('0deg');
+                  //setRotateArrow('0deg');
                   setUpperRadioButtonActive(false)  // E SI RIPORTANO A false I DUE RADIOBUTTON
                   setLowerRadioButtonActive(false)
                 }
               }}
               >
-              {IcoRepeat}<Text style={styles.repeatText}>{dataLabel[language][8]}</Text>{IcoArrow}
+              {IcoRepeat}<Text 
+              style={[styles.repeatText, 
+                !radioButton && {color: '#333333'}
+              ]}>
+                {dataLabel[language][8]}
+                </Text>{IcoArrow}
 
             </TouchableOpacity>
           </View>
