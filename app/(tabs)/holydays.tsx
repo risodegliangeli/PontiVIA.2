@@ -580,16 +580,17 @@ export default function HolydaysScreen({}: any) {
     // NESSUN ERRORE: AGGIUNGI/SOSTITUISCI L'EVENTO
     let tempNewPersonalHolydays: any[] = [];
     if (initialIndex === null) {
-      console.log('- - - nuovo item');
+      //console.log('- - - nuovo item');
       tempNewPersonalHolydays = [...newPersonalHolydays, newEvent];
       setNewPersonalHolydays(tempNewPersonalHolydays);
     } else {
-      console.log('- - - edit item esistente');
+      //console.log('- - - edit item esistente');
       tempNewPersonalHolydays = newPersonalHolydays.map((h, i) => i === initialIndex ? newEvent : h);
       setNewPersonalHolydays(tempNewPersonalHolydays);
     }
     await saveData(tempNewPersonalHolydays, 'newPersonalHolydays'); // SALVATAGGIO LOCAL STORAGE
-    console.log('Item:', JSON.stringify(newEvent, null, 2));
+    
+    console.log('newPersonalHolydays:', JSON.stringify(tempNewPersonalHolydays, null, 2));
 
     // AZZERA LE VARIABILI DI ERRORE E CHIUDE LA MODAL
     setInitialIndex(null);
@@ -688,6 +689,10 @@ const handleEdit = (index: number) => {
     async () => await saveData(myCountry, 'myCountry');
   }, [myCountry]);
 
+  
+
+
+
   return (
     <ImageBackground 
       source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg')}
@@ -771,15 +776,31 @@ const handleEdit = (index: number) => {
                       <View style={styles.dot32}>
                         <Text style={styles.dot32text}>{holiday.startDate.getDate()}</Text>
                       </View>
+
                       <View style={{flexDirection:'column'}} >
-                        {!holiday.endDate ? // GIORNO SINGOLO = DATA SINGOLA, PERIODO 0 DOPPIA DATA
-                          <Text style={styles.itemDate}>{`${holiday.startDate.getDate()} ${months[holiday.startDate.getMonth()]?.label}`}</Text>
-                        :
-                        <Text style={styles.itemDate}>
-                          {`${holiday.startDate.getDate()} ${months[holiday.startDate.getMonth()]?.label.slice(0,3)} ${holiday.startDate.getFullYear()} - `}
-                          {`${holiday.endDate.getDate()} ${months[holiday.endDate.getMonth()]?.label.slice(0,3)} ${holiday.endDate.getFullYear()}`}
-                        </Text>
-                        }
+
+                        <View style={{flexDirection:'row'}}>
+                          {/* GIORNO SINGOLO = DATA SINGOLA | PERIODO = DOPPIA DATA */}
+                          {!holiday.endDate ? 
+                            <Text style={styles.itemDate}>{`${holiday.startDate.getDate()} ${months[holiday.startDate.getMonth()]?.label}`}</Text>
+                          :
+                            <Text style={styles.itemDate}>
+                              {holiday.startDate.getDate()}
+                              {' '}
+                              {months[holiday.startDate.getMonth()]?.label.slice(0,3)}
+                              {/* holiday.startDate.getFullYear() !== new Date().getFullYear() ? holiday.startDate.getFullYear() : ''*/} 
+                              {' - '}
+                              {holiday.endDate.getDate()}
+                              {' '}
+                              {months[holiday.endDate.getMonth()]?.label.slice(0,3)}
+                              {' '}
+                              {holiday.endDate.getFullYear() !== new Date().getFullYear() ? holiday.endDate.getFullYear() : ''}
+                            </Text>
+                          }
+                          {/*  ANNO, SOLO SE DIVERSO DALL' ANNO CORRENTE */}
+                          {holiday.startDate.getFullYear() !== new Date().getFullYear() && <Text style={styles.itemDate}>{holiday.startDate.getFullYear()}</Text>}
+                        </View>
+
                         <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
                         <View style={{flexDirection:'row', alignItems:'flex-end'}}>
                           {(holiday.repeatOnDate || holiday.repeatOnDay) && <IconSymbol size={16} name="repeat" color={colors.text} style={{marginTop:8, marginLeft:10, marginRight:4, }}/>}
