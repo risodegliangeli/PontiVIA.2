@@ -185,6 +185,7 @@ const CalendarScreen = (PREFERENCES: any) => {
   const monthsToLoad = 3; // ADV OGNI x CARDS
 
   const { 
+    newPersonalHolydays,
     personalHolydays, 
     regionalHolydays, 
     vacationPeriods, 
@@ -529,6 +530,7 @@ const CalendarScreen = (PREFERENCES: any) => {
             1),
           monthsToLoad, 
           PREFERENCES.bridgeDuration, 
+          newPersonalHolydays,
           personalHolydays, 
           regionalHolydays, 
           vacationPeriods,
@@ -567,13 +569,14 @@ const CalendarScreen = (PREFERENCES: any) => {
           startDate, 
           monthsToLoad,
           PREFERENCES.bridgeDuration,
+          newPersonalHolydays,
           personalHolydays,
           regionalHolydays,
           vacationPeriods, 
           myCountry)
         );
     }    
-  }, [JSON.stringify(PREFERENCES), myCountry]);
+  }, [JSON.stringify(PREFERENCES), newPersonalHolydays, myCountry]);
 
   /* ============================================================================= 
     IDENTIFICA CONNESSIONI GRAFICHE TRA CERCHIETTI GIALLI 

@@ -98,9 +98,9 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   onConfirm
 }) => {
 
-  console.log( `- - NEWDATEPICKER` );
-  console.log( `- - startDate: ${startDate.toLocaleDateString()}, endDate: ${endDate?.toLocaleDateString()}` );
-  console.log( `- - difference: ${differenceInDays(endDate, startDate)}`);
+  // console.log( `- - NEWDATEPICKER` );
+  // console.log( `- - startDate: ${startDate.toLocaleDateString()}, endDate: ${endDate?.toLocaleDateString()}` );
+  // console.log( `- - difference: ${differenceInDays(endDate, startDate)}`);
 
   // SE NON VIENE PASSATO UN language SI PRENDE QUELLO DI SISTEMA
   if (!language) language = (getLocales()[0].languageTag);

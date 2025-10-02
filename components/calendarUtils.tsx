@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { addDays, } from 'date-fns';
 import { PREFERENCES } from '@/app/(tabs)/preferences';
 import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
@@ -5,6 +6,7 @@ import { getLocales,  } from 'expo-localization';
 import { Platform } from 'react-native';
 //import { da } from 'date-fns/locale'; // importa il Danese???
 import { dataLabel } from '@/components/dataLabel';
+import  checkPersonalHolydays  from '@/components/checkPersonalHolydays';
 
 // TYPE Holiday (VECCHIO)
 interface Holiday {
@@ -66,9 +68,6 @@ const getUTCDayOfWeek = (date: Date) => {
     return date.getUTCDay();
 };
 
-
-
-
 /* ============================================================================= 
     ARRAY CON LE FESTIVITA' NAZIONALI + PASQUA + LUNEDI DELL'ANGELO
     + FESTIVITA PERSONALI + PERIODI DI VACANZA
@@ -76,6 +75,7 @@ const getUTCDayOfWeek = (date: Date) => {
 const getCountryNationalHolidays = (
     myCountry: string,
     year: number,
+    newPersonalHolydays: NewHolyday[],
     personalHolydays: Holiday[],
     regionalHolydays: Holiday[],
     vacationPeriods: VacationPeriod[]
@@ -93,14 +93,16 @@ const getCountryNationalHolidays = (
     /* + + + + + + + + + + + + + + + + + + + + + + + + + + + +
     + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 
-    REFACTORING >
+    REFACTORING > ok
     le festività personali salvate in 'newPersonalHolydays' vanno trasformate
     in item gg/mm/description e aggiunte all'array 'holidays'
 
     + + + + + + + + + + + + + + + + + + + + + + + + + + + + */
 
     if (PREFERENCES.festivitaPersonali.status) {
-        holidays.push(...personalHolydays);
+        const tempNewPersonalHolydays = checkPersonalHolydays(newPersonalHolydays, year);
+        holidays.push(...tempNewPersonalHolydays);
+        //console.log('--> holidays[]\n',JSON.stringify(holidays, null, 1));
         }
     /* + + + + + + + + + + + + + + + + + + + + + + + + + + + + 
     + + + + + + + + + + + + + + + + + + + + + + + + + + +*/
@@ -332,6 +334,7 @@ const createCalendarGrid = (
         startDate: Date, 
         monthsTotal: number, 
         bridgeLength = PREFERENCES.bridgeDuration, 
+        newPersonalHolydays: NewHolyday[],
         personalHolydays: Holiday[], 
         regionalHolydays: Holiday[], 
         vacationPeriods: VacationPeriod[], 
@@ -351,7 +354,7 @@ const createCalendarGrid = (
     const getHolidaysForYear = (year: number) => {
         if (!holidaysByYear[year]) {
             holidaysByYear[year] = getCountryNationalHolidays(
-                myCountry, year, personalHolydays, regionalHolydays, vacationPeriods
+                myCountry, year, newPersonalHolydays, personalHolydays, regionalHolydays, vacationPeriods
             );
         }
         return holidaysByYear[year];

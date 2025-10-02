@@ -788,13 +788,14 @@ const handleEdit = (index: number) => {
                               {holiday.startDate.getDate()}
                               {' '}
                               {months[holiday.startDate.getMonth()]?.label.slice(0,3)}
-                              {/* holiday.startDate.getFullYear() !== new Date().getFullYear() ? holiday.startDate.getFullYear() : ''*/} 
+                              {' '}
+                              {holiday.repeatOnDate || holiday.repeatOnDay ? '' : holiday.startDate.getFullYear()} 
                               {' - '}
                               {holiday.endDate.getDate()}
                               {' '}
                               {months[holiday.endDate.getMonth()]?.label.slice(0,3)}
                               {' '}
-                              {holiday.endDate.getFullYear() !== new Date().getFullYear() ? holiday.endDate.getFullYear() : ''}
+                              {holiday.repeatOnDate || holiday.repeatOnDay ? '' : holiday.endDate.getFullYear()}
                             </Text>
                           }
                           {/*  ANNO, SOLO SE DIVERSO DALL' ANNO CORRENTE */}
