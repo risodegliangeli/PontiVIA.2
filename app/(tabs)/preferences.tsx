@@ -1,13 +1,14 @@
 import useLocalizationData from '@/app/data/data';
-import DropdownComponent from '@/components/ui/DropdownComponent'; // IMPORTA DROPDOWN DURATA PONTI
-import DropdownFDOW from '@/components/ui/DropdownFDoW'; // IMPORTA DROPDOWN GIORNO SETTIMANA
+import DropdownComponent from '@/components/ui/DropdownComponent'; // DROPDOWN DURATA PONTI
+// import DropdownFDOW from '@/components/ui/DropdownFDoW'; // DROPDOWN GIORNO SETTIMANA --- moment. disabled
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Suspense, useState, useEffect } from 'react';
 import { Colors } from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales,  } from 'expo-localization';
 import { dataLabel as switchNames } from '@/components/dataLabel';
+import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import {
   ImageBackground,
   ScrollView,
@@ -22,9 +23,6 @@ import {
 
 const { localizedDays } = useLocalizationData();
 const myLanguage = (getLocales()[0].languageTag).slice(0,2);
-
-
-
 const dataLabel: any = {
   'it': [
     'Imposta i tuoi filtri',
@@ -117,48 +115,46 @@ const dataLabel: any = {
     'Θρησκευτικές γιορτές',                      // 6
   ]
 };
-
-
-export const PREFERENCES = {
-  domenica:  { status: true, label: localizedDays[6].charAt(0).toUpperCase() + localizedDays[6].slice(1) },
-  sabato:    { status: true, label: localizedDays[5].charAt(0).toUpperCase() + localizedDays[5].slice(1) },
-  venerdi:   { status: false, label: localizedDays[4].charAt(0).toUpperCase() + localizedDays[4].slice(1) },
-  giovedi:   { status: false, label: localizedDays[3].charAt(0).toUpperCase() + localizedDays[3].slice(1) },
-  mercoledi: { status: false, label: localizedDays[2].charAt(0).toUpperCase() + localizedDays[2].slice(1) },
-  martedi:   { status: false, label: localizedDays[1].charAt(0).toUpperCase() + localizedDays[1].slice(1) },
-  lunedi:    { status: false, label: localizedDays[0].charAt(0).toUpperCase() + localizedDays[0].slice(1) },
-
-  pasqua: { status: true, label: switchNames(myLanguage,0) },
-  lunediDellAngelo: { status: true, label: switchNames(myLanguage,1) },
-  ascensione: { status: false, label: switchNames(myLanguage,2) },
-  pentecoste: { status: false, label: switchNames(myLanguage,3) },
-  lunediPentecoste: { status: false, label: switchNames(myLanguage,4) },
-  corpusDomini: {status: false, label: switchNames(myLanguage,5)}, 
-
-  festivitaNazionali: { status: true, label: switchNames(myLanguage,7)}, 
-  festivitaLocali: { status: true, label: switchNames(myLanguage,8)}, 
-  festivitaPersonali: { status: true, label: switchNames(myLanguage,9)}, 
-  feriePersonali: { status: true, label: switchNames(myLanguage,10)}, 
-  bridgeDuration: 3, 
-  firstDayOfWeek: 1,
-};
-
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
   return Colors[colorScheme ?? 'light'];
 };
 
+export const PREFERENCES = {
+  domenica:           { status: true, label: localizedDays[6].charAt(0).toUpperCase() + localizedDays[6].slice(1) },
+  sabato:             { status: true, label: localizedDays[5].charAt(0).toUpperCase() + localizedDays[5].slice(1) },
+  venerdi:            { status: false, label: localizedDays[4].charAt(0).toUpperCase() + localizedDays[4].slice(1) },
+  giovedi:            { status: false, label: localizedDays[3].charAt(0).toUpperCase() + localizedDays[3].slice(1) },
+  mercoledi:          { status: false, label: localizedDays[2].charAt(0).toUpperCase() + localizedDays[2].slice(1) },
+  martedi:            { status: false, label: localizedDays[1].charAt(0).toUpperCase() + localizedDays[1].slice(1) },
+  lunedi:             { status: false, label: localizedDays[0].charAt(0).toUpperCase() + localizedDays[0].slice(1) },
+  pasqua:             { status: true, label: switchNames(myLanguage,0) },
+  lunediDellAngelo:   { status: true, label: switchNames(myLanguage,1) },
+  ascensione:         { status: false, label: switchNames(myLanguage,2) },
+  pentecoste:         { status: false, label: switchNames(myLanguage,3) },
+  lunediPentecoste:   { status: false, label: switchNames(myLanguage,4) },
+  corpusDomini:       {status: false, label: switchNames(myLanguage,5)}, 
+  festivitaNazionali: { status: true, label: switchNames(myLanguage,7)}, 
+  festivitaLocali:    { status: true, label: switchNames(myLanguage,8)}, 
+  festivitaPersonali: { status: true, label: switchNames(myLanguage,9)}, 
+  feriePersonali:     { status: true, label: switchNames(myLanguage,10)}, 
+  bridgeDuration:     3, 
+  firstDayOfWeek:     1,
+};
+
+// SALVA PREFERENZE SUL LOCAL STORAGE
 const savePreferences = async () => {
   try {
     const jsonValue = JSON.stringify(PREFERENCES);
     await AsyncStorage.setItem('PREFERENCES_KEY', jsonValue);
-    //console.log('Preferences saved successfully');
-    //console.log(jsonValue);
+    console.log('Preferences saved successfully');
+    // console.log(jsonValue);
   } catch (e) {
     console.error('Failed to save preferences:', e);
   }
 };
 
+// CARICA PREFERENZE DAL LOCAL STORAGE
 const loadPreferences = async () => {
   try {
     const jsonValue = await AsyncStorage.getItem('PREFERENCES_KEY');
@@ -176,12 +172,13 @@ const loadPreferences = async () => {
 function PreferenceSwitch ({ preferenceKey }: { preferenceKey: keyof typeof PREFERENCES }) {
   const colors = useThemeColors();
   const [isEnabled, setIsEnabled] = useState((PREFERENCES[preferenceKey] as { status: boolean }).status);
-
+  
+  // Sincronizza lo stato locale con la costante globale
   useEffect(() => {
-    // Sincronizza lo stato locale con la costante globale
     setIsEnabled((PREFERENCES[preferenceKey] as { status: boolean }).status);
   }, [PREFERENCES[preferenceKey].status]);
 
+  // cambia stato dello swiwtch
   const toggleSwitch = async () => {
     const newStatus = !isEnabled;
     setIsEnabled(newStatus);
@@ -189,6 +186,7 @@ function PreferenceSwitch ({ preferenceKey }: { preferenceKey: keyof typeof PREF
     await savePreferences();
   };
 
+  // STILE DELLO SWITCH
   const styles = StyleSheet.create({
     image: {      
       flex: 1,
@@ -207,6 +205,7 @@ function PreferenceSwitch ({ preferenceKey }: { preferenceKey: keyof typeof PREF
       fontWeight: '400',
     }
   });
+
   return (
     <View style={styles.preferenceRow as ViewStyle}>
       <Text style={styles.text}>{(PREFERENCES[preferenceKey] as { label: string }).label}</Text>
@@ -231,16 +230,31 @@ export default function Preferences() {
   const navigation = useNavigation();
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
+  // RICEVE DAL CONTEXT
+  const { 
+    preferences, setPreferences, // CONTEXT PREFERENCES
+    // newPersonalHolydays, setNewPersonalHolydays, // NUOVO
+    // personalHolydays, setPersonalHolydays, // --> MUORE COL REFACTORING
+    // nationalHolydays, setNationalHolydays,
+    // vacationPeriods, setVacationPeriods, // --> MUORE COL REFACTORING
+    // myCountry, setMyCountry,
+    } = useHolydays();
+  
+
+  // CARICA PREFERENZE DAL LOCAL STORAGE AL BOOT
   useEffect(() => {
     const initializePreferences = async () => {
       await loadPreferences();
       setPreferencesLoaded(true);
     };
     initializePreferences();
+    setPreferences(PREFERENCES); // nuova condivisione PREFERENCES su Context
   }, []);
 
+  // GESTISCE PULSANTE 'MODIFICA LISTA FESTIVITA'
   const handleEditHolydays = () => { navigation.navigate('holydays') };
 
+  // STILI PAGINA
   const styles = StyleSheet.create({
     scrollview: {
       width:'100%',
@@ -328,6 +342,11 @@ export default function Preferences() {
     },
   });
 
+  // AAGGIORNA CONTEXT A OGNI CAMBAIMENTO DI PREFERENCES
+  useEffect( () => {
+    setPreferences(PREFERENCES);
+  }, [PREFERENCES]);
+
   return (
     <ImageBackground 
       source= {useColorScheme() === 'light' ? 
@@ -361,6 +380,7 @@ export default function Preferences() {
               onChange={ async (value) => {
                 PREFERENCES.bridgeDuration = value;
                 savePreferences();
+                setPreferences(PREFERENCES); // SALVA PREFERENCES NEL CONTEXT
               }}
             />
           </View>                   

@@ -1,4 +1,4 @@
-import { PREFERENCES } from '@/app/(tabs)/preferences';
+//import { PREFERENCES } from '@/app/(tabs)/preferences';
 import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext';
 import { StatusBar } from 'expo-status-bar';
@@ -25,9 +25,11 @@ export default function HomeScreen() {
   const colors = useThemeColors();
  
   const { 
+    newPersonalHolydays,
     personalHolydays, setPersonalHolydays,
     vacationPeriods, setVacationPeriods,
     //regionalHolydays,
+    preferences, setPreferences,
     myCountry, setMyCountry
   } = useHolydays();
 
@@ -37,17 +39,16 @@ export default function HomeScreen() {
   // e forza il ricaricamento del calendario quando i dati cambiano.
   const calendarKey = useMemo(() =>
     JSON.stringify({
-      PREFERENCES,
-      personalHolydays,
-      //regionalHolydays,
-      vacationPeriods,
+      //PREFERENCES,
+      newPersonalHolydays,
+      preferences,
       myCountry
     }),
-    [PREFERENCES,
-      personalHolydays, 
-      //regionalHolydays, 
-      vacationPeriods,
-    myCountry]
+    [
+      //PREFERENCES,
+      newPersonalHolydays,
+      preferences,
+      myCountry]
   );
 
   // ANIMAZIONI
@@ -57,7 +58,6 @@ export default function HomeScreen() {
   const animationTimeout = useRef<NodeJS.Timeout | null>(null);
   const cloud01Anim = new Animated.Value(0); // NUVOLETTA 1
   const cloud02Anim = new Animated.Value(0); // NUVOLETTA 2
-  // const animationStarted = useRef(false);
 
   // ANIMAZIONE //////////////////////////////////////////////////////
   const startAnimation = () => {
@@ -197,8 +197,7 @@ export default function HomeScreen() {
             >
             <CalendarScreen 
               key={calendarKey} 
-              PREFERENCES={PREFERENCES}
-            /> 
+              PREFERENCES={preferences} /> 
           </Animated.View>
 
           {/* CONTAINER TESTO, MANINA E NUVOLETTE CHE A FINE ANIMAZIONE ESCE DALLA VIEW */}

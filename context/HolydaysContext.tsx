@@ -2,18 +2,11 @@ import React, { createContext, ReactNode, useContext, useState, useEffect } from
 import useLocalizationData from '@/app/data/data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales, } from 'expo-localization';
+import { PREFERENCES as DEFAULT_PREFERENCES } from '@/app/(tabs)/preferences';
 
 /* ============================================================================= 
     STORAGE DATI
 ============================================================================= */
-// const saveData = async (data: any, key: string) => {
-//   try {
-//     const jsonValue = JSON.stringify(data);
-//     await AsyncStorage.setItem(key, jsonValue);
-//   } catch (e) {
-//     console.error(`Errore ${key} nel salvataggio locale: `, e);
-//   }
-// };
 const loadData = async (key: string) => {
   try {
     const jsonValue = await AsyncStorage.getItem(key);
@@ -32,15 +25,15 @@ interface Holiday {
 }
 
 // old --> INTERFACCIA DI VacationPeriod --> MORIRA' COL REFACTORING
-interface VacationPeriod {
-  startDay: number;
-  startMonth: number;
-  startYear: number;
-  endDay: number;
-  endMonth: number;
-  endYear: number;
-  description: string;
-}
+// interface VacationPeriod {
+//   startDay: number;
+//   startMonth: number;
+//   startYear: number;
+//   endDay: number;
+//   endMonth: number;
+//   endYear: number;
+//   description: string;
+// }
 
 // new --> INTERFACCIA DI NewHolyday ***
 interface NewHolyday {
@@ -53,18 +46,19 @@ interface NewHolyday {
 
 // INTERFACCIA DEL CONTEXT ---------------------------------------------------------------------
 interface HolydaysContextType {
-
   // VECCHI MA ANCORA USATI
   personalHolydays: Holiday[]; setPersonalHolydays: React.Dispatch< React.SetStateAction<Holiday[]> >; // OLD --> MORIRA' COL REFACTORING
   myCountry: string; setMyCountry: React.Dispatch<React.SetStateAction<string>>; // OK, RESTA
   nationalHolydays: Holiday[]; setNationalHolydays: React.Dispatch<React.SetStateAction<Holiday[]>>; // OK, RESTA
-
   // NUOVO ARRAY newPersonalHolydays
   newPersonalHolydays: NewHolyday[]; setNewPersonalHolydays: React.Dispatch< React.SetStateAction<NewHolyday[]> >; // NEW
+  // PREFERENCES
+  preferences: typeof DEFAULT_PREFERENCES;
+  setPreferences: React.Dispatch<React.SetStateAction<typeof DEFAULT_PREFERENCES>>;
 
   // VECCHI TYPE - NON SARANNO PIU' USATI
-  regionalHolydays: Holiday[]; setRegionalHolydays: React.Dispatch<React.SetStateAction<Holiday[]>>; // --> MORIRA' COL REFACTORING
-  vacationPeriods: VacationPeriod[]; setVacationPeriods: React.Dispatch<React.SetStateAction<VacationPeriod[]>>; // --> MORIRA' COL REFACTORING
+  // regionalHolydays: Holiday[]; setRegionalHolydays: React.Dispatch<React.SetStateAction<Holiday[]>>; // --> MORIRA' COL REFACTORING
+  // vacationPeriods: VacationPeriod[]; setVacationPeriods: React.Dispatch<React.SetStateAction<VacationPeriod[]>>; // --> MORIRA' COL REFACTORING
 }
 
 // CREAZIONE DEL CONTEXT VERO E PROPRIO PER PASSARE I DATI IN TUTTA L'APP ======================
@@ -87,15 +81,16 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
   const myLanguage = getLocales()[0].languageTag;
 
   // DEFINIZIONI COSTANTI
-  const [personalHolydays, setPersonalHolydays] = useState<Holiday[]>([]);            // OLD --> personalHolydays
+  // const [personalHolydays, setPersonalHolydays] = useState<Holiday[]>([]);            // OLD --> personalHolydays
 
   const [newPersonalHolydays, setNewPersonalHolydays] = useState<NewHolyday[]>([]);   // NEW --> newPersonalHolydays
 
-  const [ vacationdisabledHolydays, toggleHolydaysDisabled ] = useState();
-  const [vacationPeriods, setVacationPeriods] = useState<VacationPeriod[]>([]);
+  // const [ vacationdisabledHolydays, toggleHolydaysDisabled ] = useState();
+  // const [vacationPeriods, setVacationPeriods] = useState<VacationPeriod[]>([]);
   const [nationalHolydays, setNationalHolydays] = useState<Holiday[]>([]); // NON LO INIZILIZZO ADESSO, LO FA holydays.tsx ALLA CHIAMATA
   const [myCountry, setMyCountry] = useState(myLanguage); // VALORE DELLA DROPDOWN (es: 'it-IT), INIZIALMENTE = locale
-  
+  const [preferences, setPreferences] = useState(DEFAULT_PREFERENCES);
+
   // CONVERTE I VALORI DI TIPO string IN VALORI TIPO Data PER startDate E endDate
   const convertDates = (holydaysArray: any) => {
   if (!holydaysArray || !Array.isArray(holydaysArray)) return holydaysArray;
@@ -111,8 +106,8 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
   // INIZIALIZZAZIONE DATI DA LOCAL STORAGE ///////////////////////////
   useEffect(() => {
     const initializeData = async () => {
-      const storedPersonalHolydays = await loadData('personalHolydays');              
-        if (storedPersonalHolydays) { setPersonalHolydays(storedPersonalHolydays); }  // OLD --> MORIRA' COL REFACTORING
+      // const storedPersonalHolydays = await loadData('personalHolydays');              
+      //   if (storedPersonalHolydays) { setPersonalHolydays(storedPersonalHolydays); }  // OLD --> MORIRA' COL REFACTORING
 
       const newStoredPersonalHolydays = await loadData('newPersonalHolydays');        
         if (newStoredPersonalHolydays) { 
@@ -123,19 +118,23 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
       const storedMyCountry = await loadData('myCountry');
         if (storedMyCountry) { setMyCountry(storedMyCountry); } // OK CONTINUA
 
-      const storedVacationPeriods = await loadData('vacationPeriods');
-        if (storedVacationPeriods) { setVacationPeriods(storedVacationPeriods); } // OLD --> MORIRA' COL REFACTORING
+      // const storedVacationPeriods = await loadData('vacationPeriods');
+      //   if (storedVacationPeriods) { setVacationPeriods(storedVacationPeriods); } // OLD --> MORIRA' COL REFACTORING
+
+      const storedPreferences = await loadData('PREFERENCES_KEY');
+      if (storedPreferences) setPreferences(storedPreferences);
     };  
     initializeData(); // CHIAMATA FUNZ. LETTURA
   }, []);
 
   return (
     <HolydaysContext.Provider value={{
-      personalHolydays,     setPersonalHolydays,    // --> VECCHIO GIORNI PERSONALI --> MORIRA' COL REFACTORING
       newPersonalHolydays,  setNewPersonalHolydays, // --> NUOVO GIORNI PERSONALI ***
-      vacationPeriods,      setVacationPeriods,     // FERIE --> MORIRA' COL REFACTORING
+      // personalHolydays,     setPersonalHolydays,    // --> VECCHIO GIORNI PERSONALI --> MORIRA' COL REFACTORING
+      // vacationPeriods,      setVacationPeriods,     // FERIE --> MORIRA' COL REFACTORING
       nationalHolydays,     setNationalHolydays,    // FSTIVITA NAZIONALI --- ok
       myCountry,            setMyCountry,           // DROPDOWN FESTIVITA PER PAESE
+      preferences,          setPreferences,         // PREFERENZE
       }}>
       {children}
     </HolydaysContext.Provider>

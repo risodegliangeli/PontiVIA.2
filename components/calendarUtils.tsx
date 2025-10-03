@@ -17,15 +17,15 @@ interface Holiday {
     }
 
 // TYPE VacationPeriod (VECCHIO)
-interface VacationPeriod {
-    startDay: number;
-    startMonth: number;
-    startYear: number;
-    endDay: number;
-    endMonth: number;
-    endYear: number;
-    description: string;
-    }
+// interface VacationPeriod {
+//     startDay: number;
+//     startMonth: number;
+//     startYear: number;
+//     endDay: number;
+//     endMonth: number;
+//     endYear: number;
+//     description: string;
+//     }
 
 // TYPE NewHoliday (NUOVO)
 type NewHolyday = {
@@ -76,9 +76,9 @@ const getCountryNationalHolidays = (
     myCountry: string,
     year: number,
     newPersonalHolydays: NewHolyday[],
-    personalHolydays: Holiday[],
-    regionalHolydays: Holiday[],
-    vacationPeriods: VacationPeriod[]
+    // personalHolydays: Holiday[],
+    // regionalHolydays: Holiday[],
+    // vacationPeriods: VacationPeriod[]
     ) => {   
     
     // ARRAY DOVE SONO SALVATI I DATI
@@ -91,18 +91,14 @@ const getCountryNationalHolidays = (
         }
 
     /* + + + + + + + + + + + + + + + + + + + + + + + + + + + +
-    + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 
     REFACTORING > ok
-    le festività personali salvate in 'newPersonalHolydays' vanno trasformate
-    in item gg/mm/description e aggiunte all'array 'holidays'
 
     + + + + + + + + + + + + + + + + + + + + + + + + + + + + */
 
     if (PREFERENCES.festivitaPersonali.status) {
         const tempNewPersonalHolydays = checkPersonalHolydays(newPersonalHolydays, year);
         holidays.push(...tempNewPersonalHolydays);
-        //console.log('--> holidays[]\n',JSON.stringify(holidays, null, 1));
         }
     /* + + + + + + + + + + + + + + + + + + + + + + + + + + + + 
     + + + + + + + + + + + + + + + + + + + + + + + + + + +*/
@@ -129,6 +125,7 @@ const getCountryNationalHolidays = (
         description: dataLabel(myLanguage,0) 
     });
 
+    // CREO VARIABILE TIPO Data PER I CALCOLI CHE SEGUONO
     let currentPasqua = createUTCDate(year, monthOfEaster - 1, dayOfEaster);
 
     // AGGIUNGO LUNEDI DELL'ANGELO A holidays SE LO SWITCH =true
@@ -179,40 +176,6 @@ const getCountryNationalHolidays = (
             description: dataLabel(myLanguage,5)
         });
     }
-
-    // AGGIUNGO FESTIVITA PERSONALI A holidays (VALIDE PER OGNI ANNO)
-    // commentato perché viene aggiunto sopra ^
-    // PREFERENCES.festivitaPersonali.status && holidays.push(...personalHolydays);
-
-    // AGGIUNGO FESTIVITA LOCALI A holidays (VALIDE PER OGNI ANNO)
-    // PREFERENCES.festivitaLocali.status && holidays.push(...regionalHolydays);
-
-    // AGGIUNGO PERIODI DI FERIE RELATIVI ALL'ANNO IN ESAME (year)
-    // commentato perché parte del rafactoring ^
-    // if (PREFERENCES.feriePersonali.status === true) {
-    //     vacationPeriods.forEach((period, item) => {
-    //         // PER CIASCUN PERIODO LEGGO DATA DI INIZIO E DATA FINALE
-    //         const startDate: Date = createUTCDate(period.startYear, period.startMonth - 1, period.startDay);
-    //         const endDate: Date = createUTCDate(period.endYear, period.endMonth - 1, period.endDay);
-
-    //         // PARTO COL LOOP DALLA DATA DI INIZIO 
-    //         let currentDate: Date = startDate;
-    //         // FINO ALLA DATA FINALE
-    //         while (currentDate <= endDate) {
-    //             // console.log(`currentDate: ${currentDate}`);
-    //             if (currentDate.getFullYear() === year) {
-    //                 // CONTROLLA SE GIORNO E MESE SONO ANCHE FESTIVITA NAZIONALE
-    //                 const foundHoliday = countryHolydays.find( (local) =>
-    //                     local.day === currentDate.getUTCDate() && local.month === currentDate.getUTCMonth()
-    //                     );
-    //                 // SE NON SONO FEST. NAZ. ALLORA AGGIUNGE A holidays ALTRIMENTI PREVALE FESTIVITA NAZIONALE
-    //                 !foundHoliday && holidays.push({ day: currentDate.getUTCDate(), month: currentDate.getUTCMonth(), description: period.description });
-    //             }
-    //             // AGGIUNGE UN GIORNO E RIPETE IL LOOP
-    //             currentDate = createUTCDate(currentDate.getUTCFullYear(), currentDate.getUTCMonth(), currentDate.getUTCDate() + 1);
-    //         };
-    //     });
-    // }
 
     // RESTITUISCE ARRAY ORDINATO CRESCENTE
     holidays.sort((a, b) => {
@@ -335,9 +298,9 @@ const createCalendarGrid = (
         monthsTotal: number, 
         bridgeLength = PREFERENCES.bridgeDuration, 
         newPersonalHolydays: NewHolyday[],
-        personalHolydays: Holiday[], 
-        regionalHolydays: Holiday[], 
-        vacationPeriods: VacationPeriod[], 
+        // personalHolydays: Holiday[], 
+        // regionalHolydays: Holiday[], 
+        // vacationPeriods: VacationPeriod[], 
         myCountry: string,  // <----- arriva da * useEffect * di calendarScreen.tsx
     ) => {
 
@@ -354,7 +317,12 @@ const createCalendarGrid = (
     const getHolidaysForYear = (year: number) => {
         if (!holidaysByYear[year]) {
             holidaysByYear[year] = getCountryNationalHolidays(
-                myCountry, year, newPersonalHolydays, personalHolydays, regionalHolydays, vacationPeriods
+                myCountry, 
+                year, 
+                newPersonalHolydays, 
+                // personalHolydays, 
+                // regionalHolydays, 
+                // vacationPeriods
             );
         }
         return holidaysByYear[year];
