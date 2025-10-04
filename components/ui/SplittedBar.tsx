@@ -1,10 +1,9 @@
+import React, { useEffect, useRef, useState } from 'react';
 import { Colors } from '@/constants/Colors';
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
-import React, { useEffect, useRef, useState } from 'react';
 import { getLocales,  } from 'expo-localization';
 import { splittedBarLabel as splittedLabels } from '@/components/dataLabel';
-
 import {
   Animated,
   Dimensions,
@@ -41,7 +40,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
   
   useEffect( () => {
     if (windowWidth >= 320 && windowWidth <= 360) {
-      setSplittedTotalWidth(windowWidth * 0.95);
+      setSplittedTotalWidth(windowWidth * 0.90);
     } else {
       setSplittedTotalWidth(350);
     }

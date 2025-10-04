@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { addDays, } from 'date-fns';
-import { PREFERENCES } from '@/app/(tabs)/preferences';
+// import { PREFERENCES } from '@/app/(tabs)/preferences';
 import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
 import { getLocales,  } from 'expo-localization';
-import { Platform } from 'react-native';
+// import { Platform } from 'react-native';
 //import { da } from 'date-fns/locale'; // importa il Danese???
 import { dataLabel } from '@/components/dataLabel';
 import  checkPersonalHolydays  from '@/components/checkPersonalHolydays';
@@ -69,7 +69,7 @@ const getCountryNationalHolidays = (
     ) => {   
 
     console.log('[GETCOUNTRYNATIONALHOLYDAYS]');
-    console.log('- - myPreferences (ascensione/status):', myPreferences.ascensione.status);
+    console.log('- - myPreferences (es ascensione/status):', myPreferences.ascensione.status);
     
     // ARRAY DOVE SONO SALVATI I DATI
     const holidays = [];
@@ -177,7 +177,7 @@ const getCountryNationalHolidays = (
     });
 
     console.log('- - script terminato');
-    console.log(holidays);
+    //console.log('- - holydays: ', holidays);
    
     return holidays;
 };
@@ -185,7 +185,11 @@ const getCountryNationalHolidays = (
 /* ============================================================================= 
 CALCOLO DEL CALENDARIO
 ============================================================================== */
-const getDayType = (date: Date, holidays: { day: number; month: number; description: string }[]) => {
+const getDayType = (
+    date: Date, 
+    holidays: { day: number; month: number; description: string }[],
+    myPreferences
+    ) => {
 
     const dayOfWeek = getUTCDayOfWeek(date); // 0 = Domenica, 6 = Sabato
 
@@ -193,7 +197,7 @@ const getDayType = (date: Date, holidays: { day: number; month: number; descript
     let foundHoliday: { day: number; month: number; description: string } | undefined = undefined; 
 
     // Controlla sempre le festività personali e locali se gli switch sono attivi
-    if (PREFERENCES.festivitaPersonali.status || PREFERENCES.festivitaLocali.status || PREFERENCES.festivitaNazionali.status || PREFERENCES.feriePersonali.status) {
+    if (myPreferences.festivitaPersonali.status || myPreferences.festivitaLocali.status || myPreferences.festivitaNazionali.status || myPreferences.feriePersonali.status) {
         foundHoliday = holidays.find(
             (holiday) => holiday.day === date.getUTCDate() && holiday.month === date.getUTCMonth()
         );
@@ -203,13 +207,13 @@ const getDayType = (date: Date, holidays: { day: number; month: number; descript
     }
 
     // 2) GIORNI DELLA SETTIMANA FESTIVI IMPOSTATI IN PREFERENZE?
-    if (dayOfWeek === 0 && PREFERENCES.domenica.status) { return { value: 1, type: undefined }; }
-    if (dayOfWeek === 6 && PREFERENCES.sabato.status)   { return { value: 1, type: undefined }; }      
-    if (dayOfWeek === 5 && PREFERENCES.venerdi.status)  { return { value: 1, type: undefined }; }
-    if (dayOfWeek === 4 && PREFERENCES.giovedi.status)  { return { value: 1, type: undefined }; }
-    if (dayOfWeek === 3 && PREFERENCES.mercoledi.status) {return { value: 1, type: undefined }; }
-    if (dayOfWeek === 2 && PREFERENCES.martedi.status)  { return { value: 1, type: undefined }; } 
-    if (dayOfWeek === 1 && PREFERENCES.lunedi.status)   { return { value: 1, type: undefined }; }
+    if (dayOfWeek === 0 && myPreferences.domenica.status) { return { value: 1, type: undefined }; }
+    if (dayOfWeek === 6 && myPreferences.sabato.status)   { return { value: 1, type: undefined }; }      
+    if (dayOfWeek === 5 && myPreferences.venerdi.status)  { return { value: 1, type: undefined }; }
+    if (dayOfWeek === 4 && myPreferences.giovedi.status)  { return { value: 1, type: undefined }; }
+    if (dayOfWeek === 3 && myPreferences.mercoledi.status) {return { value: 1, type: undefined }; }
+    if (dayOfWeek === 2 && myPreferences.martedi.status)  { return { value: 1, type: undefined }; } 
+    if (dayOfWeek === 1 && myPreferences.lunedi.status)   { return { value: 1, type: undefined }; }
 
     // 3) SE NESSUNO DI QUESTI ALLORA --> GIORNO FERIALE
     return { value: undefined, type: undefined };
@@ -295,8 +299,7 @@ const createCalendarGrid = (
         myCountry: string, 
         myPreferences,
     ) => {
-    console.log('[CREATECALENDARGRID] funct');
-    console.log('--> myPreferences da props:', JSON.stringify(myPreferences)); 
+    console.log('[CREATECALENDARGRID]');
    
     // AZZERO L'ARRAY CHE CONTERRA' LA GRIGLIA
     const grid = [];
@@ -356,7 +359,7 @@ const createCalendarGrid = (
             const holidaysToUse = dateYear === year ? currentYearHolidays : 
                                  dateYear === prevYear ? prevYearHolidays : 
                                  getHolidaysForYear(dateYear);
-            const { value, type } = getDayType(dateToAdd, holidaysToUse);
+            const { value, type } = getDayType(dateToAdd, holidaysToUse, myPreferences);
             monthData.table.push([dateToAdd, value, type, false]);
         }
 
@@ -364,7 +367,7 @@ const createCalendarGrid = (
         const daysInCurrentMonth = getDaysInMonth(year, month);
         for (let j = 1; j <= daysInCurrentMonth; j++) {
             const dateToAdd = createUTCDate(year, month, j);
-            const { value, type } = getDayType(dateToAdd, currentYearHolidays);
+            const { value, type } = getDayType(dateToAdd, currentYearHolidays, myPreferences);
             monthData.table.push([dateToAdd, value, type, true]);
         }
 
@@ -376,7 +379,7 @@ const createCalendarGrid = (
             const holidaysToUse = dateYear === year ? currentYearHolidays : 
                                  dateYear === nextYear ? nextYearHolidays : 
                                  getHolidaysForYear(dateYear);
-            const { value, type } = getDayType(dateToAdd, holidaysToUse);
+            const { value, type } = getDayType(dateToAdd, holidaysToUse, myPreferences);
             monthData.table.push([dateToAdd, value, type, false]);
             dayOfNextMonth++;
         }

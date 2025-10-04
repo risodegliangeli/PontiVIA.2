@@ -3,7 +3,7 @@ import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo, useRef,  } from 'react';
-import { Animated, Easing, ImageBackground, StyleSheet, useColorScheme, Text, Pressable, TouchableOpacity } from 'react-native';
+import { Animated, Easing, ImageBackground, StyleSheet, useColorScheme, Text, TouchableOpacity } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { MovingHands } from '@/components/ui/MovingHands'; // MIO
 // import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -21,21 +21,17 @@ const useThemeColors = () => {
                                       
 ########################################################################################################### */
 export default function HomeScreen() {
+  console.log(`[INDEX]`);
 
   // GESTIONE COLORE
   const colors = useThemeColors();
  
   const { 
     newPersonalHolydays,
-    //personalHolydays, setPersonalHolydays,
-    // vacationPeriods, setVacationPeriods,
-    //regionalHolydays,
-    preferences, setPreferences,
     myPreferences, setMyPreferences,
-    myCountry, setMyCountry,
+    myCountry, 
   } = useHolydays();
-
-  console.log(`[INDEX]: myPreferences riceuto dal Context`);
+  console.log(`- - [INDEX]: myPreferences riceuto dal Context`);
 
   /* ============================================================================= 
       LETTURA STORAGE DATI
@@ -54,30 +50,20 @@ export default function HomeScreen() {
     const initializeData = async () => {
       const myStoredPreferences = await loadData('PREFERENCES_KEY');
       if (myStoredPreferences) setMyPreferences(myStoredPreferences);
-
       console.log(`[INDEX]: lettura myPreferencs al boot`);
-
     };  
     initializeData(); 
   }, [myPreferences]);
 
   const myLanguage = (getLocales()[0].languageTag).slice(0,2); // 'it', 'fr', ecc
 
-  // MEMORIZZA IL KEY DEL CALENDARIO
-  // che forza il ricaricamento del calendario quando i dati cambiano.
+  // MEMORIZZA LA KEY DEL CALENDARIO
+  // la key forza il ricaricamento del calendario quando i dati cambiano.
   const calendarKey = useMemo(() =>
-    JSON.stringify({
-      //PREFERENCES,
-      newPersonalHolydays,
-      //preferences,
-      myPreferences,
-      myCountry
-    }),
+    JSON.stringify({newPersonalHolydays, myPreferences, myCountry}),
     [
-      //PREFERENCES,
-      JSON.stringify(newPersonalHolydays),
-      //preferences,
-      JSON.stringify(myPreferences),
+      newPersonalHolydays,
+      myPreferences,
       myCountry
     ]
   );

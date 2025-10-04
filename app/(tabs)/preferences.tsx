@@ -169,10 +169,10 @@ export default function Preferences() {
 
   // AGGANCIA LE VARIABILI myPreferences E preferences DAL CONTEXT
   const { 
-    preferences, setPreferences, // CONTEXT PREFERENCES
+    //preferences, setPreferences, // CONTEXT PREFERENCES
     myPreferences, setMyPreferences,
     } = useHolydays();
-    console.log(`[PREFERENCES]> myPreferences ricevute dal Context: ${JSON.stringify(myPreferences)}`);
+    //console.log(`[PREFERENCES]> myPreferences ricevute dal Context: ${JSON.stringify(myPreferences)}`);
 
   // CARICA VARIABILE 'PREFERENCES' DAL LOCAL STORAGE
   const loadPreferences = async () => {
@@ -194,7 +194,7 @@ export default function Preferences() {
       setPreferencesLoaded(true);
     };
     initializePreferences();
-    setPreferences(PREFERENCES);    // INIZIALIZZA VARIABILE prferences LETTE DALLO STORAGE
+    //setPreferences(PREFERENCES);    // INIZIALIZZA VARIABILE prferences LETTE DALLO STORAGE
     setMyPreferences(PREFERENCES);  // IDEM myPreferences
 
     console.log(`[PREFERENCES}> myPreferences inizializzato al boot: ${JSON.stringify(myPreferences)}`);
@@ -293,9 +293,9 @@ export default function Preferences() {
 
   // AGGIORNA CONTEXT A OGNI CAMBAIMENTO DI PREFERENCES
   useEffect( () => {
-    setPreferences(PREFERENCES);
+    //setPreferences(PREFERENCES);
     setMyPreferences(PREFERENCES);
-    console.log('[]PREFERENCES]> useEffect: aggiorna myPreferences');
+    // console.log('[]PREFERENCES]> useEffect: aggiorna myPreferences');
   }, [PREFERENCES]);
 
 
@@ -319,7 +319,7 @@ export default function Preferences() {
       setIsEnabled(newStatus);
       (PREFERENCES[preferenceKey] as { status: boolean }).status = newStatus;
       await savePreferences();
-      setMyPreferences(PREFERENCES);
+      setMyPreferences( { ...PREFERENCES });
     };
 
     // STILE DELLO SWITCH
@@ -395,8 +395,8 @@ export default function Preferences() {
               onChange={ async (value) => {
                 PREFERENCES.bridgeDuration = value;
                 savePreferences();
-                setPreferences(PREFERENCES); // SALVA PREFERENCES NEL CONTEXT
-                setMyPreferences(PREFERENCES);
+                //setPreferences(PREFERENCES); // SALVA PREFERENCES NEL CONTEXT
+                setMyPreferences({ ...PREFERENCES });
                 console.log(`[PREFERENCES]> aggiornata durata: ${myPreferences.bridgeDuration}`);
                 console.log(`[PREFERENCES]> myPreferences: ${JSON.stringify(myPreferences)}`);
               }}

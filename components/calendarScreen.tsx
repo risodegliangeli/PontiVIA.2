@@ -20,8 +20,9 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { addMonths, isWithinInterval } from "date-fns";
 import * as Calendar from 'expo-calendar';
 import { getLocales,  } from 'expo-localization';
-import { PREFERENCES } from '@/app/(tabs)/preferences';
-import { useFilterScreenChildren } from 'expo-router/build/layouts/withLayoutContext';
+import { calendarScrenLabels as dataLabel } from '@/components/dataLabel';
+// import { PREFERENCES } from '@/app/(tabs)/preferences';
+// import { useFilterScreenChildren } from 'expo-router/build/layouts/withLayoutContext';
 
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
 const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
@@ -43,171 +44,155 @@ const useThemeColors = () => {
 
 const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
-const dataLabel: any = {
-  'it': [
-    'Ponte!',                                   // 0
-    'PontiVIA! ha trovato questo ponte per te', // 1
-    'ponti trovati!',                           // 2
-    'ponte trovato!',                           // 3
-    'Dal ',                                     // 4
-    ' fino al ',                                // 5
-    ' giorni)',                                 // 6
-    'Il ',                                      // 7
-    ' (1 giorno)',                              // 8
-    'Possibile ponte!',                         // 9
-    'Annulla',                                  // 10
-    'Aggiungi'                                  // 11
-    ],
-  "fr":[
-    'Pont!',                                    // 0
-    'PontiVIA! a trouvé ce pont pour vous',     // 1
-    'ponts trouvés!',                           // 2
-    'pont trouvés!',                            // 3
-    'Du ',                                      // 4
-    ' au ',                                     // 5
-    ' jours)',                                  // 6
-    'Le ',                                      // 7
-    ' (1 jour)',                                // 8
-    'Pont possible!',                           // 9
-    'Annuler',
-    'Ajouter'
-    ],
-  'es':[
-    '¡Puente!',                                 // 0
-    '¡PontiVIA! encontró este puente para ti',  // 1
-    'puentes encontrados!',                     // 2
-    'puente encontrado!',                       // 3
-    'Del ',                                     // 4
-    ' al ',                                     // 5
-    ' días)',                                   // 6
-    'El ',                                      // 7
-    ' (1 día)',                                 // 8
-    '¡Posible puente!',                         // 9
-    'Cancelar',
-    'Añadir'
-    ],
-  "de":[
-    'Brücke!',                                   // 0
-    'PontiVIA! hat diese Brücke für dich gefunden', // 1
-    'Brücken gefunden!',                         // 2
-    'Brücke gefunden!',                          // 3
-    'Vom  ',                                     // 4
-    ' bis am ',                                  // 5
-    ' Tage)',                                    // 6
-    'Am ',                                       // 7
-    ' (1 Tag)',                                  // 8
-    'Mögliche Brücke!',                          // 9
-    'Abbrechen',
-    'Hinzufügen'
-    ],  
-  'en':[
-    'Bridge!',                                   // 0
-    'PontiVIA! found this bridge for you', // 1
-    'bridges found!',                           // 2
-    'bridge found!',                           // 3
-    'From ',                                     // 4
-    ' to ',                                // 5
-    ' days)',                                 // 6
-    'On ',                                      // 7
-    ' (1 day)',                              // 8
-    'Possible bridge!',                         // 9
-   'Cancel',
-    'Add'
-     ],
-  'nl':[
-    'Brug!',                                    // 0
-    'PontiVIA! vond deze brug voor jou',       // 1
-    'bruggen gevonden!',                       // 2
-    'brug gevonden!',                          // 3
-    'Van ',                                    // 4
-    ' tot ',                                   // 5
-    ' dagen)',                                 // 6
-    'Op ',                                     // 7
-    ' (1 dag)',                                // 8
-    'Mogelijke brug!',                         // 9
-    'Annuleren',                               // 10
-    'Toevoegen',                               // 11
-    ],
-  'pt':[
-    'Ponte!',                                  // 0
-    'PontiVIA! encontrou esta ponte para você', // 1
-    'pontes encontradas!',                     // 2
-    'ponte encontrada!',                       // 3
-    'De ',                                     // 4
-    ' até ',                                   // 5
-    ' dias)',                                  // 6
-    'Em ',                                     // 7
-    ' (1 dia)',                                // 8
-    'Ponte possível!',                         // 9
-    'Cancelar',                                // 10
-    'Adicionar',                               // 11
-  ],
-  'hr': [
-    'Most!',                                   // 0
-    'PontiVIA! je pronašao ovaj most za tebe', // 1
-    'mostovi pronađeni!',                      // 2
-    'most pronađen!',                          // 3
-    'Od ',                                     // 4
-    ' do ',                                    // 5
-    ' dana)',                                  // 6
-    'Na ',                                     // 7
-    ' (1 dan)',                                // 8
-    'Moguć most!',                             // 9
-    'Otkaži',                                  // 10
-    'Dodaj',                                   // 11
-  ],
-  'si': [
-    'Most!',                                   // 0
-    'PontiVIA! je našel ta most za tebe',      // 1
-    'mostovi najdeni!',                        // 2
-    'most najden!',                            // 3
-    'Od ',                                     // 4
-    ' do ',                                    // 5
-    ' dni)',                                   // 6
-    'Na ',                                     // 7
-    ' (1 dan)',                                // 8
-    'Možen most!',                             // 9
-    'Prekliči',                                // 10
-    'Dodaj',                                   // 11
-  ],
-  'gr': [
-    'Γέφυρα!',                                 // 0
-    'Το PontiVIA! βρήκε αυτή τη γέφυρα για σας', // 1
-    'γέφυρες βρέθηκαν!',                       // 2
-    'γέφυρα βρέθηκε!',                         // 3
-    'Από ',                                    // 4
-    ' έως ',                                   // 5
-    ' μέρες)',                                 // 6
-    'Στις ',                                   // 7
-    ' (1 μέρα)',                               // 8
-    'Πιθανή γέφυρα!',                          // 9
-    'Ακύρωση',                                 // 10
-    'Προσθήκη',                                // 11
-  ]
-};
+// const dataLabel: any = {
+//   'it': [
+//     'Ponte!',                                   // 0
+//     'PontiVIA! ha trovato questo ponte per te', // 1
+//     'ponti trovati!',                           // 2
+//     'ponte trovato!',                           // 3
+//     'Dal ',                                     // 4
+//     ' fino al ',                                // 5
+//     ' giorni)',                                 // 6
+//     'Il ',                                      // 7
+//     ' (1 giorno)',                              // 8
+//     'Possibile ponte!',                         // 9
+//     'Annulla',                                  // 10
+//     'Aggiungi'                                  // 11
+//     ],
+//   "fr":[
+//     'Pont!',                                    // 0
+//     'PontiVIA! a trouvé ce pont pour vous',     // 1
+//     'ponts trouvés!',                           // 2
+//     'pont trouvés!',                            // 3
+//     'Du ',                                      // 4
+//     ' au ',                                     // 5
+//     ' jours)',                                  // 6
+//     'Le ',                                      // 7
+//     ' (1 jour)',                                // 8
+//     'Pont possible!',                           // 9
+//     'Annuler',
+//     'Ajouter'
+//     ],
+//   'es':[
+//     '¡Puente!',                                 // 0
+//     '¡PontiVIA! encontró este puente para ti',  // 1
+//     'puentes encontrados!',                     // 2
+//     'puente encontrado!',                       // 3
+//     'Del ',                                     // 4
+//     ' al ',                                     // 5
+//     ' días)',                                   // 6
+//     'El ',                                      // 7
+//     ' (1 día)',                                 // 8
+//     '¡Posible puente!',                         // 9
+//     'Cancelar',
+//     'Añadir'
+//     ],
+//   "de":[
+//     'Brücke!',                                   // 0
+//     'PontiVIA! hat diese Brücke für dich gefunden', // 1
+//     'Brücken gefunden!',                         // 2
+//     'Brücke gefunden!',                          // 3
+//     'Vom  ',                                     // 4
+//     ' bis am ',                                  // 5
+//     ' Tage)',                                    // 6
+//     'Am ',                                       // 7
+//     ' (1 Tag)',                                  // 8
+//     'Mögliche Brücke!',                          // 9
+//     'Abbrechen',
+//     'Hinzufügen'
+//     ],  
+//   'en':[
+//     'Bridge!',                                   // 0
+//     'PontiVIA! found this bridge for you', // 1
+//     'bridges found!',                           // 2
+//     'bridge found!',                           // 3
+//     'From ',                                     // 4
+//     ' to ',                                // 5
+//     ' days)',                                 // 6
+//     'On ',                                      // 7
+//     ' (1 day)',                              // 8
+//     'Possible bridge!',                         // 9
+//    'Cancel',
+//     'Add'
+//      ],
+//   'nl':[
+//     'Brug!',                                    // 0
+//     'PontiVIA! vond deze brug voor jou',       // 1
+//     'bruggen gevonden!',                       // 2
+//     'brug gevonden!',                          // 3
+//     'Van ',                                    // 4
+//     ' tot ',                                   // 5
+//     ' dagen)',                                 // 6
+//     'Op ',                                     // 7
+//     ' (1 dag)',                                // 8
+//     'Mogelijke brug!',                         // 9
+//     'Annuleren',                               // 10
+//     'Toevoegen',                               // 11
+//     ],
+//   'pt':[
+//     'Ponte!',                                  // 0
+//     'PontiVIA! encontrou esta ponte para você', // 1
+//     'pontes encontradas!',                     // 2
+//     'ponte encontrada!',                       // 3
+//     'De ',                                     // 4
+//     ' até ',                                   // 5
+//     ' dias)',                                  // 6
+//     'Em ',                                     // 7
+//     ' (1 dia)',                                // 8
+//     'Ponte possível!',                         // 9
+//     'Cancelar',                                // 10
+//     'Adicionar',                               // 11
+//   ],
+//   'hr': [
+//     'Most!',                                   // 0
+//     'PontiVIA! je pronašao ovaj most za tebe', // 1
+//     'mostovi pronađeni!',                      // 2
+//     'most pronađen!',                          // 3
+//     'Od ',                                     // 4
+//     ' do ',                                    // 5
+//     ' dana)',                                  // 6
+//     'Na ',                                     // 7
+//     ' (1 dan)',                                // 8
+//     'Moguć most!',                             // 9
+//     'Otkaži',                                  // 10
+//     'Dodaj',                                   // 11
+//   ],
+//   'si': [
+//     'Most!',                                   // 0
+//     'PontiVIA! je našel ta most za tebe',      // 1
+//     'mostovi najdeni!',                        // 2
+//     'most najden!',                            // 3
+//     'Od ',                                     // 4
+//     ' do ',                                    // 5
+//     ' dni)',                                   // 6
+//     'Na ',                                     // 7
+//     ' (1 dan)',                                // 8
+//     'Možen most!',                             // 9
+//     'Prekliči',                                // 10
+//     'Dodaj',                                   // 11
+//   ],
+//   'gr': [
+//     'Γέφυρα!',                                 // 0
+//     'Το PontiVIA! βρήκε αυτή τη γέφυρα για σας', // 1
+//     'γέφυρες βρέθηκαν!',                       // 2
+//     'γέφυρα βρέθηκε!',                         // 3
+//     'Από ',                                    // 4
+//     ' έως ',                                   // 5
+//     ' μέρες)',                                 // 6
+//     'Στις ',                                   // 7
+//     ' (1 μέρα)',                               // 8
+//     'Πιθανή γέφυρα!',                          // 9
+//     'Ακύρωση',                                 // 10
+//     'Προσθήκη',                                // 11
+//   ]
+// };
 
 /* ============================================================================= 
 CALENDARSCREEN - print calendario
 ============================================================================= */
 const CalendarScreen = ({callerPreferences}: any) => {
   console.log('[CALENDARSCREEN]');
-
-  // const statusDomenica = callerPreferences.domenica.status;  // true
-  // const labelSabato = callerPreferences.sabato.label;      // "Sabato"
-  
-  // // 2. Accedi alle festività:
-  // const statusPasqua = callerPreferences.pasqua.status;    // true
-  
-  // // 3. Accedi ai valori semplici:
-  // const bridgeDuration = callerPreferences.bridgeDuration; // 3
-  // const firstDayOfWeek = callerPreferences.firstDayOfWeek; // 1
-
-  
-  
-  console.log('callerPreferences destrutturato: bridgeDuration -->', callerPreferences.bridgeDuration);
-
-
-
+  console.log('- - prop callerPreferences, es. bridgeDuration =', callerPreferences.bridgeDuration);
 
   const colors = useThemeColors();
   const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
@@ -215,10 +200,6 @@ const CalendarScreen = ({callerPreferences}: any) => {
 
   const { 
     newPersonalHolydays,
-    personalHolydays, 
-    // regionalHolydays, 
-    // vacationPeriods, 
-    preferences,
     myPreferences, 
     myCountry 
   } = useHolydays();
@@ -552,8 +533,8 @@ const CalendarScreen = ({callerPreferences}: any) => {
       setIsLoading(true);
       try {
         // CALCOLA I PROSSIMI MESI
-        console.log('LOADMORECALENDARDATA chiama createCalendarGrid'); // Ok
-        console.log(`props myPreferences passata --> {JSON.stringify(callerPreferences)}`); // ok
+        //console.log('LOADMORECALENDARDATA chiama createCalendarGrid'); // Ok
+        //console.log(`props myPreferences passata --> {JSON.stringify(callerPreferences)}`); // ok
         const newMonthsData = createCalendarGrid( 
           createUTCDate(
             addMonths(currentLoadDate, monthsToLoad).getFullYear(), 
@@ -563,7 +544,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
           callerPreferences.bridgeDuration, 
           newPersonalHolydays,
           myCountry,
-          myPreferences, // ok funziona
+          myPreferences, 
         );
 
         // AGGIUNGE LA GRID AL CALENDARIO
@@ -583,7 +564,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
         setIsLoading(false);
       }
     }
-  }, [ isLoading, hasMore, currentLoadDate, monthsToLoad, callerPreferences.PREFERENCES ]);
+  }, [ isLoading, hasMore, currentLoadDate, monthsToLoad, callerPreferences, myPreferences ]);
 
   /* ============================================================================= 
     (USEEFFECTS) GESTISCE GLI EFFETTI COLLATERALI DEL CAMBIO DI 'PREFERENCES'
@@ -591,8 +572,11 @@ const CalendarScreen = ({callerPreferences}: any) => {
   useEffect( () => {
     if (callerPreferences) {
       const startDate = createUTCDate(new Date().getFullYear(), new Date().getMonth(), 1); 
+    
       setCalendarData([]); // SVUOTA calendarData
+
       setCurrentLoadDate(startDate); 
+
       setCalendarData(
         createCalendarGrid(
           startDate, 
@@ -600,12 +584,13 @@ const CalendarScreen = ({callerPreferences}: any) => {
           callerPreferences.bridgeDuration,
           newPersonalHolydays,
           myCountry,
-          myPreferences)
+          myPreferences
+          )
         );
     }    
   }, [
-    JSON.stringify(callerPreferences.PREFERENCES), 
-    preferences,
+    JSON.stringify(callerPreferences),
+    JSON.stringify(myPreferences), 
     newPersonalHolydays, 
     myCountry
   ]);
@@ -613,62 +598,62 @@ const CalendarScreen = ({callerPreferences}: any) => {
   /* ============================================================================= 
     IDENTIFICA CONNESSIONI GRAFICHE TRA CERCHIETTI GIALLI 
   ============================================================================= */
-  const createBridgeConnectionMap = (monthData: any) => {
+  // const createBridgeConnectionMap = (monthData: any) => {
     
-    const connectionMap = new Map();
-    const daysPerRow = 7;
+  //   const connectionMap = new Map();
+  //   const daysPerRow = 7;
     
-    monthData.bridges.forEach((bridge: any) => {
-      const bridgeDays = monthData.table // Trova tutti i giorni che fanno parte di questo ponte
-        .map((day: any, index: number) => ({ day, index }))
-        .filter(({ day }) => day[1] === -1 && 
-          day[0] >= bridge.da && day[0] <= bridge.a)
-        .sort((a, b) => a.day[0].getTime() - b.day[0].getTime());
+  //   monthData.bridges.forEach((bridge: any) => {
+  //     const bridgeDays = monthData.table // Trova tutti i giorni che fanno parte di questo ponte
+  //       .map((day: any, index: number) => ({ day, index }))
+  //       .filter(({ day }) => day[1] === -1 && 
+  //         day[0] >= bridge.da && day[0] <= bridge.a)
+  //       .sort((a, b) => a.day[0].getTime() - b.day[0].getTime());
       
-      bridgeDays.forEach(({ day, index }, bridgeIndex) => { // Per ogni giorno del ponte, determina le connessioni
-        const connections = {
-          right: false,
-          bottom: false,
-          left: false,
-          top: false
-        };
+  //     bridgeDays.forEach(({ day, index }, bridgeIndex) => { // Per ogni giorno del ponte, determina le connessioni
+  //       const connections = {
+  //         right: false,
+  //         bottom: false,
+  //         left: false,
+  //         top: false
+  //       };
         
-        const currentRow = Math.floor(index / daysPerRow);
-        const currentCol = index % daysPerRow;
+  //       const currentRow = Math.floor(index / daysPerRow);
+  //       const currentCol = index % daysPerRow;
         
-        // Verifica connessioni con gli altri giorni dello stesso ponte
-        bridgeDays.forEach(({ day: otherDay, index: otherIndex }) => {
-          if (index === otherIndex) return; // Skip stesso giorno
+  //       // Verifica connessioni con gli altri giorni dello stesso ponte
+  //       bridgeDays.forEach(({ day: otherDay, index: otherIndex }) => {
+  //         if (index === otherIndex) return; // Skip stesso giorno
           
-          const otherRow = Math.floor(otherIndex / daysPerRow);
-          const otherCol = otherIndex % daysPerRow;
+  //         const otherRow = Math.floor(otherIndex / daysPerRow);
+  //         const otherCol = otherIndex % daysPerRow;
           
-          // Connessione a destra (stesso row, colonna successiva)
-          if (currentRow === otherRow && currentCol + 1 === otherCol) {
-            connections.right = true;
-          }
+  //         // Connessione a destra (stesso row, colonna successiva)
+  //         if (currentRow === otherRow && currentCol + 1 === otherCol) {
+  //           connections.right = true;
+  //         }
           
-          // Connessione a sinistra (stesso row, colonna precedente)
-          if (currentRow === otherRow && currentCol - 1 === otherCol) {
-            connections.left = true;
-          }
+  //         // Connessione a sinistra (stesso row, colonna precedente)
+  //         if (currentRow === otherRow && currentCol - 1 === otherCol) {
+  //           connections.left = true;
+  //         }
           
-          // Connessione in basso (row successiva, stessa colonna)
-          if (currentRow + 1 === otherRow && currentCol === otherCol) {
-            connections.bottom = true;
-          }
+  //         // Connessione in basso (row successiva, stessa colonna)
+  //         if (currentRow + 1 === otherRow && currentCol === otherCol) {
+  //           connections.bottom = true;
+  //         }
           
-          // Connessione in alto (row precedente, stessa colonna)
-          if (currentRow - 1 === otherRow && currentCol === otherCol) {
-            connections.top = true;
-          }
-        });
+  //         // Connessione in alto (row precedente, stessa colonna)
+  //         if (currentRow - 1 === otherRow && currentCol === otherCol) {
+  //           connections.top = true;
+  //         }
+  //       });
         
-        connectionMap.set(index, connections);
-      });
-    });
-    return connectionMap;
-  };
+  //       connectionMap.set(index, connections);
+  //     });
+  //   });
+  //   return connectionMap;
+  // };
 
   /* ============================================================================= 
     (CALLBACK) RENDER DELLE CARD DELLA FLATLIST
@@ -682,7 +667,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
   const renderMonthCard = useCallback(({ item: month, index }) => {
 
     // MAPPA CONNESSIONI GRAFICHE TRA CERCHIETTI GIALLI
-    const bridgeConnectionMap = createBridgeConnectionMap(month); 
+    //const bridgeConnectionMap = createBridgeConnectionMap(month); 
 
     /* -----------------------------------------------------
     MODAL CHE MOSTRA UN GIORNO FESTIVO (usa SimpleToast.tsx)
@@ -733,7 +718,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
               style={{width:48, height:48, resizeMode:'contain', marginRight: 16}}
             />
             <View style={{ flex:1, }}>
-              <Text style={[styles.monthTitle, {color: colors.black, paddingLeft:0}]}>{dataLabel[myLanguage][9]}</Text> 
+              <Text style={[styles.monthTitle, {color: colors.black, paddingLeft:0}]}>{dataLabel(myLanguage, 9)}</Text> 
               { title && <Text style={[styles.dayNumber, { color: colors.black, lineHeight: 22, textAlign:'left'}]}>
                 {description}
                 </Text> }
@@ -745,17 +730,17 @@ const CalendarScreen = ({callerPreferences}: any) => {
             <TouchableOpacity 
               style={styles.cancelButton} 
               onPress={() => setVisibleToast(false)}>
-              <Text style={styles.cancelButtonText}>{dataLabel[myLanguage][10]}</Text>
+              <Text style={styles.cancelButtonText}>{dataLabel(myLanguage, 10)}</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.addButton} 
                 onPress={ async () => {
                   try {
                     const eventDetails = {
-                      title: dataLabel[myLanguage][0],    // Ponte!
+                      title: dataLabel(myLanguage, 0),    // Ponte!
                       startDate: bridgeStart,
                       endDate: bridgeEnds,
-                      notes: dataLabel[myLanguage][1],    // PontiVIA! ha trovato questo ponte ecc..
+                      notes: dataLabel(myLanguage, 1),    // PontiVIA! ha trovato questo ponte ecc..
                       allDay: false,
                     };
                     await Calendar.createEventInCalendarAsync(eventDetails);
@@ -766,7 +751,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
                     }
                 }}
               >
-              <Text style={styles.addButtonText}>{dataLabel[myLanguage][11]} </Text><IconSymbol name="calendar.badge.plus" size={24} color={colors.white} />
+              <Text style={styles.addButtonText}>{dataLabel(myLanguage, 11)} </Text><IconSymbol name="calendar.badge.plus" size={24} color={colors.white} />
             </TouchableOpacity>
           </View> 
         </View>
@@ -791,7 +776,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
             <View>
               {month.bridges.length > 0 ? 
                 <View style={styles.bridgeYellowLabel}>
-                  <Text style={styles.cardLabelBridgeFound}>{month.bridges.length} {month.bridges.length > 1 ? dataLabel[myLanguage][2] : dataLabel[myLanguage][3]}</Text>
+                  <Text style={styles.cardLabelBridgeFound}>{month.bridges.length} {month.bridges.length > 1 ? dataLabel(myLanguage, 2) : dataLabel(myLanguage, 3)}</Text>
                 </View>
                 :
                 null
@@ -816,9 +801,9 @@ const CalendarScreen = ({callerPreferences}: any) => {
 
               
               {month.table.map((day: any, dayIndex: number) => {
-                const connections = bridgeConnectionMap.get(dayIndex) || {
-                  right: false, bottom: false, left: false, top: false
-                };
+                // const connections = bridgeConnectionMap.get(dayIndex) || {
+                //   right: false, bottom: false, left: false, top: false
+                // };
 
 
                 return (
@@ -856,18 +841,18 @@ const CalendarScreen = ({callerPreferences}: any) => {
                     month.bridges.forEach( (interval: any, index: number) => {
                     if (isWithinInterval(day[0], {start: interval.da, end: interval.a})) {
                       if (interval.length > 1) {
-                        bridgeDescription += dataLabel[myLanguage][4]; // Dal
+                        bridgeDescription += dataLabel(myLanguage, 4); // Dal
                         bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                        bridgeDescription += dataLabel[myLanguage][5]; // fino al
+                        bridgeDescription += dataLabel(myLanguage, 5); // fino al
                         bridgeDescription += interval.a.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                        bridgeDescription += ' (' + interval.length + dataLabel[myLanguage][6]; // giorni
+                        bridgeDescription += ' (' + interval.length + dataLabel(myLanguage, 6); // giorni
                         // PRIMO E ULTIMO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
                         bridgeStartAt = month.bridges[index].da;
                         bridgeEndsAt = month.bridges[index].a;
                       } else {
-                        bridgeDescription += dataLabel[myLanguage][7]; // Il
+                        bridgeDescription += dataLabel(myLanguage, 7); // Il
                         bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                        bridgeDescription += dataLabel[myLanguage][8]; // (1 giorno)
+                        bridgeDescription += dataLabel(myLanguage, 8); // (1 giorno)
                         // UNICO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
                         bridgeStartAt = bridgeEndsAt = interval.da;
                       }

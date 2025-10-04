@@ -7,7 +7,7 @@ import React, { useEffect, useState, Suspense,  } from 'react';
 import DateTimePicker, { useDefaultStyles, } from 'react-native-ui-datepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales,  } from 'expo-localization';
-import DatepicketSelector from '@/components/ui/DatepickerSelector'; // --> MUORE COL REFACTORING
+//import DatepicketSelector from '@/components/ui/DatepickerSelector'; // --> MUORE COL REFACTORING
 import NewDatepicker from '@/components/NewDatepicker'; // MIO DATEPICKER
 import { holydayLabels as dataLabel } from '@/components/dataLabel';
 import {

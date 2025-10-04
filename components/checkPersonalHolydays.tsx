@@ -9,7 +9,6 @@ interface NewHolyday {
   repeatOnDay: boolean;   // RIPETE OGNI ANNO, il primo martedì di settembre
 }
 
-
 /* CALCOLA LA RICORRENZA DI UNA DATA ALL'INTERNO DEL MESE */
 function getWeekdayRecurrence(targetDate: Date) {
 const targetDayOfWeek = getDay(targetDate);

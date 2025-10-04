@@ -1,22 +1,19 @@
 # TICKET APERTI:
 
 
-- ### DatepickerSelector
-  -- quando si edita una data prvedere il corretto posizionamento dello switch
-  (Un giorno / Più giorni) e disabilitare l'altro pulsante
-
----
-
-- ### SimpleToast FESTIVITA: EDITABILE
-  -- aggiungere pulsante 'modifica' (o cancella) nel toast
-
----
 
 - ### FESTIVITA NAZIONALI EDITABILI
 -- o perlomeno ogni data checkabile (on/off)
   -- con pulsante di rollback per il ripristino
 
 ---
+
+
+- ### SimpleToast FESTIVITA: EDITABILE
+  -- aggiungere pulsante 'modifica' (o cancella) nel toast
+
+---
+
 
 - ### CONDIVISIONE DATE PERSONALI
   -- con altri utenti che hanno PontiVIA! installato
@@ -44,10 +41,7 @@
 
 ---
 
-- #### ANNO BISESTILE
-  -- aggiungere nel datepicker del giorno singolo
 
----
 
 - #### TOOLTIP
   aggiungere a fianco delle label delle PREFERENCES
@@ -77,6 +71,19 @@
 
 
 # TICKET RISOLTI:
+
+
+- #### ANNO BISESTILE
+  -- aggiungere nel datepicker del giorno singolo
+
+---
+
+
+- ### DatepickerSelector
+  -- quando si edita una data prvedere il corretto posizionamento dello switch
+  (Un giorno / Più giorni) e disabilitare l'altro pulsante
+
+---
 
 
 - ### TRADUZIONI

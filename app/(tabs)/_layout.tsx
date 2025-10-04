@@ -3,6 +3,8 @@
 
 // MY CUSTOM SPLITTED BAR
 import SplittedBar from '@/components/ui/SplittedBar';
+//import CustomTabBar from '@/components/ui/CustomTabBar'; // TABBAR DRITTA
+
 
 // CONTEXT
 import { HolydaysProvider } from '@/context/HolydaysContext';
