@@ -16,17 +16,6 @@ interface Holiday {
     description: string;
     }
 
-// TYPE VacationPeriod (VECCHIO)
-// interface VacationPeriod {
-//     startDay: number;
-//     startMonth: number;
-//     startYear: number;
-//     endDay: number;
-//     endMonth: number;
-//     endYear: number;
-//     description: string;
-//     }
-
 // TYPE NewHoliday (NUOVO)
 type NewHolyday = {
   startDate: Date;
@@ -76,17 +65,19 @@ const getCountryNationalHolidays = (
     myCountry: string,
     year: number,
     newPersonalHolydays: NewHolyday[],
-    // personalHolydays: Holiday[],
-    // regionalHolydays: Holiday[],
-    // vacationPeriods: VacationPeriod[]
+    myPreferences, 
     ) => {   
+
+    console.log('[GETCOUNTRYNATIONALHOLYDAYS]');
+    console.log('- - myPreferences (ascensione/status):', myPreferences.ascensione.status);
     
     // ARRAY DOVE SONO SALVATI I DATI
     const holidays = [];
+
     
     // SE SWITCH Festivita Nazionali = true AGGIUNGO LE FESTIVITA LOCALI DEL PAESE
     // ** VALIDE PER TUTTI GLI ANNI ** QUINDI yyy = undefined
-    if (PREFERENCES.festivitaNazionali.status) {
+    if (myPreferences.festivitaNazionali.status) {
         holidays.push(...getLocalHolydas(myCountry)); // funzione per le nazionali
         }
 
@@ -96,7 +87,7 @@ const getCountryNationalHolidays = (
 
     + + + + + + + + + + + + + + + + + + + + + + + + + + + + */
 
-    if (PREFERENCES.festivitaPersonali.status) {
+    if (myPreferences.festivitaPersonali.status) {
         const tempNewPersonalHolydays = checkPersonalHolydays(newPersonalHolydays, year);
         holidays.push(...tempNewPersonalHolydays);
         }
@@ -119,7 +110,7 @@ const getCountryNationalHolidays = (
     const dayOfEaster = ((h + l - 7 * m + 114) % 31) + 1;         // Giorno di Pasqua
     
     // AGGIUNGO PASQUA A holidays SE SWITCH pasqua=true
-    PREFERENCES.pasqua.status && holidays.push({ 
+    myPreferences.pasqua.status && holidays.push({ 
         day: dayOfEaster, 
         month: monthOfEaster - 1, 
         description: dataLabel(myLanguage,0) 
@@ -129,7 +120,7 @@ const getCountryNationalHolidays = (
     let currentPasqua = createUTCDate(year, monthOfEaster - 1, dayOfEaster);
 
     // AGGIUNGO LUNEDI DELL'ANGELO A holidays SE LO SWITCH =true
-    if (PREFERENCES.lunediDellAngelo.status === true) {
+    if (myPreferences.lunediDellAngelo.status === true) {
         const easterMonday = addDays(currentPasqua, 1);    
         holidays.push({ 
             day: easterMonday.getUTCDate(), 
@@ -138,7 +129,7 @@ const getCountryNationalHolidays = (
     }
 
     // ASCENSIONE (39 giorni dopo Pasqua)
-    if (PREFERENCES.ascensione.status === true) {
+    if (myPreferences.ascensione.status === true) {
         const ascensione = addDays(currentPasqua, 39);
         holidays.push({ 
             day: ascensione.getUTCDate(), 
@@ -148,7 +139,7 @@ const getCountryNationalHolidays = (
     }
 
     // PENTECOSTE (49 giorni dopo Pasqua)
-    if (PREFERENCES.pentecoste.status === true) {
+    if (myPreferences.pentecoste.status === true) {
         const pentecoste = addDays(currentPasqua, 49);
         holidays.push({ 
             day: pentecoste.getUTCDate(), 
@@ -158,7 +149,7 @@ const getCountryNationalHolidays = (
     }
 
     // LUNEDI DI PENTECOSTE (50 giorni dopo Pasqua)
-    if (PREFERENCES.lunediPentecoste.status === true) {
+    if (myPreferences.lunediPentecoste.status === true) {
         const lunediPentecoste = addDays(currentPasqua, 50);
         holidays.push({ 
             day: lunediPentecoste.getUTCDate(), 
@@ -168,7 +159,7 @@ const getCountryNationalHolidays = (
     }
 
     // CORPUS DOMINI (60 giorni dopo Pasqua)
-    if (PREFERENCES.corpusDomini.status === true) {
+    if (myPreferences.corpusDomini.status === true) {
         const corpusDomini = addDays(currentPasqua, 60);
         holidays.push({ 
             day: corpusDomini.getUTCDate(), 
@@ -184,7 +175,10 @@ const getCountryNationalHolidays = (
         }
         return a.day - b.day;
     });
-    
+
+    console.log('- - script terminato');
+    console.log(holidays);
+   
     return holidays;
 };
 
@@ -296,16 +290,14 @@ const countBridges = (monthTable: any[]) => {
 const createCalendarGrid = (
         startDate: Date, 
         monthsTotal: number, 
-        bridgeLength = PREFERENCES.bridgeDuration, 
+        bridgeLength: number, 
         newPersonalHolydays: NewHolyday[],
-        // personalHolydays: Holiday[], 
-        // regionalHolydays: Holiday[], 
-        // vacationPeriods: VacationPeriod[], 
-        myCountry: string,  // <----- arriva da * useEffect * di calendarScreen.tsx
+        myCountry: string, 
+        myPreferences,
     ) => {
-
-    // console.log('chiamata a calendarGrid()');
-    
+    console.log('[CREATECALENDARGRID] funct');
+    console.log('--> myPreferences da props:', JSON.stringify(myPreferences)); 
+   
     // AZZERO L'ARRAY CHE CONTERRA' LA GRIGLIA
     const grid = [];
     const initialYear = startDate.getUTCFullYear();
@@ -317,14 +309,12 @@ const createCalendarGrid = (
     const getHolidaysForYear = (year: number) => {
         if (!holidaysByYear[year]) {
             holidaysByYear[year] = getCountryNationalHolidays(
-                myCountry, 
-                year, 
-                newPersonalHolydays, 
-                // personalHolydays, 
-                // regionalHolydays, 
-                // vacationPeriods
-            );
-        }
+                                        myCountry, 
+                                        year, 
+                                        newPersonalHolydays, 
+                                        myPreferences
+                                        );
+            }
         return holidaysByYear[year];
     };
 

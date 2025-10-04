@@ -142,83 +142,20 @@ export const PREFERENCES = {
   firstDayOfWeek:     1,
 };
 
-// SALVA PREFERENZE SUL LOCAL STORAGE
+/* ===================================================
+   SALVA VARIABILE 'PREFERENCES' SUL LOCAL STORAGE 
+=================================================== */
 const savePreferences = async () => {
   try {
     const jsonValue = JSON.stringify(PREFERENCES);
     await AsyncStorage.setItem('PREFERENCES_KEY', jsonValue);
-    console.log('Preferences saved successfully');
-    // console.log(jsonValue);
+    console.log('Variabile PRFERENCES saved successfully (scritta su local storage)');
   } catch (e) {
     console.error('Failed to save preferences:', e);
   }
 };
 
-// CARICA PREFERENZE DAL LOCAL STORAGE
-const loadPreferences = async () => {
-  try {
-    const jsonValue = await AsyncStorage.getItem('PREFERENCES_KEY');
-    if (jsonValue != null) {
-      const storedPreferences = JSON.parse(jsonValue);
-      Object.assign(PREFERENCES, storedPreferences);
-    }
-  } catch (e) {
-    console.error('Failed to load preferences:', e);
-  }
-};
 
-
-/* =========================== SWITCH ====================================== */
-function PreferenceSwitch ({ preferenceKey }: { preferenceKey: keyof typeof PREFERENCES }) {
-  const colors = useThemeColors();
-  const [isEnabled, setIsEnabled] = useState((PREFERENCES[preferenceKey] as { status: boolean }).status);
-  
-  // Sincronizza lo stato locale con la costante globale
-  useEffect(() => {
-    setIsEnabled((PREFERENCES[preferenceKey] as { status: boolean }).status);
-  }, [PREFERENCES[preferenceKey].status]);
-
-  // cambia stato dello swiwtch
-  const toggleSwitch = async () => {
-    const newStatus = !isEnabled;
-    setIsEnabled(newStatus);
-    (PREFERENCES[preferenceKey] as { status: boolean }).status = newStatus;
-    await savePreferences();
-  };
-
-  // STILE DELLO SWITCH
-  const styles = StyleSheet.create({
-    image: {      
-      flex: 1,
-      justifyContent: 'center',
-      width: '100%',
-    },
-    preferenceRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      paddingVertical: 10,
-    },
-    text: {
-      color: colors.text,
-      fontSize: 16,
-      fontWeight: '400',
-    }
-  });
-
-  return (
-    <View style={styles.preferenceRow as ViewStyle}>
-      <Text style={styles.text}>{(PREFERENCES[preferenceKey] as { label: string }).label}</Text>
-      <Switch
-        trackColor={{ false: '#767577', true: '#767577' }} 
-        thumbColor={isEnabled ? colors.textRed : '#f4f3f4'} 
-        ios_backgroundColor="#3e3e3e"
-        onValueChange={toggleSwitch}
-        value={isEnabled}
-      />
-    </View>
-  );
-};
 
 /* ============================================================================= 
 
@@ -230,25 +167,37 @@ export default function Preferences() {
   const navigation = useNavigation();
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
-  // RICEVE DAL CONTEXT
+  // AGGANCIA LE VARIABILI myPreferences E preferences DAL CONTEXT
   const { 
     preferences, setPreferences, // CONTEXT PREFERENCES
-    // newPersonalHolydays, setNewPersonalHolydays, // NUOVO
-    // personalHolydays, setPersonalHolydays, // --> MUORE COL REFACTORING
-    // nationalHolydays, setNationalHolydays,
-    // vacationPeriods, setVacationPeriods, // --> MUORE COL REFACTORING
-    // myCountry, setMyCountry,
+    myPreferences, setMyPreferences,
     } = useHolydays();
-  
+    console.log(`[PREFERENCES]> myPreferences ricevute dal Context: ${JSON.stringify(myPreferences)}`);
 
-  // CARICA PREFERENZE DAL LOCAL STORAGE AL BOOT
+  // CARICA VARIABILE 'PREFERENCES' DAL LOCAL STORAGE
+  const loadPreferences = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem('PREFERENCES_KEY');
+      if (jsonValue != null) {
+        const storedPreferences = JSON.parse(jsonValue);
+        Object.assign(PREFERENCES, storedPreferences);
+      }
+    } catch (e) {
+      console.error('Failed to load preferences:', e);
+    }
+  };
+
+  // CARICA VARIABILE 'PREFERENCES' DAL LOCAL STORAGE AL BOOT
   useEffect(() => {
     const initializePreferences = async () => {
       await loadPreferences();
       setPreferencesLoaded(true);
     };
     initializePreferences();
-    setPreferences(PREFERENCES); // nuova condivisione PREFERENCES su Context
+    setPreferences(PREFERENCES);    // INIZIALIZZA VARIABILE prferences LETTE DALLO STORAGE
+    setMyPreferences(PREFERENCES);  // IDEM myPreferences
+
+    console.log(`[PREFERENCES}> myPreferences inizializzato al boot: ${JSON.stringify(myPreferences)}`);
   }, []);
 
   // GESTISCE PULSANTE 'MODIFICA LISTA FESTIVITA'
@@ -342,10 +291,76 @@ export default function Preferences() {
     },
   });
 
-  // AAGGIORNA CONTEXT A OGNI CAMBAIMENTO DI PREFERENCES
+  // AGGIORNA CONTEXT A OGNI CAMBAIMENTO DI PREFERENCES
   useEffect( () => {
     setPreferences(PREFERENCES);
+    setMyPreferences(PREFERENCES);
+    console.log('[]PREFERENCES]> useEffect: aggiorna myPreferences');
   }, [PREFERENCES]);
+
+
+
+
+  /* ===================================================
+    SWITCH DINAMICO 
+  =================================================== */
+  function PreferenceSwitch ({ preferenceKey }: { preferenceKey: keyof typeof PREFERENCES }) {
+    const colors = useThemeColors();
+    const [isEnabled, setIsEnabled] = useState((PREFERENCES[preferenceKey] as { status: boolean }).status);
+    
+    // Sincronizza lo stato locale con la costante globale
+    useEffect(() => {
+      setIsEnabled((PREFERENCES[preferenceKey] as { status: boolean }).status);
+    }, [PREFERENCES[preferenceKey].status]);
+
+    // cambia stato dello swiwtch
+    const toggleSwitch = async () => {
+      const newStatus = !isEnabled;
+      setIsEnabled(newStatus);
+      (PREFERENCES[preferenceKey] as { status: boolean }).status = newStatus;
+      await savePreferences();
+      setMyPreferences(PREFERENCES);
+    };
+
+    // STILE DELLO SWITCH
+    const styles = StyleSheet.create({
+      image: {      
+        flex: 1,
+        justifyContent: 'center',
+        width: '100%',
+      },
+      preferenceRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        paddingVertical: 10,
+      },
+      text: {
+        color: colors.text,
+        fontSize: 16,
+        fontWeight: '400',
+      }
+    });
+
+    return (
+      <View style={styles.preferenceRow as ViewStyle}>
+        <Text style={styles.text}>{(PREFERENCES[preferenceKey] as { label: string }).label}</Text>
+        <Switch
+          trackColor={{ false: '#767577', true: '#767577' }} 
+          thumbColor={isEnabled ? colors.textRed : '#f4f3f4'} 
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={toggleSwitch}
+          value={isEnabled}
+        />
+      </View>
+    );
+  };
+
+
+
+
+
+
 
   return (
     <ImageBackground 
@@ -381,6 +396,9 @@ export default function Preferences() {
                 PREFERENCES.bridgeDuration = value;
                 savePreferences();
                 setPreferences(PREFERENCES); // SALVA PREFERENCES NEL CONTEXT
+                setMyPreferences(PREFERENCES);
+                console.log(`[PREFERENCES]> aggiornata durata: ${myPreferences.bridgeDuration}`);
+                console.log(`[PREFERENCES]> myPreferences: ${JSON.stringify(myPreferences)}`);
               }}
             />
           </View>                   

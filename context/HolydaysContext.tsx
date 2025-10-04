@@ -2,7 +2,7 @@ import React, { createContext, ReactNode, useContext, useState, useEffect } from
 import useLocalizationData from '@/app/data/data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales, } from 'expo-localization';
-import { PREFERENCES as DEFAULT_PREFERENCES } from '@/app/(tabs)/preferences';
+import { PREFERENCES as SAVED_PREFERENCES } from '@/app/(tabs)/preferences';
 
 /* ============================================================================= 
     LETTURA STORAGE DATI
@@ -43,11 +43,10 @@ interface HolydaysContextType {
     setNationalHolydays: React.Dispatch<React.SetStateAction<Holiday[]>>; // OK, RESTA
   newPersonalHolydays: NewHolyday[]; 
     setNewPersonalHolydays: React.Dispatch< React.SetStateAction<NewHolyday[]> >; // NEW
-  preferences: typeof DEFAULT_PREFERENCES;
-    setPreferences: React.Dispatch<React.SetStateAction<typeof DEFAULT_PREFERENCES>>;
-  
-  myPreferences: typeof DEFAULT_PREFERENCES; // * * * new * * * 
-    setMyPreferences: React.Dispatch<React.SetStateAction<typeof DEFAULT_PREFERENCES>>;
+  preferences: typeof SAVED_PREFERENCES;
+    setPreferences: React.Dispatch<React.SetStateAction<typeof SAVED_PREFERENCES>>;
+  myPreferences: typeof SAVED_PREFERENCES; // * * * new * * * 
+    setMyPreferences: React.Dispatch<React.SetStateAction<typeof SAVED_PREFERENCES>>;
 
 }
 
@@ -69,11 +68,15 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
 
   // LINGUA
   const myLanguage = getLocales()[0].languageTag;
+
+  // VARIABILI GLOBALI
   const [newPersonalHolydays, setNewPersonalHolydays] = useState<NewHolyday[]>([]);   // NEW --> newPersonalHolydays
   const [nationalHolydays, setNationalHolydays] = useState<Holiday[]>([]); // NON LO INIZILIZZO ADESSO, LO FA holydays.tsx ALLA CHIAMATA
   const [myCountry, setMyCountry] = useState(myLanguage); // VALORE DELLA DROPDOWN (es: 'it-IT), INIZIALMENTE = locale
-  const [preferences, setPreferences] = useState(DEFAULT_PREFERENCES);
-  const [myPreferences, setMyPreferences] = useState(DEFAULT_PREFERENCES);
+  const [preferences, setPreferences] = useState(SAVED_PREFERENCES);      // <--- DA ELIMINARE COL REFACTORING
+  const [myPreferences, setMyPreferences] = useState(SAVED_PREFERENCES);  // <--- NUOVO
+
+  //console.log(`[CONTEXT] myPreferences dopo dichiarazione: ${JSON.stringify(myPreferences)}`);
 
   // CONVERTE I VALORI DI TIPO string IN VALORI TIPO Data PER startDate E endDate
   const convertDates = (holydaysArray: any) => {
@@ -102,18 +105,21 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
 
       const myStoredPreferences = await loadData('PREFERENCES_KEY');
       if (myStoredPreferences) setMyPreferences(myStoredPreferences);
+
+        //console.log(`[CONTEXT] myPreferences dopo lettura da local storage: ${JSON.stringify(myPreferences)}`);
+
     };  
     initializeData(); // CHIAMATA FUNZ. LETTURA
   }, []);
 
   return (
     <HolydaysContext.Provider value={{
-      newPersonalHolydays,  setNewPersonalHolydays, // --> NUOVO GIORNI PERSONALI ***
-      nationalHolydays,     setNationalHolydays,    // FSTIVITA NAZIONALI --- ok
+      newPersonalHolydays,  setNewPersonalHolydays, // NUOVO GIORNI PERSONALI
+      nationalHolydays,     setNationalHolydays,    // FESTIVITA NAZIONALI
       myCountry,            setMyCountry,           // DROPDOWN FESTIVITA PER PAESE
       preferences,          setPreferences,         // PREFERENZE
-      myPreferences,        setMyPreferences        // preferences nuovo (distribuito da Context)
-      }}>
+      myPreferences,        setMyPreferences        // preferences 'nuovo' (distribuito da Context)
+    }}>
       {children}
     </HolydaysContext.Provider>
   );

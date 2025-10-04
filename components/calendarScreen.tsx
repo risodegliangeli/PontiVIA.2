@@ -20,10 +20,21 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { addMonths, isWithinInterval } from "date-fns";
 import * as Calendar from 'expo-calendar';
 import { getLocales,  } from 'expo-localization';
+import { PREFERENCES } from '@/app/(tabs)/preferences';
+import { useFilterScreenChildren } from 'expo-router/build/layouts/withLayoutContext';
 
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
 const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
 const myLanguage: string = (getLocales()[0].languageTag).slice(0,2);  // LINGUA LOCALE
+
+// INTERFACCIA DI NewHolyday 
+interface NewHolyday {
+  startDate: Date;
+  endDate: Date | null;
+  description: string | null;
+  repeatOnDate: boolean;  // RIPETE OGNI ANNO, IL 25 settembre 
+  repeatOnDay: boolean;   // RIPETE OGNI ANNO, il primo martedì di settembre
+}
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -178,9 +189,27 @@ const dataLabel: any = {
 /* ============================================================================= 
 CALENDARSCREEN - print calendario
 ============================================================================= */
-const CalendarScreen = (PREFERENCES: any) => {
-  const colors = useThemeColors();
+const CalendarScreen = ({callerPreferences}: any) => {
+  console.log('[CALENDARSCREEN]');
 
+  // const statusDomenica = callerPreferences.domenica.status;  // true
+  // const labelSabato = callerPreferences.sabato.label;      // "Sabato"
+  
+  // // 2. Accedi alle festività:
+  // const statusPasqua = callerPreferences.pasqua.status;    // true
+  
+  // // 3. Accedi ai valori semplici:
+  // const bridgeDuration = callerPreferences.bridgeDuration; // 3
+  // const firstDayOfWeek = callerPreferences.firstDayOfWeek; // 1
+
+  
+  
+  console.log('callerPreferences destrutturato: bridgeDuration -->', callerPreferences.bridgeDuration);
+
+
+
+
+  const colors = useThemeColors();
   const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
   const monthsToLoad = 3; // ADV OGNI x CARDS
 
@@ -189,7 +218,8 @@ const CalendarScreen = (PREFERENCES: any) => {
     personalHolydays, 
     // regionalHolydays, 
     // vacationPeriods, 
-    preferences, 
+    preferences,
+    myPreferences, 
     myCountry 
   } = useHolydays();
 
@@ -512,10 +542,7 @@ const CalendarScreen = (PREFERENCES: any) => {
   ============================================================================= */
   const loadMoreCalendarData = useCallback( async (
     myCountry: string,
-    
-    newPersonalHolydays: any,
-    // regionalHolydays: any,
-    // vacationPeriods: any,
+    newPersonalHolydays: NewHolyday[],
     ) => {
 
     // EXIT SE UNO DEI VALORI E' true
@@ -525,18 +552,18 @@ const CalendarScreen = (PREFERENCES: any) => {
       setIsLoading(true);
       try {
         // CALCOLA I PROSSIMI MESI
+        console.log('LOADMORECALENDARDATA chiama createCalendarGrid'); // Ok
+        console.log(`props myPreferences passata --> {JSON.stringify(callerPreferences)}`); // ok
         const newMonthsData = createCalendarGrid( 
           createUTCDate(
             addMonths(currentLoadDate, monthsToLoad).getFullYear(), 
             addMonths(currentLoadDate, monthsToLoad).getMonth(), 
             1),
           monthsToLoad, 
-          PREFERENCES.bridgeDuration, 
+          callerPreferences.bridgeDuration, 
           newPersonalHolydays,
-          //personalHolydays, 
-          // regionalHolydays, 
-          // vacationPeriods,
-          myCountry
+          myCountry,
+          myPreferences, // ok funziona
         );
 
         // AGGIUNGE LA GRID AL CALENDARIO
@@ -556,13 +583,13 @@ const CalendarScreen = (PREFERENCES: any) => {
         setIsLoading(false);
       }
     }
-  }, [ isLoading, hasMore, currentLoadDate, monthsToLoad, PREFERENCES ]);
+  }, [ isLoading, hasMore, currentLoadDate, monthsToLoad, callerPreferences.PREFERENCES ]);
 
   /* ============================================================================= 
     (USEEFFECTS) GESTISCE GLI EFFETTI COLLATERALI DEL CAMBIO DI 'PREFERENCES'
   ============================================================================= */
   useEffect( () => {
-    if (PREFERENCES) {
+    if (callerPreferences) {
       const startDate = createUTCDate(new Date().getFullYear(), new Date().getMonth(), 1); 
       setCalendarData([]); // SVUOTA calendarData
       setCurrentLoadDate(startDate); 
@@ -570,16 +597,14 @@ const CalendarScreen = (PREFERENCES: any) => {
         createCalendarGrid(
           startDate, 
           monthsToLoad,
-          PREFERENCES.bridgeDuration,
+          callerPreferences.bridgeDuration,
           newPersonalHolydays,
-          //personalHolydays,
-          // regionalHolydays,
-          // vacationPeriods, 
-          myCountry)
+          myCountry,
+          myPreferences)
         );
     }    
   }, [
-    JSON.stringify(PREFERENCES), 
+    JSON.stringify(callerPreferences.PREFERENCES), 
     preferences,
     newPersonalHolydays, 
     myCountry

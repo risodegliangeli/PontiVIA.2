@@ -1,6 +1,6 @@
 //import { PREFERENCES } from '@/app/(tabs)/preferences';
 import { CalendarScreen } from '@/components/calendarScreen';
-import { useHolydays } from '@/context/HolydaysContext';
+import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo, useRef,  } from 'react';
 import { Animated, Easing, ImageBackground, StyleSheet, useColorScheme, Text, Pressable, TouchableOpacity } from 'react-native';
@@ -22,33 +22,64 @@ const useThemeColors = () => {
 ########################################################################################################### */
 export default function HomeScreen() {
 
+  // GESTIONE COLORE
   const colors = useThemeColors();
  
   const { 
     newPersonalHolydays,
-    personalHolydays, setPersonalHolydays,
-    vacationPeriods, setVacationPeriods,
+    //personalHolydays, setPersonalHolydays,
+    // vacationPeriods, setVacationPeriods,
     //regionalHolydays,
     preferences, setPreferences,
-    myCountry, setMyCountry
+    myPreferences, setMyPreferences,
+    myCountry, setMyCountry,
   } = useHolydays();
+
+  console.log(`[INDEX]: myPreferences riceuto dal Context`);
+
+  /* ============================================================================= 
+      LETTURA STORAGE DATI
+  ============================================================================= */
+  const loadData = async (key: string) => {
+    try {
+      const jsonValue = await AsyncStorage.getItem(key);
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (e) {
+      //console.error(`Errore ${key} nella lettura da locale:`, e);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const initializeData = async () => {
+      const myStoredPreferences = await loadData('PREFERENCES_KEY');
+      if (myStoredPreferences) setMyPreferences(myStoredPreferences);
+
+      console.log(`[INDEX]: lettura myPreferencs al boot`);
+
+    };  
+    initializeData(); 
+  }, [myPreferences]);
 
   const myLanguage = (getLocales()[0].languageTag).slice(0,2); // 'it', 'fr', ecc
 
   // MEMORIZZA IL KEY DEL CALENDARIO
-  // e forza il ricaricamento del calendario quando i dati cambiano.
+  // che forza il ricaricamento del calendario quando i dati cambiano.
   const calendarKey = useMemo(() =>
     JSON.stringify({
       //PREFERENCES,
       newPersonalHolydays,
-      preferences,
+      //preferences,
+      myPreferences,
       myCountry
     }),
     [
       //PREFERENCES,
-      newPersonalHolydays,
-      preferences,
-      myCountry]
+      JSON.stringify(newPersonalHolydays),
+      //preferences,
+      JSON.stringify(myPreferences),
+      myCountry
+    ]
   );
 
   // ANIMAZIONI
@@ -197,7 +228,7 @@ export default function HomeScreen() {
             >
             <CalendarScreen 
               key={calendarKey} 
-              PREFERENCES={preferences} /> 
+              callerPreferences={myPreferences} /> 
           </Animated.View>
 
           {/* CONTAINER TESTO, MANINA E NUVOLETTE CHE A FINE ANIMAZIONE ESCE DALLA VIEW */}
