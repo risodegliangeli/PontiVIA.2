@@ -733,7 +733,7 @@ const handleEdit = (index: number) => {
               <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
                 <Text style={{opacity:0}}>*</Text>
                 <Text style={[styles.listTitle, { textAlign:'center' } ]}>{dataLabel(myLanguage, 4)}</Text>
-                {personalHolydays ?                
+                {newPersonalHolydays ?                
                   <TouchableOpacity
                     onPress={ async () => {
                       Alert.alert(
