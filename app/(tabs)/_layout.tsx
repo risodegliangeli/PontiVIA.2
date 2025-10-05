@@ -1,24 +1,14 @@
-// console.log('[(tabs)_Layout]');
-
-
-// MY CUSTOM SPLITTED BAR
-import SplittedBar from '@/components/ui/SplittedBar';
-//import CustomTabBar from '@/components/ui/CustomTabBar'; // TABBAR DRITTA
-
-
-// CONTEXT
-import { HolydaysProvider } from '@/context/HolydaysContext';
-
+import SplittedBar from '@/components/ui/SplittedBar';// MY CUSTOM SPLITTED BAR
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Tabs } from 'expo-router';
 import { StyleSheet, useColorScheme } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu';
-
-// GRADIENT BLUR
 import MaskedView from "@react-native-masked-view/masked-view";
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from "expo-linear-gradient";
 import { easeGradient } from "react-native-easing-gradient";
+import { HolydaysProvider } from '@/context/HolydaysContext';// CONTEXT
+import * as SplashScreen from 'expo-splash-screen'; 
 
 /* ###########################################################################################################
 
@@ -26,8 +16,13 @@ import { easeGradient } from "react-native-easing-gradient";
                                       
 ########################################################################################################### */
 export default function TabLayout() {
+
+SplashScreen.setOptions({
+  duration: 2000, // Esempio: 1000 millisecondi (1 secondo)
+  fade: true,
+});
+
   const colorScheme = useColorScheme();
-  
   const gradient = easeGradient({
     colorStops: {
       0: {color: 'rgba(0,0,0, 1)'},
@@ -72,8 +67,7 @@ export default function TabLayout() {
             tabBar={ props => <SplittedBar {...props} />}
             screenOptions={{
               headerShown: false,
-            }} 
-            >
+            }} >
 
             {/* ================================== INDEX ================================== */}
             <Tabs.Screen
@@ -88,7 +82,6 @@ export default function TabLayout() {
                 ),
               }} />
               
-              
             {/* ================================== HOLYDAYS LIST  ================================== */}
             <Tabs.Screen
               name="holydays"
@@ -101,8 +94,6 @@ export default function TabLayout() {
                   <BlurPad/>
                 ),
               }} />
-            
-
 
             {/* ================================== PREFERENCES  ================================== */}
             <Tabs.Screen

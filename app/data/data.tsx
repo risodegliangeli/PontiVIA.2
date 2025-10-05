@@ -1,5 +1,4 @@
-// console.log('[Data]');
-
+console.log('[DATA.TSX]');
 import { getLocales, } from 'expo-localization';
 
 /* ============================================================================= 

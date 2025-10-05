@@ -2,22 +2,21 @@
 
 
 
-- ### FESTIVITA NAZIONALI EDITABILI
+- ### FESTIVITA NAZIONALI EDITABILI/DISATTIVABILI
 -- o perlomeno ogni data checkabile (on/off)
   -- con pulsante di rollback per il ripristino
 
 ---
 
-
-- ### SimpleToast FESTIVITA: EDITABILE
+- ### SimpleToast FESTIVITA: RENDERE EDITABILE
   -- aggiungere pulsante 'modifica' (o cancella) nel toast
 
 ---
 
-
 - ### CONDIVISIONE DATE PERSONALI
   -- con altri utenti che hanno PontiVIA! installato
   -- se non installato te lo fa installare
+  -- oppure inviare via WhatsApp
 
 ---
 
@@ -32,21 +31,18 @@
 
 - #### ALERT eventi personali
   -- aggiungere checkbox CAMPANELLA nelle due modal (giono singolo e periodo):
-  "Ricordami di questa data [ 7 ] giorni prima"
+  -- "Ricordami di questa data [ 7 ] giorni prima"
 
 ---
-
-- #### FESTIVI GERMANIA 
-  -- per ciascun Land
-
----
-
-
 
 - #### TOOLTIP
   aggiungere a fianco delle label delle PREFERENCES
 
 ---
+
+- #### PAGINA HELP
+  -- creare una pagina grafica di spiegazioni
+
 
 - #### geolocalizzazione per santo del giorno
 

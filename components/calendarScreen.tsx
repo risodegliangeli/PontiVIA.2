@@ -18,15 +18,15 @@ import { Colors } from '@/constants/Colors';
 import { useHolydays } from '@/context/HolydaysContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { addMonths, isWithinInterval } from "date-fns";
-import * as Calendar from 'expo-calendar';
-import { getLocales,  } from 'expo-localization';
+import * as Calendar from 'expo-calendar'; // ACCESSO AL CALENDARIO DI SISTEMA
+import { getLocales } from 'expo-localization';
 import { calendarScrenLabels as dataLabel } from '@/components/dataLabel';
 // import { PREFERENCES } from '@/app/(tabs)/preferences';
 // import { useFilterScreenChildren } from 'expo-router/build/layouts/withLayoutContext';
 
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
 const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
-const myLanguage: string = (getLocales()[0].languageTag).slice(0,2);  // LINGUA LOCALE
+const myLanguage: string = (getLocales()[0].languageTag).slice(0,2);  // LINGUA DI SISTEMA
 
 // INTERFACCIA DI NewHolyday 
 interface NewHolyday {
@@ -44,155 +44,12 @@ const useThemeColors = () => {
 
 const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
-// const dataLabel: any = {
-//   'it': [
-//     'Ponte!',                                   // 0
-//     'PontiVIA! ha trovato questo ponte per te', // 1
-//     'ponti trovati!',                           // 2
-//     'ponte trovato!',                           // 3
-//     'Dal ',                                     // 4
-//     ' fino al ',                                // 5
-//     ' giorni)',                                 // 6
-//     'Il ',                                      // 7
-//     ' (1 giorno)',                              // 8
-//     'Possibile ponte!',                         // 9
-//     'Annulla',                                  // 10
-//     'Aggiungi'                                  // 11
-//     ],
-//   "fr":[
-//     'Pont!',                                    // 0
-//     'PontiVIA! a trouvé ce pont pour vous',     // 1
-//     'ponts trouvés!',                           // 2
-//     'pont trouvés!',                            // 3
-//     'Du ',                                      // 4
-//     ' au ',                                     // 5
-//     ' jours)',                                  // 6
-//     'Le ',                                      // 7
-//     ' (1 jour)',                                // 8
-//     'Pont possible!',                           // 9
-//     'Annuler',
-//     'Ajouter'
-//     ],
-//   'es':[
-//     '¡Puente!',                                 // 0
-//     '¡PontiVIA! encontró este puente para ti',  // 1
-//     'puentes encontrados!',                     // 2
-//     'puente encontrado!',                       // 3
-//     'Del ',                                     // 4
-//     ' al ',                                     // 5
-//     ' días)',                                   // 6
-//     'El ',                                      // 7
-//     ' (1 día)',                                 // 8
-//     '¡Posible puente!',                         // 9
-//     'Cancelar',
-//     'Añadir'
-//     ],
-//   "de":[
-//     'Brücke!',                                   // 0
-//     'PontiVIA! hat diese Brücke für dich gefunden', // 1
-//     'Brücken gefunden!',                         // 2
-//     'Brücke gefunden!',                          // 3
-//     'Vom  ',                                     // 4
-//     ' bis am ',                                  // 5
-//     ' Tage)',                                    // 6
-//     'Am ',                                       // 7
-//     ' (1 Tag)',                                  // 8
-//     'Mögliche Brücke!',                          // 9
-//     'Abbrechen',
-//     'Hinzufügen'
-//     ],  
-//   'en':[
-//     'Bridge!',                                   // 0
-//     'PontiVIA! found this bridge for you', // 1
-//     'bridges found!',                           // 2
-//     'bridge found!',                           // 3
-//     'From ',                                     // 4
-//     ' to ',                                // 5
-//     ' days)',                                 // 6
-//     'On ',                                      // 7
-//     ' (1 day)',                              // 8
-//     'Possible bridge!',                         // 9
-//    'Cancel',
-//     'Add'
-//      ],
-//   'nl':[
-//     'Brug!',                                    // 0
-//     'PontiVIA! vond deze brug voor jou',       // 1
-//     'bruggen gevonden!',                       // 2
-//     'brug gevonden!',                          // 3
-//     'Van ',                                    // 4
-//     ' tot ',                                   // 5
-//     ' dagen)',                                 // 6
-//     'Op ',                                     // 7
-//     ' (1 dag)',                                // 8
-//     'Mogelijke brug!',                         // 9
-//     'Annuleren',                               // 10
-//     'Toevoegen',                               // 11
-//     ],
-//   'pt':[
-//     'Ponte!',                                  // 0
-//     'PontiVIA! encontrou esta ponte para você', // 1
-//     'pontes encontradas!',                     // 2
-//     'ponte encontrada!',                       // 3
-//     'De ',                                     // 4
-//     ' até ',                                   // 5
-//     ' dias)',                                  // 6
-//     'Em ',                                     // 7
-//     ' (1 dia)',                                // 8
-//     'Ponte possível!',                         // 9
-//     'Cancelar',                                // 10
-//     'Adicionar',                               // 11
-//   ],
-//   'hr': [
-//     'Most!',                                   // 0
-//     'PontiVIA! je pronašao ovaj most za tebe', // 1
-//     'mostovi pronađeni!',                      // 2
-//     'most pronađen!',                          // 3
-//     'Od ',                                     // 4
-//     ' do ',                                    // 5
-//     ' dana)',                                  // 6
-//     'Na ',                                     // 7
-//     ' (1 dan)',                                // 8
-//     'Moguć most!',                             // 9
-//     'Otkaži',                                  // 10
-//     'Dodaj',                                   // 11
-//   ],
-//   'si': [
-//     'Most!',                                   // 0
-//     'PontiVIA! je našel ta most za tebe',      // 1
-//     'mostovi najdeni!',                        // 2
-//     'most najden!',                            // 3
-//     'Od ',                                     // 4
-//     ' do ',                                    // 5
-//     ' dni)',                                   // 6
-//     'Na ',                                     // 7
-//     ' (1 dan)',                                // 8
-//     'Možen most!',                             // 9
-//     'Prekliči',                                // 10
-//     'Dodaj',                                   // 11
-//   ],
-//   'gr': [
-//     'Γέφυρα!',                                 // 0
-//     'Το PontiVIA! βρήκε αυτή τη γέφυρα για σας', // 1
-//     'γέφυρες βρέθηκαν!',                       // 2
-//     'γέφυρα βρέθηκε!',                         // 3
-//     'Από ',                                    // 4
-//     ' έως ',                                   // 5
-//     ' μέρες)',                                 // 6
-//     'Στις ',                                   // 7
-//     ' (1 μέρα)',                               // 8
-//     'Πιθανή γέφυρα!',                          // 9
-//     'Ακύρωση',                                 // 10
-//     'Προσθήκη',                                // 11
-//   ]
-// };
-
 /* ============================================================================= 
 CALENDARSCREEN - print calendario
 ============================================================================= */
 const CalendarScreen = ({callerPreferences}: any) => {
   console.log('[CALENDARSCREEN]');
-  console.log('- - prop callerPreferences, es. bridgeDuration =', callerPreferences.bridgeDuration);
+  //console.log('- - prop callerPreferences, es. bridgeDuration =', callerPreferences.bridgeDuration);
 
   const colors = useThemeColors();
   const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
@@ -533,8 +390,6 @@ const CalendarScreen = ({callerPreferences}: any) => {
       setIsLoading(true);
       try {
         // CALCOLA I PROSSIMI MESI
-        //console.log('LOADMORECALENDARDATA chiama createCalendarGrid'); // Ok
-        //console.log(`props myPreferences passata --> {JSON.stringify(callerPreferences)}`); // ok
         const newMonthsData = createCalendarGrid( 
           createUTCDate(
             addMonths(currentLoadDate, monthsToLoad).getFullYear(), 
@@ -589,7 +444,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
         );
     }    
   }, [
-    JSON.stringify(callerPreferences),
+    //JSON.stringify(callerPreferences),
     JSON.stringify(myPreferences), 
     newPersonalHolydays, 
     myCountry
@@ -798,17 +653,13 @@ const CalendarScreen = ({callerPreferences}: any) => {
           {/* INTERNO DELLA CARD */}
           <View style={{borderBottomLeftRadius: 16, borderBottomRightRadius: 16, overflow: 'hidden'}}>
             <View style={styles.daysGrid}>
-
-              
               {month.table.map((day: any, dayIndex: number) => {
                 // const connections = bridgeConnectionMap.get(dayIndex) || {
                 //   right: false, bottom: false, left: false, top: false
                 // };
-
-
                 return (
                   <View key={`day-container-${day[0]}-${dayIndex}`} style={styles.dayCell}>
-                    {/* TUTTI I GIORNI SONO TOUCHABLEOPACITY... */}
+                    {/* TUTTI I GIORNI SONO TOUCHABLEOPACITY MA... */}
                     <TouchableOpacity 
                     key={`key,${day[0]},${dayIndex}`}
                     style={[styles.squaredTouchable, !day[3] && styles.dayCellOutsideMonth, ]}
@@ -834,46 +685,46 @@ const CalendarScreen = ({callerPreferences}: any) => {
                     setToastAnimation('fade');
                     setToastOnClose(undefined); 
                     } else {
-                    /* MODAL/SimpleToast --> POSSIBILE PONTE */
-                    let bridgeDescription: string = '';
-                    let bridgeStartAt: Date;
-                    let bridgeEndsAt: Date;
-                    month.bridges.forEach( (interval: any, index: number) => {
-                    if (isWithinInterval(day[0], {start: interval.da, end: interval.a})) {
-                      if (interval.length > 1) {
-                        bridgeDescription += dataLabel(myLanguage, 4); // Dal
-                        bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                        bridgeDescription += dataLabel(myLanguage, 5); // fino al
-                        bridgeDescription += interval.a.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                        bridgeDescription += ' (' + interval.length + dataLabel(myLanguage, 6); // giorni
-                        // PRIMO E ULTIMO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
-                        bridgeStartAt = month.bridges[index].da;
-                        bridgeEndsAt = month.bridges[index].a;
-                      } else {
-                        bridgeDescription += dataLabel(myLanguage, 7); // Il
-                        bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                        bridgeDescription += dataLabel(myLanguage, 8); // (1 giorno)
-                        // UNICO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
-                        bridgeStartAt = bridgeEndsAt = interval.da;
-                      }
-                    } 
-                    });
-                    setVisibleToast(true); 
-                    setToastPosition('center');
-                    setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
-                    setOverlayBackground('rgba(50, 50, 50, 0.05)'); // COLORE OVERLAY
-                    setToastRadius([12,12,12,12]); // STONDATURA
-                    setPaddingFromTop(48); // MARGINE TOP
-                    setPaddingFromBottom(48); // MARGINE BOTTTOM
-                    setToastBody( 
-                    <BridgeToast 
-                      title={day[2]}
-                      description={bridgeDescription}
-                      bridgeStart={bridgeStartAt}
-                      bridgeEnds={bridgeEndsAt}
-                    />);
-                    setToastAnimation('fade');
-                    setToastOnClose(undefined); 
+                      /* MODAL/SimpleToast --> POSSIBILE PONTE */
+                      let bridgeDescription: string = '';
+                      let bridgeStartAt: Date;
+                      let bridgeEndsAt: Date;
+                      month.bridges.forEach( (interval: any, index: number) => {
+                      if (isWithinInterval(day[0], {start: interval.da, end: interval.a})) {
+                        if (interval.length > 1) {
+                          bridgeDescription += dataLabel(myLanguage, 4); // Dal
+                          bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                          bridgeDescription += dataLabel(myLanguage, 5); // fino al
+                          bridgeDescription += interval.a.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                          bridgeDescription += ' (' + interval.length + dataLabel(myLanguage, 6); // giorni
+                          // PRIMO E ULTIMO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
+                          bridgeStartAt = month.bridges[index].da;
+                          bridgeEndsAt = month.bridges[index].a;
+                        } else {
+                          bridgeDescription += dataLabel(myLanguage, 7); // Il
+                          bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                          bridgeDescription += dataLabel(myLanguage, 8); // (1 giorno)
+                          // UNICO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
+                          bridgeStartAt = bridgeEndsAt = interval.da;
+                        }
+                      } 
+                      });
+                      setVisibleToast(true); 
+                      setToastPosition('center');
+                      setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
+                      setOverlayBackground('rgba(50, 50, 50, 0.05)'); // COLORE OVERLAY
+                      setToastRadius([12,12,12,12]); // STONDATURA
+                      setPaddingFromTop(48); // MARGINE TOP
+                      setPaddingFromBottom(48); // MARGINE BOTTTOM
+                      setToastBody( 
+                      <BridgeToast 
+                        title={day[2]}
+                        description={bridgeDescription}
+                        bridgeStart={bridgeStartAt}
+                        bridgeEnds={bridgeEndsAt}
+                      />);
+                      setToastAnimation('fade');
+                      setToastOnClose(undefined); 
                     }
                     }
                     }}
@@ -920,13 +771,13 @@ const CalendarScreen = ({callerPreferences}: any) => {
                     </TouchableOpacity>
                   </View>
                 );
-              })}
+              })
+            }
             </View>
           </View>
         </View>
       
-        {/* ADV SOLO SE isAdvertising = true*/}
-
+        {/* GOOGLE ADMOB SOLO SE isAdvertising = true*/}
         {isAdvertising && 
           ((index +1)  % monthsToLoad === 0) && (
             <View style={[styles.adBanner, {borderWidth:0}]} />

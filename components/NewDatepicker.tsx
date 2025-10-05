@@ -6,33 +6,11 @@ import { getLocales,  } from 'expo-localization';
 import useLocalizationData from '@/app/data/data';
 import DateTimePicker from 'react-native-ui-datepicker'; // https://www.npmjs.com/package/react-native-ui-datepicker
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { datepickerLabels as dataLabel } from '@/components/dataLabel';
 
 
 // LABEL LOCALIZZATE
-const dataLabel: any = {
-  'it-IT': [
-    'Aggiungi un evento',      // 0
-    '1 giorno',                // 1
-    '2 giorni',                // 2
-    '3 giorni',                // 3
-    'Personalizza',            // 4
-    'Annulla',                 // 5
-    'Aggiungi',                // 6
-    'Descrizione',             // 7
-    'Ripete',                  // 8
-    'Ripete ogni anno, il',     // 9
-    'primo',                   // 10
-    'secondo',                 // 11
-    'terzo',                   // 12
-    'quarto',                  // 13
-    'quinto',                  // 14
-    'di',                      // 15
-    'Chiudi',                  // 16
-    'Ok',                      // 17
-    'Aggiorna',                // 18 usato in alternativa a Aggiungi se EDIT
-    'Modifica evento',         // 19   :    :    :
-  ],
-}; 
+
 
 // INTERFACCIA COMPONENT
 interface NewDatepickerInterface {
@@ -102,8 +80,8 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   // console.log( `- - startDate: ${startDate.toLocaleDateString()}, endDate: ${endDate?.toLocaleDateString()}` );
   // console.log( `- - difference: ${differenceInDays(endDate, startDate)}`);
 
-  // SE NON VIENE PASSATO UN language SI PRENDE QUELLO DI SISTEMA
-  if (!language) language = (getLocales()[0].languageTag);
+  // LINGUA DI SISTEMA
+  language = (getLocales()[0].languageTag);
 
   // COPIA DEI PROPS IN INGRESSO PER USO INTERNO
   const [myStartDate, setMyStartDate] = useState<Date>(createUTCDate(startDate));     // DATA INIZIO
@@ -130,10 +108,10 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
 
   // LABEL DURATA EVENTO
   const dropdownLabel: string[] = [  // LABEL LOCALIZZATE DELLA DROPDOWN
-    dataLabel[language][1],
-    dataLabel[language][2],
-    dataLabel[language][3],
-    dataLabel[language][4],
+    dataLabel(language, 1),
+    dataLabel(language, 2),
+    dataLabel(language, 3),
+    dataLabel(language, 4),
     ];
 
   const data: {label: string, value: number | null }[] = [ // LABEL E RISPETTIVI VALORI DELLA DROPDOWN
@@ -185,8 +163,8 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
 
   // ASSEMBLA LE LABEL DEI RADIOBUTTON OGNI VOLTA CHE CAMBIANO myStartDate O myEndDate
   useEffect( () => {
-    setUpperRadioButtonLabel(`${dataLabel[language][9]} ${myStartDate.getDate()} di ${ months[myStartDate.getMonth()].label }`);
-    setLowerRadioButtonLabel(`${dataLabel[language][9]} ${dataLabel[language][9 + getWeekdayRecurrence(myStartDate)]} ${localizedDays[getDay(myStartDate) === 0 ? 6 : getDay(myStartDate) - 1]} di ${ months[myStartDate.getMonth()].label } `);
+    setUpperRadioButtonLabel(`${dataLabel(language, 9)} ${myStartDate.getDate()} di ${ months[myStartDate.getMonth()].label }`);
+    setLowerRadioButtonLabel(`${dataLabel(language, 9)} ${dataLabel(language, 9 + getWeekdayRecurrence(myStartDate))} ${localizedDays[getDay(myStartDate) === 0 ? 6 : getDay(myStartDate) - 1]} di ${ months[myStartDate.getMonth()].label } `);
   }, [myStartDate, myEndDate]);
 
   // ICONE USATE NELLO SCRIPT
@@ -396,7 +374,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       <View style={styles.modalContainer}>
         {/* TITOLO MODAL */}
         <Text style={styles.listTitle}>
-          {initialIndex !== null ? dataLabel[language][19] : dataLabel[language][0]}
+          {initialIndex !== null ? dataLabel(language, 19) : dataLabel(language, 0)}
           </Text>
 
         {/* ERRORE <-- IN ARRIVO DAL CHIAMANTE */}
@@ -406,7 +384,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
         <TextInput
           key={'description'}
           style={styles.textInput}
-          placeholder={dataLabel[language][7]}
+          placeholder={dataLabel(language, 7)}
           placeholderTextColor={descriptionAlert ? 'red' : '#929292'}
           value={myDescription}
           onChangeText={setMyDescription}
@@ -483,7 +461,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               style={[styles.repeatText, 
                 !radioButton && {color: '#333333'}
               ]}>
-                {dataLabel[language][8]}
+                {dataLabel(language, 8)}
                 </Text>{IcoArrow}
 
             </TouchableOpacity>
@@ -526,7 +504,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
             <TouchableOpacity 
               style={styles.cancelButton} 
               onPress={ () => onCancel() }>
-              <Text style={styles.cancelButtonText}>{dataLabel[language][5]}</Text>
+              <Text style={styles.cancelButtonText}>{dataLabel(language, 5)}</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.addButton} 
@@ -542,7 +520,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                 setDescriptionAlert(true)
               }>
               <Text style={styles.addButtonText}>
-                {initialIndex !== null ? dataLabel[language][18] : dataLabel[language][6]}
+                {initialIndex !== null ? dataLabel(language, 18) : dataLabel(language, 6)}
                 </Text>
             </TouchableOpacity>
           </View>
@@ -606,7 +584,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               onPress={ () => 
                 setDatepickerVisible(false) // CHIUDE IL DATEPICKER E LASCIA INVARIATO
               }>
-              {/*<Text style={styles.cancelButtonText}>{dataLabel[language][16]}</Text>*/}
+              {/*<Text style={styles.cancelButtonText}>{dataLabel(language, 16]}</Text>*/}
               <IconSymbol size={24} name="xmark" color={'#969696'} style={{marginLeft:0}} />
             </TouchableOpacity>
             {/* CONFERMA CALENDARIO */}
@@ -616,7 +594,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                 datepickerCaller === 'startDate' ? setMyStartDate(selectedDate) : setMyEndDate(selectedDate); // AGGIORNA LA VARIABILE CHIAMANTE
                 setDatepickerVisible(false) // CHIUDE IL DATEPICKER
               }}>
-              {/*<Text style={styles.addButtonText}>{dataLabel[language][17]}</Text>*/}
+              {/*<Text style={styles.addButtonText}>{dataLabel(language, 17]}</Text>*/}
               <IconSymbol size={24} name="checkmark" color={'#0088ff'} style={{marginRight:0}} />
             </TouchableOpacity>
           </View>

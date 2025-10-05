@@ -1,3 +1,5 @@
+console.log('[PREFERENCES.TSX]');
+
 import useLocalizationData from '@/app/data/data';
 import DropdownComponent from '@/components/ui/DropdownComponent'; // DROPDOWN DURATA PONTI
 // import DropdownFDOW from '@/components/ui/DropdownFDoW'; // DROPDOWN GIORNO SETTIMANA --- moment. disabled
@@ -195,9 +197,9 @@ export default function Preferences() {
     };
     initializePreferences();
     //setPreferences(PREFERENCES);    // INIZIALIZZA VARIABILE prferences LETTE DALLO STORAGE
-    setMyPreferences(PREFERENCES);  // IDEM myPreferences
+    setMyPreferences({...PREFERENCES});  // IDEM myPreferences
 
-    console.log(`[PREFERENCES}> myPreferences inizializzato al boot: ${JSON.stringify(myPreferences)}`);
+    //console.log(`[PREFERENCES}\n- - myPreferences inizializzato al boot: ${JSON.stringify(myPreferences)}`);
   }, []);
 
   // GESTISCE PULSANTE 'MODIFICA LISTA FESTIVITA'
@@ -294,7 +296,7 @@ export default function Preferences() {
   // AGGIORNA CONTEXT A OGNI CAMBAIMENTO DI PREFERENCES
   useEffect( () => {
     //setPreferences(PREFERENCES);
-    setMyPreferences(PREFERENCES);
+    setMyPreferences({...PREFERENCES});
     // console.log('[]PREFERENCES]> useEffect: aggiorna myPreferences');
   }, [PREFERENCES]);
 
@@ -383,22 +385,21 @@ export default function Preferences() {
             borderWidth: 0,
             pointerEvents: 'box-none',
           }}>
-            <Text style={styles.sectionTitle}>{dataLabel[myLanguage][0]}</Text>
+            <Text style={styles.sectionTitle}>{switchNames(myLanguage,12)}</Text>
           </View>
 
           {/* ==================== DROPDOWN DURATA PONTI ==================== */}
 
           <View style={styles.groupContainer}>
-            <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[myLanguage][1]}</Text>
+            <Text style={[styles.listTitle, {textAlign:'center'}]}>{switchNames(myLanguage, 11)}</Text>
             <DropdownComponent 
-              selectedValue={parseInt(PREFERENCES.bridgeDuration)}
+              selectedValue={parseInt(myPreferences.bridgeDuration)}
               onChange={ async (value) => {
                 PREFERENCES.bridgeDuration = value;
                 savePreferences();
-                //setPreferences(PREFERENCES); // SALVA PREFERENCES NEL CONTEXT
                 setMyPreferences({ ...PREFERENCES });
-                console.log(`[PREFERENCES]> aggiornata durata: ${myPreferences.bridgeDuration}`);
-                console.log(`[PREFERENCES]> myPreferences: ${JSON.stringify(myPreferences)}`);
+                // console.log(`[PREFERENCES]> aggiornata durata: ${myPreferences.bridgeDuration}`);
+                // console.log(`[PREFERENCES]> myPreferences: ${JSON.stringify(myPreferences)}`);
               }}
             />
           </View>                   
@@ -413,10 +414,9 @@ export default function Preferences() {
             }}
           /> */}
           {/* ==================== SETTIMANA ==================== */}
-
           <View style={styles.groupContainer}>
             <View style={{width:'100%'}}>
-              <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[myLanguage][3]}</Text>
+              <Text style={[styles.listTitle, {textAlign:'center'}]}>{switchNames(myLanguage, 13)}</Text>
             </View>
             <PreferenceSwitch preferenceKey="domenica"  />
             <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
@@ -437,16 +437,16 @@ export default function Preferences() {
 
             <View style={styles.groupContainer}>
               <View style={{width:'100%'}}>
-                <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[myLanguage][4]}</Text>
+                <Text style={[styles.listTitle, {textAlign:'center'}]}>{switchNames(myLanguage, 10)}</Text>
               </View>
               <PreferenceSwitch preferenceKey="festivitaNazionali" />
               <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-              {/*<PreferenceSwitch preferenceKey="festivitaLocali" />
-              <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>*/}
+                  {/*<PreferenceSwitch preferenceKey="festivitaLocali" />
+                  <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>*/}
               <PreferenceSwitch preferenceKey="festivitaPersonali" />
               <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-              <PreferenceSwitch preferenceKey="feriePersonali" />
-              <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
+                  {/* <PreferenceSwitch preferenceKey="feriePersonali" />
+                  <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View> */}
               <View style={styles.editLinkContainer}>
                 <TouchableOpacity onPress={handleEditHolydays} style={styles.editButton}>
                   <IconSymbol size={20} name="pencil" color={colors.text} />
@@ -455,12 +455,12 @@ export default function Preferences() {
               </View>
             </View>
           </Suspense>  
-          {/* ==================== PASQUA ==================== */}
+          {/* ==================== RICORRENZE CATTLICHE  ==================== */}
           <Suspense>
 
             <View style={styles.groupContainer}>
               <View style={{width:'100%'}}>
-                <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[myLanguage][6]}</Text>
+                <Text style={[styles.listTitle, {textAlign:'center'}]}>{switchNames(myLanguage, 14)}</Text>
               </View>
               <PreferenceSwitch preferenceKey="pasqua" />
               <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>

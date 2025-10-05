@@ -1,10 +1,12 @@
+console.log('[HOLYDAYS.TSX]');
 import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
 import DropdownCountry from '@/components/ui/DropdownCountry'; // COUNTRY PICKER 
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import React, { useEffect, useState, Suspense,  } from 'react';
-import DateTimePicker, { useDefaultStyles, } from 'react-native-ui-datepicker';
+//import DateTimePicker, { useDefaultStyles, } from 'react-native-ui-datepicker';
+import { useDefaultStyles, } from 'react-native-ui-datepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales,  } from 'expo-localization';
 //import DatepicketSelector from '@/components/ui/DatepickerSelector'; // --> MUORE COL REFACTORING
@@ -320,7 +322,7 @@ export default function HolydaysScreen({}: any) {
   // RICEVE DAL CONTEXT
   const { 
     newPersonalHolydays, setNewPersonalHolydays, // NUOVO
-    personalHolydays, setPersonalHolydays, // --> MUORE COL REFACTORING
+    // personalHolydays, setPersonalHolydays, // --> MUORE COL REFACTORING
     nationalHolydays, setNationalHolydays,
     // vacationPeriods, setVacationPeriods, // --> MUORE COL REFACTORING
     myCountry, setMyCountry,
@@ -465,7 +467,7 @@ export default function HolydaysScreen({}: any) {
         return;
       } else {
       // A.2.1) Periodo e startDate coincide: ERRORE
-        showToast(`La data di inizio del periodo coincide con una festività nazionale: ${isNationalHolyday.description}`, true);
+        showToast(dataLabel(myLanguage, 21), true); // Msg: Inizio periodo coincide con festività naz
         return;
     }
   } 
@@ -656,10 +658,9 @@ const handleEdit = (index: number) => {
           async () => {
             setMyCountry(getLocales()[0].languageTag);
             await saveData(getLocales()[0].languageTag, 'myCountry');
-            //console.log('dropDown ripristinato a:', getLocales()[0].languageTag);
           }
         }>
-        <IconSymbol size={20} name="gobackward" color={colors.blueBar} style={{paddingBottom:8,}}/>
+        <IconSymbol size={20} name="gobackward" color={colors.blueBar} style={{marginBottom:10,}}/>
       </TouchableOpacity>
     )
   }
@@ -768,7 +769,7 @@ const handleEdit = (index: number) => {
                     <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
                       
                       {/* CERCHIO COLORATO CON DATA */}
-                      {holiday.endDate ? // STAMPA CERCHIETTO SOTTO IN OGNI CASO, SE = PERIODO SPOSTATTO VERSO DX
+                      {holiday.endDate ? // 1) STAMPA CERCHIETTO SOTTOSTANTE IN OGNI CASO, 2) SE E' UN PERIODO SPOSTATO 6PX A DX
                         <View style={[styles.dot32noshadow, {marginLeft:6}]} />
                           :
                         <View style={styles.dot32noshadow} />
@@ -780,9 +781,15 @@ const handleEdit = (index: number) => {
                       <View style={{flexDirection:'column'}} >
 
                         <View style={{flexDirection:'row'}}>
-                          {/* GIORNO SINGOLO = DATA SINGOLA | PERIODO = DOPPIA DATA */}
+                          {/* 1) SE GIORNO SINGOLO STAMPA DATA SINGOLA CON MESE ESTESO (E ANNO, SOLO SE DIVERSO DALL'ANNO IN CORSO) 
+                              2) SE PERIODO STAMPA DOPPIA DATA CON MESE ABBREVIATO
+                                 STAMPA ANNO SOLO SE NON E' UN EVENTO RICORRENTE*/}
                           {!holiday.endDate ? 
-                            <Text style={styles.itemDate}>{`${holiday.startDate.getDate()} ${months[holiday.startDate.getMonth()]?.label}`}</Text>
+                            <>
+                              <Text style={styles.itemDate}>{`${holiday.startDate.getDate()} ${months[holiday.startDate.getMonth()]?.label}`}</Text>
+                              {/*  SCRIVE ANNO (SOLO SE DIVERSO DALL' ANNO CORRENTE) */}
+                              {holiday.startDate.getFullYear() !== new Date().getFullYear() && <Text style={styles.itemDate}>{holiday.startDate.getFullYear()}</Text>}
+                            </>
                           :
                             <Text style={styles.itemDate}>
                               {holiday.startDate.getDate()}
@@ -798,16 +805,17 @@ const handleEdit = (index: number) => {
                               {holiday.repeatOnDate || holiday.repeatOnDay ? '' : holiday.endDate.getFullYear()}
                             </Text>
                           }
-                          {/*  ANNO, SOLO SE DIVERSO DALL' ANNO CORRENTE */}
-                          {holiday.startDate.getFullYear() !== new Date().getFullYear() && <Text style={styles.itemDate}>{holiday.startDate.getFullYear()}</Text>}
                         </View>
 
                         <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
+
                         <View style={{flexDirection:'row', alignItems:'flex-end'}}>
                           {(holiday.repeatOnDate || holiday.repeatOnDay) && <IconSymbol size={16} name="repeat" color={colors.text} style={{marginTop:8, marginLeft:10, marginRight:4, }}/>}
                           <Text style={[styles.itemDescription, {paddingLeft: 0, maxWidth:240, fontStyle:'italic', fontWeight:400}]}>{(holiday.repeatOnDate || holiday.repeatOnDay) && 'ripete ogni anno'}</Text>
                         </View>
+
                       </View>
+
                     </View>
                     <View>
                     <View style={styles.itemActions}>
@@ -898,7 +906,7 @@ const handleEdit = (index: number) => {
             <View style={styles.backgroundModal}>
               <View style={styles.modalContainer}>
                 <NewDatepicker
-                  language={myCountry}                    // LINGUA
+                  language={myLanguage}                    // LINGUA
                   startDate={dpickerStartDate}            // DATA INIZIO
                   endDate={dpickerEndDate}                // DATA FINE O null
                   description={dpickerDescription}        // DESCRIZIONE

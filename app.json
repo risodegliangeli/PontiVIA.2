@@ -4,7 +4,7 @@
     "description": "Il calendario smart che trova i ponti fra le festività",
     "slug": "pontivia",
     "owner": "risodegliangeli",
-    "version": "0.1.0",
+    "version": "0.1.2b",
     "icon": "./assets/images/pontivia-splashpage.png",
     "scheme": "cercaponti",
     "userInterfaceStyle": "automatic",
@@ -16,7 +16,7 @@
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "com.angelieassociati.pontivia",
-      "buildNumber": "0.1.0",
+      "buildNumber": "0.1.2b",
       "userInterfaceStyle": "automatic",
       "supportsTablet": true
     },

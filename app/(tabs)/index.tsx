@@ -1,3 +1,4 @@
+console.log('[INDEX.TSX]');
 //import { PREFERENCES } from '@/app/(tabs)/preferences';
 import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
@@ -21,7 +22,6 @@ const useThemeColors = () => {
                                       
 ########################################################################################################### */
 export default function HomeScreen() {
-  console.log(`[INDEX]`);
 
   // GESTIONE COLORE
   const colors = useThemeColors();
