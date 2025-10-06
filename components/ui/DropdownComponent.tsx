@@ -2,31 +2,34 @@ import { Colors } from '@/constants/Colors';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, useColorScheme } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
+import { datepickerLabels } from '@/components/dataLabel';
 
 const useThemeColors = () => {
     const colorScheme = useColorScheme();
     return Colors[colorScheme ?? 'light'];
   };
 
-const dataLabel = [
-  '1 giorno 😊',
-  '2 giorni 😀',
-  '3 giorni 🤪'
-];
-
-const data = [
-  { label: dataLabel[0], value: 1 },
-  { label: dataLabel[1], value: 2 },
-  { label: dataLabel[2], value: 3 },
-];
-
 interface DropDownComponentProps{
+  language: string;
   selectedValue: number; // Il valore selezionato arriva come numero
   onChange: (value: number) => void;
 }
 
 /* ================================================================ */
-const DropdownComponent: React.FC<DropDownComponentProps> = ({selectedValue, onChange}) => {
+const DropdownComponent: React.FC<DropDownComponentProps> = ({language, selectedValue, onChange}) => {
+  
+  
+  const dataLabel = [
+    datepickerLabels(language, 1) + ' 😊',
+    datepickerLabels(language, 2) + ' 😀',
+    datepickerLabels(language, 3) + '🤪'
+  ];
+  const data = [
+  { label: dataLabel[0], value: 1 },
+  { label: dataLabel[1], value: 2 },
+  { label: dataLabel[2], value: 3 },
+];
+  
   const [value, setValue] = useState(selectedValue);
   const [isFocus, setIsFocus] = useState(false);
   const colors = useThemeColors();

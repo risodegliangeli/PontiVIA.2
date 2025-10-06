@@ -81,7 +81,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   // console.log( `- - difference: ${differenceInDays(endDate, startDate)}`);
 
   // LINGUA DI SISTEMA
-  language = (getLocales()[0].languageTag);
+  language = (getLocales()[0].languageTag).slice(0,2);
 
   // COPIA DEI PROPS IN INGRESSO PER USO INTERNO
   const [myStartDate, setMyStartDate] = useState<Date>(createUTCDate(startDate));     // DATA INIZIO

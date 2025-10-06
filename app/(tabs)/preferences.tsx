@@ -393,13 +393,12 @@ export default function Preferences() {
           <View style={styles.groupContainer}>
             <Text style={[styles.listTitle, {textAlign:'center'}]}>{switchNames(myLanguage, 11)}</Text>
             <DropdownComponent 
+              language={myLanguage}
               selectedValue={parseInt(myPreferences.bridgeDuration)}
               onChange={ async (value) => {
                 PREFERENCES.bridgeDuration = value;
                 savePreferences();
                 setMyPreferences({ ...PREFERENCES });
-                // console.log(`[PREFERENCES]> aggiornata durata: ${myPreferences.bridgeDuration}`);
-                // console.log(`[PREFERENCES]> myPreferences: ${JSON.stringify(myPreferences)}`);
               }}
             />
           </View>                   

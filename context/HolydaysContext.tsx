@@ -35,19 +35,16 @@ interface NewHolyday {
 
 // INTERFACCIA DEL CONTEXT ---------------------------------------------------------------------
 interface HolydaysContextType {
-  // personalHolydays: Holiday[]; 
-  //   setPersonalHolydays: React.Dispatch< React.SetStateAction<Holiday[]> >; // OLD --> MORIRA' COL REFACTORING
-  myCountry: string; 
-    setMyCountry: React.Dispatch<React.SetStateAction<string>>; // OK, RESTA
-  nationalHolydays: Holiday[]; 
-    setNationalHolydays: React.Dispatch<React.SetStateAction<Holiday[]>>; // OK, RESTA
   newPersonalHolydays: NewHolyday[]; 
-    setNewPersonalHolydays: React.Dispatch< React.SetStateAction<NewHolyday[]> >; // NEW
-  // preferences: typeof SAVED_PREFERENCES;
-  //   setPreferences: React.Dispatch<React.SetStateAction<typeof SAVED_PREFERENCES>>;
+    setNewPersonalHolydays: React.Dispatch< React.SetStateAction<NewHolyday[]> >; // FESTIVITA PERSONALI
+  nationalHolydays: Holiday[]; 
+    setNationalHolydays: React.Dispatch<React.SetStateAction<Holiday[]>>; // FESTIVITA NAZIONALI
   myPreferences: typeof SAVED_PREFERENCES; // * * * new * * * 
-    setMyPreferences: React.Dispatch<React.SetStateAction<typeof SAVED_PREFERENCES>>;
-
+    setMyPreferences: React.Dispatch<React.SetStateAction<typeof SAVED_PREFERENCES>>; // PREFERENZE/FILTRI
+  myCountry: string; 
+    setMyCountry: React.Dispatch<React.SetStateAction<string>>; // GESTISCE LA DROPDOWN FESTIVITA PER PAESE
+  myLanguage: string;
+    setMyLanguage: React.Dispatch<React.SetStateAction<string>>; // GESTISCE LA LINGUA DELL'APP
 }
 
 // CREAZIONE DEL CONTEXT VERO E PROPRIO PER PASSARE I DATI IN TUTTA L'APP ======================
@@ -67,13 +64,14 @@ interface HolydaysProviderProps {
 export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) => {
 
   // LINGUA
-  const myLanguage = getLocales()[0].languageTag;
+  const systemLanguage = getLocales()[0].languageTag;
 
   // VARIABILI GLOBALI
   const [newPersonalHolydays, setNewPersonalHolydays] = useState<NewHolyday[]>([]);   // NEW --> newPersonalHolydays
   const [nationalHolydays, setNationalHolydays] = useState<Holiday[]>([]); // NON LO INIZILIZZO ADESSO, LO FA holydays.tsx ALLA CHIAMATA
-  const [myCountry, setMyCountry] = useState(myLanguage); // VALORE DELLA DROPDOWN (es: 'it-IT), INIZIALMENTE = locale
-  // const [preferences, setPreferences] = useState(SAVED_PREFERENCES);      // <--- DA ELIMINARE COL REFACTORING
+  const [myCountry, setMyCountry] = useState(systemLanguage); // es: 'it-IT' --> DROPDOWN
+  const [myLanguage, setMyLanguage] = useState(systemLanguage.slice(0,2)); // es 'it' --> LINGUA SISTEMA
+
   const [myPreferences, setMyPreferences] = useState(SAVED_PREFERENCES);  // <--- NUOVO
 
   //console.log(`[CONTEXT] myPreferences dopo dichiarazione: ${JSON.stringify(myPreferences)}`);

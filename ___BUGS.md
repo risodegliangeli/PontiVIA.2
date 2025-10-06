@@ -1,6 +1,6 @@
 # TICKET APERTI:
 
-
+---
 
 - ### FESTIVITA NAZIONALI EDITABILI/DISATTIVABILI
 -- o perlomeno ogni data checkabile (on/off)

@@ -319,7 +319,7 @@ export function holydayLabels(language,item) {
     ],  
     'de':[
         'Meine Termine',                                            // 0
-        'Füge deine besonderen Tage hinzu',                         // 1
+        'Füge besonderen Tage hinzu',                         // 1
         'Die nationalen Feiertage',                                 // 2
         'Die langen Zeiträume',                                     // 3
         'Deine besonderen Tage',                                    // 4
@@ -492,146 +492,146 @@ export function holydayLabels(language,item) {
 // LABEL USATE IN calendarScreen.tsx
 export function calendarScrenLabels(language, item) {
     const dataLabel: any = {
-    'it': [
-        'Ponte!',                                   // 0
-        'PontiVIA! ha trovato questo ponte per te', // 1
-        'ponti trovati!',                           // 2
-        'ponte trovato!',                           // 3
-        'Dal ',                                     // 4
-        ' fino al ',                                // 5
-        ' giorni)',                                 // 6
-        'Il ',                                      // 7
-        ' (1 giorno)',                              // 8
-        'Possibile ponte!',                         // 9
-        'Annulla',                                  // 10
-        'Aggiungi'                                  // 11
-    ],
-    'fr':[
-        'Pont !',                                   // 0
-        'PontiVIA! a trouvé ce pont pour vous',     // 1
-        'ponts trouvés !',                          // 2
-        'pont trouvé !',                            // 3
-        'Du ',                                      // 4
-        ' au ',                                     // 5
-        ' jours)',                                  // 6
-        'Le ',                                      // 7
-        ' (1 jour)',                                // 8
-        'Pont possible !',                          // 9
-        'Annuler',                                  // 10
-        'Ajouter'                                   // 11
-    ],
-    'es':[
-        '¡Puente!',                                 // 0
-        '¡PontiVIA! encontró este puente para ti',  // 1
-        '¡puentes encontrados!',                    // 2
-        '¡puente encontrado!',                      // 3
-        'Del ',                                     // 4
-        ' al ',                                     // 5
-        ' días)',                                   // 6
-        'El ',                                      // 7
-        ' (1 día)',                                 // 8
-        '¡Posible puente!',                         // 9
-        'Cancelar',                                 // 10
-        'Añadir'                                    // 11
-    ],
-    'de':[
-        'Brücke!',                                  // 0
-        'PontiVIA! hat diese Brücke für dich gefunden', // 1
-        'Brücken gefunden!',                        // 2
-        'Brücke gefunden!',                         // 3
-        'Vom ',                                     // 4
-        ' bis ',                                    // 5
-        ' Tage)',                                   // 6
-        'Am ',                                      // 7
-        ' (1 Tag)',                                 // 8
-        'Mögliche Brücke!',                         // 9
-        'Abbrechen',                                // 10
-        'Hinzufügen'                                // 11
-    ],  
-    'en':[
-        'Bridge!',                                  // 0
-        'PontiVIA! found this bridge for you',      // 1
-        'bridges found!',                           // 2
-        'bridge found!',                            // 3
-        'From ',                                    // 4
-        ' to ',                                     // 5
-        ' days)',                                   // 6
-        'On ',                                      // 7
-        ' (1 day)',                                 // 8
-        'Possible bridge!',                         // 9
-        'Cancel',                                   // 10
-        'Add'                                       // 11
-    ],
-'nl':[
-        'Brug!',                                    // 0
-        'PontiVIA! vond deze brug voor jou',        // 1
-        'bruggen gevonden!',                        // 2
-        'brug gevonden!',                           // 3
-        'Van ',                                     // 4
-        ' tot ',                                    // 5
-        ' dagen)',                                  // 6
-        'Op ',                                      // 7
-        ' (1 dag)',                                 // 8
-        'Mogelijke brug!',                          // 9
-        'Annuleren',                                // 10
-        'Toevoegen'                                 // 11
-    ],
-    'pt':[
-        'Ponte!',                                   // 0
-        'PontiVIA! encontrou esta ponte para você', // 1
-        'pontes encontradas!',                      // 2
-        'ponte encontrada!',                        // 3
-        'De ',                                      // 4
-        ' até ',                                    // 5
-        ' dias)',                                   // 6
-        'Em ',                                      // 7
-        ' (1 dia)',                                 // 8
-        'Ponte possível!',                          // 9
-        'Cancelar',                                 // 10
-        'Adicionar'                                 // 11
-    ],
-    'hr': [
-        'Most!',                                    // 0
-        'PontiVIA! je pronašao ovaj most za tebe',  // 1
-        'mostovi pronađeni!',                       // 2
-        'most pronađen!',                           // 3
-        'Od ',                                      // 4
-        ' do ',                                     // 5
-        ' dana)',                                   // 6
-        'Na ',                                      // 7
-        ' (1 dan)',                                 // 8
-        'Moguć most!',                              // 9
-        'Otkaži',                                   // 10
-        'Dodaj'                                     // 11
-    ],
-    'si': [
-        'Most!',                                    // 0
-        'PontiVIA! je našel ta most za tebe',       // 1
-        'mostovi najdeni!',                         // 2
-        'most najden!',                             // 3
-        'Od ',                                      // 4
-        ' do ',                                     // 5
-        ' dni)',                                    // 6
-        'Na ',                                      // 7
-        ' (1 dan)',                                 // 8
-        'Možen most!',                              // 9
-        'Prekliči',                                 // 10
-        'Dodaj'                                     // 11
-    ],
-    'gr': [
-        'Γέφυρα!',                                  // 0
-        'Το PontiVIA! βρήκε αυτή τη γέφυρα για σας', // 1
-        'γέφυρες βρέθηκαν!',                        // 2
-        'γέφυρα βρέθηκε!',                          // 3
-        'Από ',                                     // 4
-        ' έως ',                                    // 5
-        ' μέρες)',                                  // 6
-        'Στις ',                                    // 7
-        ' (1 μέρα)',                                // 8
-        'Πιθανή γέφυρα!',                           // 9
-        'Ακύρωση',                                  // 10
-        'Προσθήκη'                                  // 11
-    ]
+        'it': [
+            'Ponte!',                                   // 0
+            'PontiVIA! ha trovato questo ponte per te', // 1
+            'ponti trovati!',                           // 2
+            'ponte trovato!',                           // 3
+            'Dal ',                                     // 4
+            ' fino al ',                                // 5
+            ' giorni)',                                 // 6
+            'Il ',                                      // 7
+            ' (1 giorno)',                              // 8
+            'Possibile ponte!',                         // 9
+            'Annulla',                                  // 10
+            'Aggiungi'                                  // 11
+        ],
+        'fr':[
+            'Pont !',                                   // 0
+            'PontiVIA! a trouvé ce pont pour vous',     // 1
+            'ponts trouvés !',                          // 2
+            'pont trouvé !',                            // 3
+            'Du ',                                      // 4
+            ' au ',                                     // 5
+            ' jours)',                                  // 6
+            'Le ',                                      // 7
+            ' (1 jour)',                                // 8
+            'Pont possible !',                          // 9
+            'Annuler',                                  // 10
+            'Ajouter'                                   // 11
+        ],
+        'es':[
+            '¡Puente!',                                 // 0
+            '¡PontiVIA! encontró este puente para ti',  // 1
+            '¡puentes encontrados!',                    // 2
+            '¡puente encontrado!',                      // 3
+            'Del ',                                     // 4
+            ' al ',                                     // 5
+            ' días)',                                   // 6
+            'El ',                                      // 7
+            ' (1 día)',                                 // 8
+            '¡Posible puente!',                         // 9
+            'Cancelar',                                 // 10
+            'Añadir'                                    // 11
+        ],
+        'de':[
+            'Brücke!',                                  // 0
+            'PontiVIA! hat diese Brücke für dich gefunden', // 1
+            'Brücken gefunden!',                        // 2
+            'Brücke gefunden!',                         // 3
+            'Vom ',                                     // 4
+            ' bis ',                                    // 5
+            ' Tage)',                                   // 6
+            'Am ',                                      // 7
+            ' (1 Tag)',                                 // 8
+            'Mögliche Brücke!',                         // 9
+            'Abbrechen',                                // 10
+            'Hinzufügen'                                // 11
+        ],  
+        'en':[
+            'Bridge!',                                  // 0
+            'PontiVIA! found this bridge for you',      // 1
+            'bridges found!',                           // 2
+            'bridge found!',                            // 3
+            'From ',                                    // 4
+            ' to ',                                     // 5
+            ' days)',                                   // 6
+            'On ',                                      // 7
+            ' (1 day)',                                 // 8
+            'Possible bridge!',                         // 9
+            'Cancel',                                   // 10
+            'Add'                                       // 11
+        ],
+    'nl':[
+            'Brug!',                                    // 0
+            'PontiVIA! vond deze brug voor jou',        // 1
+            'bruggen gevonden!',                        // 2
+            'brug gevonden!',                           // 3
+            'Van ',                                     // 4
+            ' tot ',                                    // 5
+            ' dagen)',                                  // 6
+            'Op ',                                      // 7
+            ' (1 dag)',                                 // 8
+            'Mogelijke brug!',                          // 9
+            'Annuleren',                                // 10
+            'Toevoegen'                                 // 11
+        ],
+        'pt':[
+            'Ponte!',                                   // 0
+            'PontiVIA! encontrou esta ponte para você', // 1
+            'pontes encontradas!',                      // 2
+            'ponte encontrada!',                        // 3
+            'De ',                                      // 4
+            ' até ',                                    // 5
+            ' dias)',                                   // 6
+            'Em ',                                      // 7
+            ' (1 dia)',                                 // 8
+            'Ponte possível!',                          // 9
+            'Cancelar',                                 // 10
+            'Adicionar'                                 // 11
+        ],
+        'hr': [
+            'Most!',                                    // 0
+            'PontiVIA! je pronašao ovaj most za tebe',  // 1
+            'mostovi pronađeni!',                       // 2
+            'most pronađen!',                           // 3
+            'Od ',                                      // 4
+            ' do ',                                     // 5
+            ' dana)',                                   // 6
+            'Na ',                                      // 7
+            ' (1 dan)',                                 // 8
+            'Moguć most!',                              // 9
+            'Otkaži',                                   // 10
+            'Dodaj'                                     // 11
+        ],
+        'si': [
+            'Most!',                                    // 0
+            'PontiVIA! je našel ta most za tebe',       // 1
+            'mostovi najdeni!',                         // 2
+            'most najden!',                             // 3
+            'Od ',                                      // 4
+            ' do ',                                     // 5
+            ' dni)',                                    // 6
+            'Na ',                                      // 7
+            ' (1 dan)',                                 // 8
+            'Možen most!',                              // 9
+            'Prekliči',                                 // 10
+            'Dodaj'                                     // 11
+        ],
+        'gr': [
+            'Γέφυρα!',                                  // 0
+            'Το PontiVIA! βρήκε αυτή τη γέφυρα για σας', // 1
+            'γέφυρες βρέθηκαν!',                        // 2
+            'γέφυρα βρέθηκε!',                          // 3
+            'Από ',                                     // 4
+            ' έως ',                                    // 5
+            ' μέρες)',                                  // 6
+            'Στις ',                                    // 7
+            ' (1 μέρα)',                                // 8
+            'Πιθανή γέφυρα!',                           // 9
+            'Ακύρωση',                                  // 10
+            'Προσθήκη'                                  // 11
+        ]
     };
     return dataLabel[language][item];
 }
@@ -639,7 +639,7 @@ export function calendarScrenLabels(language, item) {
 // LABEL USATE IN NewDatepicker
 export function datepickerLabels(language, item) {
     const dataLabel: any = {
-        'it-IT': [
+        'it': [
             'Aggiungi un evento',      // 0
             '1 giorno',                // 1
             '2 giorni',                // 2
@@ -661,7 +661,7 @@ export function datepickerLabels(language, item) {
             'Aggiorna',                // 18
             'Modifica evento',         // 19
         ],
-        'fr-FR': [
+        'fr': [
             'Ajouter un événement',    // 0
             '1 jour',                  // 1
             '2 jours',                 // 2
@@ -683,7 +683,7 @@ export function datepickerLabels(language, item) {
             'Mettre à jour',           // 18
             'Modifier événement',      // 19
         ],
-        'es-ES': [
+        'es': [
             'Añadir un evento',        // 0
             '1 día',                   // 1
             '2 días',                  // 2
@@ -705,7 +705,7 @@ export function datepickerLabels(language, item) {
             'Actualizar',              // 18
             'Modificar evento',        // 19
         ],
-        'de-DE': [
+        'de': [
             'Ereignis hinzufügen',     // 0
             '1 Tag',                   // 1
             '2 Tage',                  // 2
@@ -727,7 +727,7 @@ export function datepickerLabels(language, item) {
             'Aktualisieren',           // 18
             'Ereignis bearbeiten',     // 19
         ],
-        'en-GB': [
+        'en': [
             'Add an event',            // 0
             '1 day',                   // 1
             '2 days',                  // 2
@@ -749,7 +749,7 @@ export function datepickerLabels(language, item) {
             'Update',                  // 18
             'Edit event',              // 19
         ],
-        'nl-NL': [
+        'nl': [
             'Evenement toevoegen',     // 0
             '1 dag',                   // 1
             '2 dagen',                 // 2
@@ -771,7 +771,7 @@ export function datepickerLabels(language, item) {
             'Bijwerken',               // 18
             'Evenement bewerken',      // 19
         ],
-        'pt-PT': [
+        'pt': [
             'Adicionar um evento',     // 0
             '1 dia',                   // 1
             '2 dias',                  // 2
@@ -793,7 +793,7 @@ export function datepickerLabels(language, item) {
             'Atualizar',               // 18
             'Editar evento',           // 19
         ],
-        'hr-HR': [
+        'hr': [
             'Dodaj događaj',           // 0
             '1 dan',                   // 1
             '2 dana',                  // 2
@@ -815,7 +815,7 @@ export function datepickerLabels(language, item) {
             'Ažuriraj',                // 18
             'Uredi događaj',           // 19
         ],
-        'sl-SI': [
+        'si': [
             'Dodaj dogodek',           // 0
             '1 dan',                   // 1
             '2 dni',                   // 2
@@ -837,7 +837,7 @@ export function datepickerLabels(language, item) {
             'Posodobi',                // 18
             'Uredi dogodek',           // 19
         ],
-        'el-GR': [
+        'gr': [
             'Προσθήκη συμβάντος',      // 0
             '1 μέρα',                  // 1
             '2 μέρες',                 // 2
