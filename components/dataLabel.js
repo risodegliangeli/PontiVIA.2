@@ -268,6 +268,10 @@ export function holydayLabels(language,item) {
         '(es. un evento che ricorre ogni anno)',                    // 19
         '(es. un periodo di ferie)',                                // 20
         'La data di inizio coincide con una festività nazionale',   // 21
+        'Questa data fa parte di un periodo esistente',             // 22
+        'Attenzione, l\'evento si sovrappone a ',                   // 23
+        'Attenzione, l\'evento è in conflitto con ',                // 24
+        'Questa data è già presente ',                              // 25
     ],
     'fr':[
         'Mes dates',                                                // 0
@@ -862,3 +866,4 @@ export function datepickerLabels(language, item) {
     };
     return dataLabel[language][item];
 }
+

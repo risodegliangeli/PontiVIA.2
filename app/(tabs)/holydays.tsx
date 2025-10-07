@@ -33,7 +33,7 @@ const useThemeColors = () => {
 };
 
 // LEGGE LINGUA DI SISTEMA
-const myLanguage: string = (getLocales()[0].languageTag).slice(0,2); // 'it', 'fr', 'de', ecc
+//const myLanguage: string = (getLocales()[0].languageTag).slice(0,2); // 'it', 'fr', 'de', ecc
 
 // LEGGE NOMI DEI MESI LOCALIZZATI DA data.tsx
 const { months } = useLocalizationData();
@@ -326,6 +326,7 @@ export default function HolydaysScreen({}: any) {
     nationalHolydays, setNationalHolydays,
     // vacationPeriods, setVacationPeriods, // --> MUORE COL REFACTORING
     myCountry, setMyCountry,
+    myLanguage
     } = useHolydays();
   
   /* ============================================================================= 
@@ -341,25 +342,25 @@ export default function HolydaysScreen({}: any) {
   const [dpickerRepeatOnDay, setDpickerRepeatOnDay] = useState<boolean | undefined>();
   
   /*  VALORI NUOVA MODAL  */
-  const [datePickerSelected, setDatePickerSelected] = useState<Date | null>(null); // DATA SELEZIONATA SU PICKER SINGLE DAY
+  // const [datePickerSelected, setDatePickerSelected] = useState<Date | null>(null); // DATA SELEZIONATA SU PICKER SINGLE DAY
   
-  const [startDate, setStartdate] = useState<Date | null>(null); // DATA INIZIO SELEZIONATA SU PICKER PERIOD
-  const [endDate, setEndDate] = useState<Date | null>(null);     // DATA FINE SELEZIONATA SU PICKER PERIOD
+  // const [startDate, setStartdate] = useState<Date | null>(null); // DATA INIZIO SELEZIONATA SU PICKER PERIOD
+  // const [endDate, setEndDate] = useState<Date | null>(null);     // DATA FINE SELEZIONATA SU PICKER PERIOD
 
-  const defaultStyles = useDefaultStyles();
-  const minDate = new Date( new Date().getFullYear() + '-01-01'); // MIN E MAX SONO IMPOSTATI NELL'ANNO 2020 (BISESTILE)
-  const maxDate = new Date( new Date().getFullYear() + '-12-31'); // PER POTR VISUALIZZARE IL GIORNO 29 FEBBRAIO
+  // const defaultStyles = useDefaultStyles();
+  // const minDate = new Date( new Date().getFullYear() + '-01-01'); // MIN E MAX SONO IMPOSTATI NELL'ANNO 2020 (BISESTILE)
+  // const maxDate = new Date( new Date().getFullYear() + '-12-31'); // PER POTR VISUALIZZARE IL GIORNO 29 FEBBRAIO
 
-  // MODAL PERIODO: STATUS DEI DATI DEL FORM
-  const [periodStartDate, setPeriodStartDate] = useState<Date | null>(null);
-  const [periodEndDate, setPeriodEndDate] = useState<Date | null>(null);
+  // // MODAL PERIODO: STATUS DEI DATI DEL FORM
+  // const [periodStartDate, setPeriodStartDate] = useState<Date | null>(null);
+  // const [periodEndDate, setPeriodEndDate] = useState<Date | null>(null);
 
-  // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD FESTIVITA' SINGOLA
-  const [initialType, setInitialType] = useState<HolidayType>();
+  // // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD FESTIVITA' SINGOLA
+  // const [initialType, setInitialType] = useState<HolidayType>();
   const [initialIndex, setInitialIndex] = useState<number | null>(null);
 
   // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD PERIODO VACANZA
-  const [initialPeriodIndex, setInitialPeriodIndex] = useState<number | null>(null);
+  //const [initialPeriodIndex, setInitialPeriodIndex] = useState<number | null>(null);
 
   // SERVE PER VISUALIZZARE IL TOAST DI ERRORE
   const [errorVisible, setErrorVisible] = useState(false);
@@ -522,7 +523,8 @@ export default function HolydaysScreen({}: any) {
       // B.1.1) Controllo duplicato: la startDate è già la startDate di un evento esistente?
       const startOverlap = newPersonalHolydays.find(h => isDateDuplicate(h, startDate));
       if (startOverlap && initialIndex === null) {
-        showToast(`Questa data è già presente: ${startOverlap.description}`, true);
+        // Msg: Questa data è già presente...
+        showToast(`${dataLabel(myLanguage, 25)} (${startOverlap.description})`, true);
         return;
       }
 
@@ -530,53 +532,52 @@ export default function HolydaysScreen({}: any) {
       const periodOverlap = newPersonalHolydays.find(h => 
         h.endDate !== null && isDateInRange(startDate, h.startDate, h.endDate)
       );
-      if (periodOverlap) {
-        showToast(`Questa data fa parte di un periodo esistente: ${periodOverlap.description}`, true);
+      if (periodOverlap && !initialIndex) { // SE SI SOVRAPPONE MA NON E' UN EDIT ALLORA -> ERRORE
+        // Questa data fa parte di un periodo esistente:
+        showToast(`${dataLabel(myLanguage,22)} "${periodOverlap.description}"`, true);
         return;
       }
 
     } else if (!isSingleDay && endDate) { 
       
       // B.2) Se periodo (endDate != null)
-      
-      // B.2.1) Controllo giorni singoli: un giorno del periodo corrisponde alla startDate di un evento singolo esistente?
-      let currentDay = new Date(startDate);
-      let singleOverlap: NewHolyday | undefined = undefined;
-
-      while (currentDay.getTime() < endDate.getTime()) {
-        singleOverlap = newPersonalHolydays.find(h => 
-          h.endDate === null && isDateDuplicate(h, currentDay)
-        );
-        if (singleOverlap) break;
-        currentDay.setDate(currentDay.getDate() + 1);
-      }
-
-      if (singleOverlap) {
-        showToast(`${initialIndex} Attenzione, l'evento si sovrappone a ${singleOverlap.description}`, true);
-        return;
-      }
-
-      // B.2.2) Controllo sovrapposizione periodo: il periodo si sovrappone a un periodo esistente?
-      const periodOverlap = newPersonalHolydays.find(h => {
-        // Cerca periodi esistenti
-        if (h.endDate) {
-          // Un periodo si sovrappone se:
-          // 1. L'inizio del nuovo periodo è compreso nel vecchio periodo
-          const startOverlap = isDateInRange(startDate, h.startDate, h.endDate);
-          // 2. La fine del nuovo periodo è compresa nel vecchio periodo
-          const endOverlap = isDateInRange(endDate, h.startDate, h.endDate);
-          // 3. Il vecchio periodo è interamente compreso nel nuovo periodo (il nuovo inizia prima e finisce dopo)
-          const engulfing = startDate.getTime() <= h.startDate.getTime() && endDate.getTime() >= h.endDate.getTime();
-
-          return startOverlap || endOverlap || engulfing;
+        // B.2.1) Controllo giorni singoli: 
+        // un giorno del periodo corrisponde alla startDate di un evento singolo esistente?
+        let currentDay = new Date(startDate);
+        let singleOverlap: NewHolyday | undefined = undefined;
+        while (currentDay.getTime() < endDate.getTime()) {
+          singleOverlap = newPersonalHolydays.find(h => 
+            h.endDate === null && isDateDuplicate(h, currentDay)
+          );
+          if (singleOverlap) break;
+          currentDay.setDate(currentDay.getDate() + 1);
         }
-        return false;
-      });
+        if (singleOverlap && !initialIndex) { // SE SEI SOVRAPPONE MA NON E' UN EDIT ALLORA -> ERRORE
+          // Msg: Attenzione, l'evento si sovrappone a...
+          showToast(`${dataLabel(myLanguage, 23)} "${singleOverlap.description}"`, true);
+          return;
+        }
 
-      if (periodOverlap && initialIndex === null) {
-        showToast(`Il periodo è in conflitto con ${periodOverlap.description}`, true);
-        return;
-      }
+        // B.2.2) Controllo sovrapposizione periodo: il periodo si sovrappone a un periodo esistente?
+        const periodOverlap = newPersonalHolydays.find(h => {
+          // Cerca periodi esistenti
+          if (h.endDate) {
+            // Un periodo si sovrappone se:
+            // 1. L'inizio del nuovo periodo è compreso nel vecchio periodo
+            const startOverlap = isDateInRange(startDate, h.startDate, h.endDate);
+            // 2. La fine del nuovo periodo è compresa nel vecchio periodo
+            const endOverlap = isDateInRange(endDate, h.startDate, h.endDate);
+            // 3. Il vecchio periodo è interamente compreso nel nuovo periodo (il nuovo inizia prima e finisce dopo)
+            const engulfing = startDate.getTime() <= h.startDate.getTime() && endDate.getTime() >= h.endDate.getTime();
+            return startOverlap || endOverlap || engulfing;
+          }
+          return false;
+        });
+        if (periodOverlap && initialIndex === null) {
+          // MSG: Il periodo è in conflitto con... 
+          showToast(`${dataLabel(myLanguage,24)} "${periodOverlap.description}"`, true);
+          return;
+        }
     }
 
     // NESSUN ERRORE: AGGIUNGI/SOSTITUISCI L'EVENTO
@@ -591,8 +592,7 @@ export default function HolydaysScreen({}: any) {
       setNewPersonalHolydays(tempNewPersonalHolydays);
     }
     await saveData(tempNewPersonalHolydays, 'newPersonalHolydays'); // SALVATAGGIO LOCAL STORAGE
-    
-    console.log('newPersonalHolydays:', JSON.stringify(tempNewPersonalHolydays, null, 2));
+    console.log('newPersonalHolydays:', JSON.stringify(tempNewPersonalHolydays, null, 2)); // STAMPA DI CONTROLLO
 
     // AZZERA LE VARIABILI DI ERRORE E CHIUDE LA MODAL
     setInitialIndex(null);
@@ -614,12 +614,10 @@ const handleEdit = (index: number) => {
   }
 
   const itemToEdit: NewHolyday = newPersonalHolydays[index];
-  const isPeriod = itemToEdit.endDate !== null;
+  //const isPeriod = itemToEdit.endDate !== null;
 
-  console.log(`initialIndex: ${index} `);
-  console.log(`pickerStartDate ${itemToEdit.startDate.toLocaleDateString()} `);
-  console.log(`pickerEndDate ${itemToEdit.endDate?.toLocaleDateString()} `);
-
+  console.log(`- - initialIndex: ${index} `);
+  console.log(`- - pickerStartDate: ${itemToEdit.startDate.toLocaleDateString()} pickerEndDate: ${itemToEdit.endDate?.toLocaleDateString()} `);
 
 
   setInitialIndex(index); // INDEX, SERVE PER L'EDIT

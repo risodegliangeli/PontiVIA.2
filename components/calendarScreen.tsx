@@ -27,7 +27,7 @@ import { calendarScrenLabels as dataLabel } from '@/components/dataLabel';
 
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
 const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
-const myLanguage: string = (getLocales()[0].languageTag).slice(0,2);  // LINGUA DI SISTEMA
+//const myLanguage: string = (getLocales()[0].languageTag).slice(0,2);  // LINGUA DI SISTEMA
 
 // INTERFACCIA DI NewHolyday 
 interface NewHolyday {
@@ -59,7 +59,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
   const { 
     newPersonalHolydays,
     myPreferences, 
-    myCountry 
+    myCountry, myLanguage
   } = useHolydays();
 
   // CONTROLLO PRIVILEGI ACCESSO AL CALENDARIO

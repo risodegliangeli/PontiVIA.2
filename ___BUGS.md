@@ -2,6 +2,12 @@
 
 ---
 
+- ### CONTROLLO SOVRAPPOSIZIONE DATE
+  -- se una data è ricorrente negli anni (per data o per giorno) la logica non rileva se un nuovo inserimento si sovrappone a quella ricorrenza negli anni futuri
+
+---
+
+
 - ### FESTIVITA NAZIONALI EDITABILI/DISATTIVABILI
 -- o perlomeno ogni data checkabile (on/off)
   -- con pulsante di rollback per il ripristino

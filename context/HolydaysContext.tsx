@@ -2,7 +2,7 @@ import React, { createContext, ReactNode, useContext, useState, useEffect } from
 //import useLocalizationData from '@/app/data/data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales, } from 'expo-localization';
-import { PREFERENCES as SAVED_PREFERENCES } from '@/app/(tabs)/preferences';
+import { PREFERENCES as SAVED_PREFERENCES } from '@/app/(tabs)/preferences'; // NON COMMENTARE!
 
 // INTERFACCIA DI Holiday
 interface Holiday {
@@ -21,7 +21,7 @@ interface NewHolyday {
 }
 
 /* ============================================================================= 
-    LETTURA STORAGE DATI
+FUNZIONE LETTURA STORAGE DATI
 ============================================================================= */
 const loadData = async (key: string) => {
   try {
@@ -71,12 +71,9 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
   const [nationalHolydays, setNationalHolydays] = useState<Holiday[]>([]); // NON LO INIZILIZZO ADESSO, LO FA holydays.tsx ALLA CHIAMATA
   const [myCountry, setMyCountry] = useState(systemLanguage); // es: 'it-IT' --> DROPDOWN
   const [myLanguage, setMyLanguage] = useState(systemLanguage.slice(0,2)); // es 'it' --> LINGUA SISTEMA
-
   const [myPreferences, setMyPreferences] = useState(SAVED_PREFERENCES);  // <--- NUOVO
 
-  //console.log(`[CONTEXT] myPreferences dopo dichiarazione: ${JSON.stringify(myPreferences)}`);
-
-  // CONVERTE I VALORI DI TIPO string IN VALORI TIPO Data PER startDate E endDate
+  // CONVERTE I VALORI DI TIPO string DEI JSON IN VALORI TIPO Data PER startDate E endDate
   const convertDates = (holydaysArray: any) => {
   if (!holydaysArray || !Array.isArray(holydaysArray)) return holydaysArray;
     return holydaysArray.map(holiday => ({
@@ -98,16 +95,10 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
       const storedMyCountry = await loadData('myCountry');
         if (storedMyCountry) { setMyCountry(storedMyCountry); } // OK CONTINUA
 
-      // const storedPreferences = await loadData('PREFERENCES_KEY');
-      // if (storedPreferences) setPreferences(storedPreferences);
-
       const myStoredPreferences = await loadData('PREFERENCES_KEY');
-      if (myStoredPreferences) setMyPreferences(myStoredPreferences);
-
-        //console.log(`[CONTEXT] myPreferences dopo lettura da local storage: ${JSON.stringify(myPreferences)}`);
-
+        if (myStoredPreferences) setMyPreferences(myStoredPreferences);
     };  
-    initializeData(); // CHIAMATA FUNZ. LETTURA
+    initializeData(); // CHIAMA LA FUNZ. LETTURA
   }, []);
 
   return (
@@ -115,8 +106,8 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
       newPersonalHolydays,  setNewPersonalHolydays, // NUOVO GIORNI PERSONALI
       nationalHolydays,     setNationalHolydays,    // FESTIVITA NAZIONALI
       myCountry,            setMyCountry,           // DROPDOWN FESTIVITA PER PAESE
-      // preferences,          setPreferences,         // PREFERENZE
-      myPreferences,        setMyPreferences        // preferences 'nuovo' (distribuito da Context)
+      myPreferences,        setMyPreferences,        // preferences 'nuovo' (distribuito da Context)
+      myLanguage,           setMyLanguage
     }}>
       {children}
     </HolydaysContext.Provider>

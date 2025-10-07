@@ -30,6 +30,7 @@ export default function HomeScreen() {
     newPersonalHolydays,
     myPreferences, setMyPreferences,
     myCountry, 
+    myLanguage
   } = useHolydays();
   console.log(`- - [INDEX]: myPreferences riceuto dal Context`);
 
@@ -55,7 +56,7 @@ export default function HomeScreen() {
     initializeData(); 
   }, [myPreferences]);
 
-  const myLanguage = (getLocales()[0].languageTag).slice(0,2); // 'it', 'fr', ecc
+  //const myLanguage = (getLocales()[0].languageTag).slice(0,2); // 'it', 'fr', ecc
 
   // MEMORIZZA LA KEY DEL CALENDARIO
   // la key forza il ricaricamento del calendario quando i dati cambiano.

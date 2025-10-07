@@ -25,98 +25,98 @@ import {
 
 const { localizedDays } = useLocalizationData();
 const myLanguage = (getLocales()[0].languageTag).slice(0,2);
-const dataLabel: any = {
-  'it': [
-    'Imposta i tuoi filtri',
-    'Durata del ponte',
-    'Primo giorno della settimana',
-    'Giorni della settimana festivi',
-    'Altri giorni festivi',
-    'Modifica lista',
-    'Festività religiose',
-  ],
-  'fr': [
-    'Configurez vos filtres',                    // 0
-    'Durée du pont',                             // 1
-    'Premier jour de la semaine',                // 2
-    'Jours fériés de la semaine',                // 3
-    'Autres jours fériés',                       // 4
-    'Modifier la liste',                         // 5
-    'Fêtes religieuses',                         // 6
-  ],
-  'es': [
-    'Configura tus filtros',                     // 0
-    'Duración del puente',                       // 1
-    'Primer día de la semana',                   // 2
-    'Días festivos de la semana',                // 3
-    'Otros días festivos',                       // 4
-    'Editar lista',                              // 5
-    'Festividades religiosas',                   // 6
-  ],
-  'de': [
-    'Stellen Sie Ihre Filter ein',               // 0
-    'Dauer der Brücke',                          // 1
-    'Erster Tag der Woche',                      // 2
-    'Feiertage der Woche',                       // 3
-    'Andere Feiertage',                          // 4
-    'Liste bearbeiten',                          // 5
-    'Religiöse Feiertage',                       // 6
-  ],
-  'en': [
-    'Set your filters',                          // 0
-    'Bridge duration',                           // 1
-    'First day of the week',                     // 2
-    'Weekly holidays',                           // 3
-    'Other holidays',                            // 4
-    'Edit list',                                 // 5
-    'Religious holidays',                        // 6
-  ],
-  'nl': [
-    'Stel je filters in',                        // 0
-    'Duur van de brug',                          // 1
-    'Eerste dag van de week',                    // 2
-    'Weekdagen feestdagen',                      // 3
-    'Andere feestdagen',                         // 4
-    'Lijst bewerken',                            // 5
-    'Religieuze feestdagen',                     // 6
-  ],
-  'pt': [
-    'Configure seus filtros',                    // 0
-    'Duração da ponte',                          // 1
-    'Primeiro dia da semana',                    // 2
-    'Dias feriados da semana',                   // 3
-    'Outros feriados',                           // 4
-    'Editar lista',                              // 5
-    'Feriados religiosos',                       // 6
-  ],
-  'hr': [
-    'Postavi svoje filtrove',                    // 0
-    'Trajanje mosta',                            // 1
-    'Prvi dan u tjednu',                         // 2
-    'Praznici u tjednu',                         // 3
-    'Ostali praznici',                           // 4
-    'Uredi listu',                               // 5
-    'Vjerski praznici',                          // 6
-  ],
-  'si': [
-    'Nastavi svoje filtre',                      // 0
-    'Trajanje mosta',                            // 1
-    'Prvi dan v tednu',                          // 2
-    'Tedni prazniki',                            // 3
-    'Ostali prazniki',                           // 4
-    'Uredi seznam',                              // 5
-    'Verski prazniki',                           // 6
-  ],
-  'gr': [
-    'Ρύθμισε τα φίλτρα σου',                     // 0
-    'Διάρκεια γέφυρας',                          // 1
-    'Πρώτη μέρα της εβδομάδας',                  // 2
-    'Αργίες της εβδομάδας',                      // 3
-    'Άλλες αργίες',                              // 4
-    'Επεξεργασία λίστας',                        // 5
-    'Θρησκευτικές γιορτές',                      // 6
-  ]
-};
+// const dataLabel: any = {
+//   'it': [
+//     'Imposta i tuoi filtri',
+//     'Durata del ponte',
+//     'Primo giorno della settimana',
+//     'Giorni della settimana festivi',
+//     'Altri giorni festivi',
+//     'Modifica lista',
+//     'Festività religiose',
+//   ],
+//   'fr': [
+//     'Configurez vos filtres',                    // 0
+//     'Durée du pont',                             // 1
+//     'Premier jour de la semaine',                // 2
+//     'Jours fériés de la semaine',                // 3
+//     'Autres jours fériés',                       // 4
+//     'Modifier la liste',                         // 5
+//     'Fêtes religieuses',                         // 6
+//   ],
+//   'es': [
+//     'Configura tus filtros',                     // 0
+//     'Duración del puente',                       // 1
+//     'Primer día de la semana',                   // 2
+//     'Días festivos de la semana',                // 3
+//     'Otros días festivos',                       // 4
+//     'Editar lista',                              // 5
+//     'Festividades religiosas',                   // 6
+//   ],
+//   'de': [
+//     'Stellen Sie Ihre Filter ein',               // 0
+//     'Dauer der Brücke',                          // 1
+//     'Erster Tag der Woche',                      // 2
+//     'Feiertage der Woche',                       // 3
+//     'Andere Feiertage',                          // 4
+//     'Liste bearbeiten',                          // 5
+//     'Religiöse Feiertage',                       // 6
+//   ],
+//   'en': [
+//     'Set your filters',                          // 0
+//     'Bridge duration',                           // 1
+//     'First day of the week',                     // 2
+//     'Weekly holidays',                           // 3
+//     'Other holidays',                            // 4
+//     'Edit list',                                 // 5
+//     'Religious holidays',                        // 6
+//   ],
+//   'nl': [
+//     'Stel je filters in',                        // 0
+//     'Duur van de brug',                          // 1
+//     'Eerste dag van de week',                    // 2
+//     'Weekdagen feestdagen',                      // 3
+//     'Andere feestdagen',                         // 4
+//     'Lijst bewerken',                            // 5
+//     'Religieuze feestdagen',                     // 6
+//   ],
+//   'pt': [
+//     'Configure seus filtros',                    // 0
+//     'Duração da ponte',                          // 1
+//     'Primeiro dia da semana',                    // 2
+//     'Dias feriados da semana',                   // 3
+//     'Outros feriados',                           // 4
+//     'Editar lista',                              // 5
+//     'Feriados religiosos',                       // 6
+//   ],
+//   'hr': [
+//     'Postavi svoje filtrove',                    // 0
+//     'Trajanje mosta',                            // 1
+//     'Prvi dan u tjednu',                         // 2
+//     'Praznici u tjednu',                         // 3
+//     'Ostali praznici',                           // 4
+//     'Uredi listu',                               // 5
+//     'Vjerski praznici',                          // 6
+//   ],
+//   'si': [
+//     'Nastavi svoje filtre',                      // 0
+//     'Trajanje mosta',                            // 1
+//     'Prvi dan v tednu',                          // 2
+//     'Tedni prazniki',                            // 3
+//     'Ostali prazniki',                           // 4
+//     'Uredi seznam',                              // 5
+//     'Verski prazniki',                           // 6
+//   ],
+//   'gr': [
+//     'Ρύθμισε τα φίλτρα σου',                     // 0
+//     'Διάρκεια γέφυρας',                          // 1
+//     'Πρώτη μέρα της εβδομάδας',                  // 2
+//     'Αργίες της εβδομάδας',                      // 3
+//     'Άλλες αργίες',                              // 4
+//     'Επεξεργασία λίστας',                        // 5
+//     'Θρησκευτικές γιορτές',                      // 6
+//   ]
+// };
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
   return Colors[colorScheme ?? 'light'];
@@ -173,6 +173,7 @@ export default function Preferences() {
   const { 
     //preferences, setPreferences, // CONTEXT PREFERENCES
     myPreferences, setMyPreferences,
+    //myLanguage
     } = useHolydays();
     //console.log(`[PREFERENCES]> myPreferences ricevute dal Context: ${JSON.stringify(myPreferences)}`);
 
@@ -449,7 +450,7 @@ export default function Preferences() {
               <View style={styles.editLinkContainer}>
                 <TouchableOpacity onPress={handleEditHolydays} style={styles.editButton}>
                   <IconSymbol size={20} name="pencil" color={colors.text} />
-                  <Text style={styles.editText}>{dataLabel[myLanguage][5]}</Text>
+                  <Text style={styles.editText}>{switchNames(myLanguage, 5)}</Text>
                 </TouchableOpacity>
               </View>
             </View>

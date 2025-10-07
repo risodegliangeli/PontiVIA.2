@@ -1,4 +1,4 @@
-console.log('[CALENDARUTILS.TSX]');
+console.log('<CALENDARUTILS>');
 //import { useMemo } from 'react';
 import { addDays, } from 'date-fns';
 // import { PREFERENCES } from '@/app/(tabs)/preferences';
@@ -69,7 +69,7 @@ const getCountryNationalHolidays = (
     myPreferences, 
     ) => {   
 
-    console.log('[GETCOUNTRYNATIONALHOLYDAYS]');
+    console.log('\t[GETCOUNTRYNATIONALHOLYDAYS]');
     //console.log('- - myPreferences (es ascensione/status):', myPreferences.ascensione.status);
     
     // ARRAY DOVE SONO SALVATI I DATI
@@ -300,7 +300,7 @@ const createCalendarGrid = (
         myCountry: string, 
         myPreferences,
     ) => {
-    console.log('[CREATECALENDARGRID]');
+    console.log('\t[CREATECALENDARGRID]');
    
     // AZZERO L'ARRAY CHE CONTERRA' LA GRIGLIA
     const grid = [];

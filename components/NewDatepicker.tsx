@@ -1,7 +1,7 @@
 import {useState, useEffect, } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet,  } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import { addDays,  getDay, differenceInDays, startOfMonth } from 'date-fns';
+import { addDays, subDays, compareAsc, getDay, differenceInDays, startOfMonth } from 'date-fns';
 import { getLocales,  } from 'expo-localization';
 import useLocalizationData from '@/app/data/data';
 import DateTimePicker from 'react-native-ui-datepicker'; // https://www.npmjs.com/package/react-native-ui-datepicker
@@ -89,6 +89,8 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
 
   // VARIABILI DI SERVZIO
   const [datepickerCaller, setDatepickerCaller] = useState<'startDate' | 'endDate'>(); // DA QUALE CAMPO VIENE RICHIAMATO IL DATEPICKER?
+  const [maxDate, setMaxDate] = useState<Date | null>(null); // 'maxdate' del datepicker, per evitare che startDate > endDate
+  const [minDate, setMinDate] = useState<Date | null>(null); // idem
   const [selectedDate, setSelectedDate] = useState<Date>(); // INIZIALIZZATA DAL DATEPICKER 
   const [descriptionAlert, setDescriptionAlert] = useState(false); // CAMBIA IL COLORE DEL SEGNAPOSTO
 
@@ -99,8 +101,8 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   const [datepickerVisible, setDatepickerVisible] = useState(false); // CALENDARIO
 
   // DROPDOWN GIORNI DI DURATA EVENTO
-  const [value, setValue] = useState<number | null>(1);          // DURATA SELEZIONATA
-  const [isFocus, setIsFocus] = useState(false);  // FOCUS DELLA DROPDOWN
+  const [value, setValue] = useState<number | null>(1);   // DURATA SELEZIONATA
+  const [isFocus, setIsFocus] = useState(false);          // FOCUS DELLA DROPDOWN
 
   // LABEL DURATA EVENTO
   const dropdownLabel: string[] = [  // LABEL LOCALIZZATE DELLA DROPDOWN
@@ -118,7 +120,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
     ];
 
   
-  /* RADIOBUTTON 
+  /* RADIOBUTTON REPEAT-ON-DATE/ON-DAY
   INIZIALMENTE false ENTRAMBI, SI ATTIVANO/DISATTIVANO QND L'UTENTE APRE/CHIUDE IL GRUPPO RADIOBUTTON
   SERVE COME PROP DA PASSARE AL CHIAMANTE (ripete? si/no, quale? upper/lower) */
   const [upperRadioButtonActive, setUpperRadioButtonActive] = useState(repeatOnDate || false); 
@@ -333,44 +335,50 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   /* --------------------------------------------------
   GESTISCE LA DROPDOWN PARTENDO DALLA DIFFERENZA TRA DATE
   -------------------------   ------------------------- */
-  useEffect( () => {
-    // if (myEndDate && differenceInDays(myEndDate,myStartDate) > 2)  setValue(null);
+  useEffect(() => {
+
+
     if (myEndDate) {
-      let d = differenceInDays(myEndDate,myStartDate);
-      console.log(`- - useEffect: differenceInDays = ${d}`);
-      if (d > 0 && d <= 3) { 
-        setValue(d + 1) 
-      } else { 
-        setValue(null) 
+      // controllo che startDate sia < di endDate: nel caso la forzo = endDate
+      // si utilizza {compareAsc}
+      // Compare the two dates and return 1 if the first date is after the second, 
+      // -1 if the first date is before the second or 
+      // 0 if dates are equal.
+      if ( compareAsc(myStartDate, myEndDate) > 0 ) { setValue(1) }
+      // controllo
+      let d = differenceInDays(myEndDate, myStartDate);
+      console.log(`- - useEffect: GESTISCE LA DROPDOWN PARTENDO DALLA DIFFERENZA\ndifferenceInDays = ${d}`);
+      if (d > 0 && d <= 3 && value !== d + 1) {
+        setValue(d + 1);
+      } else if ((d <= 0 || d > 3) && value !== null) {
+        setValue(null);
       }
-  }}, [myStartDate, myEndDate, value]);
+    }
+    // Do not update value if myEndDate is null
+  }, [myStartDate, myEndDate]);
 
   /* --------------------------------------------------
-  GESTISCE CAMBIO DROPDOWN GIORNI PARTENDO DA DROPDOWN 
+  GESTISCE LA DROPDOWN PARTENDO DAL value 
   -------------------------   ------------------------- */
-  useEffect( () => {
-    switch (value) {
-      case 1:
-        setMyEndDate(null);
-        setToDate(false);
-      break;
-      case 2:
-        setMyEndDate(addDays(myStartDate, 1));
-        setToDate(true);
-      break;
-      case 3:
-        setMyEndDate(addDays(myStartDate, 2));
-        setToDate(true);
-      break;
-      case null: 
-        initialIndex === null ? setMyEndDate(myStartDate) : setMyEndDate(endDate) ; 
-        setToDate(true);
-      break;
-      default:
-        setToDate(false);
-      return;
-    }
-  }, [value, myStartDate]);
+  // useEffect(() => {
+  //   console.log(`- - useEffect: MUOVE LA DROPDOWN PARTENDO DAL value (${value})`);
+  //   // Prevent unnecessary updates to myEndDate
+  //   if (value === 1 && myEndDate !== null) {
+  //     setMyEndDate(null);
+  //     setToDate(false);
+  //   } else if (value === 2 && (!myEndDate || differenceInDays(myEndDate, myStartDate) !== 1)) {
+  //     setMyEndDate(addDays(myStartDate, 1));
+  //     setToDate(true);
+  //   } else if (value === 3 && (!myEndDate || differenceInDays(myEndDate, myStartDate) !== 2)) {
+  //     setMyEndDate(addDays(myStartDate, 2));
+  //     setToDate(true);
+  //   } else if (value === null && (!myEndDate || (initialIndex === null && myEndDate.getTime() !== myStartDate.getTime()) || (initialIndex !== null && endDate && myEndDate.getTime() !== endDate.getTime()))) {
+  //     initialIndex === null ? setMyEndDate(myStartDate) : setMyEndDate(endDate);
+  //     setToDate(true);
+  //   } else if (![1, 2, 3, null].includes(value as number)) {
+  //     setToDate(false);
+  //   }
+  // }, [value, myStartDate]);
 
   /* --------------------------------------------------
   ASSEMBLA LE LABEL DEI RADIOBUTTON OGNI VOLTA CHE CAMBIANO myStartDate O myEndDate
@@ -407,9 +415,11 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
           <View style={styles.dateContainerRow}>
             {/* FROM */}
             <TouchableOpacity 
-              onPress={ () => {
+              onPress={ () => {                   // CHIAMANTE = 'startDate'  
                 setDatepickerCaller('startDate'); // PASSA AL DATEPICKER IL CHIAMANTE
                 setSelectedDate(myStartDate);     // PASSA AL DATEPICKER LA DATA DA VISUALIZZARE
+                myEndDate ? setMaxDate( subDays(myEndDate, 1) ) : setMaxDate(null); // SE ESISTE UNA endDate SI PASSA IL maxDate
+                setMinDate(null); // NESSUN VINCOLO ALL'INDIETRO NEL CALENDARIO
                 setDatepickerVisible(true);       // APRE IL DATEPICKER
               }}
               style={styles.dateFrom}>
@@ -428,8 +438,31 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                 value={value}
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
-                onChange={item => {
-                  setValue(item.value);   // AGGIORNA DATA NEL FIELD
+                onChange={ (item) => {
+                   
+                  let v: number = item.value;
+
+                  switch (v) {
+                    case 1:
+                      setToDate(false); // NASCONDE endDate
+                      setValue(v);      // SPOSTA DROPDOWN
+                      break;
+                    case 2:
+                      setMyEndDate( addDays(myStartDate, 1) );
+                      setToDate(true);
+                      //setValue(v);      // SPOSTA DROPDOWN
+                      break;
+                    case 3:
+                      setMyEndDate( addDays(myStartDate, 2) );
+                      setToDate(true);
+                      //setValue(v);      // SPOSTA DROPDOWN
+                      break;
+                    default:
+                      setMyEndDate( myStartDate );
+                      setToDate(true);
+                      setValue(v);      // SPOSTA DROPDOWN
+                    return;
+                  }
                 }               
                 //search
                 //maxHeight={300}
@@ -443,9 +476,11 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
             {/* TO */}
             <TouchableOpacity 
               style={styles.dateFrom}
-              onPress={ () => {
-                setDatepickerCaller('endDate'); // PASSA AL DATEPICKER IL CHIAMANTE
-                setSelectedDate(myEndDate);     // PASSA AL DATEPICKER LA DATA DA VISUALIZZARE
+              onPress={ () => {                       // CHIAMANTE = 'endDate'
+                setDatepickerCaller('endDate');       // PASSA AL DATEPICKER IL CHIAMANTE
+                setSelectedDate(myEndDate);           // PASSA AL DATEPICKER LA DATA DA VISUALIZZARE
+                setMinDate(addDays(myStartDate, 1));  // imposta data min al giorno succesivo alla startDate
+                setMaxDate(null);                     // NESSUN VINCOLO IN AVANTI NEL CALENDARIO
                 setDatepickerVisible(true);
                 }}>
               <Text key='toDate' style={styles.dateFromText}>{myEndDate?.toLocaleDateString()}</Text>{IcoCalendar}
@@ -538,7 +573,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
         </View>
       </View>
 
-      {/* CALENDARIO */}
+      {/* GRIGLIA CALENDARIO */}
       {datepickerVisible && 
         <View style={styles.datepickerContainer}>
 
@@ -546,25 +581,43 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
             mode="single"
             calendar="gregory"
             date={selectedDate}
-            minDate={datepickerCaller === 'endDate' ? myStartDate : null}
+            maxDate={maxDate}
+            minDate={minDate}
             onChange={({date}) => {
-              setSelectedDate(createUTCDate(date));
-              datepickerCaller === 'startDate' ? setMyStartDate(date) : setMyEndDate(date); // IL CHIAMANTE RICEVE L'AGGIORNAMENTO
-              }}
+
+              // VARIABILE DI SERVIZIO
+              let d: Date | null = createUTCDate(date);
+
+console.log(`- - caller: ${datepickerCaller}`);
+console.log(`- - selectedDate: ${createUTCDate(date)?.toLocaleDateString()}`);
+console.log(`- - myStartDate: ${myStartDate.toLocaleDateString()}`);
+console.log(`- - myEndDate: ${myEndDate?.toLocaleDateString()}`);
+console.log(`- - maxDate: ${maxDate?.toLocaleDateString()}`);
+console.log(`- - minDate: ${minDate?.toLocaleDateString()}`);
+
+              if (datepickerCaller === 'startDate') { 
+                setMyStartDate(d); 
+              } else { 
+                setMyEndDate(d); 
+              }; 
+              
+              setSelectedDate(d); // AGGIORNA DATA NEL FILED
+              // setMaxDate(null); // RESETTA maxdate
+              // setMinDate(null);
+              }
+            }
             containerHeight={220}
             hideWeekdays={false}
             disableMonthPicker={false}
             disableYearPicker={false}
             showOutsideDays={false}          
-            // minDate={minDate}
-            // maxDate={maxDate}
             firstDayOfWeek={1}
             //timeZone={'UTC'}
             locale={language}
             style={{
-            //   backgroundColor: 'transparent',
+            // backgroundColor: 'transparent',
             // borderWidth:1,
-            //   paddingTop: 24
+            // paddingTop: 24
             }}
             //navigationPosition={'right'}
             styles={{
@@ -600,12 +653,13 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
             </TouchableOpacity>
             {/* CONFERMA CALENDARIO */}
             <TouchableOpacity 
-              //style={[styles.addButton, {borderWidth:1}]} 
               onPress={ () => {
-                datepickerCaller === 'startDate' ? setMyStartDate(selectedDate) : setMyEndDate(selectedDate); // AGGIORNA LA VARIABILE CHIAMANTE
+                datepickerCaller === 'startDate' ? // AGGIORNA LA VARIABILE CHIAMANTE
+                  setMyStartDate(selectedDate) 
+                  : 
+                  setMyEndDate(selectedDate); 
                 setDatepickerVisible(false) // CHIUDE IL DATEPICKER
               }}>
-              {/*<Text style={styles.addButtonText}>{dataLabel(language, 17]}</Text>*/}
               <IconSymbol size={24} name="checkmark" color={'#0088ff'} style={{marginRight:0}} />
             </TouchableOpacity>
           </View>
