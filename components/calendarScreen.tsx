@@ -1,3 +1,4 @@
+console.log('<CALENDARSCREEN>');
 import React, { useCallback, useEffect, useRef, useState, Suspense } from 'react';
 import {
   ActivityIndicator,
@@ -48,7 +49,7 @@ const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 CALENDARSCREEN - print calendario
 ============================================================================= */
 const CalendarScreen = ({callerPreferences}: any) => {
-  console.log('[CALENDARSCREEN]');
+
   //console.log('- - prop callerPreferences, es. bridgeDuration =', callerPreferences.bridgeDuration);
 
   const colors = useThemeColors();

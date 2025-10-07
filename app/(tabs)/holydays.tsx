@@ -606,17 +606,23 @@ export default function HolydaysScreen({}: any) {
   ============================================================================= */
 // LA FUNZIONE RICEVE SOLO L'INDICE 'index' DEL RECORD DA EDITARE DA newPersonalHolydays
 const handleEdit = (index: number) => {
-  console.log('HANDLE EDIT');
+  console.log('<HANDLE EDIT>');
   // Controlla se l'indice è valido
   if (index === null || index < 0 || index >= newPersonalHolydays.length) {
     console.warn('Indice non valido per la modifica:', index);
     return;
   }
-  setInitialIndex(index); // INDEX, SERVE PER L'EDIT
 
   const itemToEdit: NewHolyday = newPersonalHolydays[index];
   const isPeriod = itemToEdit.endDate !== null;
-  
+
+  console.log(`initialIndex: ${index} `);
+  console.log(`pickerStartDate ${itemToEdit.startDate.toLocaleDateString()} `);
+  console.log(`pickerEndDate ${itemToEdit.endDate?.toLocaleDateString()} `);
+
+
+
+  setInitialIndex(index); // INDEX, SERVE PER L'EDIT
   setDpickerStartDate(itemToEdit.startDate);
   setDpickerEndDate(itemToEdit.endDate);
   setDpickerDescription(itemToEdit.description);

@@ -70,7 +70,7 @@ const getCountryNationalHolidays = (
     ) => {   
 
     console.log('[GETCOUNTRYNATIONALHOLYDAYS]');
-    console.log('- - myPreferences (es ascensione/status):', myPreferences.ascensione.status);
+    //console.log('- - myPreferences (es ascensione/status):', myPreferences.ascensione.status);
     
     // ARRAY DOVE SONO SALVATI I DATI
     const holidays = [];
@@ -177,7 +177,7 @@ const getCountryNationalHolidays = (
         return a.day - b.day;
     });
 
-    console.log('- - script terminato');
+    // console.log('- - script terminato');
     //console.log('- - holydays: ', holidays);
    
     return holidays;

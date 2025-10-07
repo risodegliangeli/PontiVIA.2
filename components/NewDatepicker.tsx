@@ -1,36 +1,32 @@
 import {useState, useEffect, } from 'react';
 import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet,  } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import { addDays, getWeekOfMonth, getDay, differenceInDays, startOfMonth } from 'date-fns';
+import { addDays,  getDay, differenceInDays, startOfMonth } from 'date-fns';
 import { getLocales,  } from 'expo-localization';
 import useLocalizationData from '@/app/data/data';
 import DateTimePicker from 'react-native-ui-datepicker'; // https://www.npmjs.com/package/react-native-ui-datepicker
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { datepickerLabels as dataLabel } from '@/components/dataLabel';
 
-
-// LABEL LOCALIZZATE
-
-
 // INTERFACCIA COMPONENT
 interface NewDatepickerInterface {
-language: string | undefined;
-startDate: Date;
-endDate: Date | null;
-description: string | undefined;
-repeatOnDate: boolean | null;
-repeatOnDay: boolean | null;
-isError: boolean;
-errorMsg: string | null;
-initialIndex: number | null; // USATO IN CASO DI EDIT PER CAMBIARE PULSANTE Aggiungi
-onCancel: () => null;
-onConfirm: (
-  startDate: Date, 
-  endDate: Date | null, 
-  description: string,  
-  upperRadioButtonActive: boolean, 
-  lowerRadioButtonActive: boolean
-  ) => void;
+  language: string | undefined;
+  startDate: Date;
+  endDate: Date | null;
+  description: string | undefined;
+  repeatOnDate: boolean | null;
+  repeatOnDay: boolean | null;
+  isError: boolean;
+  errorMsg: string | null;
+  initialIndex: number | null; // USATO IN CASO DI EDIT PER CAMBIARE PULSANTE Aggiungi/Aggiorna
+  onCancel: () => null;
+  onConfirm: (
+    startDate: Date, 
+    endDate: Date | null, 
+    description: string,  
+    upperRadioButtonActive: boolean, 
+    lowerRadioButtonActive: boolean
+    ) => void;
 }
 
 /* =========================================================
@@ -76,20 +72,20 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   onConfirm
 }) => {
 
-  // console.log( `- - NEWDATEPICKER` );
+  console.log( `<NEWDATEPICKER>` );
   // console.log( `- - startDate: ${startDate.toLocaleDateString()}, endDate: ${endDate?.toLocaleDateString()}` );
-  // console.log( `- - difference: ${differenceInDays(endDate, startDate)}`);
+  // console.log( `- - difference: ${differenceInDays(endDate, startDate) + 1 }`); // 0 based
 
   // LINGUA DI SISTEMA
   language = (getLocales()[0].languageTag).slice(0,2);
 
-  // COPIA DEI PROPS IN INGRESSO PER USO INTERNO
-  const [myStartDate, setMyStartDate] = useState<Date>(createUTCDate(startDate));     // DATA INIZIO
-  const [myEndDate, setMyEndDate] = useState<Date | null>(endDate);                   // DATA FINE
-  const [myDescription, setMyDescription] = useState<string | undefined>(description); // DESCRIZIONE
-
   // NOMI MESI E GIORNI DELLA SETTIMANA LETTI DAL data
   const { months, localizedDays } = useLocalizationData();
+
+  // COPIA DEI PROPS IN INGRESSO PER USO INTERNO
+  const [myStartDate, setMyStartDate] = useState<Date>(createUTCDate(startDate));     // DATA INIZIO
+  const [myEndDate, setMyEndDate] = useState<Date | null>(endDate);                   // DATA FINE | null
+  const [myDescription, setMyDescription] = useState<string | undefined>(description); // DESCRIZIONE
 
   // VARIABILI DI SERVZIO
   const [datepickerCaller, setDatepickerCaller] = useState<'startDate' | 'endDate'>(); // DA QUALE CAMPO VIENE RICHIAMATO IL DATEPICKER?
@@ -121,51 +117,16 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
     { label: dropdownLabel[3], value: null },
     ];
 
-  // GESTISCE CAMBIO DROPDOWN GIORNI PARTENDO DA DROPDOWN
-  useEffect( () => {
-    switch (value) {
-      case 1:
-        setMyEndDate(null);
-        setToDate(false);
-      break;
-      case 2:
-        setMyEndDate(addDays(myStartDate, 1));
-        setToDate(true);
-      break;
-      case 3:
-        setMyEndDate(addDays(myStartDate, 2));
-        setToDate(true);
-      break;
-      case null: 
-        initialIndex === null ? setMyEndDate(myStartDate) : setMyEndDate(endDate) ; 
-        setToDate(true);
-      break;
-      default:
-        setToDate(false);
-      return;
-    }
-  }, [value, myStartDate]);
-
-  // GESTISCE LA DROPDOWN PARTENDO DALLA DIFFERENZA TRA DATE
-  useEffect( () => {
-    myEndDate && differenceInDays(myEndDate,myStartDate) > 2 && setValue(null);
-    }, [myStartDate, myEndDate]);
   
   /* RADIOBUTTON 
-   INIZIALMENTE false ENTRAMBI, SI ATTIVANO/DISATTIVANO QND L'UTENTE APRE/CHIUDE IL GRUPPO RADIOBUTTON
-     SERVE COME PROP DA PASSARE AL CHIAMANTE (ripete? si/no, quale? upper/lower) */
+  INIZIALMENTE false ENTRAMBI, SI ATTIVANO/DISATTIVANO QND L'UTENTE APRE/CHIUDE IL GRUPPO RADIOBUTTON
+  SERVE COME PROP DA PASSARE AL CHIAMANTE (ripete? si/no, quale? upper/lower) */
   const [upperRadioButtonActive, setUpperRadioButtonActive] = useState(repeatOnDate || false); 
   const [lowerRadioButtonActive, setLowerRadioButtonActive] = useState(repeatOnDay || false);  
 
   // LABEL LOCALIZZATE CHE SARANNO RI-ASSEMBLATE OGNI VOLTA CHE CAMBIANO myStartDate O myEndDate
   const [upperRadioButtonLabel, setUpperRadioButtonLabel] = useState<string>(); // {/*es. Ripete ogni anno, il 25 settembre*/}
   const [lowerRadioButtonLabel, setLowerRadioButtonLabel] = useState<string>(); // {/*es. Ripete ogni anno, il quarto giovedì di settembre*/}
-
-  // ASSEMBLA LE LABEL DEI RADIOBUTTON OGNI VOLTA CHE CAMBIANO myStartDate O myEndDate
-  useEffect( () => {
-    setUpperRadioButtonLabel(`${dataLabel(language, 9)} ${myStartDate.getDate()} di ${ months[myStartDate.getMonth()].label }`);
-    setLowerRadioButtonLabel(`${dataLabel(language, 9)} ${dataLabel(language, 9 + getWeekdayRecurrence(myStartDate))} ${localizedDays[getDay(myStartDate) === 0 ? 6 : getDay(myStartDate) - 1]} di ${ months[myStartDate.getMonth()].label } `);
-  }, [myStartDate, myEndDate]);
 
   // ICONE USATE NELLO SCRIPT
   const IcoCalendar = <Image source={require('@/assets/images/ico_calendar_picker.png')} style={{width:13, height:14, resizeMode:'contain'}}/>;
@@ -368,6 +329,57 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
     }
   })
 
+
+  /* --------------------------------------------------
+  GESTISCE LA DROPDOWN PARTENDO DALLA DIFFERENZA TRA DATE
+  -------------------------   ------------------------- */
+  useEffect( () => {
+    // if (myEndDate && differenceInDays(myEndDate,myStartDate) > 2)  setValue(null);
+    if (myEndDate) {
+      let d = differenceInDays(myEndDate,myStartDate);
+      console.log(`- - useEffect: differenceInDays = ${d}`);
+      if (d > 0 && d <= 3) { 
+        setValue(d + 1) 
+      } else { 
+        setValue(null) 
+      }
+  }}, [myStartDate, myEndDate, value]);
+
+  /* --------------------------------------------------
+  GESTISCE CAMBIO DROPDOWN GIORNI PARTENDO DA DROPDOWN 
+  -------------------------   ------------------------- */
+  useEffect( () => {
+    switch (value) {
+      case 1:
+        setMyEndDate(null);
+        setToDate(false);
+      break;
+      case 2:
+        setMyEndDate(addDays(myStartDate, 1));
+        setToDate(true);
+      break;
+      case 3:
+        setMyEndDate(addDays(myStartDate, 2));
+        setToDate(true);
+      break;
+      case null: 
+        initialIndex === null ? setMyEndDate(myStartDate) : setMyEndDate(endDate) ; 
+        setToDate(true);
+      break;
+      default:
+        setToDate(false);
+      return;
+    }
+  }, [value, myStartDate]);
+
+  /* --------------------------------------------------
+  ASSEMBLA LE LABEL DEI RADIOBUTTON OGNI VOLTA CHE CAMBIANO myStartDate O myEndDate
+  -------------------------   ------------------------- */
+  useEffect( () => {
+    setUpperRadioButtonLabel(`${dataLabel(language, 9)} ${myStartDate.getDate()} di ${ months[myStartDate.getMonth()].label }`);
+    setLowerRadioButtonLabel(`${dataLabel(language, 9)} ${dataLabel(language, 9 + getWeekdayRecurrence(myStartDate))} ${localizedDays[getDay(myStartDate) === 0 ? 6 : getDay(myStartDate) - 1]} di ${ months[myStartDate.getMonth()].label } `);
+  }, [myStartDate, myEndDate]);
+
   return (
     <View style={styles.modalContainer}>
       {/* MODAL */}
@@ -418,13 +430,12 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                 onBlur={() => setIsFocus(false)}
                 onChange={item => {
                   setValue(item.value);   // AGGIORNA DATA NEL FIELD
-
-                }}                
+                }               
                 //search
                 //maxHeight={300}
                 //searchPlaceholder="Search..."
                 //renderLeftIcon={() => null }
-              />
+              } />
             </View>
           </View>
           {/* ROW 2 - A */}

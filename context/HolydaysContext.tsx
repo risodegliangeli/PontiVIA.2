@@ -4,19 +4,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales, } from 'expo-localization';
 import { PREFERENCES as SAVED_PREFERENCES } from '@/app/(tabs)/preferences';
 
-/* ============================================================================= 
-    LETTURA STORAGE DATI
-============================================================================= */
-const loadData = async (key: string) => {
-  try {
-    const jsonValue = await AsyncStorage.getItem(key);
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
-    console.error(`Errore ${key} nella lettura da locale:`, e);
-    return null;
-  }
-};
-
 // INTERFACCIA DI Holiday
 interface Holiday {
   day: number;
@@ -33,7 +20,20 @@ interface NewHolyday {
   repeatOnDay: boolean;   // RIPETE OGNI ANNO, il primo martedì di settembre
 }
 
-// INTERFACCIA DEL CONTEXT ---------------------------------------------------------------------
+/* ============================================================================= 
+    LETTURA STORAGE DATI
+============================================================================= */
+const loadData = async (key: string) => {
+  try {
+    const jsonValue = await AsyncStorage.getItem(key);
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
+  } catch (e) {
+    console.error(`Errore ${key} nella lettura da locale:`, e);
+    return null;
+  }
+};
+
+// INTERFACCIA DEL CONTEXT
 interface HolydaysContextType {
   newPersonalHolydays: NewHolyday[]; 
     setNewPersonalHolydays: React.Dispatch< React.SetStateAction<NewHolyday[]> >; // FESTIVITA PERSONALI
