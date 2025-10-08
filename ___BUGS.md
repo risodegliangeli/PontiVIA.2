@@ -2,11 +2,19 @@
 
 ---
 
+
+
 - ### CONTROLLO SOVRAPPOSIZIONE DATE
   -- se una data è ricorrente negli anni (per data o per giorno) la logica non rileva se un nuovo inserimento si sovrappone a quella ricorrenza negli anni futuri
+  es. ho un periodo on una data che RIPETE OGNI ANNO IL III GIOVEDì DI NOVEMBRE
+      non rileva se carico un periodo, sia fisso che ricorrente, che si accavalla negli anni 
 
 ---
 
+- ### AZZERARE maxDate  
+  -- azzerare maxDate = null nel momento in cui si nasconde il field 'endDate'
+
+---
 
 - ### FESTIVITA NAZIONALI EDITABILI/DISATTIVABILI
 -- o perlomeno ogni data checkabile (on/off)
@@ -74,6 +82,11 @@
 
 # TICKET RISOLTI:
 
+
+- ### NON CONSERVA LUNGHEZZA PONTE
+  -- quando si esce/rientra nell'app non viene conservata la lunghezza del ponte
+
+--- 
 
 - #### ANNO BISESTILE
   -- aggiungere nel datepicker del giorno singolo
