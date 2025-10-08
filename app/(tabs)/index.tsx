@@ -32,7 +32,7 @@ export default function HomeScreen() {
     myCountry, 
     myLanguage
   } = useHolydays();
-  console.log(`- - [INDEX]: myPreferences riceuto dal Context`);
+  //console.log(`- - [INDEX]: myPreferences riceuto dal Context`);
 
   /* ============================================================================= 
       LETTURA STORAGE DATI
@@ -51,7 +51,7 @@ export default function HomeScreen() {
     const initializeData = async () => {
       const myStoredPreferences = await loadData('PREFERENCES_KEY');
       if (myStoredPreferences) setMyPreferences(myStoredPreferences);
-      console.log(`[INDEX]: lettura myPreferencs al boot`);
+      //console.log(`[INDEX]: lettura myPreferencs al boot`);
     };  
     initializeData(); 
   }, [myPreferences]);
