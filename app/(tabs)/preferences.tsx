@@ -332,7 +332,6 @@ export default function Preferences() {
           </View>
           {/* ==================== FESTIVITA NAZIONALI ==================== */}   
           <Suspense> 
-
             <View style={styles.groupContainer}>
               <View style={{width:'100%'}}>
                 <Text style={[styles.listTitle, {textAlign:'center'}]}>{switchNames(myLanguage, 10)}</Text>
@@ -348,12 +347,12 @@ export default function Preferences() {
               <View style={styles.editLinkContainer}>
                 <TouchableOpacity onPress={handleEditHolydays} style={styles.editButton}>
                   <IconSymbol size={20} name="pencil" color={colors.text} />
-                  <Text style={styles.editText}>{switchNames(myLanguage, 5)}</Text>
+                  <Text style={styles.editText}>{switchNames(myLanguage, 15)}</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </Suspense>  
-          {/* ==================== RICORRENZE CATTLICHE  ==================== */}
+          {/* ==================== RICORRENZE CATTOLICHE  ==================== */}
           <Suspense>
 
             <View style={styles.groupContainer}>

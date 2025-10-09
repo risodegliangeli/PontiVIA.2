@@ -441,11 +441,12 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                 onChange={ (item) => {
                    
                   let v: number = item.value;
-
                   switch (v) {
                     case 1:
-                      setToDate(false); // NASCONDE endDate
-                      setValue(v);      // SPOSTA DROPDOWN
+                      setValue(v);        // SPOSTA DROPDOWN
+                      setToDate(false);   // NASCONDE endDate
+                      setMyEndDate(null); // AZZERA endDate ALTRIMENTI VIENE INTERPRETATO COME PERIODO
+                      setMaxDate(null); 
                       break;
                     case 2:
                       setMyEndDate( addDays(myStartDate, 1) );

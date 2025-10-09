@@ -101,7 +101,6 @@ export function dataLabel(language, item) {
             'Configurez vos filtres',               // 12
             'Jours fériés de la semaine',           // 13
             'Fêtes religieuses',                    // 14
-            'Modifier la liste',                    // 15
         ],
         'es': [
             'Pascua',                               // 0
@@ -119,7 +118,6 @@ export function dataLabel(language, item) {
             'Configura tus filtros',                // 12
             'Días festivos de la semana',           // 13
             'Festividades religiosas',              // 14
-            'Editar lista',                         // 15
         ],
         'de': [
             'Ostern',                               // 0
@@ -137,7 +135,6 @@ export function dataLabel(language, item) {
             'Stellen Sie Ihre Filter ein',          // 12
             'Feiertage der Woche',                  // 13
             'Religiöse Feiertage',                  // 14
-            'Liste bearbeiten',                     // 15
         ],
         'en': [
             'Easter',                               // 0
@@ -155,7 +152,6 @@ export function dataLabel(language, item) {
             'Set your filters',                     // 12
             'Weekly holidays',                      // 13
             'Religious holidays',                   // 14
-            'Edit list',                            // 15
         ],
         'nl': [
             'Pasen',                                // 0
@@ -173,7 +169,6 @@ export function dataLabel(language, item) {
             'Stel je filters in',                   // 12
             'Weekdagen feestdagen',                 // 13
             'Religieuze feestdagen',                // 14
-            'Lijst bewerken',                       // 15
         ],
         'pt': [
             'Páscoa',                               // 0
@@ -191,7 +186,6 @@ export function dataLabel(language, item) {
             'Configure seus filtros',               // 12
             'Dias feriados da semana',              // 13
             'Feriados religiosos',                  // 14
-            'Editar lista',                         // 15
         ],
         'hr': [
             'Uskrs',                                // 0
@@ -209,7 +203,6 @@ export function dataLabel(language, item) {
             'Postavi svoje filtrove',               // 12
             'Praznici u tjednu',                    // 13
             'Vjerski praznici',                     // 14
-            'Uredi listu',                          // 15
         ],
         'si': [
             'Velika noč',                           // 0
@@ -227,7 +220,6 @@ export function dataLabel(language, item) {
             'Nastavi svoje filtre',                 // 12
             'Tedni prazniki',                       // 13
             'Verski prazniki',                      // 14
-            'Uredi seznam',                         // 15
         ],
         'gr': [
             'Πάσχα',                                // 0
@@ -245,7 +237,6 @@ export function dataLabel(language, item) {
             'Ρύθμισε τα φίλτρα σου',                // 12
             'Αργίες της εβδομάδας',                 // 13
             'Θρησκευτικές γιορτές',                 // 14
-            'Επεξεργασία λίστας',                   // 15
         ]
     };
     return countryLabels[language][item];
@@ -305,10 +296,6 @@ export function holydayLabels(language,item) {
         '(ex. une date fixe qui revient chaque année)',             // 19
         '(ex. une période de vacances)',                            // 20
         'La date de début coïncide avec une fête nationale',        // 21
-        'Cette date fait partie d\'une période existante',          // 22
-        'Attention, l\'événement chevauche ',                       // 23
-        'Attention, l\'événement est en conflit avec ',             // 24
-        'Cette date est déjà présente ',                            // 25
     ],  
     'es':[
         'Mis fechas',                                               // 0
@@ -333,14 +320,10 @@ export function holydayLabels(language,item) {
         '(ej. una fecha fija que se repite cada año)',              // 19
         '(ej. un período de vacaciones)',                           // 20
         'La fecha de inicio coincide con una festividad nacional',  // 21
-        'Esta fecha forma parte de un período existente',           // 22
-        'Atención, el evento se superpone a ',                      // 23
-        'Atención, el evento está en conflicto con ',               // 24
-        'Esta fecha ya está presente ',                             // 25
     ],  
     'de':[
         'Meine Termine',                                            // 0
-        'Füge besonderen Tage hinzu',                               // 1
+        'Füge besonderen Tage hinzu',                         // 1
         'Die nationalen Feiertage',                                 // 2
         'Die langen Zeiträume',                                     // 3
         'Deine besonderen Tage',                                    // 4
@@ -361,10 +344,6 @@ export function holydayLabels(language,item) {
         '(z.B. ein festes Datum, das jedes Jahr wiederkehrt)',      // 19
         '(z.B. eine Ferienzeit)',                                   // 20
         'Das Startdatum fällt auf einen nationalen Feiertag',       // 21
-        'Dieses Datum ist Teil eines bestehenden Zeitraums',        // 22
-        'Achtung, das Ereignis überlappt sich mit ',                // 23
-        'Achtung, das Ereignis steht in Konflikt mit ',             // 24
-        'Dieses Datum ist bereits vorhanden ',                      // 25
     ],
     'en':[
         'My dates',                                                 // 0
@@ -389,10 +368,6 @@ export function holydayLabels(language,item) {
         '(e.g. a fixed date that recurs every year)',               // 19
         '(e.g. a holiday period)',                                  // 20
         'The start date coincides with a national holiday',         // 21
-        'This date is part of an existing period',                  // 22
-        'Warning, the event overlaps with ',                        // 23
-        'Warning, the event conflicts with ',                       // 24
-        'This date is already present ',                            // 25
     ],
     'nl':[
         'Mijn datums',                                              // 0
@@ -417,10 +392,6 @@ export function holydayLabels(language,item) {
         '(bijv. een vaste datum die elk jaar terugkeert)',          // 19
         '(bijv. een vakantieperiode)',                              // 20
         'De startdatum valt samen met een nationale feestdag',      // 21
-        'Deze datum maakt deel uit van een bestaande periode',      // 22
-        'Let op, het evenement overlapt met ',                      // 23
-        'Let op, het evenement is in conflict met ',                // 24
-        'Deze datum is al aanwezig ',                               // 25
     ],
     'pt':[
         'Minhas datas',                                             // 0
@@ -445,10 +416,6 @@ export function holydayLabels(language,item) {
         '(ex. uma data fixa que se repete todo ano)',               // 19
         '(ex. um período de férias)',                               // 20
         'A data de início coincide com um feriado nacional',        // 21
-        'Esta data faz parte de um período existente',              // 22
-        'Atenção, o evento se sobrepõe a ',                         // 23
-        'Atenção, o evento está em conflito com ',                  // 24
-        'Esta data já está presente ',                              // 25
     ],
     'hr': [
         'Moji datumi',                                              // 0
@@ -473,10 +440,6 @@ export function holydayLabels(language,item) {
         '(npr. fiksni datum koji se ponavlja svake godine)',        // 19
         '(npr. period odmora)',                                     // 20
         'Početni datum se poklapa s nacionalnim praznikom',         // 21
-        'Ovaj datum je dio postojećeg perioda',                     // 22
-        'Pažnja, događaj se preklapa s ',                           // 23
-        'Pažnja, događaj je u sukobu s ',                           // 24
-        'Ovaj datum je već prisutan ',                              // 25
     ],
     'si': [
         'Moji datumi',                                              // 0
@@ -501,10 +464,6 @@ export function holydayLabels(language,item) {
         '(npr. fiksni datum, ki se ponavlja vsako leto)',           // 19
         '(npr. počitniško obdobje)',                                // 20
         'Začetni datum se ujema z državnim praznikom',              // 21
-        'Ta datum je del obstoječega obdobja',                      // 22
-        'Pozor, dogodek se prekriva z ',                            // 23
-        'Pozor, dogodek je v sporu z ',                             // 24
-        'Ta datum je že prisoten ',                                 // 25
     ],
     'gr': [
         'Οι ημερομηνίες μου',                                       // 0
@@ -529,10 +488,6 @@ export function holydayLabels(language,item) {
         '(π.χ. μια σταθερή ημερομηνία που επαναλαμβάνεται κάθε χρόνο)', // 19
         '(π.χ. μια περίοδος διακοπών)',                             // 20
         'Η ημερομηνία έναρξης συμπίπτει με εθνική γιορτή',          // 21
-        'Αυτή η ημερομηνία αποτελεί μέρος υπάρχουσας περιόδου',     // 22
-        'Προσοχή, το γεγονός επικαλύπτεται με ',                    // 23
-        'Προσοχή, το γεγονός έρχεται σε σύγκρουση με ',             // 24
-        'Αυτή η ημερομηνία είναι ήδη παρούσα ',                     // 25
     ]
     };
     return dataLabel[language][item];
@@ -611,7 +566,7 @@ export function calendarScrenLabels(language, item) {
             'Cancel',                                   // 10
             'Add'                                       // 11
         ],
-        'nl':[
+    'nl':[
             'Brug!',                                    // 0
             'PontiVIA! vond deze brug voor jou',        // 1
             'bruggen gevonden!',                        // 2
@@ -911,3 +866,4 @@ export function datepickerLabels(language, item) {
     };
     return dataLabel[language][item];
 }
+

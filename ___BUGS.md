@@ -1,8 +1,11 @@
 # TICKET APERTI:
 
+
+
+
+
+
 ---
-
-
 
 - ### CONTROLLO SOVRAPPOSIZIONE DATE
   -- se una data è ricorrente negli anni (per data o per giorno) la logica non rileva se un nuovo inserimento si sovrappone a quella ricorrenza negli anni futuri
@@ -11,10 +14,6 @@
 
 ---
 
-- ### AZZERARE maxDate  
-  -- azzerare maxDate = null nel momento in cui si nasconde il field 'endDate'
-
----
 
 - ### FESTIVITA NAZIONALI EDITABILI/DISATTIVABILI
 -- o perlomeno ogni data checkabile (on/off)
@@ -82,6 +81,11 @@
 
 # TICKET RISOLTI:
 
+
+- ### AZZERARE maxDate (20251009.001)
+  -- azzerare maxDate = null nel momento in cui si nasconde il field 'endDate'
+
+---
 
 - ### NON CONSERVA LUNGHEZZA PONTE
   -- quando si esce/rientra nell'app non viene conservata la lunghezza del ponte

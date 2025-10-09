@@ -300,7 +300,7 @@ const createCalendarGrid = (
         myCountry: string, 
         myPreferences,
     ) => {
-    console.log('\t[CREATECALENDARGRID]');
+    console.log('[CREATECALENDARGRID]');
    
     // AZZERO L'ARRAY CHE CONTERRA' LA GRIGLIA
     const grid = [];
