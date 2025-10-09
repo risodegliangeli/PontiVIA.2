@@ -429,7 +429,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
             <View style={{width:'48%'}}>
               <Dropdown
                 style={styles.dropdownStyle}
-                placeholder={!isFocus ? 'Scegli la data' : '...'}
+                placeholder={!isFocus ? 'Select' : '...'}
                 placeholderStyle={styles.dropdownPlaceholderStyle}
                 selectedTextStyle={styles.dropdownSelectedTextStyle}
                 data={data}
@@ -443,8 +443,8 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                   let v: number = item.value;
                   switch (v) {
                     case 1:
-                      setValue(v);        // SPOSTA DROPDOWN
                       setToDate(false);   // NASCONDE endDate
+                      setValue(v);        // SPOSTA DROPDOWN
                       setMyEndDate(null); // AZZERA endDate ALTRIMENTI VIENE INTERPRETATO COME PERIODO
                       setMaxDate(null); 
                       break;

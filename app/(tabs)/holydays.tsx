@@ -1,17 +1,6 @@
 console.log('[HOLYDAYS.TSX]');
-import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
-import DropdownCountry from '@/components/ui/DropdownCountry'; // COUNTRY PICKER 
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Colors } from '@/constants/Colors';
-import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
+
 import React, { useEffect, useState, Suspense,  } from 'react';
-//import DateTimePicker, { useDefaultStyles, } from 'react-native-ui-datepicker';
-import { useDefaultStyles, } from 'react-native-ui-datepicker';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getLocales,  } from 'expo-localization';
-//import DatepicketSelector from '@/components/ui/DatepickerSelector'; // --> MUORE COL REFACTORING
-import NewDatepicker from '@/components/NewDatepicker'; // MIO DATEPICKER
-import { holydayLabels as dataLabel } from '@/components/dataLabel';
 import {
   Alert,
   ImageBackground,
@@ -25,6 +14,19 @@ import {
   useColorScheme,
   Platform
 } from 'react-native';
+import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
+import DropdownCountry from '@/components/ui/DropdownCountry'; // COUNTRY PICKER 
+import { IconSymbol } from '@/components/ui/IconSymbol';
+import { Colors } from '@/constants/Colors';
+import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getLocales,  } from 'expo-localization';
+import NewDatepicker from '@/components/NewDatepicker'; // MIO DATEPICKER
+import { holydayLabels as dataLabel } from '@/components/dataLabel';
+//import { useDefaultStyles, } from 'react-native-ui-datepicker';
+//import DateTimePicker, { useDefaultStyles, } from 'react-native-ui-datepicker';
+//import DatepicketSelector from '@/components/ui/DatepickerSelector'; // --> MUORE COL REFACTORING
+
 
 // GESTIONE COLORI
 const useThemeColors = () => {
@@ -32,20 +34,17 @@ const useThemeColors = () => {
   return Colors[colorScheme ?? 'light'];
 };
 
-// LEGGE LINGUA DI SISTEMA
-//const myLanguage: string = (getLocales()[0].languageTag).slice(0,2); // 'it', 'fr', 'de', ecc
-
 // LEGGE NOMI DEI MESI LOCALIZZATI DA data.tsx
 const { months } = useLocalizationData();
 
 // TYPE HOLYDAY (vecchio)--> MUORE COL REFACTORING
-type Holiday = {  // DEFINIZIONE DI holiday
+type Holiday = {          // DEFINIZIONE DI holiday
   day: number;            // GIORNO
   month: number;          // MESE
   description: string;    // DESCRIZIONE
 };
-type HolidayType = 'personal' | 'regional' | 'national';
-type ItemType = HolidayType | 'vacation';
+// type HolidayType = 'personal' | 'regional' | 'national';
+// type ItemType = HolidayType | 'vacation';
 
 // TYPE NewHoliday (nuovo)
 type NewHolyday = {
@@ -322,9 +321,7 @@ export default function HolydaysScreen({}: any) {
   // RICEVE DAL CONTEXT
   const { 
     newPersonalHolydays, setNewPersonalHolydays, // NUOVO
-    // personalHolydays, setPersonalHolydays, // --> MUORE COL REFACTORING
     nationalHolydays, setNationalHolydays,
-    // vacationPeriods, setVacationPeriods, // --> MUORE COL REFACTORING
     myCountry, setMyCountry,
     myLanguage
     } = useHolydays();
@@ -341,26 +338,8 @@ export default function HolydaysScreen({}: any) {
   const [dpickerRepeatOnDate, setDpickerRepeatOnDate] = useState<boolean | undefined>();
   const [dpickerRepeatOnDay, setDpickerRepeatOnDay] = useState<boolean | undefined>();
   
-  /*  VALORI NUOVA MODAL  */
-  // const [datePickerSelected, setDatePickerSelected] = useState<Date | null>(null); // DATA SELEZIONATA SU PICKER SINGLE DAY
-  
-  // const [startDate, setStartdate] = useState<Date | null>(null); // DATA INIZIO SELEZIONATA SU PICKER PERIOD
-  // const [endDate, setEndDate] = useState<Date | null>(null);     // DATA FINE SELEZIONATA SU PICKER PERIOD
-
-  // const defaultStyles = useDefaultStyles();
-  // const minDate = new Date( new Date().getFullYear() + '-01-01'); // MIN E MAX SONO IMPOSTATI NELL'ANNO 2020 (BISESTILE)
-  // const maxDate = new Date( new Date().getFullYear() + '-12-31'); // PER POTR VISUALIZZARE IL GIORNO 29 FEBBRAIO
-
-  // // MODAL PERIODO: STATUS DEI DATI DEL FORM
-  // const [periodStartDate, setPeriodStartDate] = useState<Date | null>(null);
-  // const [periodEndDate, setPeriodEndDate] = useState<Date | null>(null);
-
   // // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD FESTIVITA' SINGOLA
-  // const [initialType, setInitialType] = useState<HolidayType>();
   const [initialIndex, setInitialIndex] = useState<number | null>(null);
-
-  // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD PERIODO VACANZA
-  //const [initialPeriodIndex, setInitialPeriodIndex] = useState<number | null>(null);
 
   // SERVE PER VISUALIZZARE IL TOAST DI ERRORE
   const [errorVisible, setErrorVisible] = useState(false);
@@ -368,9 +347,6 @@ export default function HolydaysScreen({}: any) {
   // All'inizio del componente HolydaysScreen, aggiungi:
   const [dpickerToastMessage, setDpickerToastMessage] = useState<string | null>(null);
   const [dpickerToastIsError, setDpickerToastIsError] = useState<boolean>(false);
-
-  // MSG SERVIZIO, CANCELLARE
-  // const [msgServizio, setMsgServizio] = useState<string>('****');
 
   /* GESTIONE SHOW/HIDE MODAL */
   const showModalSingleDate = () => {
@@ -406,16 +382,16 @@ export default function HolydaysScreen({}: any) {
     }, 5000); 
   };
 
-  /* Funzione per verificare se una data è compresa in un periodo
+  /* VERIFICA SE UNA DATA E' COMPRESA IN UN PERIODO
    L'endDate è normalizzata e rappresenta il giorno successivo 
-  all'ultimo giorno del periodo (per come viene calcolata)
-  Per i periodi, il date picker imposta l'endDate al giorno successivo, 
-  quindi togliamo 1ms per includere l'ultimo giorno */
+   all'ultimo giorno del periodo (per come viene calcolata)
+   Per i periodi, il date picker imposta l'endDate al giorno successivo, 
+   quindi togliamo 1ms per includere l'ultimo giorno */
   const isDateInRange = (date: Date, start: Date, end: Date): boolean => {
     const normDate = normalizeDate(date)!.getTime();
     const normStart = normalizeDate(start)!.getTime();
     const normEnd = normalizeDate(end)!.getTime() - 1; 
-    return normDate >= normStart && normDate <= normEnd;
+  return normDate >= normStart && normDate <= normEnd;
   };
 
   /* ============================================================================= 
@@ -430,8 +406,8 @@ export default function HolydaysScreen({}: any) {
     ) => {
 
     // Normalizza le date
-    const startDate = normalizeDate(myStartDate)!;
-    let endDate = normalizeDate(myEndDate);
+    const startDate = normalizeDate(myStartDate)!;  // COSTANTE
+    let endDate = normalizeDate(myEndDate);         // VARIABILE
     
     // GIORNO SINGOLO O PERIODO?
     const isSingleDay = !endDate || startDate.getTime() === endDate.getTime();
@@ -473,33 +449,32 @@ export default function HolydaysScreen({}: any) {
     }
   } 
     
-    // // A.2.2) Se è un periodo, controllo se comprende altre date nazionali (solo SEGNALAZIONE)
-
-    if (!isSingleDay && endDate) {
-      // Genera un array di giorni compresi nel periodo
-      const daysInPeriod: any[] = [];
-      let currentDay = new Date(startDate);
-      
-      // Si ferma al giorno prima dell'endDate (che è il giorno successivo all'ultimo)
-      while (currentDay.getTime() < endDate.getTime()) {
-        daysInPeriod.push({
-          day: currentDay.getDate(),
-          month: currentDay.getMonth(),
-        });
-        currentDay.setDate(currentDay.getDate() + 1); // Passa al giorno successivo
-      }
-
-      const nationalOverlap = nationalHolydays.find(h => 
-        daysInPeriod.some(day => day.day === h.day && day.month === h.month)
-      );
-
-      if (nationalOverlap) {
-        // A.2.2) Periodo e include festività nazionale: SEGNALAZIONE
-        const overlapMsg = `Attenzione, il periodo include la festività nazionale: ${nationalOverlap.description}.`;
-        showToast(overlapMsg, false); // false = SEGNALAZIONE (Toast bianco)
-        // Non fa 'return', procede all'aggiunta dopo la segnalazione
-      }
+  // A.2.2) Se è un periodo, controllo se comprende altre date nazionali (solo SEGNALAZIONE)
+  if (!isSingleDay && endDate) {
+    // Genera un array di giorni compresi nel periodo
+    const daysInPeriod: any[] = [];
+    let currentDay = new Date(startDate);
+    
+    // Si ferma al giorno prima dell'endDate (che è il giorno successivo all'ultimo)
+    while (currentDay.getTime() < endDate.getTime()) {
+      daysInPeriod.push({
+        day: currentDay.getDate(),
+        month: currentDay.getMonth(),
+      });
+      currentDay.setDate(currentDay.getDate() + 1); // Passa al giorno successivo
     }
+
+    const nationalOverlap = nationalHolydays.find(h => 
+      daysInPeriod.some(day => day.day === h.day && day.month === h.month)
+    );
+
+    if (nationalOverlap) {
+      // A.2.2) Periodo e include festività nazionale: SEGNALAZIONE
+      const overlapMsg = `Attenzione, il periodo include la festività nazionale: ${nationalOverlap.description}.`;
+      showToast(overlapMsg, false); // false = SEGNALAZIONE (Toast bianco)
+      // Non fa 'return', procede all'aggiunta dopo la segnalazione
+    }
+  }
 
 
     /* ============================================================================= 
@@ -533,8 +508,8 @@ export default function HolydaysScreen({}: any) {
         h.endDate !== null && isDateInRange(startDate, h.startDate, h.endDate)
       );
       if (periodOverlap && !initialIndex) { // SE SI SOVRAPPONE MA NON E' UN EDIT ALLORA -> ERRORE
-        // Questa data fa parte di un periodo esistente:
-        showToast(`${dataLabel(myLanguage,22)} "${periodOverlap.description}"`, true);
+        // Msg: Questa data fa parte di un periodo esistente:
+        showToast(`${dataLabel(myLanguage,22)} "${periodOverlap.description}"\n(index: ${initialIndex})`, true);
         return;
       }
 
@@ -583,11 +558,9 @@ export default function HolydaysScreen({}: any) {
     // NESSUN ERRORE: AGGIUNGI/SOSTITUISCI L'EVENTO
     let tempNewPersonalHolydays: any[] = [];
     if (initialIndex === null) {
-      //console.log('- - - nuovo item');
       tempNewPersonalHolydays = [...newPersonalHolydays, newEvent];
       setNewPersonalHolydays(tempNewPersonalHolydays);
     } else {
-      //console.log('- - - edit item esistente');
       tempNewPersonalHolydays = newPersonalHolydays.map((h, i) => i === initialIndex ? newEvent : h);
       setNewPersonalHolydays(tempNewPersonalHolydays);
     }
@@ -606,27 +579,22 @@ export default function HolydaysScreen({}: any) {
   ============================================================================= */
 // LA FUNZIONE RICEVE SOLO L'INDICE 'index' DEL RECORD DA EDITARE DA newPersonalHolydays
 const handleEdit = (index: number) => {
-  console.log('<HANDLE EDIT>');
+  console.log('[HANDLE EDIT]s');
   // Controlla se l'indice è valido
   if (index === null || index < 0 || index >= newPersonalHolydays.length) {
     console.warn('Indice non valido per la modifica:', index);
     return;
   }
 
-  const itemToEdit: NewHolyday = newPersonalHolydays[index];
-  //const isPeriod = itemToEdit.endDate !== null;
+  const itemToEdit: any = newPersonalHolydays[index];
 
-  console.log(`- - initialIndex: ${index} `);
-  console.log(`- - pickerStartDate: ${itemToEdit.startDate.toLocaleDateString()} pickerEndDate: ${itemToEdit.endDate?.toLocaleDateString()} `);
-
-
-  setInitialIndex(index); // INDEX, SERVE PER L'EDIT
-  setDpickerStartDate(itemToEdit.startDate);
-  setDpickerEndDate(itemToEdit.endDate);
-  setDpickerDescription(itemToEdit.description);
-  setDpickerRepeatOnDate(itemToEdit.repeatOnDate);
-  setDpickerRepeatOnDay(itemToEdit.repeatOnDay);
-  setIsModalSingleDateVisible(true);
+  setInitialIndex(index);                         // INDEX, SERVE PER L'EDIT
+  setDpickerStartDate(itemToEdit.startDate);      // START
+  setDpickerEndDate(itemToEdit.endDate);          // END
+  setDpickerDescription(itemToEdit.description);  // DESCR
+  setDpickerRepeatOnDate(itemToEdit.repeatOnDate);// REP ON DATE
+  setDpickerRepeatOnDay(itemToEdit.repeatOnDay);  // REP ON DAY
+  setIsModalSingleDateVisible(true);              // APRE MODAL
 };
 
   /* ============================================================================= 
@@ -669,11 +637,6 @@ const handleEdit = (index: number) => {
     )
   }
   
-  // GESTIONE STATI DELLE RADIOBUTTON DELLA MODAL, ATTIVO, FOCUSED E DISABILITATO
-  // const [selectedRadioOption, setSelectedRadioOption] = useState<'single' | 'period'>('single'); // STATO INIZIALE DEL RADIOBUTTON
-  // const [leftRadioButtonActive, setLeftRadioButtonActive] = useState<boolean>(true);    // FLAG PER DISATTIVARE IL RADIOBUTTON SINISTRO (da resettare a ogni [+ Aggiungi] )
-  // const [rightRadioButtonActive, setRightRadioButtonActive] = useState<boolean>(true);  // FLAG PER DISATTIVARE IL RADIOBUTTON DESTRO (da resettare a ogni [+ Aggiungi] )
-
   // GESTIONE SLIDER PER SELEZIONARE GIORNO/PERIODO NEL DATEPICKER
   const [sliderTargetValue, setSliderTargetValue] = useState(0);
   const buttonLeftAction = () => {
@@ -694,16 +657,11 @@ const handleEdit = (index: number) => {
     async () => await saveData(myCountry, 'myCountry');
   }, [myCountry]);
 
-  
-
-
-
   return (
     <ImageBackground 
       source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg')}
       resizeMode="cover" 
       style={[styles.image, {alignItems:'center'}]}> 
-
       <ScrollView 
         style={styles.container} 
         showsVerticalScrollIndicator={false} >
@@ -876,15 +834,14 @@ const handleEdit = (index: number) => {
                   </View>
                   <TouchableOpacity
                     onPress={ () => 
-                      // RENDE DISABLED LA RIGA DELLA FESTIVITA' CHE NON SARA' CONTEGGIATA
+                      // RIGA DA NON CONTEGGIARE
+                      // va implementata la logica
                       null
                     } >
                     <IconSymbol size={24} name="checkmark.circle.fill" color={colors.blueBar} style={{paddingBottom:8,}}/>
                     {/* <IconSymbol size={24} name="xmark.circle" color={colors.disabled} style={{paddingBottom:8,}}/> */}
                   </TouchableOpacity>
-
               </View> 
-
 
               {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
               {index !== nationalHolydays.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
@@ -895,49 +852,53 @@ const handleEdit = (index: number) => {
         {/* SPACER */}
         <View style={{height:500}}></View>
       </ScrollView>
-
       {/* nuovo MODAL DATEPICKR ###################################################################### */}
       <Suspense>
-          <Modal
-            visible={isModalSingleDateVisible}  
-            presentationStyle="fullScreen"
-            transparent={false}
-            // backdropColor={'rgba(0, 0, 0, .25)'} // NON FUNZIONA TRASPARENZA
-            animationType="none"
-            onRequestClose={hideModalSingleDate} 
-            hardwareAccelerated={true}
-            >
-            <View style={styles.backgroundModal}>
-              <View style={styles.modalContainer}>
-                <NewDatepicker
-                  language={myLanguage}                    // LINGUA
-                  startDate={dpickerStartDate}            // DATA INIZIO
-                  endDate={dpickerEndDate}                // DATA FINE O null
-                  description={dpickerDescription}        // DESCRIZIONE
-                  isError={dpickerToastIsError}           // PASSA AL COMPONENT FLAG DI ERRORE
-                  errorMsg={dpickerToastMessage}          // PASSA AL COMPONENT MSG DI ERRORE
-                  repeatOnDate={dpickerRepeatOnDate}      // RIPETE IN QUELLA DATA
-                  repeatOnDay={dpickerRepeatOnDay}        // RIPETE QUEL GIORNO DELL'ANNO
-                  initialIndex={initialIndex}             // VALORIZZATO SE EDIT
-                  onCancel={ () => {
-                      setInitialIndex(null);              // SE ERA UN EDIT AZZERA IL FLAG
-                      setDpickerToastMessage('');         // AZZERA MSG ERRORE
-                      setDpickerToastIsError(false);      // AZZERA FLAG ERRORE
-                      setIsModalSingleDateVisible(false); // CHIUDE MODAL
-                  }} 
-                  onConfirm={(
-                    myStartDate, 
-                    myEndDate, 
-                    myDescription, 
-                    upperRadioButtonActive, 
-                    lowerRadioButtonActive) => 
-                    handleAddEvent(myStartDate, myEndDate, myDescription, upperRadioButtonActive, lowerRadioButtonActive, ) 
-                }/>      
-              </View>
-            </View>
-          </Modal>
+        <Modal
+        visible={isModalSingleDateVisible}  
+        presentationStyle="fullScreen"
+        transparent={false}
+        // backdropColor={'rgba(0, 0, 0, .25)'} // NON FUNZIONA TRASPARENZA
+        animationType="none"
+        onRequestClose={hideModalSingleDate} 
+        hardwareAccelerated={true}
+        >
+        <View style={styles.backgroundModal}>
+        <View style={styles.modalContainer}>
+        <NewDatepicker
+        language={myLanguage}                    // LINGUA
+        startDate={dpickerStartDate}            // DATA INIZIO
+        endDate={dpickerEndDate}                // DATA FINE O null
+        description={dpickerDescription}        // DESCRIZIONE
+        isError={dpickerToastIsError}           // PASSA AL COMPONENT FLAG DI ERRORE
+        errorMsg={dpickerToastMessage}          // PASSA AL COMPONENT MSG DI ERRORE
+        repeatOnDate={dpickerRepeatOnDate}      // RIPETE IN QUELLA DATA
+        repeatOnDay={dpickerRepeatOnDay}        // RIPETE QUEL GIORNO DELL'ANNO
+        initialIndex={initialIndex}             // VALORIZZATO SE EDIT
+        onCancel={ () => {
+            setInitialIndex(null);              // SE ERA UN EDIT AZZERA IL FLAG
+            setDpickerToastMessage('');         // AZZERA MSG ERRORE
+            setDpickerToastIsError(false);      // AZZERA FLAG ERRORE
+            setIsModalSingleDateVisible(false); // CHIUDE MODAL
+        }} 
+        onConfirm={(
+          myStartDate, 
+          myEndDate, 
+          myDescription, 
+          upperRadioButtonActive, 
+          lowerRadioButtonActive) => 
+          handleAddEvent(
+            myStartDate, 
+            myEndDate, 
+            myDescription, 
+            upperRadioButtonActive, 
+            lowerRadioButtonActive, 
+          ) 
+        }/>      
+        </View>
+        </View>
+        </Modal>
       </Suspense>
-
     </ImageBackground>
   );
 }

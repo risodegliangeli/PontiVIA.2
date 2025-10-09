@@ -8,7 +8,7 @@ import { Animated, Easing, ImageBackground, StyleSheet, useColorScheme, Text, To
 import { Colors } from '@/constants/Colors';
 import { MovingHands } from '@/components/ui/MovingHands'; // MIO
 // import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getLocales, } from 'expo-localization';
+// import { getLocales, } from 'expo-localization';
 import { indexLabels as dataLabel } from '@/components/dataLabel';
 
 const useThemeColors = () => {
@@ -32,7 +32,6 @@ export default function HomeScreen() {
     myCountry, 
     myLanguage
   } = useHolydays();
-  //console.log(`- - [INDEX]: myPreferences riceuto dal Context`);
 
   /* ============================================================================= 
       LETTURA STORAGE DATI
@@ -42,7 +41,6 @@ export default function HomeScreen() {
       const jsonValue = await AsyncStorage.getItem(key);
       return jsonValue != null ? JSON.parse(jsonValue) : null;
     } catch (e) {
-      //console.error(`Errore ${key} nella lettura da locale:`, e);
       return null;
     }
   };
@@ -51,12 +49,9 @@ export default function HomeScreen() {
     const initializeData = async () => {
       const myStoredPreferences = await loadData('PREFERENCES_KEY');
       if (myStoredPreferences) setMyPreferences(myStoredPreferences);
-      //console.log(`[INDEX]: lettura myPreferencs al boot`);
     };  
     initializeData(); 
   }, [myPreferences]);
-
-  //const myLanguage = (getLocales()[0].languageTag).slice(0,2); // 'it', 'fr', ecc
 
   // MEMORIZZA LA KEY DEL CALENDARIO
   // la key forza il ricaricamento del calendario quando i dati cambiano.
