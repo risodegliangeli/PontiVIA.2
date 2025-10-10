@@ -885,12 +885,21 @@ export default function HolydaysScreen({}: any) {
                       // SOTTO: ICONA BLU SE ELEMENTO ATTIVO, ICONA GRIGIA SE ELEMENTO NELLA LISTA NERA
 
                     }}>
-                    <IconSymbol 
-                      style={{paddingBottom:8,}}
-                      size={24} 
-                      name={nationalExcluded.indexOf(index) === -1 ? "checkmark.circle.fill" : "xmark.circle.fill" }
-                      color={nationalExcluded.indexOf(index) === -1 ? colors.blueBar :  colors.disabled} 
-                      />
+                    {nationalExcluded.indexOf(index) === -1 ?
+                      <IconSymbol 
+                        style={{paddingBottom:8,}}
+                        size={24} 
+                        name={"checkmark"}
+                        color={colors.blueBar} 
+                        />
+                      :
+                      <IconSymbol 
+                        style={{paddingBottom:8,}}
+                        size={24} 
+                        name={"xmark"}
+                        color={colors.disabled} 
+                        />
+                    }
                   </TouchableOpacity>
               </View> 
 
