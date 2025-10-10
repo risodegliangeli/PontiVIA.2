@@ -66,20 +66,30 @@ const getCountryNationalHolidays = (
     myCountry: string,
     year: number,
     newPersonalHolydays: NewHolyday[],
-    myPreferences, 
+    myPreferences,
+    nationalExcluded 
     ) => {   
 
     console.log('\t[GETCOUNTRYNATIONALHOLYDAYS]');
-    //console.log('- - myPreferences (es ascensione/status):', myPreferences.ascensione.status);
-    
+    //console.log('\t- - nationalExcluded:', JSON.stringify(nationalExcluded));
+
     // ARRAY DOVE SONO SALVATI I DATI
     const holidays = [];
-
     
     // SE SWITCH Festivita Nazionali = true AGGIUNGO LE FESTIVITA LOCALI DEL PAESE
     // ** VALIDE PER TUTTI GLI ANNI ** QUINDI yyy = undefined
     if (myPreferences.festivitaNazionali.status) {
-        holidays.push(...getLocalHolydas(myCountry)); // funzione per le nazionali
+        // opzione 1) AGGIUNGE TUTTE LE FESTIVITA SENZA FILTRI
+        //holidays.push(...getLocalHolydas(myCountry)); // funzione per le nazionali
+
+        // opzione 2) ELIMINA LE FESTIVITA NAZIONALI DISATTIVATE
+        // Rimuove da tempLocalHolydays tutti gli item il cui indice è presente in nationalExcluded
+        let tempLocalHolydays: Holiday[] = [...getLocalHolydas(myCountry)];
+        tempLocalHolydays = tempLocalHolydays.filter((_, idx) => 
+            !nationalExcluded.includes(idx)
+            );
+
+        holidays.push(...tempLocalHolydays);
         }
 
     /* + + + + + + + + + + + + + + + + + + + + + + + + + + + +
@@ -299,8 +309,10 @@ const createCalendarGrid = (
         newPersonalHolydays: NewHolyday[],
         myCountry: string, 
         myPreferences,
+        nationalExcluded: number[],
     ) => {
     console.log('[CREATECALENDARGRID]');
+    console.log(`prop ricevuto -> nationalExcluded: ${JSON.stringify(nationalExcluded)}`);
    
     // AZZERO L'ARRAY CHE CONTERRA' LA GRIGLIA
     const grid = [];
@@ -316,7 +328,8 @@ const createCalendarGrid = (
                                         myCountry, 
                                         year, 
                                         newPersonalHolydays, 
-                                        myPreferences
+                                        myPreferences,
+                                        nationalExcluded,
                                         );
             }
         return holidaysByYear[year];

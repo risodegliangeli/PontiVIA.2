@@ -50,17 +50,18 @@ CALENDARSCREEN - print calendario
 ============================================================================= */
 const CalendarScreen = ({callerPreferences}: any) => {
 
-  //console.log('- - prop callerPreferences, es. bridgeDuration =', callerPreferences.bridgeDuration);
-
   const colors = useThemeColors();
   const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
   const monthsToLoad = 3; // ADV OGNI x CARDS
 
   const { 
     newPersonalHolydays,
+    nationalExcluded,
     myPreferences, 
     myCountry, myLanguage
   } = useHolydays();
+
+  // console.log(`[CALENDARSCREEN] nationalExcluded (from Context): ${nationalExcluded}`);
 
   // CONTROLLO PRIVILEGI ACCESSO AL CALENDARIO
   useEffect(() => {
@@ -401,6 +402,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
           newPersonalHolydays,
           myCountry,
           myPreferences, 
+          nationalExcluded,
         );
 
         // AGGIUNGE LA GRID AL CALENDARIO
@@ -440,76 +442,18 @@ const CalendarScreen = ({callerPreferences}: any) => {
           callerPreferences.bridgeDuration,
           newPersonalHolydays,
           myCountry,
-          myPreferences
+          myPreferences,
+          nationalExcluded,
           )
         );
     }    
   }, [
     //JSON.stringify(callerPreferences),
     JSON.stringify(myPreferences), 
-    newPersonalHolydays, 
+    newPersonalHolydays,
+    nationalExcluded, 
     myCountry
   ]);
-
-  /* ============================================================================= 
-    IDENTIFICA CONNESSIONI GRAFICHE TRA CERCHIETTI GIALLI 
-  ============================================================================= */
-  // const createBridgeConnectionMap = (monthData: any) => {
-    
-  //   const connectionMap = new Map();
-  //   const daysPerRow = 7;
-    
-  //   monthData.bridges.forEach((bridge: any) => {
-  //     const bridgeDays = monthData.table // Trova tutti i giorni che fanno parte di questo ponte
-  //       .map((day: any, index: number) => ({ day, index }))
-  //       .filter(({ day }) => day[1] === -1 && 
-  //         day[0] >= bridge.da && day[0] <= bridge.a)
-  //       .sort((a, b) => a.day[0].getTime() - b.day[0].getTime());
-      
-  //     bridgeDays.forEach(({ day, index }, bridgeIndex) => { // Per ogni giorno del ponte, determina le connessioni
-  //       const connections = {
-  //         right: false,
-  //         bottom: false,
-  //         left: false,
-  //         top: false
-  //       };
-        
-  //       const currentRow = Math.floor(index / daysPerRow);
-  //       const currentCol = index % daysPerRow;
-        
-  //       // Verifica connessioni con gli altri giorni dello stesso ponte
-  //       bridgeDays.forEach(({ day: otherDay, index: otherIndex }) => {
-  //         if (index === otherIndex) return; // Skip stesso giorno
-          
-  //         const otherRow = Math.floor(otherIndex / daysPerRow);
-  //         const otherCol = otherIndex % daysPerRow;
-          
-  //         // Connessione a destra (stesso row, colonna successiva)
-  //         if (currentRow === otherRow && currentCol + 1 === otherCol) {
-  //           connections.right = true;
-  //         }
-          
-  //         // Connessione a sinistra (stesso row, colonna precedente)
-  //         if (currentRow === otherRow && currentCol - 1 === otherCol) {
-  //           connections.left = true;
-  //         }
-          
-  //         // Connessione in basso (row successiva, stessa colonna)
-  //         if (currentRow + 1 === otherRow && currentCol === otherCol) {
-  //           connections.bottom = true;
-  //         }
-          
-  //         // Connessione in alto (row precedente, stessa colonna)
-  //         if (currentRow - 1 === otherRow && currentCol === otherCol) {
-  //           connections.top = true;
-  //         }
-  //       });
-        
-  //       connectionMap.set(index, connections);
-  //     });
-  //   });
-  //   return connectionMap;
-  // };
 
   /* ============================================================================= 
     (CALLBACK) RENDER DELLE CARD DELLA FLATLIST
@@ -521,9 +465,6 @@ const CalendarScreen = ({callerPreferences}: any) => {
         2025-05-26T12:00:00.000Z,   1,        "Ferragosto",     false],
   ============================================================================= */
   const renderMonthCard = useCallback(({ item: month, index }) => {
-
-    // MAPPA CONNESSIONI GRAFICHE TRA CERCHIETTI GIALLI
-    //const bridgeConnectionMap = createBridgeConnectionMap(month); 
 
     /* -----------------------------------------------------
     MODAL CHE MOSTRA UN GIORNO FESTIVO (usa SimpleToast.tsx)
