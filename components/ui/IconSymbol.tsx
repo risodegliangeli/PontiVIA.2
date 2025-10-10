@@ -29,8 +29,8 @@ const MAPPING = {
   'bell': 'notifications',  // CAMPANELLA OUTILNED
   'bell.circle.fill': 'circle-notifications', // CAMPANELLA FILLED
   'calendar.badge.plus' : 'edit-calendar',
-  'checkmark.circle.fill': 'check-circle',
-  'xmark.circle': 'cancel',
+  'checkmark.circle.fill': 'check-circle', // CHECK BLU RIGHE NATIONALHOLIDAY
+  'xmark.circle': 'cancel', // CROSS GRIGIO RIGHE NATIONAL HOLIDAY
   'xmark': 'close',     // X CHIUSURA
   'checkmark': 'check',  // CHECK CONFERMA
   'repeat':'repeat'

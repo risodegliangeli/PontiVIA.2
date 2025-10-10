@@ -33,18 +33,26 @@ const loadData = async (key: string) => {
   }
 };
 
-// INTERFACCIA DEL CONTEXT
 interface HolydaysContextType {
+  // NUOVE FESTIVITA PERSONALI
   newPersonalHolydays: NewHolyday[]; 
-    setNewPersonalHolydays: React.Dispatch< React.SetStateAction<NewHolyday[]> >; // FESTIVITA PERSONALI
+    setNewPersonalHolydays: React.Dispatch< React.SetStateAction<NewHolyday[]> >; 
+  // FESTIVITA NAZIONALI
   nationalHolydays: Holiday[]; 
-    setNationalHolydays: React.Dispatch<React.SetStateAction<Holiday[]>>; // FESTIVITA NAZIONALI
-  myPreferences: typeof SAVED_PREFERENCES; // * * * new * * * 
-    setMyPreferences: React.Dispatch<React.SetStateAction<typeof SAVED_PREFERENCES>>; // PREFERENZE/FILTRI
+    setNationalHolydays: React.Dispatch<React.SetStateAction<Holiday[]>>; 
+  // FESTIVITA NAZIONALI DA NON CONTEGGIARE 
+  // nb. va azzerato ogni volta che si modifica la dorpdown ES: [1, 3, ...]
+  nationalExcluded: number[];
+    setNationalExcluded: React.Dispatch<React.SetStateAction<number[]>>;
+  // NUOVE PREREFENCES
+  myPreferences: typeof SAVED_PREFERENCES;  
+    setMyPreferences: React.Dispatch<React.SetStateAction<typeof SAVED_PREFERENCES>>; 
+// GESTISCE LA DROPDOWN FESTIVITA PER PAESE
   myCountry: string; 
-    setMyCountry: React.Dispatch<React.SetStateAction<string>>; // GESTISCE LA DROPDOWN FESTIVITA PER PAESE
+    setMyCountry: React.Dispatch<React.SetStateAction<string>>; 
+// GESTISCE LA LINGUA DELL'APP
   myLanguage: string;
-    setMyLanguage: React.Dispatch<React.SetStateAction<string>>; // GESTISCE LA LINGUA DELL'APP
+    setMyLanguage: React.Dispatch<React.SetStateAction<string>>; 
 }
 
 // CREAZIONE DEL CONTEXT VERO E PROPRIO PER PASSARE I DATI IN TUTTA L'APP ======================
@@ -69,6 +77,7 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
   // VARIABILI GLOBALI
   const [newPersonalHolydays, setNewPersonalHolydays] = useState<NewHolyday[]>([]);   // NEW --> newPersonalHolydays
   const [nationalHolydays, setNationalHolydays] = useState<Holiday[]>([]); // NON LO INIZILIZZO ADESSO, LO FA holydays.tsx ALLA CHIAMATA
+  const [nationalExcluded, setNationalExcluded] = useState<number[]>([]); // FEST. NAZ. DA IGNORARE
   const [myCountry, setMyCountry] = useState(systemLanguage); // es: 'it-IT' --> DROPDOWN
   const [myLanguage, setMyLanguage] = useState(systemLanguage.slice(0,2)); // es 'it' --> LINGUA SISTEMA
   const [myPreferences, setMyPreferences] = useState(SAVED_PREFERENCES);  // <--- NUOVO
@@ -86,27 +95,32 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
   // INIZIALIZZAZIONE DATI DA LOCAL STORAGE ///////////////////////////
   useEffect(() => {
     const initializeData = async () => {
+
       const newStoredPersonalHolydays = await loadData('newPersonalHolydays');        
         if (newStoredPersonalHolydays) { 
           const holydaysWithDates = convertDates(newStoredPersonalHolydays);
-          setNewPersonalHolydays(holydaysWithDates); 
-        }
+          setNewPersonalHolydays(holydaysWithDates); }
+
+      const storedNationalExcluded = await loadData('nationalExcluded');
+        if (storedNationalExcluded) { setNationalExcluded(storedNationalExcluded); }
 
       const storedMyCountry = await loadData('myCountry');
-        if (storedMyCountry) { setMyCountry(storedMyCountry); } // OK CONTINUA
+        if (storedMyCountry) { setMyCountry(storedMyCountry); } 
 
       const myStoredPreferences = await loadData('PREFERENCES_KEY');
         if (myStoredPreferences) setMyPreferences(myStoredPreferences);
     };  
-    initializeData(); // CHIAMA LA FUNZ. LETTURA
+
+    initializeData(); // CHIAMA SE STESSA
   }, []);
 
   return (
     <HolydaysContext.Provider value={{
       newPersonalHolydays,  setNewPersonalHolydays, // NUOVO GIORNI PERSONALI
       nationalHolydays,     setNationalHolydays,    // FESTIVITA NAZIONALI
+      nationalExcluded,     setNationalExcluded,    // FEST. NAZ. DA IGNORARE
       myCountry,            setMyCountry,           // DROPDOWN FESTIVITA PER PAESE
-      myPreferences,        setMyPreferences,        // preferences 'nuovo' (distribuito da Context)
+      myPreferences,        setMyPreferences,       // preferences 'nuovo' (distribuito da Context)
       myLanguage,           setMyLanguage
     }}>
       {children}

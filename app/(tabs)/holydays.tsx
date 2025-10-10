@@ -8,25 +8,24 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
+  //TextInput,
   TouchableOpacity,
   View,
   useColorScheme,
   Platform
 } from 'react-native';
-import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
-import DropdownCountry from '@/components/ui/DropdownCountry'; // COUNTRY PICKER 
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales,  } from 'expo-localization';
-import NewDatepicker from '@/components/NewDatepicker'; // MIO DATEPICKER
 import { holydayLabels as dataLabel } from '@/components/dataLabel';
+import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
+import DropdownCountry from '@/components/ui/DropdownCountry'; // COUNTRY PICKER 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import NewDatepicker from '@/components/NewDatepicker'; // MIO DATEPICKER
 //import { useDefaultStyles, } from 'react-native-ui-datepicker';
 //import DateTimePicker, { useDefaultStyles, } from 'react-native-ui-datepicker';
 //import DatepicketSelector from '@/components/ui/DatepickerSelector'; // --> MUORE COL REFACTORING
-
 
 // GESTIONE COLORI
 const useThemeColors = () => {
@@ -322,9 +321,12 @@ export default function HolydaysScreen({}: any) {
   const { 
     newPersonalHolydays, setNewPersonalHolydays, // NUOVO
     nationalHolydays, setNationalHolydays,
+    nationalExcluded, setNationalExcluded,
     myCountry, setMyCountry,
     myLanguage
     } = useHolydays();
+
+    // console.log(`nationalExcluded from local storage: ${JSON.stringify(nationalExcluded)}`);
   
   /* ============================================================================= 
    GESTIONE MODAL NEWDATEPICKER
@@ -565,7 +567,6 @@ export default function HolydaysScreen({}: any) {
       setNewPersonalHolydays(tempNewPersonalHolydays);
     }
     await saveData(tempNewPersonalHolydays, 'newPersonalHolydays'); // SALVATAGGIO LOCAL STORAGE
-    console.log('newPersonalHolydays:', JSON.stringify(tempNewPersonalHolydays, null, 2)); // STAMPA DI CONTROLLO
 
     // AZZERA LE VARIABILI DI ERRORE E CHIUDE LA MODAL
     setInitialIndex(null);
@@ -574,28 +575,28 @@ export default function HolydaysScreen({}: any) {
     setIsModalSingleDateVisible(false);
   };
 
-/* ============================================================================= 
-  EDIT ITEM (SINGOLO E PERIODO) - REFACTORED
-  ============================================================================= */
-// LA FUNZIONE RICEVE SOLO L'INDICE 'index' DEL RECORD DA EDITARE DA newPersonalHolydays
-const handleEdit = (index: number) => {
-  console.log('[HANDLE EDIT]s');
-  // Controlla se l'indice è valido
-  if (index === null || index < 0 || index >= newPersonalHolydays.length) {
-    console.warn('Indice non valido per la modifica:', index);
-    return;
-  }
+  /* ============================================================================= 
+    EDIT ITEM (SINGOLO E PERIODO) - REFACTORED
+    ============================================================================= */
+  // LA FUNZIONE RICEVE SOLO L'INDICE 'index' DEL RECORD DA EDITARE DA newPersonalHolydays
+  const handleEdit = (index: number) => {
+    console.log('[HANDLE EDIT]s');
+    // Controlla se l'indice è valido
+    if (index === null || index < 0 || index >= newPersonalHolydays.length) {
+      console.warn('Indice non valido per la modifica:', index);
+      return;
+    }
 
-  const itemToEdit: any = newPersonalHolydays[index];
+    const itemToEdit: any = newPersonalHolydays[index];
 
-  setInitialIndex(index);                         // INDEX, SERVE PER L'EDIT
-  setDpickerStartDate(itemToEdit.startDate);      // START
-  setDpickerEndDate(itemToEdit.endDate);          // END
-  setDpickerDescription(itemToEdit.description);  // DESCR
-  setDpickerRepeatOnDate(itemToEdit.repeatOnDate);// REP ON DATE
-  setDpickerRepeatOnDay(itemToEdit.repeatOnDay);  // REP ON DAY
-  setIsModalSingleDateVisible(true);              // APRE MODAL
-};
+    setInitialIndex(index);                         // INDEX, SERVE PER L'EDIT
+    setDpickerStartDate(itemToEdit.startDate);      // START
+    setDpickerEndDate(itemToEdit.endDate);          // END
+    setDpickerDescription(itemToEdit.description);  // DESCR
+    setDpickerRepeatOnDate(itemToEdit.repeatOnDate);// REP ON DATE
+    setDpickerRepeatOnDay(itemToEdit.repeatOnDay);  // REP ON DAY
+    setIsModalSingleDateVisible(true);              // APRE MODAL
+  };
 
   /* ============================================================================= 
    DELETE ITEM --- Refactored
@@ -630,6 +631,9 @@ const handleEdit = (index: number) => {
           async () => {
             setMyCountry(getLocales()[0].languageTag);
             await saveData(getLocales()[0].languageTag, 'myCountry');
+            setNationalExcluded([]);
+            await saveData([], 'nationalExcluded');
+
           }
         }>
         <IconSymbol size={20} name="gobackward" color={colors.blueBar} style={{marginBottom:10,}}/>
@@ -665,6 +669,15 @@ const handleEdit = (index: number) => {
       <ScrollView 
         style={styles.container} 
         showsVerticalScrollIndicator={false} >
+
+
+        {/* ===================== STAMPA DI SERVIZIO ===================== */}
+        {/* <View>
+            <Text>{'\n'}{JSON.stringify(nationalExcluded)}</Text>
+        </View> */}
+        {/* ===================== STAMPA DI SERVIZIO ===================== */}
+
+
 
         {/* TITOLO PAGINA  */}{/* LE MIE DATE */}
         <Text style={[styles.sectionTitle, { flex:1, marginBottom:32, }]}>{dataLabel(myLanguage, 0)}</Text> 
@@ -811,6 +824,8 @@ const handleEdit = (index: number) => {
               onChange={ async (item) => {
                 setMyCountry(item);
                 await saveData(item, 'myCountry');
+                setNationalExcluded([]);
+                await saveData([], 'nationalExcluded');
               }}
             />
             { myCountry.slice(0,2) === myLanguage  ? null : <ResetCountryButton/> }
@@ -827,19 +842,55 @@ const handleEdit = (index: number) => {
                       <Text style={styles.dot32text}>{holiday.day}</Text>
                     </View>
                     <View style={{flexDirection:'column'}}>
-                      {/* <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label}`}</Text> */}
-                      <Text style={styles.itemDate}>{`${holiday.day} ${months[holiday.month]?.label}`}</Text>
-                      <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
+                      <Text 
+                        style={[
+                          styles.itemDate,
+                          {
+                            color: nationalExcluded.indexOf(index) !== -1 ? colors.disabled : colors.text 
+                          }
+                        ]} >
+                        {`${holiday.day} ${months[holiday.month]?.label}`}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.itemDescription,
+                          {
+                            maxWidth: 240,
+                            color: nationalExcluded.indexOf(index) !== -1 ? colors.disabled : colors.text
+                          }
+                        ]}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {holiday.description}
+                      </Text>
                     </View>
                   </View>
                   <TouchableOpacity
-                    onPress={ () => 
+                    onPress={ async () => {                      
                       // RIGA DA NON CONTEGGIARE
-                      // va implementata la logica
-                      null
-                    } >
-                    <IconSymbol size={24} name="checkmark.circle.fill" color={colors.blueBar} style={{paddingBottom:8,}}/>
-                    {/* <IconSymbol size={24} name="xmark.circle" color={colors.disabled} style={{paddingBottom:8,}}/> */}
+                      // 1) SE NON ESISTE NELLA LISTA
+                      if (nationalExcluded.indexOf(index) === -1) {                        
+                        // AGGIUNGE A nationalExcluded
+                        let tempNationalExcluded: number[] = [...nationalExcluded, index];
+                          setNationalExcluded(tempNationalExcluded);
+                          await saveData(tempNationalExcluded, 'nationalExcluded');
+                      } else { 
+                        // ALTRIMENTI ELIMINA DA nationalExcluded
+                        let tempNationalExcluded: number[] = nationalExcluded.filter(i => i !== index);
+                          setNationalExcluded(tempNationalExcluded);
+                          await saveData(tempNationalExcluded, 'nationalExcluded');
+                      }
+
+                      // SOTTO: ICONA BLU SE ELEMENTO ATTIVO, ICONA GRIGIA SE ELEMENTO NELLA LISTA NERA
+
+                    }}>
+                    <IconSymbol 
+                      style={{paddingBottom:8,}}
+                      size={24} 
+                      name={nationalExcluded.indexOf(index) === -1 ? "checkmark.circle.fill" : "xmark.circle.fill" }
+                      color={nationalExcluded.indexOf(index) === -1 ? colors.blueBar :  colors.disabled} 
+                      />
                   </TouchableOpacity>
               </View> 
 
@@ -849,6 +900,8 @@ const handleEdit = (index: number) => {
           ))}
         </View>
       
+
+
         {/* SPACER */}
         <View style={{height:500}}></View>
       </ScrollView>
