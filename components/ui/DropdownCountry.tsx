@@ -23,8 +23,9 @@ const countryNames = [
   { label: 'Éire', value: 'en-IE', flag: '🇮🇪' },
   { label: 'Belgium', value: 'be-BE', flag: '🇧🇪' },
   { label: 'Nederland', value: 'nl-NL', flag: '🇳🇱' },
-  { label: 'Hrvatska', value: 'hr-HR', flag: '🇵🇹', disable: true },
-  { label: 'Ελλάδα', value: 'gr-GR', flag: '🇬🇷', disable: true },
+  { label: 'Slovenija', value: 'si-SI', flag: '🇸🇮'},
+  { label: 'Hrvatska', value: 'hr-HR', flag: '🇵🇹'},
+  { label: 'Ελλάδα', value: 'gr-GR', flag: '🇬🇷'},
 ];
 
 interface DropdownCountryProps {

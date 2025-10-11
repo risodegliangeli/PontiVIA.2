@@ -121,6 +121,46 @@ export const getLocalHolydas = (country: string) => {
         { day: 8, month: 11, description: "Imaculada Conceição" },
         { day: 25, month: 11, description: "Natal" }
         ];
+ case 'si-SI':
+        return [
+        { day: 1, month: 0, description: "Novo leto"},
+        { day: 2, month: 0, description: "Novo leto"},
+        { day: 8, month: 1, description: "Prešernov dan"},
+        { day: 27, month: 3, description: "Dan upora proti okupatorju"},
+        { day: 1, month: 4, description: "Praznik dela"},
+        { day: 2, month: 4, description: "Ppraznik dela"},
+        { day: 25, month: 5, description: "dDan državnosti"},
+        { day: 15, month: 7, description: "Marijino vnebovzetje"},
+        { day: 31, month: 9, description: "Dan reformacije"},
+        { day: 1, month: 10, description: "Dan spomina na mrtve"},
+        { day: 25, month: 11, description: "Božič"},
+        { day: 26, month: 11, description: "Dan samostojnosti in enotnosti"},
+        ];
+    case 'hr-HR':
+      return [
+        { day: 1, month: 0, description: "Nova godina"},
+        { day: 6, month: 0, description: "Sveta tri kralja"},
+        { day: 1, month: 4, description: "Praznik rada"},
+        { day: 30, month: 4, description: "Dan državnosti"},
+        { day: 22, month: 5, description: "Dan antifašističke borbe"},
+        { day: 5, month: 7, description: "Dan pobjede i domovinske zahvalnosti"},
+        { day: 15, month: 7, description: "Velika Gospa"},
+        { day: 1, month: 10, description: "Dan svih svetih"},
+        { day: 18, month: 10, description: "Dan sjećanja na žrtve Domovinskog rata"},
+        { day: 25, month: 11, description: "Božić"},
+        { day: 26, month: 11, description: "Sveti Stjepan"},
+      ];
+    case 'gr-GR':
+      return [        
+        { day: 1, month: 0, description: "Πρωτοχρονιά"},
+        { day: 6, month: 0, description: "Θεοφάνια"},
+        { day: 25, month: 2, description: "Εικοστή Πέμπτη Μαρτίου"},
+        { day: 1, month: 4, description: "Εργατική Πρωτομαγιά"},
+        { day: 15, month: 7, description: "Κοίμηση της Θεοτόκου"},
+        { day: 28, month: 9, description: "Ημέρα του Όχι"},
+        { day: 25, month: 11, description: "Χριστούγεννα"},
+        { day: 26, month: 11, description: "Δεύτερη μέρα των Χριστουγέννων"},
+    ];
     default: 
       return [
         { day: 1, month: 0, description: 'Capodanno' },
