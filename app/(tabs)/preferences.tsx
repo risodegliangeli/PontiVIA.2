@@ -49,7 +49,7 @@ export const PREFERENCES = {
   festivitaLocali:    { status: true, label: switchNames(myLanguage,8)}, 
   festivitaPersonali: { status: true, label: switchNames(myLanguage,9)}, 
   feriePersonali:     { status: true, label: switchNames(myLanguage,10)}, 
-  bridgeDuration:     3, 
+  bridgeDuration:     2, 
   firstDayOfWeek:     1,
 };
 

@@ -70,7 +70,7 @@ const getCountryNationalHolidays = (
     nationalExcluded 
     ) => {   
 
-    console.log('\t[GETCOUNTRYNATIONALHOLYDAYS]');
+    console.log('\t\t[GETCOUNTRYNATIONALHOLYDAYS]');
     //console.log('\t- - nationalExcluded:', JSON.stringify(nationalExcluded));
 
     // ARRAY DOVE SONO SALVATI I DATI
@@ -311,8 +311,8 @@ const createCalendarGrid = (
         myPreferences,
         nationalExcluded: number[],
     ) => {
-    console.log('[CREATECALENDARGRID]');
-    console.log(`prop ricevuto -> nationalExcluded: ${JSON.stringify(nationalExcluded)}`);
+    console.log('\t[CREATECALENDARGRID]');
+    //console.log(`prop ricevuto -> nationalExcluded: ${JSON.stringify(nationalExcluded)}`);
    
     // AZZERO L'ARRAY CHE CONTERRA' LA GRIGLIA
     const grid = [];

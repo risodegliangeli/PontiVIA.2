@@ -1,4 +1,5 @@
 console.log('<CALENDARSCREEN>');
+
 import React, { useCallback, useEffect, useRef, useState, Suspense } from 'react';
 import {
   ActivityIndicator,
@@ -20,10 +21,10 @@ import { useHolydays } from '@/context/HolydaysContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { addMonths, isWithinInterval } from "date-fns";
 import * as Calendar from 'expo-calendar'; // ACCESSO AL CALENDARIO DI SISTEMA
-import { getLocales } from 'expo-localization';
 import { calendarScrenLabels as dataLabel } from '@/components/dataLabel';
 // import { PREFERENCES } from '@/app/(tabs)/preferences';
 // import { useFilterScreenChildren } from 'expo-router/build/layouts/withLayoutContext';
+//import { getLocales } from 'expo-localization';
 
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
 const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
@@ -58,10 +59,9 @@ const CalendarScreen = ({callerPreferences}: any) => {
     newPersonalHolydays,
     nationalExcluded,
     myPreferences, 
-    myCountry, myLanguage
+    myCountry, 
+    myLanguage
   } = useHolydays();
-
-  // console.log(`[CALENDARSCREEN] nationalExcluded (from Context): ${nationalExcluded}`);
 
   // CONTROLLO PRIVILEGI ACCESSO AL CALENDARIO
   useEffect(() => {
@@ -221,7 +221,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
       alignItems: 'center',
       justifyContent: 'center',
       color: colors.text,
-      // minHeight: 12,
+      minHeight: 48,
       //marginTop: 48, marginBottom:36,
       //padding: 15,
     },
@@ -385,7 +385,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
     newPersonalHolydays: NewHolyday[],
     ) => {
 
-    // EXIT SE UNO DEI VALORI E' true
+    // EXIT SE isLoading = true OPPURE hasMore = false
     if (isLoading || !hasMore) { 
       return; 
     } else { 
@@ -605,27 +605,29 @@ const CalendarScreen = ({callerPreferences}: any) => {
                       <TouchableOpacity 
                         key={`key,${day[0]},${dayIndex}`}
                         style={styles.squaredTouchable} //{[styles.squaredTouchable, !day[3] && styles.dayCellOutsideMonth, ]} NON PIU' NECESSARIO
-                        disabled={!day[2]} // ...ALCUNI DISABILITATI SE NON ESISTE DESCRIZIONE
+                        //disabled={!day[2]} // ...ALCUNI DISABILITATI SE NON ESISTE DESCRIZIONE
                         hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }} // ← Area toccabile estesa
-                        activeOpacity={0.7}
+                        activeOpacity={0.1}
+
+                        // ON-PRESS
                         onPress={() => {
                         if (day[2] != undefined) {
                         if (day[1] > 0) {
                           /*  MODAL/SimpleToast --> FESTIVITA' */
-                          setVisibleToast(true); 
                           setToastPosition('center');
                           setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
                           setOverlayBackground('rgba(50, 50, 50, 0.05)') // COLORE OVERLAY
                           setToastRadius([12,12,12,12]); // STONDATURA
                           setPaddingFromTop(48); // MARGINE TOP
                           setPaddingFromBottom(48); // MARGINE BOTTTOM
+                          setToastAnimation('fade');
                           setToastBody( 
                             <HolydayToast 
                               title={day[2]} 
                               description={day[0].toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})} />
                           );
-                          setToastAnimation('fade');
                           setToastOnClose(undefined); 
+                          setVisibleToast(true); 
                         } else {
                           /* MODAL/SimpleToast --> POSSIBILE PONTE */
                           let bridgeDescription: string = '';
@@ -670,6 +672,13 @@ const CalendarScreen = ({callerPreferences}: any) => {
                         }
                         }
                         }}
+
+                        // ON LONG-PRESS
+                        onLongPress={ () => {
+
+                          console.log('LONG PRESS ON', day[0].toLocaleDateString());
+                        }}
+                        delayLongPress={750}
                         >
                         {day[2] && day[1] !== -1 ? // se cell[2] non è vuota ma cell[1] != -1 : festivita
                           <View 
@@ -677,13 +686,9 @@ const CalendarScreen = ({callerPreferences}: any) => {
                           style={[ StyleSheet.absoluteFill, styles.redCircle ]} />
                         :
                         day[1] === -1 ? // se cell[2] non è vuota ma cell[1] = -1 : ponte
-                        <>
                           <View 
                           key={`yellowcircle.${day[0].toISOString()}.${dayIndex}`}
                           style={[ StyleSheet.absoluteFill, styles.yellowCircle ]} />
-                        {/*<View 
-                        style={styles.yellowBadge}/>*/}
-                        </>  
                         : 
                         null
                         }

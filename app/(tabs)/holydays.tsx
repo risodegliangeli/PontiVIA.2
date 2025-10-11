@@ -511,7 +511,7 @@ export default function HolydaysScreen({}: any) {
       );
       if (periodOverlap && !initialIndex) { // SE SI SOVRAPPONE MA NON E' UN EDIT ALLORA -> ERRORE
         // Msg: Questa data fa parte di un periodo esistente:
-        showToast(`${dataLabel(myLanguage,22)} "${periodOverlap.description}"\n(index: ${initialIndex})`, true);
+        showToast(`${dataLabel(myLanguage,22)} "${periodOverlap.description}"\n[da correggere]`, true);
         return;
       }
 

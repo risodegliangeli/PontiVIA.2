@@ -73,8 +73,6 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
 }) => {
 
   console.log( `<NEWDATEPICKER>` );
-  // console.log( `- - startDate: ${startDate.toLocaleDateString()}, endDate: ${endDate?.toLocaleDateString()}` );
-  // console.log( `- - difference: ${differenceInDays(endDate, startDate) + 1 }`); // 0 based
 
   // LINGUA DI SISTEMA
   language = (getLocales()[0].languageTag).slice(0,2);
@@ -151,7 +149,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       //backgroundColor:'white',
       //borderRadius:24,
       flexDirection:'column',
-      gap:24,
+      gap:32,
       alignItems:'center', // HOR
       justifyContent:'center',
       alignContent:'center',
@@ -178,7 +176,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       width:'100%',
       flexDirection: 'column',
       alignContent:'flex-start',
-      gap:12,
+      gap:20,
     },
     dateContainerRow: {
       //flex:2,
@@ -230,13 +228,13 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       width:'100%',
       flexDirection: 'column',
       justifyContent: 'space-around',
-      paddingVertical:16,
+      paddingVertical:24,
       paddingHorizontal: 12,
       borderWidth:1,
       borderColor: '#dedede',
       borderRadius:8,
       minHeight:80,
-      gap:12,
+      gap:24,
     },
     radioOption: {
       flexDirection: 'row',

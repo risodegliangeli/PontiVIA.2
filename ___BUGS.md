@@ -1,18 +1,21 @@
 # TICKET APERTI:
 
 
-- ### SPOSTARE PREFERENCES
-  -- in data.js
-
-- ### ADV AdMob
-  -- aggiungere
-
----
-
-- ### CONTROLLO SOVRAPPOSIZIONE DATE
+- ### CONTROLLO SOVRAPPOSIZIONE DATE 20251011.001
   -- se una data è ricorrente negli anni (per data o per giorno) la logica non rileva se un nuovo inserimento si sovrappone a quella ricorrenza negli anni futuri
   es. ho un periodo on una data che RIPETE OGNI ANNO IL III GIOVEDì DI NOVEMBRE
       non rileva se carico un periodo, sia fisso che ricorrente, che si accavalla negli anni 
+ 
+ ---
+
+- ### ERRORE IN EDIT 20251011.002
+  -- se modifico un periodo e lo trasformo in un evento da 1 giorno segnala errore
+     e non sovrascrive come invece dovrbbe
+
+---
+
+- ### LONG-PRESS 20251011.003
+  -- aggiungere logica long-press sulle date per inserimento/modifica eventi
 
 ---
 
@@ -20,6 +23,16 @@
   -- aggiungere pulsante 'modifica' (o cancella) nel toast
 
 ---
+- ### SPOSTARE PREFERENCES
+  -- in data.js
+
+---
+
+- ### ADV AdMob
+  -- aggiungere
+
+---
+
 
 - ### CONDIVISIONE DATE PERSONALI
   -- con altri utenti che hanno PontiVIA! installato
