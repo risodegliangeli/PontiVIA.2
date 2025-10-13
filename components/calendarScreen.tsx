@@ -23,9 +23,11 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { addMonths, isWithinInterval } from "date-fns";
 import * as Calendar from 'expo-calendar'; // ACCESSO AL CALENDARIO DI SISTEMA
 import { calendarScrenLabels as dataLabel } from '@/components/dataLabel';
+import { useNavigation } from '@react-navigation/native';
 
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
 const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
+
 
 // INTERFACCIA DI NewHolyday 
 interface NewHolyday {
@@ -373,6 +375,13 @@ const CalendarScreen = ({callerPreferences}: any) => {
     },
   });
 
+  const navigation = useNavigation();
+
+  const handleGoToHolydays = (date: Date, typ: string) => {
+    const dateString = date.toISOString(); 
+    navigation.navigate('holydays' as never, {date: dateString, typ: typ} as never);
+  };
+
   /* ============================================================================= 
   (CALLBACK) AGGIUNGE MESI AL CALENDARIO
   MEMORIZZA - E NON RICALCOLA - IL RISULTATO DELLA FUNZIONE FINCHE' NON CAMBIA 
@@ -677,6 +686,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
                         delayLongPress={500}
                         onLongPress={ () => {
                           console.log('--> onLongPress');
+                            handleGoToHolydays(day[0], 'new');
                         }}
                         >
                           {day[2] && day[1] !== -1 ? // se cell[2] non è vuota ma cell[1] != -1 : festivita

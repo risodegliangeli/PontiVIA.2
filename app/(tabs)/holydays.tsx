@@ -8,12 +8,13 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  //TextInput,
   TouchableOpacity,
   View,
   useColorScheme,
-  Platform
+  Platform,
 } from 'react-native';
+import { useRoute } from '@react-navigation/native'; 
+
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
@@ -23,9 +24,6 @@ import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
 import DropdownCountry from '@/components/ui/DropdownCountry'; // COUNTRY PICKER 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewDatepicker from '@/components/NewDatepicker'; // MIO DATEPICKER
-//import { useDefaultStyles, } from 'react-native-ui-datepicker';
-//import DateTimePicker, { useDefaultStyles, } from 'react-native-ui-datepicker';
-//import DatepicketSelector from '@/components/ui/DatepickerSelector'; // --> MUORE COL REFACTORING
 
 // GESTIONE COLORI
 const useThemeColors = () => {
@@ -42,8 +40,6 @@ type Holiday = {          // DEFINIZIONE DI holiday
   month: number;          // MESE
   description: string;    // DESCRIZIONE
 };
-// type HolidayType = 'personal' | 'regional' | 'national';
-// type ItemType = HolidayType | 'vacation';
 
 // TYPE NewHoliday (nuovo)
 type NewHolyday = {
@@ -80,7 +76,23 @@ const saveData = async (data: any, key: string) => {
                                       MAIN - HolydaysScreen
                                       
 ########################################################################################################### */
-export default function HolydaysScreen({}: any) {
+export default function HolydaysScreen() {
+
+  const route = useRoute();
+  const params = route.params as { date?: string, typ?: string }; 
+  
+  const dateString = params?.date;
+  const type = params?.typ;
+
+  let receivedDate: Date | null = null;
+  if (dateString) {
+    receivedDate = new Date(dateString);
+  }
+  
+  if (receivedDate) {
+    console.log('\t- - parametri in arrivo:', receivedDate, type);
+    console.log('\t- - scateno script di gestione');
+  } 
 
   const colors = useThemeColors();
 
