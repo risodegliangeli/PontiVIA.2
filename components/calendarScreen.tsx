@@ -670,7 +670,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
                         }
 
                         // ON LONG-PRESS
-                        delayLongPress={900}
+                        delayLongPress={500}
                         onLongPress={ () => {
                           if (day[1] === undefined) { // SOLO SE FERIALE
                             // console.log('--> onLongPress');

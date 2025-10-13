@@ -18,6 +18,7 @@
   -- aggiungere pulsante 'modifica' (o cancella) nel toast
 
 ---
+
 - ### SPOSTARE PREFERENCES
   -- in data.js
 

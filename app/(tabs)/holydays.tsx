@@ -685,13 +685,21 @@ export default function HolydaysScreen() {
   }, [myCountry]);
 
   // EFFETTO GENIUS PER LA MODAL
-  const modalSize= new Animated.Value(0);
+  const modalSize= new Animated.Value(1.2);     // DA SCALA 0
+  const modalOpacity = new Animated.Value(0); // DA OPACITY 0
   const startAnimation = () => {
-    Animated.timing(modalSize, { // 1) TESTO E MANINA SI RIDUCONO (NON CAMBIA OPACITY)
-      toValue: 1,
-      duration: 250,
-      useNativeDriver: true,
-    }).start();
+    Animated.parallel([
+      Animated.timing(modalSize, { 
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+      Animated.timing(modalOpacity, { 
+        toValue: 1,
+        duration: 150,
+        useNativeDriver: true,
+      }),
+    ]).start()
   }
   useEffect( () => {
     isModalSingleDateVisible && startAnimation()
@@ -951,7 +959,10 @@ export default function HolydaysScreen() {
             <View style={styles.backgroundModal}>
               <Animated.View style={[
                 styles.modalContainer, 
-                {transform: [{scale: modalSize.interpolate({inputRange: [0, 1], outputRange: [0, 1]})}]}
+                {
+                  transform: [{scale: modalSize.interpolate({inputRange: [0, 1], outputRange: [0, 1]})}],
+                  opacity: modalOpacity,
+                }
                 ]}>
                   <NewDatepicker
                   language={myLanguage}                    // LINGUA

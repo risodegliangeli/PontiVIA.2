@@ -71,7 +71,7 @@ SplashScreen.setOptions({
               transitionSpec: {
                 animation: 'timing',
                 config: {
-                  duration: 250,
+                  duration: 150,
                 },
               },
             }}>
