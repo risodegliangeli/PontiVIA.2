@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   Platform,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -22,13 +23,9 @@ import { useThemeColor } from '@/hooks/useThemeColor';
 import { addMonths, isWithinInterval } from "date-fns";
 import * as Calendar from 'expo-calendar'; // ACCESSO AL CALENDARIO DI SISTEMA
 import { calendarScrenLabels as dataLabel } from '@/components/dataLabel';
-// import { PREFERENCES } from '@/app/(tabs)/preferences';
-// import { useFilterScreenChildren } from 'expo-router/build/layouts/withLayoutContext';
-//import { getLocales } from 'expo-localization';
 
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
 const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
-//const myLanguage: string = (getLocales()[0].languageTag).slice(0,2);  // LINGUA DI SISTEMA
 
 // INTERFACCIA DI NewHolyday 
 interface NewHolyday {
@@ -315,7 +312,8 @@ const CalendarScreen = ({callerPreferences}: any) => {
     },
     squaredTouchable: {
       position: 'absolute',
-      width:'99%', height:'100%', //borderRadius:20,
+      width:'99%', height:'100%', 
+      borderRadius:24,
       backgroundColor:'transparent',
       alignItems: 'center',
       justifyContent: 'center',
@@ -602,122 +600,122 @@ const CalendarScreen = ({callerPreferences}: any) => {
                     {/* 1) SE NON ESISTE day[3] E' GIORNO ESTERNO AL MESE E NON SI STAMPA */}
                     {/* 2) TUTTI I GIORNI SONO TOUCHABLEOPACITY MA... */}
                     {day[3] &&
-                      <TouchableOpacity 
+                      <Pressable 
                         key={`key,${day[0]},${dayIndex}`}
-                        style={styles.squaredTouchable} //{[styles.squaredTouchable, !day[3] && styles.dayCellOutsideMonth, ]} NON PIU' NECESSARIO
-                        //disabled={!day[2]} // ...ALCUNI DISABILITATI SE NON ESISTE DESCRIZIONE
-                        hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }} // ← Area toccabile estesa
-                        activeOpacity={0.1}
+                        style={({pressed}) => [
+                          styles.squaredTouchable,
+                          {backgroundColor: pressed && colors.dot32}
+                          ]}
+                        hitSlop={{top: 5, bottom: 5, left: 5, right: 5}}
 
-                        // ON-PRESS
-                        onPress={() => {
-                        if (day[2] != undefined) {
-                        if (day[1] > 0) {
-                          /*  MODAL/SimpleToast --> FESTIVITA' */
-                          setToastPosition('center');
-                          setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
-                          setOverlayBackground('rgba(50, 50, 50, 0.05)') // COLORE OVERLAY
-                          setToastRadius([12,12,12,12]); // STONDATURA
-                          setPaddingFromTop(48); // MARGINE TOP
-                          setPaddingFromBottom(48); // MARGINE BOTTTOM
-                          setToastAnimation('fade');
-                          setToastBody( 
-                            <HolydayToast 
-                              title={day[2]} 
-                              description={day[0].toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})} />
-                          );
-                          setToastOnClose(undefined); 
-                          setVisibleToast(true); 
-                        } else {
-                          /* MODAL/SimpleToast --> POSSIBILE PONTE */
-                          let bridgeDescription: string = '';
-                          let bridgeStartAt: Date;
-                          let bridgeEndsAt: Date;
-                          month.bridges.forEach( (interval: any, index: number) => {
-                          if (isWithinInterval(day[0], {start: interval.da, end: interval.a})) {
-                            if (interval.length > 1) {
-                              bridgeDescription += dataLabel(myLanguage, 4); // Dal
-                              bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                              bridgeDescription += dataLabel(myLanguage, 5); // fino al
-                              bridgeDescription += interval.a.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                              bridgeDescription += ' (' + interval.length + dataLabel(myLanguage, 6); // giorni
-                              // PRIMO E ULTIMO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
-                              bridgeStartAt = month.bridges[index].da;
-                              bridgeEndsAt = month.bridges[index].a;
-                            } else {
-                              bridgeDescription += dataLabel(myLanguage, 7); // Il
-                              bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                              bridgeDescription += dataLabel(myLanguage, 8); // (1 giorno)
-                              // UNICO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
-                              bridgeStartAt = bridgeEndsAt = interval.da;
+                        // ON PRESS
+                        onPressIn={ () => {
+                            console.log('--> onPressIn');
+                              if (day[2] != undefined) {
+                                if (day[1] > 0) {
+                                  setToastPosition('center');
+                                  setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
+                                  setOverlayBackground('rgba(50, 50, 50, 0.05)') // COLORE OVERLAY
+                                  setToastRadius([12,12,12,12]); // STONDATURA
+                                  setPaddingFromTop(48); // MARGINE TOP
+                                  setPaddingFromBottom(48); // MARGINE BOTTTOM
+                                  setToastAnimation('fade');
+                                  setToastBody( 
+                                    <HolydayToast 
+                                      title={day[2]} 
+                                      description={day[0].toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})} />
+                                  );
+                                  setToastOnClose(undefined); 
+                                  setVisibleToast(true); 
+                                } else {
+                                  /* MODAL/SimpleToast --> POSSIBILE PONTE */
+                                  let bridgeDescription: string = '';
+                                  let bridgeStartAt: Date;
+                                  let bridgeEndsAt: Date;
+                                  month.bridges.forEach( (interval: any, index: number) => {
+                                    if (isWithinInterval(day[0], {start: interval.da, end: interval.a})) {
+                                      if (interval.length > 1) {
+                                        bridgeDescription += dataLabel(myLanguage, 4); // Dal
+                                        bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                        bridgeDescription += dataLabel(myLanguage, 5); // fino al
+                                        bridgeDescription += interval.a.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                        bridgeDescription += ' (' + interval.length + dataLabel(myLanguage, 6); // giorni
+                                        // PRIMO E ULTIMO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
+                                        bridgeStartAt = month.bridges[index].da;
+                                        bridgeEndsAt = month.bridges[index].a;
+                                      } else {
+                                        bridgeDescription += dataLabel(myLanguage, 7); // Il
+                                        bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                        bridgeDescription += dataLabel(myLanguage, 8); // (1 giorno)
+                                        // UNICO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
+                                        bridgeStartAt = bridgeEndsAt = interval.da;
+                                      }
+                                } 
+                                });
+                                setVisibleToast(true); 
+                                setToastPosition('center');
+                                setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
+                                setOverlayBackground('rgba(50, 50, 50, 0.05)'); // COLORE OVERLAY
+                                setToastRadius([12,12,12,12]); // STONDATURA
+                                setPaddingFromTop(48); // MARGINE TOP
+                                setPaddingFromBottom(48); // MARGINE BOTTTOM
+                                setToastBody( 
+                                <BridgeToast 
+                                  title={day[2]}
+                                  description={bridgeDescription}
+                                  bridgeStart={bridgeStartAt}
+                                  bridgeEnds={bridgeEndsAt}
+                                />);
+                                setToastAnimation('fade');
+                                setToastOnClose(undefined); 
+                              }
                             }
-                          } 
-                          });
-                          setVisibleToast(true); 
-                          setToastPosition('center');
-                          setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
-                          setOverlayBackground('rgba(50, 50, 50, 0.05)'); // COLORE OVERLAY
-                          setToastRadius([12,12,12,12]); // STONDATURA
-                          setPaddingFromTop(48); // MARGINE TOP
-                          setPaddingFromBottom(48); // MARGINE BOTTTOM
-                          setToastBody( 
-                          <BridgeToast 
-                            title={day[2]}
-                            description={bridgeDescription}
-                            bridgeStart={bridgeStartAt}
-                            bridgeEnds={bridgeEndsAt}
-                          />);
-                          setToastAnimation('fade');
-                          setToastOnClose(undefined); 
+                          }
                         }
-                        }
-                        }}
 
                         // ON LONG-PRESS
+                        delayLongPress={500}
                         onLongPress={ () => {
-
-                          console.log('LONG PRESS ON', day[0].toLocaleDateString());
+                          console.log('--> onLongPress');
                         }}
-                        delayLongPress={750}
                         >
-                        {day[2] && day[1] !== -1 ? // se cell[2] non è vuota ma cell[1] != -1 : festivita
-                          <View 
-                          key={`redcircle.${day[0].toISOString()}.${dayIndex}`}
-                          style={[ StyleSheet.absoluteFill, styles.redCircle ]} />
-                        :
-                        day[1] === -1 ? // se cell[2] non è vuota ma cell[1] = -1 : ponte
-                          <View 
-                          key={`yellowcircle.${day[0].toISOString()}.${dayIndex}`}
-                          style={[ StyleSheet.absoluteFill, styles.yellowCircle ]} />
-                        : 
-                        null
-                        }
-                        <Text 
-                          style={[ 
-                          styles.dayNumber,
-                          // SE day[2] (ESISTE DESCRIZIONE) 
-                          day[2] ?
-                          // + SE day[1]>0 = SOLO FESTIVITA
-                          day[1] === 1 ?
-                            [styles.dayNumberHoliday, styles.dayNumberBold, {color: colors.textRed}]
-                            :
-                            // SE day[1] DIVERSO DA 1 (E SE day[2] ESISTE NON PUO' CHE ESSERE -1) = PONTE
-                            [styles.dayNumberBridge, styles.dayNumberBold, {color: colors.white}]
+                          {day[2] && day[1] !== -1 ? // se cell[2] non è vuota ma cell[1] != -1 : festivita
+                            <View 
+                            key={`redcircle.${day[0].toISOString()}.${dayIndex}`}
+                            style={[ StyleSheet.absoluteFill, styles.redCircle ]} />
                           :
-                          // ALTRIMENTI SE NON ESISTE day[2] DESCRIZIONE
-                          // day[1] =1 FESTIVO
-                          day[1] === 1 ?
-                            [styles.dayNumberHoliday, styles.dayNumberBold]
-                            :
-                            // day[1] != \ GIORNO NORMALE
-                            [styles.dayNumber, ]
-                          ]} 
-                        >
-                        {day[0].getUTCDate()}
-                        </Text>
-                      </TouchableOpacity>
+                            day[1] === -1 ? // se cell[2] non è vuota ma cell[1] = -1 : ponte
+                              <View 
+                              key={`yellowcircle.${day[0].toISOString()}.${dayIndex}`}
+                              style={[ StyleSheet.absoluteFill, styles.yellowCircle ]} />
+                            : 
+                            null
+                          }
+                          <Text 
+                            style={[ 
+                              styles.dayNumber,
+                              // SE day[2] (ESISTE DESCRIZIONE) 
+                              day[2] ?
+                              // + SE day[1]>0 = SOLO FESTIVITA
+                              day[1] === 1 ?
+                                [styles.dayNumberHoliday, styles.dayNumberBold, {color: colors.textRed}]
+                                :
+                                // SE day[1] DIVERSO DA 1 (E SE day[2] ESISTE NON PUO' CHE ESSERE -1) = PONTE
+                                [styles.dayNumberBridge, styles.dayNumberBold, {color: colors.white}]
+                              :
+                              // ALTRIMENTI SE NON ESISTE day[2] DESCRIZIONE
+                              // day[1] =1 FESTIVO
+                              day[1] === 1 ?
+                                [styles.dayNumberHoliday, styles.dayNumberBold]
+                                :
+                                // day[1] != \ GIORNO NORMALE
+                                [styles.dayNumber, ]
+                              ]} 
+                          >
+                            {day[0].getUTCDate()}
+                          </Text>
+                      </Pressable>
                     }
-
                   </View>
                 );
               })
@@ -796,6 +794,8 @@ const CalendarScreen = ({callerPreferences}: any) => {
         decelerationRate="normal"          // ← Decelerazione naturale
         bouncesZoom={false}               // ← Disabilita zoom accidentali
       />
+
+      {/* SimpleToast ###################################################################### */}
       <Suspense>
         <SimpleToast
           isSTVisible={visibleToast}
@@ -810,6 +810,8 @@ const CalendarScreen = ({callerPreferences}: any) => {
           onClose={ () => setVisibleToast(false) }
         />
       </Suspense>
+
+
     </>
   );
 };
