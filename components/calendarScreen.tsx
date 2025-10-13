@@ -267,15 +267,6 @@ const CalendarScreen = ({callerPreferences}: any) => {
       borderWidth:2,
       borderColor: colors.textRed,
       borderRadius: 36,
-      // backgroundColor: colors.textRed,
-      // elevation:6,
-      // shadowColor: colors.black, // iOS shadow
-      // shadowOffset: {
-      //   width: 1,
-      //   height: 2, // Match elevation for iOS
-      // },
-      // shadowOpacity: 0.25,
-      // shadowRadius: 4 // Match elevation for iOS
       },
     yellowCircle: { // NON E' PIU YELLOW MA BLUE... ;-)
       position:'absolute',
@@ -303,19 +294,11 @@ const CalendarScreen = ({callerPreferences}: any) => {
       width:6,
       borderRadius:'100%',
       backgroundColor: '#ffffff66',
-      // elevation:12,
-      // shadowColor: colors.black, // iOS shadow
-      // shadowOffset: {
-      //   width: 1,
-      //   height: 4, // Match elevation for iOS
-      // },
-      // shadowOpacity: 0.75,
-      // shadowRadius: 4 // Match elevation for iOS
     },
     squaredTouchable: {
       position: 'absolute',
       width:'99%', height:'100%', 
-      borderRadius:24,
+      borderRadius:999,
       backgroundColor:'transparent',
       alignItems: 'center',
       justifyContent: 'center',
@@ -379,7 +362,10 @@ const CalendarScreen = ({callerPreferences}: any) => {
 
   const handleGoToHolydays = (date: Date, typ: string) => {
     const dateString = date.toISOString(); 
-    navigation.navigate('holydays' as never, {date: dateString, typ: typ} as never);
+    navigation.navigate(
+      'holydays' as never, 
+      {date: dateString, typ: typ} as never, 
+      );
   };
 
   /* ============================================================================= 

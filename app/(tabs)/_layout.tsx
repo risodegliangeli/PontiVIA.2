@@ -67,7 +67,14 @@ SplashScreen.setOptions({
             tabBar={ props => <SplittedBar {...props} />}
             screenOptions={{
               headerShown: false,
-            }} >
+              animation: 'fade', // fade | shift | none
+              transitionSpec: {
+                animation: 'timing',
+                config: {
+                  duration: 250,
+                },
+              },
+            }}>
 
             {/* ================================== INDEX ================================== */}
             <Tabs.Screen

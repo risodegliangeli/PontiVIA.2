@@ -1,5 +1,5 @@
 import {useState, useEffect, } from 'react';
-import { View, Text, Image, TextInput, TouchableOpacity, StyleSheet,  } from 'react-native';
+import {  View, Text, Image, TextInput, TouchableOpacity, StyleSheet,  } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { addDays, subDays, compareAsc, getDay, differenceInDays, startOfMonth } from 'date-fns';
 import { getLocales,  } from 'expo-localization';
@@ -146,16 +146,11 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   const styles = StyleSheet.create({
     modalContainer: {
       width:'100%',
-      //backgroundColor:'white',
-      //borderRadius:24,
       flexDirection:'column',
       gap:32,
       alignItems:'center', // HOR
       justifyContent:'center',
       alignContent:'center',
-      // paddingHorizontal:12,
-      // paddingVertical:24,
-      // borderWidth:1,
     },    
     listTitle: {
       color: '#333',
@@ -335,7 +330,6 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   -------------------------   ------------------------- */
   useEffect(() => {
 
-
     if (myEndDate) {
       // controllo che startDate sia < di endDate: nel caso la forzo = endDate
       // si utilizza {compareAsc}
@@ -356,29 +350,6 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   }, [myStartDate, myEndDate]);
 
   /* --------------------------------------------------
-  GESTISCE LA DROPDOWN PARTENDO DAL value 
-  -------------------------   ------------------------- */
-  // useEffect(() => {
-  //   console.log(`- - useEffect: MUOVE LA DROPDOWN PARTENDO DAL value (${value})`);
-  //   // Prevent unnecessary updates to myEndDate
-  //   if (value === 1 && myEndDate !== null) {
-  //     setMyEndDate(null);
-  //     setToDate(false);
-  //   } else if (value === 2 && (!myEndDate || differenceInDays(myEndDate, myStartDate) !== 1)) {
-  //     setMyEndDate(addDays(myStartDate, 1));
-  //     setToDate(true);
-  //   } else if (value === 3 && (!myEndDate || differenceInDays(myEndDate, myStartDate) !== 2)) {
-  //     setMyEndDate(addDays(myStartDate, 2));
-  //     setToDate(true);
-  //   } else if (value === null && (!myEndDate || (initialIndex === null && myEndDate.getTime() !== myStartDate.getTime()) || (initialIndex !== null && endDate && myEndDate.getTime() !== endDate.getTime()))) {
-  //     initialIndex === null ? setMyEndDate(myStartDate) : setMyEndDate(endDate);
-  //     setToDate(true);
-  //   } else if (![1, 2, 3, null].includes(value as number)) {
-  //     setToDate(false);
-  //   }
-  // }, [value, myStartDate]);
-
-  /* --------------------------------------------------
   ASSEMBLA LE LABEL DEI RADIOBUTTON OGNI VOLTA CHE CAMBIANO myStartDate O myEndDate
   -------------------------   ------------------------- */
   useEffect( () => {
@@ -386,10 +357,14 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
     setLowerRadioButtonLabel(`${dataLabel(language, 9)} ${dataLabel(language, 9 + getWeekdayRecurrence(myStartDate))} ${localizedDays[getDay(myStartDate) === 0 ? 6 : getDay(myStartDate) - 1]} di ${ months[myStartDate.getMonth()].label } `);
   }, [myStartDate, myEndDate]);
 
+
   return (
     <View style={styles.modalContainer}>
+
+
+
       {/* MODAL */}
-      <View style={styles.modalContainer}>
+      <View style={styles.modalContainer} >
         {/* TITOLO MODAL */}
         <Text style={styles.listTitle}>
           {initialIndex !== null ? dataLabel(language, 19) : dataLabel(language, 0)}
@@ -572,7 +547,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
         </View>
       </View>
 
-      {/* GRIGLIA CALENDARIO */}
+      {/* DATEPICKER - GRIGLIA CALENDARIO */}
       {datepickerVisible && 
         <View style={styles.datepickerContainer}>
 
@@ -587,12 +562,12 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               // VARIABILE DI SERVIZIO
               let d: Date | null = createUTCDate(date);
 
-console.log(`- - caller: ${datepickerCaller}`);
-console.log(`- - selectedDate: ${createUTCDate(date)?.toLocaleDateString()}`);
-console.log(`- - myStartDate: ${myStartDate.toLocaleDateString()}`);
-console.log(`- - myEndDate: ${myEndDate?.toLocaleDateString()}`);
-console.log(`- - maxDate: ${maxDate?.toLocaleDateString()}`);
-console.log(`- - minDate: ${minDate?.toLocaleDateString()}`);
+              // console.log(`- - caller: ${datepickerCaller}`);
+              // console.log(`- - selectedDate: ${createUTCDate(date)?.toLocaleDateString()}`);
+              // console.log(`- - myStartDate: ${myStartDate.toLocaleDateString()}`);
+              // console.log(`- - myEndDate: ${myEndDate?.toLocaleDateString()}`);
+              // console.log(`- - maxDate: ${maxDate?.toLocaleDateString()}`);
+              // console.log(`- - minDate: ${minDate?.toLocaleDateString()}`);
 
               if (datepickerCaller === 'startDate') { 
                 setMyStartDate(d); 

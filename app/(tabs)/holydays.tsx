@@ -2,6 +2,7 @@ console.log('[HOLYDAYS.TSX]');
 
 import React, { useEffect, useState, Suspense,  } from 'react';
 import {
+  Animated,
   Alert,
   ImageBackground,
   Modal,
@@ -683,6 +684,19 @@ export default function HolydaysScreen() {
     async () => await saveData(myCountry, 'myCountry');
   }, [myCountry]);
 
+  // EFFETTO GENIUS PER LA MODAL
+  const modalSize= new Animated.Value(0);
+  const startAnimation = () => {
+    Animated.timing(modalSize, { // 1) TESTO E MANINA SI RIDUCONO (NON CAMBIA OPACITY)
+      toValue: 1,
+      duration: 250,
+      useNativeDriver: true,
+    }).start();
+  }
+  useEffect( () => {
+    isModalSingleDateVisible && startAnimation()
+    }, [isModalSingleDateVisible]);
+
   return (
     <ImageBackground 
       source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg')}
@@ -934,40 +948,43 @@ export default function HolydaysScreen() {
           onRequestClose={hideModalSingleDate} 
           hardwareAccelerated={true}
           >
-          <View style={styles.backgroundModal}>
-            <View style={styles.modalContainer}>
-              <NewDatepicker
-              language={myLanguage}                    // LINGUA
-              startDate={dpickerStartDate}            // DATA INIZIO
-              endDate={dpickerEndDate}                // DATA FINE O null
-              description={dpickerDescription}        // DESCRIZIONE
-              isError={dpickerToastIsError}           // PASSA AL COMPONENT FLAG DI ERRORE
-              errorMsg={dpickerToastMessage}          // PASSA AL COMPONENT MSG DI ERRORE
-              repeatOnDate={dpickerRepeatOnDate}      // RIPETE IN QUELLA DATA
-              repeatOnDay={dpickerRepeatOnDay}        // RIPETE QUEL GIORNO DELL'ANNO
-              initialIndex={initialIndex}             // VALORIZZATO SE EDIT
-              onCancel={ () => {
-                  setInitialIndex(null);              // SE ERA UN EDIT AZZERA IL FLAG
-                  setDpickerToastMessage('');         // AZZERA MSG ERRORE
-                  setDpickerToastIsError(false);      // AZZERA FLAG ERRORE
-                  setIsModalSingleDateVisible(false); // CHIUDE MODAL
-              }} 
-              onConfirm={(
-                myStartDate, 
-                myEndDate, 
-                myDescription, 
-                upperRadioButtonActive, 
-                lowerRadioButtonActive) => 
-                handleAddEvent(
-                  myStartDate, 
-                  myEndDate, 
-                  myDescription, 
-                  upperRadioButtonActive, 
-                  lowerRadioButtonActive, 
-                ) 
-              }/>      
+            <View style={styles.backgroundModal}>
+              <Animated.View style={[
+                styles.modalContainer, 
+                {transform: [{scale: modalSize.interpolate({inputRange: [0, 1], outputRange: [0, 1]})}]}
+                ]}>
+                  <NewDatepicker
+                  language={myLanguage}                    // LINGUA
+                  startDate={dpickerStartDate}            // DATA INIZIO
+                  endDate={dpickerEndDate}                // DATA FINE O null
+                  description={dpickerDescription}        // DESCRIZIONE
+                  isError={dpickerToastIsError}           // PASSA AL COMPONENT FLAG DI ERRORE
+                  errorMsg={dpickerToastMessage}          // PASSA AL COMPONENT MSG DI ERRORE
+                  repeatOnDate={dpickerRepeatOnDate}      // RIPETE IN QUELLA DATA
+                  repeatOnDay={dpickerRepeatOnDay}        // RIPETE QUEL GIORNO DELL'ANNO
+                  initialIndex={initialIndex}             // VALORIZZATO SE EDIT
+                  onCancel={ () => {
+                      setInitialIndex(null);              // SE ERA UN EDIT AZZERA IL FLAG
+                      setDpickerToastMessage('');         // AZZERA MSG ERRORE
+                      setDpickerToastIsError(false);      // AZZERA FLAG ERRORE
+                      setIsModalSingleDateVisible(false); // CHIUDE MODAL
+                  }} 
+                  onConfirm={(
+                    myStartDate, 
+                    myEndDate, 
+                    myDescription, 
+                    upperRadioButtonActive, 
+                    lowerRadioButtonActive) => 
+                    handleAddEvent(
+                      myStartDate, 
+                      myEndDate, 
+                      myDescription, 
+                      upperRadioButtonActive, 
+                      lowerRadioButtonActive, 
+                    ) 
+                  }/>      
+              </Animated.View>
             </View>
-          </View>
         </Modal>
       </Suspense>
     </ImageBackground>
