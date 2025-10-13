@@ -611,14 +611,15 @@ const CalendarScreen = ({callerPreferences}: any) => {
                     {day[3] &&
                       <Pressable 
                         key={`key,${day[0]},${dayIndex}`}
+                        android_ripple={{ color: colors.blueBar, borderless: false }}
                         style={({pressed}) => [
                           styles.squaredTouchable,
-                          {backgroundColor: pressed && colors.dot32}
+                          {backgroundColor: pressed ? colors.dot32 : 'transparent'}
                           ]}
                         hitSlop={{top: 5, bottom: 5, left: 5, right: 5}}
 
                         // ON PRESS
-                        onPressIn={ () => {
+                        onPress={ () => {
                             console.log('--> onPressIn');
                               if (day[2] != undefined) {
                                 if (day[1] > 0) {
@@ -683,10 +684,12 @@ const CalendarScreen = ({callerPreferences}: any) => {
                         }
 
                         // ON LONG-PRESS
-                        delayLongPress={500}
+                        delayLongPress={900}
                         onLongPress={ () => {
-                          console.log('--> onLongPress');
-                            handleGoToHolydays(day[0], 'new');
+                          if (day[1] === undefined) { // SOLO SE FERIALE
+                            // console.log('--> onLongPress');
+                            handleGoToHolydays(day[0], 'newItem');
+                          } 
                         }}
                         >
                           {day[2] && day[1] !== -1 ? // se cell[2] non è vuota ma cell[1] != -1 : festivita

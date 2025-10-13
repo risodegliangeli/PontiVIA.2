@@ -14,11 +14,6 @@
 
 ---
 
-- ### LONG-PRESS 20251011.003
-  -- aggiungere logica long-press sulle date per inserimento/modifica eventi
-
----
-
 - ### SimpleToast FESTIVITA: RENDERE EDITABILE
   -- aggiungere pulsante 'modifica' (o cancella) nel toast
 
@@ -62,10 +57,6 @@
 
 - #### geolocalizzazione per santo del giorno
 
----
-
-- #### inserimento date PERS/LOC: non segnala i duplicati nelle altre categorie e nei nazionali, -> R.246 A) NUOVO
-
 --- 
  
 - #### SPLASH ICON & SCREEN
@@ -83,6 +74,12 @@
 
 
 # TICKET RISOLTI:
+
+
+- ### LONG-PRESS 20251011.003
+  -- aggiungere logica long-press sulle date per inserimento/modifica eventi
+
+---
 
 
 - ### FESTIVITA NAZIONALI EDITABILI/DISATTIVABILI

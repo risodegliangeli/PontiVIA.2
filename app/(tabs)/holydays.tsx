@@ -78,21 +78,6 @@ const saveData = async (data: any, key: string) => {
 ########################################################################################################### */
 export default function HolydaysScreen() {
 
-  const route = useRoute();
-  const params = route.params as { date?: string, typ?: string }; 
-  
-  const dateString = params?.date;
-  const type = params?.typ;
-
-  let receivedDate: Date | null = null;
-  if (dateString) {
-    receivedDate = new Date(dateString);
-  }
-  
-  if (receivedDate) {
-    console.log('\t- - parametri in arrivo:', receivedDate, type);
-    console.log('\t- - scateno script di gestione');
-  } 
 
   const colors = useThemeColors();
 
@@ -337,9 +322,20 @@ export default function HolydaysScreen() {
     myCountry, setMyCountry,
     myLanguage
     } = useHolydays();
-
-    // console.log(`nationalExcluded from local storage: ${JSON.stringify(nationalExcluded)}`);
   
+
+  function handleExternalAddDate(receivedDate: Date) {
+    setInitialIndex(null);                  // INDEX, SERVE PER L'EDIT
+    setDpickerStartDate(receivedDate);      // START
+    setDpickerEndDate(null);                // END
+    setDpickerDescription('');              // DESCR
+    setDpickerRepeatOnDate(false);          // REP ON DATE
+    setDpickerRepeatOnDay(false);           // REP ON DAY
+    setIsModalSingleDateVisible(true);      // APRE MODAL
+  }
+
+
+
   /* ============================================================================= 
    GESTIONE MODAL NEWDATEPICKER
    ============================================================================= */
@@ -373,12 +369,26 @@ export default function HolydaysScreen() {
     setIsModalSingleDateVisible(false);
   };
 
+  // HANDLE EXTERNAL CALL FOR ADD
+  const route = useRoute();
+  const params = route.params as { date?: string, typ?: string }; 
+
+  // SE VIENE PASSATO UN PARAMETRO ALLORA SI APRE LA DATEPICKER PER INSERIRE UN NUOVO EVENTO
+  useEffect(() => {
+    if (params?.date) {
+      const receivedDate = new Date(params.date);
+      const type = params?.typ;
+      console.log('\t- - parametri in arrivo:', receivedDate.toLocaleDateString(), type);
+      console.log('\t- -> scateno script di gestione');
+      handleExternalAddDate(receivedDate);
+    }
+  }, [params?.date]);
+
   /* WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW 
 
       AGGIUNGI EVENTO (refactored)
 
   WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW */
-
   // FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
   const normalizeDate = (date: Date | null): Date | null => {
     if (!date) return null;
@@ -655,14 +665,14 @@ export default function HolydaysScreen() {
   
   // GESTIONE SLIDER PER SELEZIONARE GIORNO/PERIODO NEL DATEPICKER
   const [sliderTargetValue, setSliderTargetValue] = useState(0);
-  const buttonLeftAction = () => {
-    sliderTargetValue === 1 && setSliderTargetValue(0);
-    sliderTargetValue === 1 && setSelectedRadioOption('single');
-    };
-  const buttonRightAction = () => {
-    sliderTargetValue === 0 && setSliderTargetValue(1);
-    sliderTargetValue === 0 && setSelectedRadioOption('period');
-    };
+  // const buttonLeftAction = () => {
+  //   sliderTargetValue === 1 && setSliderTargetValue(0);
+  //   sliderTargetValue === 1 && setSelectedRadioOption('single');
+  //   };
+  // const buttonRightAction = () => {
+  //   sliderTargetValue === 0 && setSliderTargetValue(1);
+  //   sliderTargetValue === 0 && setSelectedRadioOption('period');
+  //   };
 
   /* ============================================================================= 
   * useEffect * AL CAMBIO DI myCountry
@@ -681,15 +691,6 @@ export default function HolydaysScreen() {
       <ScrollView 
         style={styles.container} 
         showsVerticalScrollIndicator={false} >
-
-
-        {/* ===================== STAMPA DI SERVIZIO ===================== */}
-        {/* <View>
-            <Text>{'\n'}{JSON.stringify(nationalExcluded)}</Text>
-        </View> */}
-        {/* ===================== STAMPA DI SERVIZIO ===================== */}
-
-
 
         {/* TITOLO PAGINA  */}{/* LE MIE DATE */}
         <Text style={[styles.sectionTitle, { flex:1, marginBottom:32, }]}>{dataLabel(myLanguage, 0)}</Text> 
@@ -848,7 +849,6 @@ export default function HolydaysScreen() {
               <View 
                 key={index} 
                 style={[styles.holidayRow, {justifyContent:'space-between', alignItems:'center'}]}>
-
                   <View style={[styles.holidayRow, {justifyContent:'flex-start', alignItems:'flex-start'}]}>
                     <View style={{width:44, height:44, borderRadius:24, backgroundColor: colors.dot32}}>
                       <Text style={styles.dot32text}>{holiday.day}</Text>
@@ -893,15 +893,12 @@ export default function HolydaysScreen() {
                           setNationalExcluded(tempNationalExcluded);
                           await saveData(tempNationalExcluded, 'nationalExcluded');
                       }
-
-                      // SOTTO: ICONA BLU SE ELEMENTO ATTIVO, ICONA GRIGIA SE ELEMENTO NELLA LISTA NERA
-
                     }}>
                     {nationalExcluded.indexOf(index) === -1 ?
                       <IconSymbol 
                         style={{paddingBottom:8,}}
                         size={24} 
-                        name={"checkmark"}
+                        name={"checkmark.circle.fill"}
                         color={colors.blueBar} 
                         />
                       :
@@ -929,48 +926,48 @@ export default function HolydaysScreen() {
       {/* nuovo MODAL DATEPICKR ###################################################################### */}
       <Suspense>
         <Modal
-        visible={isModalSingleDateVisible}  
-        presentationStyle="fullScreen"
-        transparent={false}
-        // backdropColor={'rgba(0, 0, 0, .25)'} // NON FUNZIONA TRASPARENZA
-        animationType="none"
-        onRequestClose={hideModalSingleDate} 
-        hardwareAccelerated={true}
-        >
-        <View style={styles.backgroundModal}>
-        <View style={styles.modalContainer}>
-        <NewDatepicker
-        language={myLanguage}                    // LINGUA
-        startDate={dpickerStartDate}            // DATA INIZIO
-        endDate={dpickerEndDate}                // DATA FINE O null
-        description={dpickerDescription}        // DESCRIZIONE
-        isError={dpickerToastIsError}           // PASSA AL COMPONENT FLAG DI ERRORE
-        errorMsg={dpickerToastMessage}          // PASSA AL COMPONENT MSG DI ERRORE
-        repeatOnDate={dpickerRepeatOnDate}      // RIPETE IN QUELLA DATA
-        repeatOnDay={dpickerRepeatOnDay}        // RIPETE QUEL GIORNO DELL'ANNO
-        initialIndex={initialIndex}             // VALORIZZATO SE EDIT
-        onCancel={ () => {
-            setInitialIndex(null);              // SE ERA UN EDIT AZZERA IL FLAG
-            setDpickerToastMessage('');         // AZZERA MSG ERRORE
-            setDpickerToastIsError(false);      // AZZERA FLAG ERRORE
-            setIsModalSingleDateVisible(false); // CHIUDE MODAL
-        }} 
-        onConfirm={(
-          myStartDate, 
-          myEndDate, 
-          myDescription, 
-          upperRadioButtonActive, 
-          lowerRadioButtonActive) => 
-          handleAddEvent(
-            myStartDate, 
-            myEndDate, 
-            myDescription, 
-            upperRadioButtonActive, 
-            lowerRadioButtonActive, 
-          ) 
-        }/>      
-        </View>
-        </View>
+          visible={isModalSingleDateVisible}  
+          presentationStyle="fullScreen"
+          transparent={false}
+          // backdropColor={'rgba(0, 0, 0, .25)'} // NON FUNZIONA TRASPARENZA
+          animationType="none"
+          onRequestClose={hideModalSingleDate} 
+          hardwareAccelerated={true}
+          >
+          <View style={styles.backgroundModal}>
+            <View style={styles.modalContainer}>
+              <NewDatepicker
+              language={myLanguage}                    // LINGUA
+              startDate={dpickerStartDate}            // DATA INIZIO
+              endDate={dpickerEndDate}                // DATA FINE O null
+              description={dpickerDescription}        // DESCRIZIONE
+              isError={dpickerToastIsError}           // PASSA AL COMPONENT FLAG DI ERRORE
+              errorMsg={dpickerToastMessage}          // PASSA AL COMPONENT MSG DI ERRORE
+              repeatOnDate={dpickerRepeatOnDate}      // RIPETE IN QUELLA DATA
+              repeatOnDay={dpickerRepeatOnDay}        // RIPETE QUEL GIORNO DELL'ANNO
+              initialIndex={initialIndex}             // VALORIZZATO SE EDIT
+              onCancel={ () => {
+                  setInitialIndex(null);              // SE ERA UN EDIT AZZERA IL FLAG
+                  setDpickerToastMessage('');         // AZZERA MSG ERRORE
+                  setDpickerToastIsError(false);      // AZZERA FLAG ERRORE
+                  setIsModalSingleDateVisible(false); // CHIUDE MODAL
+              }} 
+              onConfirm={(
+                myStartDate, 
+                myEndDate, 
+                myDescription, 
+                upperRadioButtonActive, 
+                lowerRadioButtonActive) => 
+                handleAddEvent(
+                  myStartDate, 
+                  myEndDate, 
+                  myDescription, 
+                  upperRadioButtonActive, 
+                  lowerRadioButtonActive, 
+                ) 
+              }/>      
+            </View>
+          </View>
         </Modal>
       </Suspense>
     </ImageBackground>
