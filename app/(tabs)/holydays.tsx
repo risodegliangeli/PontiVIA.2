@@ -15,7 +15,6 @@ import {
   Platform,
 } from 'react-native';
 import { useRoute } from '@react-navigation/native'; 
-
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
@@ -78,7 +77,6 @@ const saveData = async (data: any, key: string) => {
                                       
 ########################################################################################################### */
 export default function HolydaysScreen() {
-
 
   const colors = useThemeColors();
 
@@ -323,7 +321,6 @@ export default function HolydaysScreen() {
     myCountry, setMyCountry,
     myLanguage
     } = useHolydays();
-  
 
   function handleExternalAddDate(receivedDate: Date) {
     setInitialIndex(null);                  // INDEX, SERVE PER L'EDIT
@@ -334,8 +331,6 @@ export default function HolydaysScreen() {
     setDpickerRepeatOnDay(false);           // REP ON DAY
     setIsModalSingleDateVisible(true);      // APRE MODAL
   }
-
-
 
   /* ============================================================================= 
    GESTIONE MODAL NEWDATEPICKER
@@ -361,8 +356,6 @@ export default function HolydaysScreen() {
 
   /* GESTIONE SHOW/HIDE MODAL */
   const showModalSingleDate = () => {
-    // setSingleDateDay('');
-    // setSingleDateMonth('');
     setIsModalSingleDateVisible(true);
   };
 
@@ -370,7 +363,7 @@ export default function HolydaysScreen() {
     setIsModalSingleDateVisible(false);
   };
 
-  // HANDLE EXTERNAL CALL FOR ADD
+  // GESTISCE CHIAMATE ESTERNE ALLA PAGINA
   const route = useRoute();
   const params = route.params as { date?: string, typ?: string }; 
 
@@ -611,7 +604,6 @@ export default function HolydaysScreen() {
     }
 
     const itemToEdit: any = newPersonalHolydays[index];
-
     setInitialIndex(index);                         // INDEX, SERVE PER L'EDIT
     setDpickerStartDate(itemToEdit.startDate);      // START
     setDpickerEndDate(itemToEdit.endDate);          // END
@@ -663,17 +655,6 @@ export default function HolydaysScreen() {
       </TouchableOpacity>
     )
   }
-  
-  // GESTIONE SLIDER PER SELEZIONARE GIORNO/PERIODO NEL DATEPICKER
-  const [sliderTargetValue, setSliderTargetValue] = useState(0);
-  // const buttonLeftAction = () => {
-  //   sliderTargetValue === 1 && setSliderTargetValue(0);
-  //   sliderTargetValue === 1 && setSelectedRadioOption('single');
-  //   };
-  // const buttonRightAction = () => {
-  //   sliderTargetValue === 0 && setSliderTargetValue(1);
-  //   sliderTargetValue === 0 && setSelectedRadioOption('period');
-  //   };
 
   /* ============================================================================= 
   * useEffect * AL CAMBIO DI myCountry
@@ -939,12 +920,12 @@ export default function HolydaysScreen() {
             </React.Fragment>
           ))}
         </View>
-      
-
 
         {/* SPACER */}
         <View style={{height:500}}></View>
+
       </ScrollView>
+
       {/* nuovo MODAL DATEPICKR ###################################################################### */}
       <Suspense>
         <Modal
@@ -965,34 +946,34 @@ export default function HolydaysScreen() {
                 }
                 ]}>
                   <NewDatepicker
-                  language={myLanguage}                    // LINGUA
-                  startDate={dpickerStartDate}            // DATA INIZIO
-                  endDate={dpickerEndDate}                // DATA FINE O null
-                  description={dpickerDescription}        // DESCRIZIONE
-                  isError={dpickerToastIsError}           // PASSA AL COMPONENT FLAG DI ERRORE
-                  errorMsg={dpickerToastMessage}          // PASSA AL COMPONENT MSG DI ERRORE
-                  repeatOnDate={dpickerRepeatOnDate}      // RIPETE IN QUELLA DATA
-                  repeatOnDay={dpickerRepeatOnDay}        // RIPETE QUEL GIORNO DELL'ANNO
-                  initialIndex={initialIndex}             // VALORIZZATO SE EDIT
-                  onCancel={ () => {
-                      setInitialIndex(null);              // SE ERA UN EDIT AZZERA IL FLAG
-                      setDpickerToastMessage('');         // AZZERA MSG ERRORE
-                      setDpickerToastIsError(false);      // AZZERA FLAG ERRORE
-                      setIsModalSingleDateVisible(false); // CHIUDE MODAL
-                  }} 
-                  onConfirm={(
-                    myStartDate, 
-                    myEndDate, 
-                    myDescription, 
-                    upperRadioButtonActive, 
-                    lowerRadioButtonActive) => 
-                    handleAddEvent(
+                    language={myLanguage}                    // LINGUA
+                    startDate={dpickerStartDate}            // DATA INIZIO
+                    endDate={dpickerEndDate}                // DATA FINE O null
+                    description={dpickerDescription}        // DESCRIZIONE
+                    isError={dpickerToastIsError}           // PASSA AL COMPONENT FLAG DI ERRORE
+                    errorMsg={dpickerToastMessage}          // PASSA AL COMPONENT MSG DI ERRORE
+                    repeatOnDate={dpickerRepeatOnDate}      // RIPETE IN QUELLA DATA
+                    repeatOnDay={dpickerRepeatOnDay}        // RIPETE QUEL GIORNO DELL'ANNO
+                    initialIndex={initialIndex}             // VALORIZZATO SE EDIT
+                    onCancel={ () => {
+                        setInitialIndex(null);              // SE ERA UN EDIT AZZERA IL FLAG
+                        setDpickerToastMessage('');         // AZZERA MSG ERRORE
+                        setDpickerToastIsError(false);      // AZZERA FLAG ERRORE
+                        setIsModalSingleDateVisible(false); // CHIUDE MODAL
+                    }} 
+                    onConfirm={(
                       myStartDate, 
                       myEndDate, 
                       myDescription, 
                       upperRadioButtonActive, 
-                      lowerRadioButtonActive, 
-                    ) 
+                      lowerRadioButtonActive) => 
+                      handleAddEvent(
+                        myStartDate, 
+                        myEndDate, 
+                        myDescription, 
+                        upperRadioButtonActive, 
+                        lowerRadioButtonActive, 
+                      ) 
                   }/>      
               </Animated.View>
             </View>
@@ -1001,6 +982,3 @@ export default function HolydaysScreen() {
     </ImageBackground>
   );
 }
-
-
-
