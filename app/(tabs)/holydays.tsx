@@ -440,6 +440,12 @@ export default function HolydaysScreen() {
       repeatOnDay: lowerRadioButtonActive,
     };
 
+    // EDIT (initialIndex): CREO UNA COPIA DELL'ARRAY ESCLUDENDO L'ITEM CHE STIAMO MODIFICANDO
+    const eventsToCheck = initialIndex !== null
+      ? newPersonalHolydays.filter((_, i) => i !== initialIndex)
+      : newPersonalHolydays;
+
+
   // A) CONTROLLO SOVRAPPOSIZIONE con nationalHolydays 
 
   // A.1 e A.2.1) Controllo se la startDate coincide con una festività nazionale
@@ -509,18 +515,18 @@ export default function HolydaysScreen() {
     // B.1) Se giorno singolo (endDate = null)
     if (isSingleDay) {
       // B.1.1) Controllo duplicato: la startDate è già la startDate di un evento esistente?
-      const startOverlap = newPersonalHolydays.find(h => isDateDuplicate(h, startDate));
-      if (startOverlap && initialIndex === null) {
+      const startOverlap = eventsToCheck.find(h => isDateDuplicate(h, startDate));
+      if (startOverlap) {
         // Msg: Questa data è già presente...
         showToast(`${dataLabel(myLanguage, 25)} (${startOverlap.description})`, true);
         return;
       }
 
       // B.1.2) Controllo periodo: la startDate è compresa in un periodo esistente?
-      const periodOverlap = newPersonalHolydays.find(h => 
+      const periodOverlap = eventsToCheck.find(h => 
         h.endDate !== null && isDateInRange(startDate, h.startDate, h.endDate)
       );
-      if (periodOverlap && !initialIndex) { // SE SI SOVRAPPONE MA NON E' UN EDIT ALLORA -> ERRORE
+      if (periodOverlap) { // SE SI SOVRAPPONE MA NON E' UN EDIT ALLORA -> ERRORE
         // Msg: Questa data fa parte di un periodo esistente:
         showToast(`${dataLabel(myLanguage,22)} "${periodOverlap.description}"\n[da correggere]`, true);
         return;
@@ -534,20 +540,20 @@ export default function HolydaysScreen() {
         let currentDay = new Date(startDate);
         let singleOverlap: NewHolyday | undefined = undefined;
         while (currentDay.getTime() < endDate.getTime()) {
-          singleOverlap = newPersonalHolydays.find(h => 
+          singleOverlap = eventsToCheck.find(h => 
             h.endDate === null && isDateDuplicate(h, currentDay)
           );
           if (singleOverlap) break;
           currentDay.setDate(currentDay.getDate() + 1);
         }
-        if (singleOverlap && !initialIndex) { // SE SEI SOVRAPPONE MA NON E' UN EDIT ALLORA -> ERRORE
+        if (singleOverlap) { // SE SEI SOVRAPPONE MA NON E' UN EDIT ALLORA -> ERRORE
           // Msg: Attenzione, l'evento si sovrappone a...
           showToast(`${dataLabel(myLanguage, 23)} "${singleOverlap.description}"`, true);
           return;
         }
 
         // B.2.2) Controllo sovrapposizione periodo: il periodo si sovrappone a un periodo esistente?
-        const periodOverlap = newPersonalHolydays.find(h => {
+        const periodOverlap = eventsToCheck.find(h => {
           // Cerca periodi esistenti
           if (h.endDate) {
             // Un periodo si sovrappone se:
@@ -561,7 +567,7 @@ export default function HolydaysScreen() {
           }
           return false;
         });
-        if (periodOverlap && initialIndex === null) {
+        if (periodOverlap) {
           // MSG: Il periodo è in conflitto con... 
           showToast(`${dataLabel(myLanguage,24)} "${periodOverlap.description}"`, true);
           return;
@@ -609,6 +615,7 @@ export default function HolydaysScreen() {
     setDpickerDescription(itemToEdit.description);  // DESCR
     setDpickerRepeatOnDate(itemToEdit.repeatOnDate);// REP ON DATE
     setDpickerRepeatOnDay(itemToEdit.repeatOnDay);  // REP ON DAY
+    setGoBack(false);
     setIsModalSingleDateVisible(true);              // APRE MODAL
   };
 
@@ -647,7 +654,6 @@ export default function HolydaysScreen() {
             await saveData(getLocales()[0].languageTag, 'myCountry');
             setNationalExcluded([]);
             await saveData([], 'nationalExcluded');
-
           }
         }>
         <IconSymbol size={20} name="gobackward" color={colors.blueBar} style={{marginBottom:10,}}/>
@@ -945,7 +951,7 @@ export default function HolydaysScreen() {
                 }
                 ]}>
                   <NewDatepicker
-                    language={myLanguage}                    // LINGUA
+                    language={myLanguage}                   // LINGUA
                     startDate={dpickerStartDate}            // DATA INIZIO
                     endDate={dpickerEndDate}                // DATA FINE O null
                     description={dpickerDescription}        // DESCRIZIONE
@@ -959,7 +965,7 @@ export default function HolydaysScreen() {
                         setDpickerToastMessage('');         // AZZERA MSG ERRORE
                         setDpickerToastIsError(false);      // AZZERA FLAG ERRORE
                         setIsModalSingleDateVisible(false); // CHIUDE MODAL
-                        if (goBack) {                       // SE IL DATEPICKER E STATO CHIAMATO DA FUORI
+                        if (goBack === true) {                       // SE IL DATEPICKER E STATO CHIAMATO DA FUORI
                           setGoBack(false);
                           navigation.goBack();
                         } 

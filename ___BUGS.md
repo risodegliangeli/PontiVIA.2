@@ -1,12 +1,7 @@
 # TICKET:
 
 
-- ### CONTROLLO SOVRAPPOSIZIONE DATE 20251011.001
-  -- se una data è ricorrente negli anni (per data o per giorno) la logica non rileva se un nuovo inserimento si sovrappone a quella ricorrenza negli anni futuri
-  es. ho un periodo on una data che RIPETE OGNI ANNO IL III GIOVEDì DI NOVEMBRE
-      non rileva se carico un periodo, sia fisso che ricorrente, che si accavalla negli anni 
- 
- ---
+
 
 - ### ERRORE IN EDIT 20251011.002
   -- se modifico un periodo e lo trasformo in un evento da 1 giorno segnala errore
@@ -77,11 +72,17 @@
 # TICKET RISOLTI:
 
 
-- ### LONG-PRESS 20251011.003
+- ### CONTROLLO SOVRAPPOSIZIONE DATE 20251011.001
+  -- se una data è ricorrente negli anni (per data o per giorno) la logica non rileva se un nuovo inserimento si sovrappone a quella ricorrenza negli anni futuri
+  es. ho un periodo on una data che RIPETE OGNI ANNO IL III GIOVEDì DI NOVEMBRE
+      non rileva se carico un periodo, sia fisso che ricorrente, che si accavalla negli anni 
+ 
+ ---
+ 
+ - ### LONG-PRESS 20251011.003
   -- aggiungere logica long-press sulle date per inserimento/modifica eventi
 
 ---
-
 
 - ### FESTIVITA NAZIONALI EDITABILI/DISATTIVABILI
 -- o perlomeno ogni data checkabile (on/off)
@@ -104,13 +105,11 @@
 
 ---
 
-
 - ### DatepickerSelector
   -- quando si edita una data prvedere il corretto posizionamento dello switch
   (Un giorno / Più giorni) e disabilitare l'altro pulsante
 
 ---
-
 
 - ### TRADUZIONI
   ##### impostare due variabili, una per le traduzioni (myLanguage) e una per la dropdown (myCountry)
@@ -189,11 +188,10 @@
           { label: 'Hrvatski (Hrvatska)', value: 'hr-HR', flag: '🇭🇷' }, // Croato
         ];
 
-
-
 - ### ROVESCIARE PULSANTIERA
   -- 1 -2
 
+---
 
 - ### PONTI FUORI DAL MESE
   -- eliminare segnalazione ponti che sono prima o dopo il mese corrente
@@ -205,11 +203,9 @@
 
 ---
 
-
 - ### DARK MODE
 
 ---
-
 
 - ### DROPDOWN LUNGHEZZA PONTE
   -- non salva nelle preferenze
