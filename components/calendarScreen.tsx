@@ -359,7 +359,9 @@ const CalendarScreen = ({callerPreferences}: any) => {
   });
 
   const navigation = useNavigation();
-  const handleGoToHolydays = (date: Date, action: string) => {
+
+  // CHIAMA LA PAGINA holydays COL DATEPICKER APERTO SULLA DATA DA INSERIRE
+  const handleGoToHolydays = (date: Date, action: string | undefined) => {
     const dateString = date.toISOString(); 
     navigation.navigate(
       'holydays' as never, 

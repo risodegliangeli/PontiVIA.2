@@ -14,25 +14,17 @@ import {
   useColorScheme,
   Platform,
 } from 'react-native';
-import { useRoute } from '@react-navigation/native'; 
+import { useRoute } from '@react-navigation/native';      // SERVE PER LEGGERE I PARAMETRI
+import { useNavigation } from '@react-navigation/native'; // SERVE PER GESTIRE LA NAVIGAZIONE
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import { getLocales,  } from 'expo-localization';
 import { holydayLabels as dataLabel } from '@/components/dataLabel';
 import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
-import DropdownCountry from '@/components/ui/DropdownCountry'; // COUNTRY PICKER 
+import DropdownCountry from '@/components/ui/DropdownCountry';  // COUNTRY PICKER 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import NewDatepicker from '@/components/NewDatepicker'; // MIO DATEPICKER
-
-// GESTIONE COLORI
-const useThemeColors = () => {
-  const colorScheme = useColorScheme();
-  return Colors[colorScheme ?? 'light'];
-};
-
-// LEGGE NOMI DEI MESI LOCALIZZATI DA data.tsx
-const { months } = useLocalizationData();
+import NewDatepicker from '@/components/NewDatepicker';         // MIO DATEPICKER ✌🏻
 
 // TYPE HOLYDAY (vecchio)--> MUORE COL REFACTORING
 type Holiday = {          // DEFINIZIONE DI holiday
@@ -50,16 +42,14 @@ type NewHolyday = {
   repeatOnDay: boolean;
 };
 
-// INTERFACCIA VacationPeriod --> MUORE COL REFACTORING
-interface VacationPeriod {
-  startDay: number;
-  startMonth: number;
-  startYear: number;
-  endDay: number;
-  endMonth: number;
-  endYear: number;
-  description: string;
-}
+// GESTIONE COLORI
+const useThemeColors = () => {
+  const colorScheme = useColorScheme();
+  return Colors[colorScheme ?? 'light'];
+};
+
+// LEGGE NOMI DEI MESI LOCALIZZATI DA data.tsx
+const { months } = useLocalizationData();
 
 // FUNZIONE DI SCRITURA SU STORAGE DATI
 const saveData = async (data: any, key: string) => {
@@ -79,6 +69,7 @@ const saveData = async (data: any, key: string) => {
 export default function HolydaysScreen() {
 
   const colors = useThemeColors();
+  const navigation = useNavigation();
 
   /* ============================================================================= 
   STYLESHEET
@@ -313,7 +304,7 @@ export default function HolydaysScreen() {
     }
   });
 
-  // RICEVE DAL CONTEXT
+  // RICEVE VARIABILI DAL CONTEXT
   const { 
     newPersonalHolydays, setNewPersonalHolydays, // NUOVO
     nationalHolydays, setNationalHolydays,
@@ -322,7 +313,10 @@ export default function HolydaysScreen() {
     myLanguage
     } = useHolydays();
 
-  function handleExternalAddDate(receivedDate: Date) {
+  /* ============================================================================= 
+  // GESTISCE LE CHIAMATE DALL'ESTERNO E APRE LA DATEPICKER PER INSERIMENTO newItem
+  ============================================================================= */
+  function handleExternalAddDate(receivedDate: Date, action: string) {
     setInitialIndex(null);                  // INDEX, SERVE PER L'EDIT
     setDpickerStartDate(receivedDate);      // START
     setDpickerEndDate(null);                // END
@@ -330,6 +324,7 @@ export default function HolydaysScreen() {
     setDpickerRepeatOnDate(false);          // REP ON DATE
     setDpickerRepeatOnDay(false);           // REP ON DAY
     setIsModalSingleDateVisible(true);      // APRE MODAL
+    setGoBack(true);                        // IMPOSTA goBack PER IL RITORNO ALLA PAG CHIAMANTE
   }
 
   /* ============================================================================= 
@@ -363,18 +358,19 @@ export default function HolydaysScreen() {
     setIsModalSingleDateVisible(false);
   };
 
-  // GESTISCE CHIAMATE ESTERNE ALLA PAGINA
-  const route = useRoute();
-  const params = route.params as { date?: string, typ?: string }; 
+  // GESTISCE CHIAMATE ESTERNE ALLA PAGINA --------------------------------------
+  const route = useRoute(); // PUNTA AL ROUTE
+  const params = route.params as { date?: string, action?: string | undefined}; // LEGGE PARAMETRI
+  const [goBack, setGoBack] = useState<boolean>(false); // IMPOSTA STATO DEL FLAG 'goBack'
 
-  // SE VIENE PASSATO UN PARAMETRO ALLORA SI APRE LA DATEPICKER PER INSERIRE UN NUOVO EVENTO
+  // SE VIENE PASSATO UN PARAMETRO ALLORA SI APRE 
+  // LA DATEPICKER PER INSERIRE UN NUOVO EVENTO
   useEffect(() => {
     if (params?.date) {
       const receivedDate = new Date(params.date);
-      const type = params?.typ;
-      console.log('\t- - parametri in arrivo:', receivedDate.toLocaleDateString(), type);
-      console.log('\t- -> scateno script di gestione');
-      handleExternalAddDate(receivedDate);
+      const action = params?.action;
+      console.log(`- - parametri in arrivo: ${receivedDate.toLocaleDateString()}, ${action}`);
+      handleExternalAddDate(receivedDate, action);
     }
   }, [params?.date]);
 
@@ -494,7 +490,6 @@ export default function HolydaysScreen() {
     }
   }
 
-
     /* ============================================================================= 
       B) CONTROLLO SOVRAPPOSIZIONE con newPersonalHolydays
     ============================================================================= */
@@ -589,6 +584,10 @@ export default function HolydaysScreen() {
     setDpickerToastMessage('');
     setDpickerToastIsError(false);
     setIsModalSingleDateVisible(false);
+    if (goBack) {
+      setGoBack(false);
+      navigation.goBack();
+    } 
   };
 
   /* ============================================================================= 
@@ -960,7 +959,11 @@ export default function HolydaysScreen() {
                         setDpickerToastMessage('');         // AZZERA MSG ERRORE
                         setDpickerToastIsError(false);      // AZZERA FLAG ERRORE
                         setIsModalSingleDateVisible(false); // CHIUDE MODAL
-                    }} 
+                        if (goBack) {                       // SE IL DATEPICKER E STATO CHIAMATO DA FUORI
+                          setGoBack(false);
+                          navigation.goBack();
+                        } 
+                     }} 
                     onConfirm={(
                       myStartDate, 
                       myEndDate, 
