@@ -359,12 +359,11 @@ const CalendarScreen = ({callerPreferences}: any) => {
   });
 
   const navigation = useNavigation();
-
-  const handleGoToHolydays = (date: Date, typ: string) => {
+  const handleGoToHolydays = (date: Date, action: string) => {
     const dateString = date.toISOString(); 
     navigation.navigate(
       'holydays' as never, 
-      {date: dateString, typ: typ} as never, 
+      {date: dateString, action: action} as never, 
       );
   };
 
@@ -597,74 +596,74 @@ const CalendarScreen = ({callerPreferences}: any) => {
                     {day[3] &&
                       <Pressable 
                         key={`key,${day[0]},${dayIndex}`}
-                        android_ripple={{ color: colors.blueBar, borderless: false }}
+                        //android_ripple={{ color: colors.blueBar, borderless: false }}
                         style={({pressed}) => [
                           styles.squaredTouchable,
+                          // sfondo solo se area premuta, altrimenti sfondo trasparente
                           {backgroundColor: pressed ? colors.dot32 : 'transparent'}
                           ]}
                         hitSlop={{top: 5, bottom: 5, left: 5, right: 5}}
 
                         // ON PRESS
                         onPress={ () => {
-                            console.log('--> onPressIn');
-                              if (day[2] != undefined) {
-                                if (day[1] > 0) {
-                                  setToastPosition('center');
-                                  setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
-                                  setOverlayBackground('rgba(50, 50, 50, 0.05)') // COLORE OVERLAY
-                                  setToastRadius([12,12,12,12]); // STONDATURA
-                                  setPaddingFromTop(48); // MARGINE TOP
-                                  setPaddingFromBottom(48); // MARGINE BOTTTOM
-                                  setToastAnimation('fade');
-                                  setToastBody( 
-                                    <HolydayToast 
-                                      title={day[2]} 
-                                      description={day[0].toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})} />
-                                  );
-                                  setToastOnClose(undefined); 
-                                  setVisibleToast(true); 
-                                } else {
-                                  /* MODAL/SimpleToast --> POSSIBILE PONTE */
-                                  let bridgeDescription: string = '';
-                                  let bridgeStartAt: Date;
-                                  let bridgeEndsAt: Date;
-                                  month.bridges.forEach( (interval: any, index: number) => {
-                                    if (isWithinInterval(day[0], {start: interval.da, end: interval.a})) {
-                                      if (interval.length > 1) {
-                                        bridgeDescription += dataLabel(myLanguage, 4); // Dal
-                                        bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                                        bridgeDescription += dataLabel(myLanguage, 5); // fino al
-                                        bridgeDescription += interval.a.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                                        bridgeDescription += ' (' + interval.length + dataLabel(myLanguage, 6); // giorni
-                                        // PRIMO E ULTIMO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
-                                        bridgeStartAt = month.bridges[index].da;
-                                        bridgeEndsAt = month.bridges[index].a;
-                                      } else {
-                                        bridgeDescription += dataLabel(myLanguage, 7); // Il
-                                        bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                                        bridgeDescription += dataLabel(myLanguage, 8); // (1 giorno)
-                                        // UNICO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
-                                        bridgeStartAt = bridgeEndsAt = interval.da;
-                                      }
-                                } 
-                                });
-                                setVisibleToast(true); 
+                            if (day[2] != undefined) {
+                              if (day[1] > 0) {
                                 setToastPosition('center');
                                 setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
-                                setOverlayBackground('rgba(50, 50, 50, 0.05)'); // COLORE OVERLAY
+                                setOverlayBackground('rgba(50, 50, 50, 0.05)') // COLORE OVERLAY
                                 setToastRadius([12,12,12,12]); // STONDATURA
                                 setPaddingFromTop(48); // MARGINE TOP
                                 setPaddingFromBottom(48); // MARGINE BOTTTOM
-                                setToastBody( 
-                                <BridgeToast 
-                                  title={day[2]}
-                                  description={bridgeDescription}
-                                  bridgeStart={bridgeStartAt}
-                                  bridgeEnds={bridgeEndsAt}
-                                />);
                                 setToastAnimation('fade');
+                                setToastBody( 
+                                  <HolydayToast 
+                                    title={day[2]} 
+                                    description={day[0].toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})} />
+                                );
                                 setToastOnClose(undefined); 
-                              }
+                                setVisibleToast(true); 
+                              } else {
+                                /* MODAL/SimpleToast --> POSSIBILE PONTE */
+                                let bridgeDescription: string = '';
+                                let bridgeStartAt: Date;
+                                let bridgeEndsAt: Date;
+                                month.bridges.forEach( (interval: any, index: number) => {
+                                  if (isWithinInterval(day[0], {start: interval.da, end: interval.a})) {
+                                    if (interval.length > 1) {
+                                      bridgeDescription += dataLabel(myLanguage, 4); // Dal
+                                      bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                      bridgeDescription += dataLabel(myLanguage, 5); // fino al
+                                      bridgeDescription += interval.a.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                      bridgeDescription += ' (' + interval.length + dataLabel(myLanguage, 6); // giorni
+                                      // PRIMO E ULTIMO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
+                                      bridgeStartAt = month.bridges[index].da;
+                                      bridgeEndsAt = month.bridges[index].a;
+                                    } else {
+                                      bridgeDescription += dataLabel(myLanguage, 7); // Il
+                                      bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                      bridgeDescription += dataLabel(myLanguage, 8); // (1 giorno)
+                                      // UNICO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
+                                      bridgeStartAt = bridgeEndsAt = interval.da;
+                                    }
+                              } 
+                              });
+                              setVisibleToast(true); 
+                              setToastPosition('center');
+                              setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
+                              setOverlayBackground('rgba(50, 50, 50, 0.05)'); // COLORE OVERLAY
+                              setToastRadius([12,12,12,12]); // STONDATURA
+                              setPaddingFromTop(48); // MARGINE TOP
+                              setPaddingFromBottom(48); // MARGINE BOTTTOM
+                              setToastBody( 
+                              <BridgeToast 
+                                title={day[2]}
+                                description={bridgeDescription}
+                                bridgeStart={bridgeStartAt}
+                                bridgeEnds={bridgeEndsAt}
+                              />);
+                              setToastAnimation('fade');
+                              setToastOnClose(undefined); 
+                            }
                             }
                           }
                         }
@@ -672,8 +671,13 @@ const CalendarScreen = ({callerPreferences}: any) => {
                         // ON LONG-PRESS
                         delayLongPress={500}
                         onLongPress={ () => {
-                          if (day[1] === undefined) { // SOLO SE FERIALE
-                            // console.log('--> onLongPress');
+                          console.log(`longPress=> day[1]: ${day[1]} day[2]: ${day[2]} day[3]: ${day[3]}`);
+                          // LA CHIAMATA ALLA DROPDOWN VIENE FATTA SOLO SE:
+                          // -> NON PONTE (day[1] = -1) E NON FESTIVO (day[2] vuoto) 
+                          // NON PARTE LA CHIAMATA SE:
+                          //  1) FESTIVO CON DESCRIZIONE (es. festivita nazionale o inserito da utente)
+                          //  2) PONTE                          
+                          if (day[1] !== -1 && day[2] === undefined) { 
                             handleGoToHolydays(day[0], 'newItem');
                           } 
                         }}
