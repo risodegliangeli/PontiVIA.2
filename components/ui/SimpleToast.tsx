@@ -2,8 +2,8 @@
    SIMPLE TOAST
    G. Angeli 2025 - MIT License
    =============================*/
-import React from 'react';
-import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React, { useEffect } from 'react';
+import { Animated, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface SimpleToastInterface {
   isSTVisible: boolean;
@@ -71,6 +71,30 @@ const SimpleToast: React.FC<SimpleToastInterface> = ({
     },
   });
 
+
+
+    const modalSize= new Animated.Value(1.2);     // DA SCALA 0
+    const modalOpacity = new Animated.Value(0); // DA OPACITY 0
+    const startAnimation = () => {
+      Animated.parallel([
+        Animated.timing(modalSize, { 
+          toValue: 1,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+        Animated.timing(modalOpacity, { 
+          toValue: 1,
+          duration: 150,
+          useNativeDriver: true,
+        }),
+      ]).start()
+    }
+    useEffect( () => {
+      isSTVisible && startAnimation()
+      }, [isSTVisible]);
+  
+
+
   return (  
       <Modal
         visible={isSTVisible}
@@ -82,16 +106,30 @@ const SimpleToast: React.FC<SimpleToastInterface> = ({
         hardwareAccelerated={true}
         >
           <TouchableOpacity 
-            style={[StyleSheet.absoluteFill, {alignItems:'center', backgroundColor: 'rgba(0, 0, 0, 0.75)'}]} 
+            style={[
+              StyleSheet.absoluteFill, 
+              {
+                alignItems:'center', 
+                backgroundColor: 'rgba(0, 0, 0, 0.30)'
+              }
+              ]} 
             onPress={onClose} 
             activeOpacity={1}>
-            <View style={styles.modalContainer}>
+            <View 
+              style={styles.modalContainer}>
               <TouchableOpacity 
                 activeOpacity={1} 
                 onPress={ (e) => e.stopPropagation() }>
-                <View style={styles.baseST}>
+                <Animated.View 
+                  style={[
+                    styles.baseST,
+                    {
+                    transform: [{scale: modalSize.interpolate({inputRange: [0, 1], outputRange: [0, 1]})}],
+                    opacity: modalOpacity,
+                    }
+                    ]}>
                   {isSTBody}
-                </View>
+                </Animated.View>
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
