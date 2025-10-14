@@ -3,11 +3,7 @@
 
 
 
-- ### ERRORE IN EDIT 20251011.002
-  -- se modifico un periodo e lo trasformo in un evento da 1 giorno segnala errore
-     e non sovrascrive come invece dovrbbe
 
----
 
 - ### SimpleToast FESTIVITA: RENDERE EDITABILE
   -- aggiungere pulsante 'modifica' (o cancella) nel toast
@@ -71,6 +67,13 @@
 
 # TICKET RISOLTI:
 
+
+
+- ### ERRORE IN EDIT 20251011.002
+  -- se modifico un periodo e lo trasformo in un evento da 1 giorno segnala errore
+     e non sovrascrive come invece dovrbbe
+
+---
 
 - ### CONTROLLO SOVRAPPOSIZIONE DATE 20251011.001
   -- se una data è ricorrente negli anni (per data o per giorno) la logica non rileva se un nuovo inserimento si sovrappone a quella ricorrenza negli anni futuri

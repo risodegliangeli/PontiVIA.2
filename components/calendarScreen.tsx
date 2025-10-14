@@ -64,7 +64,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
 
   // CONTROLLO PRIVILEGI ACCESSO AL CALENDARIO
   useEffect(() => {
-  (async () => {
+  ( async () => {
     const { status } = await Calendar.requestCalendarPermissionsAsync();
     if (status === 'granted') {
       const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);

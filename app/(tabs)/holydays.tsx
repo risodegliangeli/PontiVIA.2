@@ -1,6 +1,6 @@
 console.log('[HOLYDAYS.TSX]');
 
-import React, { useEffect, useState, Suspense,  } from 'react';
+import React, { useEffect, useState, Suspense, use, useRef,  } from 'react';
 import {
   Animated,
   Alert,
@@ -14,6 +14,7 @@ import {
   useColorScheme,
   Platform,
 } from 'react-native';
+import { isEqual } from 'date-fns';
 import { useRoute } from '@react-navigation/native';      // SERVE PER LEGGERE I PARAMETRI
 import { useNavigation } from '@react-navigation/native'; // SERVE PER GESTIRE LA NAVIGAZIONE
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -25,6 +26,7 @@ import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
 import DropdownCountry from '@/components/ui/DropdownCountry';  // COUNTRY PICKER 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewDatepicker from '@/components/NewDatepicker';         // MIO DATEPICKER ✌🏻
+import { withTiming } from 'react-native-reanimated';
 
 // TYPE HOLYDAY (vecchio)--> MUORE COL REFACTORING
 type Holiday = {          // DEFINIZIONE DI holiday
@@ -323,14 +325,16 @@ export default function HolydaysScreen() {
     setDpickerDescription('');              // DESCR
     setDpickerRepeatOnDate(false);          // REP ON DATE
     setDpickerRepeatOnDay(false);           // REP ON DAY
-    setIsModalSingleDateVisible(true);      // APRE MODAL
     setGoBack(true);                        // IMPOSTA goBack PER IL RITORNO ALLA PAG CHIAMANTE
+    //setIsModalSingleDateVisible(true);      // APRE MODAL
+    showModalSingleDate();
   }
 
   /* ============================================================================= 
    GESTIONE MODAL NEWDATEPICKER
    ============================================================================= */
-  const [isModalSingleDateVisible, setIsModalSingleDateVisible] = useState(false);
+  const [isModalSingleDateVisible, setIsModalSingleDateVisible] = useState<boolean>(false);
+  //const [modalIsOpen, setModalIsOpen] = useState<boolean>(false); // FLAG DUPLICATO, SERVE PER L'EFFETTO GENIUS
 
   /* VALORI NUOVA MODAL DATEPICKER */
   const [dpickerStartDate, setDpickerStartDate] = useState<Date>();
@@ -351,10 +355,12 @@ export default function HolydaysScreen() {
 
   /* GESTIONE SHOW/HIDE MODAL */
   const showModalSingleDate = () => {
+    ///setModalIsOpen(true);
     setIsModalSingleDateVisible(true);
   };
 
   const hideModalSingleDate = () => {
+    ///setModalIsOpen(false);
     setIsModalSingleDateVisible(false);
   };
 
@@ -390,11 +396,12 @@ export default function HolydaysScreen() {
     setDpickerToastMessage(message);
     setDpickerToastIsError(isError);
     setErrorVisible(true);
-    setTimeout(() => {  // Nasconde il toast dopo 4 secondi
-      setErrorVisible(false);
-      setDpickerToastMessage(null);
-    }, 5000); 
+    // setTimeout(() => {  // Nasconde il toast dopo 4 secondi
+    //   setErrorVisible(false);
+    //   setDpickerToastMessage(null);
+    // }, 5000); 
   };
+
 
   /* VERIFICA SE UNA DATA E' COMPRESA IN UN PERIODO
    L'endDate è normalizzata e rappresenta il giorno successivo 
@@ -411,13 +418,13 @@ export default function HolydaysScreen() {
   /* ============================================================================= 
             HANDLE ADD EVENT (nuovo)
   ============================================================================= */
-  const handleAddEvent = async (
+const handleAddEvent = async (
       myStartDate: Date, 
       myEndDate: Date | null, 
       myDescription: string, 
       upperRadioButtonActive: boolean, // Corrisponde a repeatOnDate
       lowerRadioButtonActive: boolean // Corrisponde a repeatOnDay
-    ) => {
+) => {
 
     // Normalizza le date
     const startDate = normalizeDate(myStartDate)!;  // COSTANTE
@@ -440,77 +447,76 @@ export default function HolydaysScreen() {
       repeatOnDay: lowerRadioButtonActive,
     };
 
-    // EDIT (initialIndex): CREO UNA COPIA DELL'ARRAY ESCLUDENDO L'ITEM CHE STIAMO MODIFICANDO
+    // copia dell'array escludendo l'evento che stiamo modificando
     const eventsToCheck = initialIndex !== null
-      ? newPersonalHolydays.filter((_, i) => i !== initialIndex)
-      : newPersonalHolydays;
+        ? newPersonalHolydays.filter((_, i) => i !== initialIndex)
+        : newPersonalHolydays;
 
+    // A) CONTROLLO SOVRAPPOSIZIONE con nationalHolydays 
 
-  // A) CONTROLLO SOVRAPPOSIZIONE con nationalHolydays 
+      // A.1 e A.2.1) Controllo se la startDate coincide con una festività nazionale
+      const nationalDay = startDate.getDate();
+      const nationalMonth = startDate.getMonth(); // NIENTE +1, nationalHolydays è già 0 based
+      // Cerca una ricorrenza annuale nell'array nationalHolydays
+      const isNationalHolyday = nationalHolydays.find(h => h.day === nationalDay && h.month === nationalMonth);
 
-  // A.1 e A.2.1) Controllo se la startDate coincide con una festività nazionale
-  // Estrai Giorno e Mese dall'evento inserito
-  const nationalDay = startDate.getDate();
-  const nationalMonth = startDate.getMonth(); // NIENTE +1, nationalHolydays è già 0 based
-
-  // Cerca una ricorrenza annuale nell'array nationalHolydays
-  const isNationalHolyday = nationalHolydays.find(h => h.day === nationalDay && h.month === nationalMonth);
-
-  if (isNationalHolyday) {
-    const msg = `${dataLabel(myLanguage, 13)} (${isNationalHolyday.description})`; // 'Esiste già una festività nazionale in questa data...'
-    if (isSingleDay) {
-      // A.1) Giorno singolo e data coincide: ERRORE
-        showToast(msg, true); // MESSAGGIO DI ERRORE
-        return;
-      } else {
-      // A.2.1) Periodo e startDate coincide: ERRORE
-        showToast(dataLabel(myLanguage, 21), true); // Msg: Inizio periodo coincide con festività naz
-        return;
-    }
-  } 
+      if (isNationalHolyday) {
+        const msg = `${dataLabel(myLanguage, 13)} (${isNationalHolyday.description})`; // 'Esiste già una festività nazionale in questa data...'
+        if (isSingleDay) {
+          // A.1) Giorno singolo e data coincide: ERRORE
+          showToast(msg, true); // MESSAGGIO DI ERRORE
+          return;
+          } else {
+          // A.2.1) Periodo e startDate coincide: ERRORE
+          showToast(dataLabel(myLanguage, 21), true); // Msg: Inizio periodo coincide con festività naz
+          return;
+        }
+      } 
     
-  // A.2.2) Se è un periodo, controllo se comprende altre date nazionali (solo SEGNALAZIONE)
-  if (!isSingleDay && endDate) {
-    // Genera un array di giorni compresi nel periodo
-    const daysInPeriod: any[] = [];
-    let currentDay = new Date(startDate);
-    
-    // Si ferma al giorno prima dell'endDate (che è il giorno successivo all'ultimo)
-    while (currentDay.getTime() < endDate.getTime()) {
-      daysInPeriod.push({
-        day: currentDay.getDate(),
-        month: currentDay.getMonth(),
-      });
-      currentDay.setDate(currentDay.getDate() + 1); // Passa al giorno successivo
-    }
+      // A.2.2) Se è un periodo, controllo se comprende altre date nazionali (solo SEGNALAZIONE)
+      if (!isSingleDay && endDate) {
+        // Genera un array di giorni compresi nel periodo
+        const daysInPeriod: any[] = [];
+        let currentDay = new Date(startDate);
+        
+        // Si ferma al giorno prima dell'endDate (che è il giorno successivo all'ultimo)
+        while (currentDay.getTime() < endDate.getTime()) {
+          daysInPeriod.push({
+            day: currentDay.getDate(),
+            month: currentDay.getMonth(),
+          });
+          currentDay.setDate(currentDay.getDate() + 1); // Passa al giorno successivo
+        }
 
-    const nationalOverlap = nationalHolydays.find(h => 
-      daysInPeriod.some(day => day.day === h.day && day.month === h.month)
-    );
+        const nationalOverlap = nationalHolydays.find(h => 
+          daysInPeriod.some(day => day.day === h.day && day.month === h.month)
+        );
 
-    if (nationalOverlap) {
-      // A.2.2) Periodo e include festività nazionale: SEGNALAZIONE
-      const overlapMsg = `Attenzione, il periodo include la festività nazionale: ${nationalOverlap.description}.`;
-      showToast(overlapMsg, false); // false = SEGNALAZIONE (Toast bianco)
-      // Non fa 'return', procede all'aggiunta dopo la segnalazione
-    }
-  }
-
-    /* ============================================================================= 
-      B) CONTROLLO SOVRAPPOSIZIONE con newPersonalHolydays
-    ============================================================================= */
-    // Funzione helper per confrontare date (solo giorno e mese se entrambi sono 'repeatOnDate')
-    const isDateDuplicate = (existingEvent: NewHolyday, newDate: Date): boolean => {
-      const existingDate = normalizeDate(existingEvent.startDate)!;
-
-      // Se entrambi ripetono annualmente, controlla solo giorno e mese
-      if (existingEvent.repeatOnDate && newEvent.repeatOnDate) {
-        return existingDate.getDate() === newDate.getDate() && 
-              existingDate.getMonth() === newDate.getMonth();
+        if (nationalOverlap) {
+          // A.2.2) Periodo e include festività nazionale: SEGNALAZIONE
+          const overlapMsg = `Attenzione, il periodo include la festività nazionale: ${nationalOverlap.description}.`;
+          showToast(overlapMsg, false); // false = SEGNALAZIONE (Toast bianco)
+          // Non fa 'return', procede all'aggiunta dopo la segnalazione
+        }
       }
-      // Altrimenti, controlla l'uguaglianza completa della data
-      return existingDate.getTime() === newDate.getTime();
-    };
+
+
+      /* ============================================================================= 
+        B) CONTROLLO SOVRAPPOSIZIONE con newPersonalHolydays
+      ============================================================================= */
+      // Funzione per confrontare date (solo giorno e mese se entrambi sono 'repeatOnDate')
+      const isDateDuplicate = (existingEvent: NewHolyday, newDate: Date): boolean => {
+        const existingDate = normalizeDate(existingEvent.startDate)!;
+
+        // Se entrambi ripetono annualmente, controlla solo giorno e mese
+        if (existingEvent.repeatOnDate && newEvent.repeatOnDate) {
+          return existingDate.getDate() === newDate.getDate() && 
+                existingDate.getMonth() === newDate.getMonth();
+        }
+        // Altrimenti, controlla l'uguaglianza completa della data
+        return existingDate.getTime() === newDate.getTime();
+        //return isEqual(existingDate, newDate);
+      };
 
     // B.1) Se giorno singolo (endDate = null)
     if (isSingleDay) {
@@ -528,7 +534,7 @@ export default function HolydaysScreen() {
       );
       if (periodOverlap) { // SE SI SOVRAPPONE MA NON E' UN EDIT ALLORA -> ERRORE
         // Msg: Questa data fa parte di un periodo esistente:
-        showToast(`${dataLabel(myLanguage,22)} "${periodOverlap.description}"\n[da correggere]`, true);
+        showToast(`${dataLabel(myLanguage,22)} "${periodOverlap.description}"`, true);
         return;
       }
 
@@ -589,8 +595,9 @@ export default function HolydaysScreen() {
     setInitialIndex(null);
     setDpickerToastMessage('');
     setDpickerToastIsError(false);
-    setIsModalSingleDateVisible(false);
-    if (goBack) {
+    //setIsModalSingleDateVisible(false);
+    hideModalSingleDate();
+    if (goBack === true) {                // SE IL DATEPICKER E STATO CHIAMATO DA FUORI
       setGoBack(false);
       navigation.goBack();
     } 
@@ -616,7 +623,8 @@ export default function HolydaysScreen() {
     setDpickerRepeatOnDate(itemToEdit.repeatOnDate);// REP ON DATE
     setDpickerRepeatOnDay(itemToEdit.repeatOnDay);  // REP ON DAY
     setGoBack(false);
-    setIsModalSingleDateVisible(true);              // APRE MODAL
+    //setIsModalSingleDateVisible(true);              // APRE MODAL
+    showModalSingleDate();
   };
 
   /* ============================================================================= 
@@ -670,9 +678,9 @@ export default function HolydaysScreen() {
     async () => await saveData(myCountry, 'myCountry');
   }, [myCountry]);
 
-  // EFFETTO GENIUS PER LA MODAL
-  const modalSize= new Animated.Value(1.2);     // DA SCALA 0
-  const modalOpacity = new Animated.Value(0); // DA OPACITY 0
+  // EFFETTO GENIUS PER LA MODAL (va in conflitto con qlc valore e la datepicker resta invisibile)
+  const modalSize = useRef(new Animated.Value(1.25)).current;
+  const modalOpacity = useRef(new Animated.Value(0)).current;  
   const startAnimation = () => {
     Animated.parallel([
       Animated.timing(modalSize, { 
@@ -687,9 +695,16 @@ export default function HolydaysScreen() {
       }),
     ]).start()
   }
-  useEffect( () => {
-    isModalSingleDateVisible && startAnimation()
-    }, [isModalSingleDateVisible]);
+  // useEffect( () => {
+  //   isModalSingleDateVisible && startAnimation()
+  //   }, [isModalSingleDateVisible]);
+  useEffect(() => {
+    if (isModalSingleDateVisible) {
+      modalSize.setValue(1.2);
+      modalOpacity.setValue(0.25);
+      startAnimation();
+    }
+  }, [isModalSingleDateVisible]);
 
   return (
     <ImageBackground 
@@ -961,14 +976,15 @@ export default function HolydaysScreen() {
                     repeatOnDay={dpickerRepeatOnDay}        // RIPETE QUEL GIORNO DELL'ANNO
                     initialIndex={initialIndex}             // VALORIZZATO SE EDIT
                     onCancel={ () => {
-                        setInitialIndex(null);              // SE ERA UN EDIT AZZERA IL FLAG
-                        setDpickerToastMessage('');         // AZZERA MSG ERRORE
-                        setDpickerToastIsError(false);      // AZZERA FLAG ERRORE
-                        setIsModalSingleDateVisible(false); // CHIUDE MODAL
-                        if (goBack === true) {                       // SE IL DATEPICKER E STATO CHIAMATO DA FUORI
-                          setGoBack(false);
-                          navigation.goBack();
-                        } 
+                      setInitialIndex(null);                // SE ERA UN EDIT AZZERA IL FLAG
+                      setDpickerToastMessage('');           // AZZERA MSG ERRORE
+                      setDpickerToastIsError(false);        // AZZERA FLAG ERRORE
+                      //setIsModalSingleDateVisible(false);   // CHIUDE MODAL
+                      hideModalSingleDate();
+                      if (goBack === true) {                // SE IL DATEPICKER E STATO CHIAMATO DA FUORI
+                        setGoBack(false);
+                        navigation.goBack();
+                      } 
                      }} 
                     onConfirm={(
                       myStartDate, 
