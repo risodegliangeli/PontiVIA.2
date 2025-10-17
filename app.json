@@ -3,7 +3,7 @@
     "name": "PontiVIA!",
     "description": "Trova i ponti per vacanze smart!",
     "slug": "pontivia",
-    "owner": "risodegliangeli",
+    "owner": "angeli-e-associati",
     "version": "1.0.0",
     "icon": "./assets/images/pontivia-splashpage.png",
     "scheme": "cercaponti",
@@ -31,8 +31,6 @@
       "edgeToEdgeEnabled": true,
       "package": "com.angelieassociati.pontivia",
       "permissions": [
-        "android.permission.READ_CALENDAR",
-        "android.permission.WRITE_CALENDAR",
         "android.permission.READ_CALENDAR",
         "android.permission.WRITE_CALENDAR"
       ]
@@ -68,7 +66,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "cb0a6d99-e865-4053-9126-946083815c32"
+        "projectId": "e1acb70d-dadd-465a-abaf-b8058c99ca47"
       }
     },
     "runtimeVersion": {
