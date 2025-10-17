@@ -7,22 +7,32 @@
     "local": {
       "env": {
         "JAVA_HOME": "/Library/Java/JavaVirtualMachines/jdk-17.jdk/Contents/Home"
-      }
+      },
+      "channel": "local"
     },
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "channel": "development"
     },
     "preview": {
       "android": {
-        "buildType": "apk"
-      }
+        "buildType": "app-bundle"
+      },
+      "channel": "preview"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": false,
+      "channel": "production"
     }
   },
   "submit": {
-    "production": {}
+    "production": {
+      "ios": {
+        "appleId": "gioangeli@tiscali.it",
+        "ascAppId": "6754095339",
+        "appleTeamId": "S79G33UNLT"
+      }
+    }
   }
 }
