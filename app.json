@@ -5,8 +5,8 @@
     "slug": "pontivia",
     "owner": "angeli-e-associati",
     "version": "1.0.0",
-    "icon": "./assets/images/pontivia-splashpage.png",
-    "scheme": "cercaponti",
+    "icon": "./assets/images/icon.png",
+    "scheme": "pontivia",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/pontivia-splashpage.png",
@@ -25,7 +25,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/pontivia-splashpage.png",
+        "foregroundImage": "./assets/images/adaptive-icon-foreground.png",
         "backgroundColor": "#E35527"
       },
       "edgeToEdgeEnabled": true,
@@ -45,8 +45,8 @@
       [
         "expo-calendar",
         {
-          "calendarPermission": "L'app ha bisogno di poter accedere al calendario per gestire gli eventi",
-          "remindersPermission": "L'app ha bisogno di poter accedere ai promemoria per gestire gli eventi"
+          "calendarPermission": "The app needs access to your calendar to manage events",
+          "remindersPermission": "The app needs access to your calendar to manage events"
         }
       ],
       [
