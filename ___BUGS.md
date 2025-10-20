@@ -1,30 +1,13 @@
 # TICKET:
 
 
-
-
-
-
-- ### SimpleToast FESTIVITA: RENDERE EDITABILE
-  -- aggiungere pulsante 'modifica' (o cancella) nel toast
-
----
-
-- ### SPOSTARE PREFERENCES
-  -- in data.js
-
----
-
 - ### ADV AdMob
   -- aggiungere
 
 ---
 
-
-- ### CONDIVISIONE DATE PERSONALI
-  -- con altri utenti che hanno PontiVIA! installato
-  -- se non installato te lo fa installare
-  -- oppure inviare via WhatsApp
+- ### CREARE PAGINA WEB SUPPORTO
+  -- Firebase
 
 ---
 
@@ -37,6 +20,27 @@
   -- "Ricordami di questa data [ 7 ] giorni prima"
 
 ---
+
+- ### SimpleToast FESTIVITA: RENDERE EDITABILE
+  -- aggiungere pulsante 'modifica' (o cancella) nel toast
+
+---
+
+- ### SPOSTARE PREFERENCES
+  -- in data.js
+
+---
+
+
+
+
+- ### CONDIVISIONE DATE PERSONALI
+  -- con altri utenti che hanno PontiVIA! installato
+  -- se non installato te lo fa installare
+  -- oppure inviare via WhatsApp
+
+---
+
 
 - #### TOOLTIP
   aggiungere a fianco delle label delle PREFERENCES

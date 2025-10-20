@@ -195,7 +195,7 @@ export default function HolydaysScreen() {
     },
     modalContainer: {
       width:'95%',
-      //minHeight:400,
+      maxWidth:600,
       backgroundColor:'white',
       borderRadius:24,
       flexDirection:'column',
