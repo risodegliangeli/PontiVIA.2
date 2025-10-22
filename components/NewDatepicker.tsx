@@ -72,7 +72,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   onConfirm
 }) => {
 
-  console.log( `<NEWDATEPICKER>` );
+  //console.log( `<NEWDATEPICKER>` );
 
   // LINGUA DI SISTEMA
   language = (getLocales()[0].languageTag).slice(0,2);

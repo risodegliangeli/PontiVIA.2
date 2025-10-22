@@ -26,7 +26,8 @@ import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
 import DropdownCountry from '@/components/ui/DropdownCountry';  // COUNTRY PICKER 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewDatepicker from '@/components/NewDatepicker';         // MIO DATEPICKER ✌🏻
-import { withTiming } from 'react-native-reanimated';
+//import { withTiming } from 'react-native-reanimated';
+import * as Linking from 'expo-linking';
 import { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
 
 
@@ -99,7 +100,6 @@ export default function HolydaysScreen() {
     container: {
       width:'100%',
       backgroundColor: 'transparent',
-      //paddingHorizontal: 12,
       paddingTop: 80,
       maxWidth:600,
     },
@@ -133,7 +133,7 @@ export default function HolydaysScreen() {
       paddingLeft:16,
       paddingRight:16,
       borderRadius: 24,
-      marginBottom: 10,
+      marginBottom: 24,
       marginLeft:12,
       marginRight:12,
     },
@@ -197,7 +197,6 @@ export default function HolydaysScreen() {
       alignItems:'center',
       paddingTop: Platform.OS === 'ios' ? 6:5,
       letterSpacing:-.5,
-      // borderWidth:1    
     },
     // MODAL
     modalOverlay: {
@@ -224,8 +223,6 @@ export default function HolydaysScreen() {
       borderWidth: 1,
       borderColor: colors.textRed,
       borderRadius: 8,
-      // borderBottomLeftRadius: 6,
-      // borderBottomRightRadius: 6,
       padding:8,
       backgroundColor:'transparent',
     },
@@ -277,7 +274,6 @@ export default function HolydaysScreen() {
       height:50,
       color: colors.black,
     },
-
     errorText: {
       color: 'red',
       marginBottom: 16,
@@ -319,22 +315,32 @@ export default function HolydaysScreen() {
       justifyContent:'center',
       alignItems:'center',
       backgroundColor: 'rgba(0, 0, 0, 0.75)'
-    },     advContainer:{
-      // flex:1,
-      //width:'100%',
+    },     
+    advContainer:{
       paddingTop: 12,
       paddingBottom: 12,
       paddingLeft:0,
       paddingRight:0,
-       //padding: 12,
-      //marginTop: 16,
-      // marginLeft:12,
-      // marginRight:12,
       marginBottom:24,
       backgroundColor: 'rgba(0, 0, 0, .08)',
       borderRadius: 0,
       borderWidth: 0,
     },
+    infoButton: {
+      flex:1,
+      flexDirection:'row',
+      justifyContent:'center',
+      alignItems:'center',
+      padding:20,
+      marginHorizontal:12,
+      //marginTop:12,
+      gap:8,
+      borderWidth:2,
+      borderStyle: 'dotted',
+      borderColor: colors.blueBar,
+      borderRadius:24,
+      backgroundColor: 'rgba(255, 255, 255, .5)'
+    }
 
   });
 
@@ -640,7 +646,7 @@ const handleAddEvent = async (
     ============================================================================= */
   // LA FUNZIONE RICEVE SOLO L'INDICE 'index' DEL RECORD DA EDITARE DA newPersonalHolydays
   const handleEdit = (index: number) => {
-    console.log('[HANDLE EDIT]s');
+    //console.log('[HANDLE EDIT]s');
     // Controlla se l'indice è valido
     if (index === null || index < 0 || index >= newPersonalHolydays.length) {
       console.warn('Indice non valido per la modifica:', index);
@@ -748,7 +754,7 @@ const handleAddEvent = async (
         showsVerticalScrollIndicator={false} >
 
         {/* TITOLO PAGINA  */}{/* LE MIE DATE */}
-        <Text style={[styles.sectionTitle, { flex:1, marginBottom:32, }]}>{dataLabel(myLanguage, 0)}</Text> 
+        <Text style={[styles.sectionTitle, { flex:1, marginBottom:32 }]}>{dataLabel(myLanguage, 0)}</Text> 
 
         {/* PULSANTONE + GIORNI SPECIALI ########################################################################## */}
         <TouchableOpacity 
@@ -981,6 +987,20 @@ const handleAddEvent = async (
             </React.Fragment>
           ))}
         </View>
+
+        {/* INFO */}
+        <TouchableOpacity
+            style={styles.infoButton}
+            onPress={ async () => {
+              await Linking.openURL('https://pontivia-2181f.web.app/')
+              }}>
+                <IconSymbol size={28} name="info.circle.fill" color={colors.blueBar}/>
+                <Text style={{
+                  fontSize:18,
+                  fontWeight:600,
+                  color: colors.blueBar,
+                }}>Informazioni e privacy</Text>
+          </TouchableOpacity>
 
         {/* SPACER */}
         <View style={{height:500}}></View>

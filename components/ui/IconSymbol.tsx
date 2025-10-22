@@ -33,7 +33,8 @@ const MAPPING = {
   'xmark.circle': 'cancel', // CROSS GRIGIO RIGHE NATIONAL HOLIDAY
   'xmark': 'close',     // X CHIUSURA
   'checkmark': 'check',  // CHECK CONFERMA
-  'repeat':'repeat'
+  'repeat':'repeat',
+  'info.circle.fill': 'info'
 
 } as IconMapping;
 

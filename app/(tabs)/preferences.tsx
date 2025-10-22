@@ -11,6 +11,8 @@ import { useNavigation } from '@react-navigation/native';
 import { getLocales,  } from 'expo-localization';
 import { dataLabel as switchNames } from '@/components/dataLabel';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
+import * as Linking from 'expo-linking';
+
 import {
   ImageBackground,
   Platform,
@@ -23,13 +25,17 @@ import {
   View,
   ViewStyle,
   } from 'react-native';
-  // ADMOB
+
+// ADMOB
 import { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
 
-
+// NOMI GIORNI LOCALIZZATI
 const { localizedDays } = useLocalizationData();
+
+// LINGUA PER LE LABEL
 const myLanguage = (getLocales()[0].languageTag).slice(0,2);
 
+// COLORI
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
   return Colors[colorScheme ?? 'light'];
@@ -70,9 +76,9 @@ const savePreferences = async () => {
   }
 };
 
-// SE DEV id=Test ALTRIMENTI id=(AdMob Test)
+// ADV: SE DEV id=Test ALTRIMENTI id=(AdMob Test)
+// DA AGGIORNARE/RIMUOVERE CON ID CORRETTO
 const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-3940256099942544/2435281174';
-
 
 /* ============================================================================= 
 
@@ -132,7 +138,6 @@ export default function Preferences() {
     scrollview: {
       width:'100%',
       backgroundColor: 'transparent',
-      //paddingHorizontal:12, 
       paddingTop: 80,
       maxWidth: 600,
     },
@@ -226,21 +231,30 @@ export default function Preferences() {
       justifyContent: 'center',
     },
     advContainer:{
-      // flex:1,
-      //width:'100%',
       paddingTop: 12,
       paddingBottom: 12,
       paddingLeft:0,
       paddingRight:0,
-       //padding: 12,
-      //marginTop: 16,
-      // marginLeft:12,
-      // marginRight:12,
       marginBottom:24,
       backgroundColor: 'rgba(0, 0, 0, .08)',
       borderRadius: 0,
       borderWidth: 0,
     },
+    infoButton: {
+      flex:1,
+      flexDirection:'row',
+      justifyContent:'center',
+      alignItems:'center',
+      padding:20,
+      marginHorizontal:12,
+      marginTop:12,
+      gap:8,
+      borderWidth:2,
+      borderStyle: 'dotted',
+      borderColor: colors.blueBar,
+      borderRadius:24,
+      backgroundColor: 'rgba(255, 255, 255, .5)'
+    }
 
   });
 
@@ -414,6 +428,22 @@ export default function Preferences() {
               <PreferenceSwitch preferenceKey="corpusDomini" /> 
             </View>
           </Suspense>
+
+          {/* INFO */}
+          <TouchableOpacity
+              style={styles.infoButton}
+              onPress={ async () => {
+                await Linking.openURL('https://pontivia-2181f.web.app/')
+                }}>
+                  <IconSymbol size={28} name="info.circle.fill" color={colors.blueBar}/>
+                  <Text style={{
+                    fontSize:18,
+                    fontWeight:600,
+                    color: colors.blueBar,
+                  }}>Informazioni e privacy</Text>
+            </TouchableOpacity>
+
+          {/* SPACER */}
           <View style={{ height: 240 }} />
         </ScrollView>
     </ImageBackground>
