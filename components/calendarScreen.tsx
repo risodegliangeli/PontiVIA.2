@@ -25,9 +25,12 @@ import * as Calendar from 'expo-calendar'; // ACCESSO AL CALENDARIO DI SISTEMA
 import { calendarScrenLabels as dataLabel } from '@/components/dataLabel';
 import { useNavigation } from '@react-navigation/native';
 
+// ADMOB
+import { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
+
+// NOMI MESI E GIORNI
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
 const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
-
 
 // INTERFACCIA DI NewHolyday 
 interface NewHolyday {
@@ -45,10 +48,19 @@ const useThemeColors = () => {
 
 const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
+// SE DEV id=Test ALTRIMENTI id=(AdMob Test)
+const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-3940256099942544/2435281174';
+
 /* ============================================================================= 
 CALENDARSCREEN - print calendario
 ============================================================================= */
 const CalendarScreen = ({callerPreferences}: any) => {
+
+  // NATIVE ADV
+  const bannerRef = useRef<BannerAd>(null);
+  useForeground(() => {
+    Platform.OS === 'ios' && bannerRef.current?.load();
+  }); 
 
   const colors = useThemeColors();
   const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
@@ -114,8 +126,26 @@ const CalendarScreen = ({callerPreferences}: any) => {
       paddingLeft:16,
       paddingRight:16,
       marginTop: 16,
+      marginLeft:12,
+      marginRight:12,
       backgroundColor: colors.cardBackground,
       borderRadius: 24,
+      borderWidth: 0,
+    },
+    advContainer:{
+      // flex:1,
+      //width:'100%',
+      paddingTop: 12,
+      paddingBottom: 12,
+      paddingLeft:0,
+      paddingRight:0,
+       //padding: 12,
+      marginTop: 16,
+      // marginLeft:12,
+      // marginRight:12,
+      margin:0,
+      backgroundColor: 'rgba(0, 0, 0, .08)',
+      borderRadius: 0,
       borderWidth: 0,
     },
     monthTitle: {
@@ -556,7 +586,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
           
           <View style={{ flex:1, flexDirection:'row', justifyContent:'space-between', }}>
 
-            {/* BLOCCHETTO MESE/ANNO */}
+            {/* BLOCCHETTO TITOLO MESE/ANNO */}
             <View>
               <Text style={styles.monthTitle}>
                 {localizedMonths[month.m - 1].label.charAt(0).toUpperCase() + localizedMonths[month.m - 1].label.slice(1)}
@@ -731,8 +761,30 @@ const CalendarScreen = ({callerPreferences}: any) => {
       
         {/* GOOGLE ADMOB SOLO SE isAdvertising = true*/}
         {isAdvertising && 
-          ((index +1)  % monthsToLoad === 0) && (
-            <View style={[styles.adBanner, {borderWidth:0}]} />
+          ((index + 1) % monthsToLoad === 0) && (
+            <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
+            <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
+              
+
+              {/* <BannerAd
+                unitId={adUnitId}
+                size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
+                requestOptions={{
+                  networkExtras: {
+                  collapsible: 'bottom'
+                  },
+                }}
+              /> */}
+
+              <BannerAd 
+                ref={bannerRef} 
+                unitId={adUnitId} 
+                size={BannerAdSize.MEDIUM_RECTANGLE}
+              /> 
+
+
+
+            </View>
           )
         }
       </React.Fragment>

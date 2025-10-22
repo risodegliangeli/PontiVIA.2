@@ -140,7 +140,7 @@ export default function HomeScreen() {
       flex: 1,
       width: '100%',
       maxWidth:600,
-      paddingHorizontal:12,      
+      paddingHorizontal:0,      
       alignItems:'center',
     }, 
     // IMMAGINE DI SFONDO
