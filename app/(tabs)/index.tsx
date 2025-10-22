@@ -1,5 +1,6 @@
-console.log('[INDEX.TSX]');
-//import { PREFERENCES } from '@/app/(tabs)/preferences';
+// console.log('[INDEX.TSX]');
+
+// import { PREFERENCES } from '@/app/(tabs)/preferences';
 import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import { StatusBar } from 'expo-status-bar';

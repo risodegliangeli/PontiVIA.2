@@ -1,4 +1,4 @@
-console.log('[HOLYDAYS.TSX]');
+// console.log('[HOLYDAYS.TSX]');
 
 import React, { useEffect, useState, Suspense, use, useRef,  } from 'react';
 import {
@@ -27,6 +27,8 @@ import DropdownCountry from '@/components/ui/DropdownCountry';  // COUNTRY PICKE
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewDatepicker from '@/components/NewDatepicker';         // MIO DATEPICKER ✌🏻
 import { withTiming } from 'react-native-reanimated';
+import { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
+
 
 // TYPE HOLYDAY (vecchio)--> MUORE COL REFACTORING
 type Holiday = {          // DEFINIZIONE DI holiday
@@ -63,6 +65,10 @@ const saveData = async (data: any, key: string) => {
   }
 };
 
+// SE DEV id=Test ALTRIMENTI id=(AdMob Test)
+const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-3940256099942544/2435281174';
+
+
 /* ###########################################################################################################
 
                                       MAIN - HolydaysScreen
@@ -72,6 +78,12 @@ export default function HolydaysScreen() {
 
   const colors = useThemeColors();
   const navigation = useNavigation();
+
+    // NATIVE ADV
+  const bannerRef = useRef<BannerAd>(null);
+  useForeground(() => {
+    Platform.OS === 'ios' && bannerRef.current?.load();
+  }); 
 
   /* ============================================================================= 
   STYLESHEET
@@ -87,7 +99,7 @@ export default function HolydaysScreen() {
     container: {
       width:'100%',
       backgroundColor: 'transparent',
-      paddingHorizontal: 12,
+      //paddingHorizontal: 12,
       paddingTop: 80,
       maxWidth:600,
     },
@@ -122,6 +134,8 @@ export default function HolydaysScreen() {
       paddingRight:16,
       borderRadius: 24,
       marginBottom: 10,
+      marginLeft:12,
+      marginRight:12,
     },
     holidayRow: { 
       flex:1,
@@ -281,6 +295,8 @@ export default function HolydaysScreen() {
       borderRadius: 24,
       backgroundColor: useColorScheme() === 'dark' ? colors.tabBarFocusDotAndroid : 'transparent',
       marginBottom:24,
+      marginLeft:12,
+      marginRight:12,
       flexDirection: 'row',
       alignItems: 'center',
       paddingLeft:16
@@ -303,7 +319,23 @@ export default function HolydaysScreen() {
       justifyContent:'center',
       alignItems:'center',
       backgroundColor: 'rgba(0, 0, 0, 0.75)'
-    }
+    },     advContainer:{
+      // flex:1,
+      //width:'100%',
+      paddingTop: 12,
+      paddingBottom: 12,
+      paddingLeft:0,
+      paddingRight:0,
+       //padding: 12,
+      //marginTop: 16,
+      // marginLeft:12,
+      // marginRight:12,
+      marginBottom:24,
+      backgroundColor: 'rgba(0, 0, 0, .08)',
+      borderRadius: 0,
+      borderWidth: 0,
+    },
+
   });
 
   // RICEVE VARIABILI DAL CONTEXT
@@ -847,6 +879,15 @@ const handleAddEvent = async (
           </Suspense>
         )}
        
+        {/* GOOGLE ADMOB ############################################################################# */}
+        <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
+          <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
+            <BannerAd 
+              ref={bannerRef} 
+              unitId={adUnitId} 
+              size={BannerAdSize.MEDIUM_RECTANGLE}/>
+        </View>
+
         {/* FESTIVITA NAZIONALI ############################################################################# */}
         <View style={styles.listItem}>
           

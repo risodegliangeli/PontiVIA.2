@@ -2,7 +2,7 @@
 
 
 - ### ADV AdMob
-  -- aggiungere
+  -- aggiungere iOS / Android
 
 ---
 

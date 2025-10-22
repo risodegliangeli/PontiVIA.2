@@ -1,5 +1,6 @@
-console.log('<CALENDARUTILS>');
-//import { useMemo } from 'react';
+// console.log('<CALENDARUTILS>');
+
+// import { useMemo } from 'react';
 import { addDays, } from 'date-fns';
 // import { PREFERENCES } from '@/app/(tabs)/preferences';
 import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
@@ -70,7 +71,7 @@ const getCountryNationalHolidays = (
     nationalExcluded 
     ) => {   
 
-    console.log('\t\t[GETCOUNTRYNATIONALHOLYDAYS]');
+    // console.log('\t\t[GETCOUNTRYNATIONALHOLYDAYS]');
     //console.log('\t- - nationalExcluded:', JSON.stringify(nationalExcluded));
 
     // ARRAY DOVE SONO SALVATI I DATI
@@ -311,7 +312,7 @@ const createCalendarGrid = (
         myPreferences,
         nationalExcluded: number[],
     ) => {
-    console.log('\t[CREATECALENDARGRID]');
+    // console.log('\t[CREATECALENDARGRID]');
     //console.log(`prop ricevuto -> nationalExcluded: ${JSON.stringify(nationalExcluded)}`);
    
     // AZZERO L'ARRAY CHE CONTERRA' LA GRIGLIA

@@ -18,7 +18,7 @@
       "bundleIdentifier": "com.angelieassociati.pontivia",
       "buildNumber": "1",
       "userInterfaceStyle": "automatic",
-      "supportsTablet": true,
+      "supportsTablet": false,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }

@@ -1,4 +1,4 @@
-console.log('<CALENDARSCREEN>');
+// console.log('<CALENDARSCREEN>');
 
 import React, { useCallback, useEffect, useRef, useState, Suspense } from 'react';
 import {
@@ -580,10 +580,13 @@ const CalendarScreen = ({callerPreferences}: any) => {
       )
     }
 
+
+
+
+
     return (    
       <React.Fragment key={`${month.y}-${month.m}-${index}`}>
-        <View style={styles.card}>
-          
+        <View style={styles.card}>          
           <View style={{ flex:1, flexDirection:'row', justifyContent:'space-between', }}>
 
             {/* BLOCCHETTO TITOLO MESE/ANNO */}
@@ -703,7 +706,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
                         // ON LONG-PRESS
                         delayLongPress={500}
                         onLongPress={ () => {
-                          console.log(`longPress=> day[1]: ${day[1]} day[2]: ${day[2]} day[3]: ${day[3]}`);
+                          // console.log(`longPress=> day[1]: ${day[1]} day[2]: ${day[2]} day[3]: ${day[3]}`);
                           // LA CHIAMATA ALLA DROPDOWN VIENE FATTA SOLO SE:
                           // -> NON PONTE (day[1] = -1) E NON FESTIVO (day[2] vuoto) 
                           // NON PARTE LA CHIAMATA SE:
@@ -758,35 +761,63 @@ const CalendarScreen = ({callerPreferences}: any) => {
             </View>
           </View>
         </View>
-      
-        {/* GOOGLE ADMOB SOLO SE isAdvertising = true*/}
+
+        {/* GOOGLE ADMOB SOLO SE isAdvertising = true
+            -----------------------------------------------------------
+            OGNI 3 MESI SI ALTERNANO BANNER QUADRATI (MEDIUM_RECTANGLE)
+            E BANNER PICCOLI (BANNER)
+        */}
         {isAdvertising && 
           ((index + 1) % monthsToLoad === 0) && (
             <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
-            <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
-              
+              <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
+              {
+              Math.floor((index % 12 )/3) === 0 ?
 
-              {/* <BannerAd
-                unitId={adUnitId}
-                size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER}
-                requestOptions={{
-                  networkExtras: {
-                  collapsible: 'bottom'
-                  },
-                }}
-              /> */}
+                <BannerAd 
+                  ref={bannerRef} 
+                  unitId={adUnitId} 
+                  size={BannerAdSize.MEDIUM_RECTANGLE}/>
 
-              <BannerAd 
-                ref={bannerRef} 
-                unitId={adUnitId} 
-                size={BannerAdSize.MEDIUM_RECTANGLE}
-              /> 
+              : Math.floor((index % 12 )/3) === 1 ?
 
+                <BannerAd 
+                  ref={bannerRef} 
+                  unitId={adUnitId} 
+                  size={BannerAdSize.BANNER}/> 
 
+                : Math.floor((index % 12 )/3) === 2 ?
+
+                  <BannerAd 
+                    ref={bannerRef} 
+                    unitId={adUnitId} 
+                    size={BannerAdSize.MEDIUM_RECTANGLE}/> 
+
+                  :
+
+                  <BannerAd 
+                    ref={bannerRef} 
+                    unitId={adUnitId} 
+                    size={BannerAdSize.BANNER}/> 
+                  
+              }
 
             </View>
           )
         }
+
+        {/* { Math.floor((index % 12 )/3) === 3 &&
+          <BannerAd 
+            unitId={adUnitId} 
+            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} 
+            requestOptions={{
+              networkExtras: {
+              collapsible: 'bottom'
+              },
+            }}
+          />
+        } */}
+
       </React.Fragment>
     );
     

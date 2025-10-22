@@ -1,11 +1,11 @@
-console.log('[PREFERENCES.TSX]');
+// console.log('[PREFERENCES.TSX]');
 
 import useLocalizationData from '@/app/data/data';
 import DropdownComponent from '@/components/ui/DropdownComponent'; // DROPDOWN DURATA PONTI
 // import DropdownFDOW from '@/components/ui/DropdownFDoW'; // DROPDOWN GIORNO SETTIMANA --- moment. disabled
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { Suspense, useState, useEffect } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import { Colors } from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import { getLocales,  } from 'expo-localization';
@@ -13,6 +13,7 @@ import { dataLabel as switchNames } from '@/components/dataLabel';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import {
   ImageBackground,
+  Platform,
   ScrollView,
   StyleSheet,
   Switch,
@@ -22,6 +23,9 @@ import {
   View,
   ViewStyle,
   } from 'react-native';
+  // ADMOB
+import { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
+
 
 const { localizedDays } = useLocalizationData();
 const myLanguage = (getLocales()[0].languageTag).slice(0,2);
@@ -66,6 +70,10 @@ const savePreferences = async () => {
   }
 };
 
+// SE DEV id=Test ALTRIMENTI id=(AdMob Test)
+const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-3940256099942544/2435281174';
+
+
 /* ============================================================================= 
 
                           MAIN EXPORT - Preferences
@@ -76,6 +84,12 @@ export default function Preferences() {
   const navigation = useNavigation();
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
+  // NATIVE ADV
+  const bannerRef = useRef<BannerAd>(null);
+  useForeground(() => {
+    Platform.OS === 'ios' && bannerRef.current?.load();
+  }); 
+  
   // AGGANCIA LE VARIABILI myPreferences E preferences DAL CONTEXT
   const { 
     //preferences, setPreferences, // CONTEXT PREFERENCES
@@ -118,7 +132,7 @@ export default function Preferences() {
     scrollview: {
       width:'100%',
       backgroundColor: 'transparent',
-      paddingHorizontal:12, 
+      //paddingHorizontal:12, 
       paddingTop: 80,
       maxWidth: 600,
     },
@@ -167,8 +181,10 @@ export default function Preferences() {
       borderRadius: 24,
       paddingVertical: 24,
       paddingHorizontal:18,
-      marginBottom: 20,
-      width: '100%',
+      marginLeft:12,
+      marginRight:12,
+      marginBottom: 24,
+      //width: '100%',
     },
     preferenceRow: {
       flexDirection: 'row',
@@ -209,6 +225,23 @@ export default function Preferences() {
       flex: 1,
       justifyContent: 'center',
     },
+    advContainer:{
+      // flex:1,
+      //width:'100%',
+      paddingTop: 12,
+      paddingBottom: 12,
+      paddingLeft:0,
+      paddingRight:0,
+       //padding: 12,
+      //marginTop: 16,
+      // marginLeft:12,
+      // marginRight:12,
+      marginBottom:24,
+      backgroundColor: 'rgba(0, 0, 0, .08)',
+      borderRadius: 0,
+      borderWidth: 0,
+    },
+
   });
 
   // AGGIORNA CONTEXT A OGNI CAMBIAMENTO DI PREFERENCES
@@ -300,7 +333,16 @@ export default function Preferences() {
                 await savePreferences();              // SALVA LE PREFERENCES SU LOCAL STORAGE
               }}
             />
-          </View>                   
+          </View>       
+
+          <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
+            <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
+              <BannerAd 
+                ref={bannerRef} 
+                unitId={adUnitId} 
+                size={BannerAdSize.MEDIUM_RECTANGLE}/>
+          </View>
+                      
 
           {/* ==================== DROPDOWN GIORNO SETTIMANA ==================== */}
           {/* <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[2]}</Text>
