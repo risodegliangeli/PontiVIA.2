@@ -76,9 +76,9 @@ const savePreferences = async () => {
   }
 };
 
-// ADV: SE DEV id=Test ALTRIMENTI id=(AdMob Test)
-// DA AGGIORNARE/RIMUOVERE CON ID CORRETTO
-const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-3940256099942544~1458002511';
+// ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
+// DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
+const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
 /* ============================================================================= 
 
@@ -433,7 +433,7 @@ export default function Preferences() {
           <TouchableOpacity
               style={styles.infoButton}
               onPress={ async () => {
-                await Linking.openURL('https://pontivia-2181f.web.app/')
+                await Linking.openURL('https://pontivia-2025.web.app/')
                 }}>
                   <IconSymbol size={28} name="info.circle.fill" color={colors.blueBar}/>
                   <Text style={{

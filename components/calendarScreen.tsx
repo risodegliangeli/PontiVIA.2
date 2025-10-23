@@ -26,7 +26,7 @@ import { calendarScrenLabels as dataLabel } from '@/components/dataLabel';
 import { useNavigation } from '@react-navigation/native';
 
 // ADMOB
-import { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
+import { BannerAd, BannerAdSize, TestIds, useForeground, } from 'react-native-google-mobile-ads';
 
 // NOMI MESI E GIORNI
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
@@ -48,8 +48,9 @@ const useThemeColors = () => {
 
 const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
-// SE DEV id=Test ALTRIMENTI id=(AdMob Test)
-const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-3940256099942544~1458002511';
+// ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
+// DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
+const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
 /* ============================================================================= 
 CALENDARSCREEN - print calendario
@@ -798,7 +799,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
                   <BannerAd 
                     ref={bannerRef} 
                     unitId={adUnitId} 
-                    size={BannerAdSize.BANNER}/> 
+                    size={BannerAdSize.WIDE_SKYSCRAPER}/> 
                   
               }
 

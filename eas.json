@@ -17,7 +17,7 @@
     },
     "preview": {
       "android": {
-        "buildType": "app-bundle"
+        "buildType": "apk"
       },
       "channel": "preview"
     },
