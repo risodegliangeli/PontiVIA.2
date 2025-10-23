@@ -67,7 +67,7 @@ const saveData = async (data: any, key: string) => {
 };
 
 // SE DEV id=Test ALTRIMENTI id=(AdMob Test)
-const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-3940256099942544/2435281174';
+const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-3940256099942544~1458002511';
 
 
 /* ###########################################################################################################

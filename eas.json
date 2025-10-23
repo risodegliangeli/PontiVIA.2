@@ -22,7 +22,7 @@
       "channel": "preview"
     },
     "production": {
-      "autoIncrement": false,
+      "autoIncrement": true,
       "channel": "production"
     }
   },

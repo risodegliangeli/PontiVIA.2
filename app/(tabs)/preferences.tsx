@@ -78,7 +78,7 @@ const savePreferences = async () => {
 
 // ADV: SE DEV id=Test ALTRIMENTI id=(AdMob Test)
 // DA AGGIORNARE/RIMUOVERE CON ID CORRETTO
-const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-3940256099942544/2435281174';
+const adUnitId = __DEV__ ? TestIds.ADAPTIVE_BANNER : 'ca-app-pub-3940256099942544~1458002511';
 
 /* ============================================================================= 
 

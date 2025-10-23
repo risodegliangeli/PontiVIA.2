@@ -16,9 +16,11 @@
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "com.angelieassociati.pontivia",
-      "buildNumber": "1",
+      "buildNumber": "4",
+      "icon": "./assets/images/icon.png",
+      "marketingIcon": "./assets/images/AppIcon~ios-marketing.png",
       "userInterfaceStyle": "automatic",
-      "supportsTablet": false,
+      "supportsTablet": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
       }
@@ -62,8 +64,8 @@
       [
         "react-native-google-mobile-ads",
         {
-          "androidAppId": "ca-app-pub-3940256099942544/9214589741",
-          "iosAppId": "ca-app-pub-3940256099942544/2435281174",
+          "androidAppId": "ca-app-pub-3940256099942544~6300978111",
+          "iosAppId": "ca-app-pub-3940256099942544~1458002511",
           "skAdNetworkItems": [
             "cstr6suwn9.skadnetwork",
             "4fzdc2evr5.skadnetwork",
