@@ -28,7 +28,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewDatepicker from '@/components/NewDatepicker';         // MIO DATEPICKER ✌🏻
 //import { withTiming } from 'react-native-reanimated';
 import * as Linking from 'expo-linking';
-import { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
+
+// GOOGLE ADMOB ///////////////////////////////////
+import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
+
+// INIZIALIZZA ADMOB
+mobileAds()
+  .initialize()
+  .then(adapterStatuses => {
+    console.log('AdMob Initialized @ holydays.tsx'); // Initialization complete!
+  });
+
+// ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
+// DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
+const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
+// const adUnitId = TestIds;
+// GOOGLE ADMOB ///////////////////////////////////
 
 
 // TYPE HOLYDAY (vecchio)--> MUORE COL REFACTORING
@@ -66,10 +81,6 @@ const saveData = async (data: any, key: string) => {
   }
 };
 
-// ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
-// DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
-const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
-
 
 /* ###########################################################################################################
 
@@ -81,8 +92,10 @@ export default function HolydaysScreen() {
   const colors = useThemeColors();
   const navigation = useNavigation();
 
-    // NATIVE ADV
+  // ADMOB
   const bannerRef = useRef<BannerAd>(null);
+  // (iOS) WKWebView can terminate if app is in a "suspended state", resulting in an empty banner when app returns to foreground.
+  // Therefore it's advised to "manually" request a new ad when the app is foregrounded (https://groups.google.com/g/google-admob-ads-sdk/c/rwBpqOUr8m8).
   useForeground(() => {
     Platform.OS === 'ios' && bannerRef.current?.load();
   }); 
@@ -414,7 +427,7 @@ export default function HolydaysScreen() {
     if (params?.date) {
       const receivedDate = new Date(params.date);
       const action = params?.action;
-      console.log(`- - parametri in arrivo: ${receivedDate.toLocaleDateString()}, ${action}`);
+      // console.log(`- - parametri in arrivo: ${receivedDate.toLocaleDateString()}, ${action}`);
       handleExternalAddDate(receivedDate, action);
     }
   }, [params?.date]);

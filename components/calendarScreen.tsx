@@ -25,8 +25,23 @@ import * as Calendar from 'expo-calendar'; // ACCESSO AL CALENDARIO DI SISTEMA
 import { calendarScrenLabels as dataLabel } from '@/components/dataLabel';
 import { useNavigation } from '@react-navigation/native';
 
-// ADMOB
-import { BannerAd, BannerAdSize, TestIds, useForeground, } from 'react-native-google-mobile-ads';
+// GOOGLE ADMOB ///////////////////////////////////
+import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground, } from 'react-native-google-mobile-ads';
+
+// INIZIALIZZA ADMOB
+mobileAds()
+  .initialize()
+  .then(adapterStatuses => {
+    console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
+    
+  });
+
+// ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
+// DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
+const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
+
+// const adUnitId = TestIds;
+// GOOGLE ADMOB ///////////////////////////////////
 
 // NOMI MESI E GIORNI
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
@@ -48,17 +63,17 @@ const useThemeColors = () => {
 
 const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
-// ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
-// DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
-const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
+
 
 /* ============================================================================= 
 CALENDARSCREEN - print calendario
 ============================================================================= */
 const CalendarScreen = ({callerPreferences}: any) => {
 
-  // NATIVE ADV
+  // ADMOB
   const bannerRef = useRef<BannerAd>(null);
+  // (iOS) WKWebView can terminate if app is in a "suspended state", resulting in an empty banner when app returns to foreground.
+  // Therefore it's advised to "manually" request a new ad when the app is foregrounded (https://groups.google.com/g/google-admob-ads-sdk/c/rwBpqOUr8m8).
   useForeground(() => {
     Platform.OS === 'ios' && bannerRef.current?.load();
   }); 
@@ -772,6 +787,12 @@ const CalendarScreen = ({callerPreferences}: any) => {
           ((index + 1) % monthsToLoad === 0) && (
             <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
               <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
+
+            {/* <BannerAd 
+              ref={bannerRef} 
+              unitId={adUnitId} 
+              size={BannerAdSize.MEDIUM_RECTANGLE}/> */}
+
               {
               Math.floor((index % 12 )/3) === 0 ?
 

@@ -42,6 +42,14 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ],
       "expo-router",
       [
         "expo-calendar",
@@ -63,10 +71,11 @@
       [
         "react-native-google-mobile-ads",
         {
-          "androidAppId": "ca-app-pub-3940256099942544/6300978111",
-          "iosAppId": "ca-app-pub-3940256099942544/2934735716",
+          "androidAppId": "ca-app-pub-0000000000000000~0000000000",
+          "iosAppId":     "ca-app-pub-0000000000000000~0000000000",
+          "userTrackingUsageDescription": "This identifier will be used to deliver personalized ads to you.",
           "skAdNetworkItems": [
-            "cstr6suwn9.skadnetwork",
+           "cstr6suwn9.skadnetwork",
             "4fzdc2evr5.skadnetwork",
             "2fnua5tdw4.skadnetwork",
             "ydx93a7ass.skadnetwork",
@@ -114,8 +123,7 @@
             "8c4e2ghe7u.skadnetwork",
             "3rd42ekr43.skadnetwork",
             "97r2b46745.skadnetwork",
-            "3qcr597p9d.skadnetwork"
-          ]
+            "3qcr597p9d.skadnetwork"          ]
         }
       ]    
     ],
