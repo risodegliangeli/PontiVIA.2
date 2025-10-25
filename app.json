@@ -16,7 +16,7 @@
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "com.angelieassociati.pontivia",
-      "buildNumber": "2",
+      "buildNumber": "5",
       "icon": "./assets/images/icon.png",
       "userInterfaceStyle": "automatic",
       "supportsTablet": true,
@@ -31,6 +31,7 @@
       },
       "edgeToEdgeEnabled": true,
       "package": "com.angelieassociati.pontivia",
+      "versionCode": 5,
       "permissions": [
         "android.permission.READ_CALENDAR",
         "android.permission.WRITE_CALENDAR"
@@ -71,8 +72,8 @@
       [
         "react-native-google-mobile-ads",
         {
-          "androidAppId": "ca-app-pub-0000000000000000~0000000000",
-          "iosAppId":     "ca-app-pub-0000000000000000~0000000000",
+          "androidAppId": "ca-app-pub-3704551485094904~2929669879",
+          "iosAppId":     "ca-app-pub-3704551485094904~1246972401",
           "userTrackingUsageDescription": "This identifier will be used to deliver personalized ads to you.",
           "skAdNetworkItems": [
            "cstr6suwn9.skadnetwork",
