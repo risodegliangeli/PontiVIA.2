@@ -141,7 +141,8 @@ const CalendarScreen = ({callerPreferences}: any) => {
       paddingBottom: 16,
       paddingLeft:16,
       paddingRight:16,
-      marginTop: 16,
+      //marginTop: 16,
+      marginBottom:16,
       marginLeft:12,
       marginRight:12,
       backgroundColor: colors.cardBackground,
@@ -149,17 +150,12 @@ const CalendarScreen = ({callerPreferences}: any) => {
       borderWidth: 0,
     },
     advContainer:{
-      // flex:1,
-      //width:'100%',
       paddingTop: 12,
       paddingBottom: 12,
       paddingLeft:0,
       paddingRight:0,
-       //padding: 12,
-      marginTop: 16,
-      // marginLeft:12,
-      // marginRight:12,
-      margin:0,
+      marginBottom:32,
+      marginTop:12,
       backgroundColor: 'rgba(0, 0, 0, .08)',
       borderRadius: 0,
       borderWidth: 0,
@@ -806,7 +802,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
                 <BannerAd 
                   ref={bannerRef} 
                   unitId={adUnitId} 
-                  size={BannerAdSize.BANNER}/> 
+                  size={BannerAdSize.MEDIUM_RECTANGLE}/> 
 
                 : Math.floor((index % 12 )/3) === 2 ?
 

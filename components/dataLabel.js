@@ -86,6 +86,9 @@ export function dataLabel(language, item) {
             'Giorni della settimana festivi',       // 13
             'Festività cattoliche',                 // 14
             'Modifica lista dei giorni',            // 15
+            'Come funziona?',                       // 16
+            'FAQ / Info Privacy'                    // 17
+
         ],
         'fr': [
             'Pâques',                               // 0
@@ -104,6 +107,8 @@ export function dataLabel(language, item) {
             'Jours fériés de la semaine',           // 13
             'Fêtes religieuses',                    // 14
             'Modifier la liste',                    // 15
+            'Comment ça marche ?',                  // 16
+            'FAQ / Infos Confidentialité'           // 17
         ],
         'es': [
             'Pascua',                               // 0
@@ -122,6 +127,8 @@ export function dataLabel(language, item) {
             'Días festivos de la semana',           // 13
             'Festividades religiosas',              // 14
             'Editar lista',                         // 15
+            '¿Cómo funciona?',                  // 16
+            'FAQ / Info Privacidad'           // 17
         ],
         'de': [
             'Ostern',                               // 0
@@ -140,6 +147,8 @@ export function dataLabel(language, item) {
             'Feiertage der Woche',                  // 13
             'Religiöse Feiertage',                  // 14
             'Liste bearbeiten',                     // 15
+            'Wie funktioniert es?',                  // 16
+            'FAQ / Datenschutz-Info'           // 17
         ],
         'en': [
             'Easter',                               // 0
@@ -158,6 +167,8 @@ export function dataLabel(language, item) {
             'Weekly holidays',                      // 13
             'Religious holidays',                   // 14
             'Edit list',                            // 15
+            'How does it work?',                  // 16
+            'FAQ / Privacy Info'           // 17
         ],
         'nl': [
             'Pasen',                                // 0
@@ -176,6 +187,8 @@ export function dataLabel(language, item) {
             'Weekdagen feestdagen',                 // 13
             'Religieuze feestdagen',                // 14
             'Lijst bewerken',                       // 15
+            'Hoe werkt het?',                  // 16
+            'FAQ / Privacy Info'           // 17
         ],
         'pt': [
             'Páscoa',                               // 0
@@ -194,6 +207,8 @@ export function dataLabel(language, item) {
             'Dias feriados da semana',              // 13
             'Feriados religiosos',                  // 14
             'Editar lista',                         // 15
+            'Como funciona?',                  // 16
+            'FAQ / Info Privacidade'           // 17
         ],
         'hr': [
             'Uskrs',                                // 0
@@ -212,6 +227,8 @@ export function dataLabel(language, item) {
             'Praznici u tjednu',                    // 13
             'Vjerski praznici',                     // 14
             'Uredi listu',                          // 15
+            'Kako funkcionira?',                  // 16
+            'FAQ / Info o privatnosti'           // 17
         ],
         'si': [
             'Velika noč',                           // 0
@@ -230,6 +247,8 @@ export function dataLabel(language, item) {
             'Tedni prazniki',                       // 13
             'Verski prazniki',                      // 14
             'Uredi seznam',                         // 15
+            'Kako deluje?',                  // 16
+            'FAQ / Info o zasebnosti'           // 17
         ],
         'gr': [
             'Πάσχα',                                // 0
@@ -248,6 +267,8 @@ export function dataLabel(language, item) {
             'Αργίες της εβδομάδας',                 // 13
             'Θρησκευτικές γιορτές',                 // 14
             'Επεξεργασία λίστας',                   // 15
+            'Πώς λειτουργεί;',                  // 16
+            'FAQ / Πληροφορίες Απορρήτου'           // 17
         ]
     };
     return countryLabels[language][item];
@@ -283,6 +304,8 @@ export function holydayLabels(language,item) {
         'Attenzione, l\'evento si sovrappone a ',                   // 23
         'Attenzione, l\'evento è in conflitto con ',                // 24
         'Questa data è già presente ',                              // 25
+        'Come funziona?',                                           // 26
+        'FAQ / Info Privacy'                                        // 27
     ],
     'fr':[
         'Mes dates',                                                // 0
@@ -311,6 +334,9 @@ export function holydayLabels(language,item) {
         'Attention, l\'événement chevauche ',                       // 23
         'Attention, l\'événement est en conflit avec ',             // 24
         'Cette date est déjà présente ',                            // 25
+        'Comment ça marche ?',                                      // 26
+        'FAQ / Infos Confidentialité'                               // 27
+
     ],  
     'es':[
         'Mis fechas',                                               // 0
@@ -339,10 +365,12 @@ export function holydayLabels(language,item) {
         'Atención, el evento se superpone a ',                      // 23
         'Atención, el evento está en conflicto con ',               // 24
         'Esta fecha ya está presente ',                             // 25
+        '¿Cómo funciona?',                  // 16
+        'FAQ / Info Privacidad'           // 17
     ],  
     'de':[
         'Meine Termine',                                            // 0
-        'Füge besonderen Tage hinzu',                               // 1
+        'Füge deine Termine ein',                                      // 1
         'Die nationalen Feiertage',                                 // 2
         'Die langen Zeiträume',                                     // 3
         'Deine besonderen Tage',                                    // 4
@@ -367,6 +395,8 @@ export function holydayLabels(language,item) {
         'Achtung, das Ereignis überlappt sich mit ',                // 23
         'Achtung, das Ereignis steht in Konflikt mit ',             // 24
         'Dieses Datum ist bereits vorhanden ',                      // 25
+        'Wie funktioniert es?',                  // 16
+        'FAQ / Datenschutz-Info'           // 17
     ],
     'en':[
         'My dates',                                                 // 0
@@ -395,6 +425,8 @@ export function holydayLabels(language,item) {
         'Warning, the event overlaps with ',                        // 23
         'Warning, the event conflicts with ',                       // 24
         'This date is already present ',                            // 25
+        'How does it work?',                  // 16
+        'FAQ / Privacy Info'           // 17
     ],
     'nl':[
         'Mijn datums',                                              // 0
@@ -423,6 +455,8 @@ export function holydayLabels(language,item) {
         'Let op, het evenement overlapt met ',                      // 23
         'Let op, het evenement is in conflict met ',                // 24
         'Deze datum is al aanwezig ',                               // 25
+        'Hoe werkt het?',                  // 16
+        'FAQ / Privacy Info'           // 17
     ],
     'pt':[
         'Minhas datas',                                             // 0
@@ -451,6 +485,8 @@ export function holydayLabels(language,item) {
         'Atenção, o evento se sobrepõe a ',                         // 23
         'Atenção, o evento está em conflito com ',                  // 24
         'Esta data já está presente ',                              // 25
+        'Como funciona?',                  // 16
+        'FAQ / Info Privacidade'           // 17
     ],
     'hr': [
         'Moji datumi',                                              // 0
@@ -479,6 +515,8 @@ export function holydayLabels(language,item) {
         'Pažnja, događaj se preklapa s ',                           // 23
         'Pažnja, događaj je u sukobu s ',                           // 24
         'Ovaj datum je već prisutan ',                              // 25
+        'Kako funkcionira?',                  // 16
+        'FAQ / Info o privatnosti'           // 17
     ],
     'si': [
         'Moji datumi',                                              // 0
@@ -507,6 +545,8 @@ export function holydayLabels(language,item) {
         'Pozor, dogodek se prekriva z ',                            // 23
         'Pozor, dogodek je v sporu z ',                             // 24
         'Ta datum je že prisoten ',                                 // 25
+        'Kako deluje?',                  // 16
+        'FAQ / Info o zasebnosti'           // 17
     ],
     'gr': [
         'Οι ημερομηνίες μου',                                       // 0
@@ -535,6 +575,8 @@ export function holydayLabels(language,item) {
         'Προσοχή, το γεγονός επικαλύπτεται με ',                    // 23
         'Προσοχή, το γεγονός έρχεται σε σύγκρουση με ',             // 24
         'Αυτή η ημερομηνία είναι ήδη παρούσα ',                     // 25
+        'Πώς λειτουργεί;',                  // 16
+        'FAQ / Πληροφορίες Απορρήτου'           // 17
     ]
     };
     return dataLabel[language][item];

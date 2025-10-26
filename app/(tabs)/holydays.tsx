@@ -13,6 +13,7 @@ import {
   View,
   useColorScheme,
   Platform,
+  Pressable,
 } from 'react-native';
 import { isEqual } from 'date-fns';
 import { useRoute } from '@react-navigation/native';      // SERVE PER LEGGERE I PARAMETRI
@@ -31,6 +32,7 @@ import * as Linking from 'expo-linking';
 
 // GOOGLE ADMOB ///////////////////////////////////
 import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
+import { launchDuration } from 'expo-updates';
 
 // INIZIALIZZA ADMOB
 mobileAds()
@@ -81,7 +83,6 @@ const saveData = async (data: any, key: string) => {
   }
 };
 
-
 /* ###########################################################################################################
 
                                       MAIN - HolydaysScreen
@@ -114,7 +115,7 @@ export default function HolydaysScreen() {
     container: {
       width:'100%',
       backgroundColor: 'transparent',
-      paddingTop: 80,
+      paddingTop: 54,
       maxWidth:600,
     },
     // TITOLO PAGINA
@@ -134,7 +135,7 @@ export default function HolydaysScreen() {
     // TITOLO CARD
     listTitle: {
       color: colors.text,
-      fontSize: 18,
+      fontSize: 22,
       fontWeight: '600',
       marginBottom: 10,
       paddingBottom: 12,
@@ -299,22 +300,31 @@ export default function HolydaysScreen() {
     specialDays: {
       flex:1,
       minHeight:80,
-      borderWidth: 2,
-      borderColor: '#0088ff',
-      borderStyle: 'dotted',
+      // borderWidth: 2,
+      // borderColor: '#0088ff',
+      // borderStyle: 'dotted',
       borderRadius: 24,
-      backgroundColor: useColorScheme() === 'dark' ? colors.tabBarFocusDotAndroid : 'transparent',
+      backgroundColor: useColorScheme() === 'dark' ? colors.tabBarFocusDotAndroid : colors.blueBar,
       marginBottom:24,
       marginLeft:12,
       marginRight:12,
       flexDirection: 'row',
       alignItems: 'center',
-      paddingLeft:16
+      paddingLeft:16,
+      elevation:8,
+      shadowColor: colors.black, // iOS shadow
+      shadowOffset: {
+        width: 4,
+        height: 4, // Match elevation for iOS
+      },
+      shadowOpacity: 0.45,
+      shadowRadius: 8 // Match elevation for iOS
     },
     specialDaysLabel: {
       fontSize:20,
       fontWeight:400,
-      color: '#0088ff',
+      //color: '#0088ff',
+      color: colors.white,
     },
     // DROPDOWN FESTIVITA PER PAESE
     dropDownCountry: {
@@ -335,7 +345,8 @@ export default function HolydaysScreen() {
       paddingBottom: 12,
       paddingLeft:0,
       paddingRight:0,
-      marginBottom:24,
+      marginBottom:32,
+      marginTop:12,
       backgroundColor: 'rgba(0, 0, 0, .08)',
       borderRadius: 0,
       borderWidth: 0,
@@ -767,8 +778,37 @@ const handleAddEvent = async (
         style={styles.container} 
         showsVerticalScrollIndicator={false} >
 
-        {/* TITOLO PAGINA  */}{/* LE MIE DATE */}
-        <Text style={[styles.sectionTitle, { flex:1, marginBottom:32 }]}>{dataLabel(myLanguage, 0)}</Text> 
+        {/* GOOGLE ADMOB ############################################################################# */}
+        <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
+          <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
+            <BannerAd 
+              ref={bannerRef} 
+              unitId={adUnitId} 
+              size={BannerAdSize.MEDIUM_RECTANGLE}/>
+        </View>
+
+
+        {/* TITOLO PAGINA - LE MIE DATE */}
+        <View style={{
+        flexDirection:'column',
+        alignItems:'center',
+        gap:16,
+        }}>
+          <Text style={[styles.sectionTitle, { flex:1, marginBottom:32}]}>{dataLabel(myLanguage, 0)}</Text> 
+          {/* COME FUNZIONA? */}
+          {/* <Pressable
+            onPress={ () => {
+            }}>
+              <Text style={{
+                fontSize:18,
+                fontWeight:'600',
+                color: colors.blueBar,
+                marginBottom:32,
+              }}>
+                {dataLabel(myLanguage, 26)}</Text>
+          </Pressable> */}
+        </View>
+
 
         {/* PULSANTONE + GIORNI SPECIALI ########################################################################## */}
         <TouchableOpacity 
@@ -784,7 +824,7 @@ const handleAddEvent = async (
             showModalSingleDate(); // --> APRE MODAL CON DATEPICKER
           }}
         >
-          <IconSymbol name="plus" size={36} color={'#0088ff'}/>
+          <IconSymbol name="plus" size={36} color={colors.white} style={{marginRight: 12}}/>
           <Text style={styles.specialDaysLabel}>{dataLabel(myLanguage, 1)}</Text>
         </TouchableOpacity>
 
@@ -899,20 +939,11 @@ const handleAddEvent = async (
           </Suspense>
         )}
        
-        {/* GOOGLE ADMOB ############################################################################# */}
-        <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
-          <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
-            <BannerAd 
-              ref={bannerRef} 
-              unitId={adUnitId} 
-              size={BannerAdSize.MEDIUM_RECTANGLE}/>
-        </View>
-
         {/* FESTIVITA NAZIONALI ############################################################################# */}
+        
+        {/* TITOLO */}
         <View style={styles.listItem}>
-          
-          {/* TITOLO */}
-          <Text style={[ styles.listTitle, { textAlign:'center' } ]}>{dataLabel(myLanguage, 2)}</Text>
+                  <Text style={[ styles.listTitle, { textAlign:'center' } ]}>{dataLabel(myLanguage, 2)}</Text>
 
           {/* DROPDOWN PAESE */}
           <View style={styles.dropDownCountry}>
@@ -1002,9 +1033,25 @@ const handleAddEvent = async (
           ))}
         </View>
 
-        {/* INFO */}
+        {/* GOOGLE ADMOB ############################################################################# */}
+        <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
+          <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
+            <BannerAd 
+              ref={bannerRef} 
+              unitId={adUnitId} 
+              size={BannerAdSize.MEDIUM_RECTANGLE}/>
+        </View>
+
+        {/* INFO / PRIVACY */}
         <TouchableOpacity
-            style={styles.infoButton}
+            style={[styles.listItem, {
+              flex:1,
+              padding:16,
+              flexDirection:'row',
+              justifyContent:'center',
+              alignItems:'center',
+              gap:8,
+            }]}
             onPress={ async () => {
               await Linking.openURL('https://pontivia-2025.web.app/')
               }}>
@@ -1013,11 +1060,12 @@ const handleAddEvent = async (
                   fontSize:18,
                   fontWeight:600,
                   color: colors.blueBar,
-                }}>Informazioni e privacy</Text>
+                }}>{dataLabel(myLanguage, 27)}</Text>
           </TouchableOpacity>
 
+
         {/* SPACER */}
-        <View style={{height:500}}></View>
+        <View style={{height:240}}></View>
 
       </ScrollView>
 

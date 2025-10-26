@@ -149,18 +149,19 @@ export default function Preferences() {
     scrollview: {
       width:'100%',
       backgroundColor: 'transparent',
-      paddingTop: 80,
+      paddingTop: 56,
       maxWidth: 600,
     },
     pageTitle: {
       flex:1,
       width:'100%',
-      height:48,
+      height:60,
       flexDirection:'row',
       justifyContent:'center',
-      alignItems:'center',
-      borderWidth: 0,
+      alignItems:'flex-start',
+      // borderWidth: 1,
       pointerEvents: 'box-none',
+      
     },
     sectionTitle: {
       fontSize: 24,
@@ -246,7 +247,8 @@ export default function Preferences() {
       paddingBottom: 12,
       paddingLeft:0,
       paddingRight:0,
-      marginBottom:24,
+      marginBottom:32,
+      marginTop:12,
       backgroundColor: 'rgba(0, 0, 0, .08)',
       borderRadius: 0,
       borderWidth: 0,
@@ -339,10 +341,24 @@ export default function Preferences() {
       resizeMode="cover" 
       style={[styles.image, {alignItems:'center'}]}>
         <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
+
+
+          {/* GOOGLE ADMOB ############################################################################# */}
+          <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
+            <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
+              <BannerAd 
+                ref={bannerRef} 
+                unitId={adUnitId} 
+                size={BannerAdSize.MEDIUM_RECTANGLE}/>
+          </View>
+
+
+
           {/* ==================== TITOLO PAGINA + PULSANTE RESET ==================== */}
           <View style={styles.pageTitle}>
             <Text style={styles.sectionTitle}>{switchNames(myLanguage,12)}</Text>
           </View>
+
 
           {/* ==================== DROPDOWN DURATA PONTI ==================== */}
 
@@ -359,15 +375,6 @@ export default function Preferences() {
               }}
             />
           </View>       
-
-          <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
-            <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
-              <BannerAd 
-                ref={bannerRef} 
-                unitId={adUnitId} 
-                size={BannerAdSize.MEDIUM_RECTANGLE}/>
-          </View>
-                      
 
           {/* ==================== DROPDOWN GIORNO SETTIMANA ==================== */}
           {/* <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[2]}</Text>
@@ -440,21 +447,41 @@ export default function Preferences() {
             </View>
           </Suspense>
 
-          {/* INFO */}
-          <TouchableOpacity
-              style={styles.infoButton}
-              onPress={ async () => {
-                await Linking.openURL('https://pontivia-2025.web.app/')
-                }}>
-                  <IconSymbol size={28} name="info.circle.fill" color={colors.blueBar}/>
-                  <Text style={{
-                    fontSize:18,
-                    fontWeight:600,
-                    color: colors.blueBar,
-                  }}>Informazioni e privacy</Text>
-            </TouchableOpacity>
 
-          {/* SPACER */}
+          {/* GOOGLE ADMOB ############################################################################# */}
+          <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
+            <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
+              <BannerAd 
+                ref={bannerRef} 
+                unitId={adUnitId} 
+                size={BannerAdSize.MEDIUM_RECTANGLE}/>
+          </View>
+
+
+
+        {/* INFO / PRIVACY  ############################################################################# */}
+        <TouchableOpacity
+            style={[styles.groupContainer, {
+              flex:1,
+              padding:16,
+              flexDirection:'row',
+              justifyContent:'center',
+              alignItems:'center',
+              gap:8,
+            }]}
+            onPress={ async () => {
+              await Linking.openURL('https://pontivia-2025.web.app/')
+              }}>
+                <IconSymbol size={28} name="info.circle.fill" color={colors.blueBar}/>
+                <Text style={{
+                  fontSize:18,
+                  fontWeight:600,
+                  color: colors.blueBar,
+                }}>{switchNames(myLanguage, 17)}</Text>
+          </TouchableOpacity>
+
+
+          {/* SPACER  ############################################################################# */}
           <View style={{ height: 240 }} />
         </ScrollView>
     </ImageBackground>

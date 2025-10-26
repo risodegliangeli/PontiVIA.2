@@ -36,6 +36,7 @@ SplashScreen.setOptions({
   const BlurPad = () => {
     return (
       <MaskedView
+        pointerEvents="none"
         maskElement={
           <LinearGradient
             locations={locations as [number, number, ...number[]]}
