@@ -149,7 +149,7 @@ export default function Preferences() {
     scrollview: {
       width:'100%',
       backgroundColor: 'transparent',
-      paddingTop: 56,
+      paddingTop: 90,
       maxWidth: 600,
     },
     pageTitle: {
@@ -343,14 +343,6 @@ export default function Preferences() {
         <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
 
 
-          {/* GOOGLE ADMOB ############################################################################# */}
-          <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
-            <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
-              <BannerAd 
-                ref={bannerRef} 
-                unitId={adUnitId} 
-                size={BannerAdSize.MEDIUM_RECTANGLE}/>
-          </View>
 
 
 
@@ -359,6 +351,14 @@ export default function Preferences() {
             <Text style={styles.sectionTitle}>{switchNames(myLanguage,12)}</Text>
           </View>
 
+          {/* GOOGLE ADMOB ############################################################################# */}
+          <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
+            <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
+              <BannerAd 
+                ref={bannerRef} 
+                unitId={adUnitId} 
+                size={BannerAdSize.MEDIUM_RECTANGLE}/>
+          </View>
 
           {/* ==================== DROPDOWN DURATA PONTI ==================== */}
 

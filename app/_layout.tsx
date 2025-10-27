@@ -1,14 +1,29 @@
-// console.log('[_Layout]');
+console.log('[@/_Layout]');
 
-
-
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import { NavigationContainer, DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
+// GESTISCE LE CHIAMATE ESTERNE pontivia://...
+const linking = {
+  prefixes: ['pontivia://'], 
+  config: {
+    screens: {
+      Home: 'index',              // pontivia://index/
+      Holydays: 'holydays',       // pontivia://holydays/
+      Preferences: 'preferences', // pontivia://preferences/
+    },
+  },
+};
+
+/* ======================================================
+
+MAIN
+
+====================================================== */
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({

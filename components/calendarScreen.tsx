@@ -406,8 +406,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
   const handleGoToHolydays = (date: Date, action: string | undefined) => {
     const dateString = date.toISOString(); 
     navigation.navigate(
-      'holydays' as never, 
-      {date: dateString, action: action} as never, 
+      'holydays' as never, {date: dateString, action: action} as never, 
       );
   };
 

@@ -95,8 +95,7 @@ export default function HolydaysScreen() {
 
   // ADMOB
   const bannerRef = useRef<BannerAd>(null);
-  // (iOS) WKWebView can terminate if app is in a "suspended state", resulting in an empty banner when app returns to foreground.
-  // Therefore it's advised to "manually" request a new ad when the app is foregrounded (https://groups.google.com/g/google-admob-ads-sdk/c/rwBpqOUr8m8).
+  // (iOS) WKWebView can terminate if app is in a "suspended state", resulting in an empty banner when app returns to foreground. Therefore it's advised to "manually" request a new ad when the app is foregrounded (https://groups.google.com/g/google-admob-ads-sdk/c/rwBpqOUr8m8).
   useForeground(() => {
     Platform.OS === 'ios' && bannerRef.current?.load();
   }); 
@@ -115,7 +114,7 @@ export default function HolydaysScreen() {
     container: {
       width:'100%',
       backgroundColor: 'transparent',
-      paddingTop: 54,
+      paddingTop: 90,
       maxWidth:600,
     },
     // TITOLO PAGINA
@@ -377,9 +376,9 @@ export default function HolydaysScreen() {
     myCountry, setMyCountry,
     myLanguage
     } = useHolydays();
-
+    
   /* ============================================================================= 
-  // GESTISCE LE CHIAMATE DALL'ESTERNO E APRE LA DATEPICKER PER INSERIMENTO newItem
+  // GESTISCE LE CHIAMATE 'newItem' DA UNA LONG PRESS SUL CALENDARIO E APRE LA DATEPICKER
   ============================================================================= */
   function handleExternalAddDate(receivedDate: Date, action: string) {
     setInitialIndex(null);                  // INDEX, SERVE PER L'EDIT
@@ -389,9 +388,28 @@ export default function HolydaysScreen() {
     setDpickerRepeatOnDate(false);          // REP ON DATE
     setDpickerRepeatOnDay(false);           // REP ON DAY
     setGoBack(true);                        // IMPOSTA goBack PER IL RITORNO ALLA PAG CHIAMANTE
-    //setIsModalSingleDateVisible(true);      // APRE MODAL
-    showModalSingleDate();
+    showModalSingleDate();                  // APRE MODAL
   }
+
+  /* ============================================================================= 
+  // GESTISCE LE CHIAMATE 'newItem' DA DEEP LINK E APRE LA DATEPICKER
+  ============================================================================= */
+  function handleDeepLinkAddDate(
+    pStartDate: string,
+    pEndDate?: string | undefined,
+    pDescription?: string | undefined,
+    pRODate?: string,
+    pRODay?: string
+    ) {
+      setInitialIndex(null);                          // INDEX, SERVE PER L'EDIT
+      setDpickerStartDate(new Date(pStartDate));      // START
+      pEndDate ? setDpickerEndDate(new Date(pEndDate)) : setDpickerEndDate(null);         // END
+      pDescription ? setDpickerDescription(pDescription) : setDpickerDescription('');     // DESCR
+      pRODate === 'true' ? setDpickerRepeatOnDate(true) : setDpickerRepeatOnDate(false);  // REP ON DATE
+      pRODay === 'true' ? setDpickerRepeatOnDay(true) : setDpickerRepeatOnDay(false);     // REP ON DAY
+      setGoBack(false);                       // IMPOSTA goBack PER IL RITORNO ALLA PAG CHIAMANTE
+      showModalSingleDate();                  // APRE MODAL
+      }
 
   /* ============================================================================= 
    GESTIONE MODAL NEWDATEPICKER
@@ -427,21 +445,58 @@ export default function HolydaysScreen() {
     setIsModalSingleDateVisible(false);
   };
 
-  // GESTISCE CHIAMATE ESTERNE ALLA PAGINA --------------------------------------
-  const route = useRoute(); // PUNTA AL ROUTE
-  const params = route.params as { date?: string, action?: string | undefined}; // LEGGE PARAMETRI
-  const [goBack, setGoBack] = useState<boolean>(false); // IMPOSTA STATO DEL FLAG 'goBack'
+  // GESTISCE CHIAMATE ESTERNE //////////////////////////////////////////////
+    // interfaccia parametri in arrivo dal link
+    interface RouteParams {
+      date?: string;    // Data passata internamente (e.g., '2024-09-23T00:00:00.000Z')
+      action?: string;  // Azione passta acon deep link (es. 'addDate')
 
-  // SE VIENE PASSATO UN PARAMETRO ALLORA SI APRE 
-  // LA DATEPICKER PER INSERIRE UN NUOVO EVENTO
-  useEffect(() => {
-    if (params?.date) {
-      const receivedDate = new Date(params.date);
-      const action = params?.action;
-      // console.log(`- - parametri in arrivo: ${receivedDate.toLocaleDateString()}, ${action}`);
-      handleExternalAddDate(receivedDate, action);
+      // Parametri aggiuntivi del deep link:
+      prmStartDate?: Date;       // DATA INIZIO EVENTO
+      prmEndDate?: Date;         // DATA FINE EVENTO 
+      prmDdescription?: string;  // DESCRIZIONE
+      prmRODate?: string;        // REPEAT ON DATE
+      prmRODay?: string;         // REPEAT ON DAY
     }
-  }, [params?.date]);
+
+    const route = useRoute(); // PUNTA AL ROUTE
+    const params = route.params as { 
+      date?: string, 
+      action?: string | undefined,
+      pStartDate?: Date,
+      pEndDate?: Date,
+      pDescription?: string,
+      pRODate?: boolean,
+      pRODay?: boolean
+      }; // LEGGE PARAMETRI
+    //const [params, setParams] = useState<RouteParams>(useRoute());
+    const [goBack, setGoBack] = useState<boolean>(false); // FLAG 'goBack' PER TORNARE ALLA PAGINA CHIAMANTE
+
+    useEffect(() => {
+      console.log('- - deep link -->', params);
+      if (params === undefined) {
+          console.log('- - params undefined: link diretto');
+          return;
+      }
+      // se la chiamata (newItem) arrirva da una long press su una data
+      if (params.action === 'newItem') {
+        const receivedDate = new Date(params.date);
+        const action = params?.action;
+        handleExternalAddDate(receivedDate, action); // GESTISCE GIORNO SINGOLO (DA LONG PRESS)
+      }
+      // se la chiamata (newItemFromExternal) arriva da un deep link esterno
+      // es.: pontivia://holydays?action=newItemFromExternal&pStartDate=2025-10-19T12:00:00.000Z&pEndDate=2025-10-26T12:00:00.000Z&pDescription=Ricorrenza%20mia%20personale&pRODate=true&pRODay=false
+      if (params.action === 'newItemFromExternal') {
+        handleDeepLinkAddDate(
+          params.pStartDate,
+          params.pEndDate,
+          params.pDescription,
+          params.pRODate,
+          params.pRODay
+        );
+      }
+    }, [params]);
+
 
   /* WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW 
 
@@ -778,15 +833,6 @@ const handleAddEvent = async (
         style={styles.container} 
         showsVerticalScrollIndicator={false} >
 
-        {/* GOOGLE ADMOB ############################################################################# */}
-        <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
-          <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
-            <BannerAd 
-              ref={bannerRef} 
-              unitId={adUnitId} 
-              size={BannerAdSize.MEDIUM_RECTANGLE}/>
-        </View>
-
 
         {/* TITOLO PAGINA - LE MIE DATE */}
         <View style={{
@@ -809,7 +855,6 @@ const handleAddEvent = async (
           </Pressable> */}
         </View>
 
-
         {/* PULSANTONE + GIORNI SPECIALI ########################################################################## */}
         <TouchableOpacity 
           style={styles.specialDays}
@@ -827,6 +872,17 @@ const handleAddEvent = async (
           <IconSymbol name="plus" size={36} color={colors.white} style={{marginRight: 12}}/>
           <Text style={styles.specialDaysLabel}>{dataLabel(myLanguage, 1)}</Text>
         </TouchableOpacity>
+
+
+        {/* GOOGLE ADMOB ############################################################################# */}
+        <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
+          <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
+            <BannerAd 
+              ref={bannerRef} 
+              unitId={adUnitId} 
+              size={BannerAdSize.MEDIUM_RECTANGLE}/>
+        </View>
+
 
         {/* CARD GIORNI SPECIALI ############################################################################# */}
         {newPersonalHolydays.length > 0 && (

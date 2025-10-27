@@ -1,13 +1,10 @@
 # TICKET:
 
 
-- ### ADV AdMob
-  -- aggiungere iOS / Android
 
----
 
-- ### CREARE PAGINA WEB SUPPORTO
-  -- Firebase
+- ### CAROUSEL APERTURA
+  -- react-native-snap-carousel
 
 ---
 
@@ -71,6 +68,20 @@
 
 # TICKET RISOLTI:
 
+
+
+
+
+- ### CREARE PAGINA WEB SUPPORTO
+  -- Firebase
+
+---
+
+
+- ### ADV AdMob
+  -- aggiungere iOS / Android
+
+---
 
 
 - ### ERRORE IN EDIT 20251011.002
