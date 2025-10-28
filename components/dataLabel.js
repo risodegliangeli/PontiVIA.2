@@ -305,7 +305,9 @@ export function holydayLabels(language,item) {
         'Attenzione, l\'evento è in conflitto con ',                // 24
         'Questa data è già presente ',                              // 25
         'Come funziona?',                                           // 26
-        'FAQ / Info Privacy'                                        // 27
+        'FAQ / Info Privacy',                                       // 27 ex 'FAQ / Info Privacy'
+        'Vorrei condididere con te questo evento:',                 // 28
+        'Scarica PontiVIA!'                                         // 29
     ],
     'fr':[
         'Mes dates',                                                // 0
@@ -335,7 +337,9 @@ export function holydayLabels(language,item) {
         'Attention, l\'événement est en conflit avec ',             // 24
         'Cette date est déjà présente ',                            // 25
         'Comment ça marche ?',                                      // 26
-        'FAQ / Infos Confidentialité'                               // 27
+        'FAQ / Infos Confidentialité',                              // 27
+        'Je voudrais partager cet événement avec toi :',            // 28
+        'Télécharge PontiVIA !'                                     // 29
 
     ],  
     'es':[
@@ -365,8 +369,10 @@ export function holydayLabels(language,item) {
         'Atención, el evento se superpone a ',                      // 23
         'Atención, el evento está en conflicto con ',               // 24
         'Esta fecha ya está presente ',                             // 25
-        '¿Cómo funciona?',                  // 16
-        'FAQ / Info Privacidad'           // 17
+        '¿Cómo funciona?',                                          // 26
+        'FAQ / Info Privacidad',                                    // 27
+        'Me gustaría compartir este evento contigo:',               // 28
+        '¡Descarga PontiVIA!'                                       // 29
     ],  
     'de':[
         'Meine Termine',                                            // 0
@@ -395,8 +401,10 @@ export function holydayLabels(language,item) {
         'Achtung, das Ereignis überlappt sich mit ',                // 23
         'Achtung, das Ereignis steht in Konflikt mit ',             // 24
         'Dieses Datum ist bereits vorhanden ',                      // 25
-        'Wie funktioniert es?',                  // 16
-        'FAQ / Datenschutz-Info'           // 17
+        'Wie funktioniert es?',                                     // 16
+        'FAQ / Datenschutz-Info',                                   // 17
+        'Ich möchte dieses Ereignis mit dir teilen:',               // 28
+        'Lade PontiVIA herunter!'                                   // 29
     ],
     'en':[
         'My dates',                                                 // 0
@@ -425,8 +433,10 @@ export function holydayLabels(language,item) {
         'Warning, the event overlaps with ',                        // 23
         'Warning, the event conflicts with ',                       // 24
         'This date is already present ',                            // 25
-        'How does it work?',                  // 16
-        'FAQ / Privacy Info'           // 17
+        'How does it work?',                                        // 16
+        'FAQ / Privacy Info',                                       // 17
+        'I would like to share this event with you:',               // 28
+        'Download PontiVIA!'                                        // 29
     ],
     'nl':[
         'Mijn datums',                                              // 0
@@ -455,8 +465,10 @@ export function holydayLabels(language,item) {
         'Let op, het evenement overlapt met ',                      // 23
         'Let op, het evenement is in conflict met ',                // 24
         'Deze datum is al aanwezig ',                               // 25
-        'Hoe werkt het?',                  // 16
-        'FAQ / Privacy Info'           // 17
+        'Hoe werkt het?',                                           // 16
+        'FAQ / Privacy Info',                                       // 17
+        'Ik wil deze gebeurtenis met je delen:',                    // 28
+        'Download PontiVIA!'                                        // 29
     ],
     'pt':[
         'Minhas datas',                                             // 0
@@ -486,7 +498,9 @@ export function holydayLabels(language,item) {
         'Atenção, o evento está em conflito com ',                  // 24
         'Esta data já está presente ',                              // 25
         'Como funciona?',                  // 16
-        'FAQ / Info Privacidade'           // 17
+        'FAQ / Info Privacidade',           // 17
+        'Gostaria de compartilhar este evento com você:',           // 28
+        'Baixe PontiVIA!'                                           // 29
     ],
     'hr': [
         'Moji datumi',                                              // 0
@@ -515,8 +529,10 @@ export function holydayLabels(language,item) {
         'Pažnja, događaj se preklapa s ',                           // 23
         'Pažnja, događaj je u sukobu s ',                           // 24
         'Ovaj datum je već prisutan ',                              // 25
-        'Kako funkcionira?',                  // 16
-        'FAQ / Info o privatnosti'           // 17
+        'Kako funkcionira?',                                        // 16
+    'FAQ / Info o privatnosti',                                     // 17
+        'Želio bih podijeliti ovaj događaj s tobom:',               // 28
+        'Preuzmi PontiVIA!'                                         // 29
     ],
     'si': [
         'Moji datumi',                                              // 0
@@ -545,8 +561,10 @@ export function holydayLabels(language,item) {
         'Pozor, dogodek se prekriva z ',                            // 23
         'Pozor, dogodek je v sporu z ',                             // 24
         'Ta datum je že prisoten ',                                 // 25
-        'Kako deluje?',                  // 16
-        'FAQ / Info o zasebnosti'           // 17
+        'Kako deluje?',                                             // 16
+        'FAQ / Info o zasebnosti',                                  // 17
+        'Rad bi delil ta dogodek s teboj:',                         // 28
+        'Prenesi PontiVIA!'                                         // 29
     ],
     'gr': [
         'Οι ημερομηνίες μου',                                       // 0
@@ -575,8 +593,10 @@ export function holydayLabels(language,item) {
         'Προσοχή, το γεγονός επικαλύπτεται με ',                    // 23
         'Προσοχή, το γεγονός έρχεται σε σύγκρουση με ',             // 24
         'Αυτή η ημερομηνία είναι ήδη παρούσα ',                     // 25
-        'Πώς λειτουργεί;',                  // 16
-        'FAQ / Πληροφορίες Απορρήτου'           // 17
+        'Πώς λειτουργεί;',                                          // 16
+        'FAQ / Πληροφορίες Απορρήτου',                              // 17
+        'Θα ήθελα να μοιραστώ αυτό το γεγονός μαζί σου:',           // 28
+        'Κατέβασε το PontiVIA!'                                     // 29
     ]
     };
     return dataLabel[language][item];

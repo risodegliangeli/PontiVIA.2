@@ -1,6 +1,6 @@
 // console.log('[HOLYDAYS.TSX]');
 
-import React, { useEffect, useState, Suspense, use, useRef,  } from 'react';
+import React, { useEffect, useState, Suspense, useRef, } from 'react';
 import {
   Animated,
   Alert,
@@ -14,8 +14,9 @@ import {
   useColorScheme,
   Platform,
   Pressable,
+  Share
 } from 'react-native';
-import { isEqual } from 'date-fns';
+// import { isEqual } from 'date-fns';
 import { useRoute } from '@react-navigation/native';      // SERVE PER LEGGERE I PARAMETRI
 import { useNavigation } from '@react-navigation/native'; // SERVE PER GESTIRE LA NAVIGAZIONE
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -159,20 +160,21 @@ export default function HolydaysScreen() {
       paddingVertical: 16,
     },
     itemDate: {
+      flexWrap: 'wrap',
       fontSize: 16,
       fontWeight: 'bold',
-      paddingLeft:12,
+      paddingLeft: 8,
       color: colors.text,
     },
     itemDescription: {
       fontSize: 16,
-      paddingLeft:12,
+      paddingLeft: 8,
       color: colors.text,
     },
     itemActions: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginRight:12,
+      marginRight:8,
     },
     dot32: {
       position:'absolute', 
@@ -726,13 +728,11 @@ const handleAddEvent = async (
     ============================================================================= */
   // LA FUNZIONE RICEVE SOLO L'INDICE 'index' DEL RECORD DA EDITARE DA newPersonalHolydays
   const handleEdit = (index: number) => {
-    //console.log('[HANDLE EDIT]s');
     // Controlla se l'indice è valido
     if (index === null || index < 0 || index >= newPersonalHolydays.length) {
       console.warn('Indice non valido per la modifica:', index);
       return;
     }
-
     const itemToEdit: any = newPersonalHolydays[index];
     setInitialIndex(index);                         // INDEX, SERVE PER L'EDIT
     setDpickerStartDate(itemToEdit.startDate);      // START
@@ -744,6 +744,32 @@ const handleAddEvent = async (
     //setIsModalSingleDateVisible(true);              // APRE MODAL
     showModalSingleDate();
   };
+
+
+
+  const handleShare = async (index: any) => {
+    const itemToShare: any = newPersonalHolydays[index];
+      try {
+
+          let msg = `${dataLabel(myLanguage, 28)}\n*${ itemToShare.startDate }*\n_${ itemToShare.description }_\n------\n\n${dataLabel(myLanguage, 29)} \nhttp://pontivia-2025.web.app`;
+
+        const result = await Share.share({
+          message: msg,
+        });
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            // OK -> shared with activity type of result.activityType
+          } else {
+            // shared
+          }
+        } else if (result.action === Share.dismissedAction) {
+          // CANCEL -> dismissed
+        }
+      } catch (error) {
+        console.error(error);
+      }
+  }
+
 
   /* ============================================================================= 
    DELETE ITEM --- Refactored
@@ -925,7 +951,12 @@ const handleAddEvent = async (
               {newPersonalHolydays.sort((a: any, b: any) => a.startDate - b.startDate).map((holiday, index) => (
                 <React.Fragment key={index}>
                   <View style={styles.holidayRow }>
-                    <View style={{ flexDirection:'row', justifyContent:'flex-start', alignItems:'flex-start'}}>
+                    <View style={{ 
+                      flexDirection:'row', 
+                      justifyContent:'flex-start', 
+                      alignItems:'flex-start',
+                      //borderWidth:1,
+                      maxWidth:'70%'}}>
                       
                       {/* CERCHIO COLORATO CON DATA */}
                       {holiday.endDate ? // 1) STAMPA CERCHIETTO SOTTOSTANTE IN OGNI CASO, 2) SE E' UN PERIODO SPOSTATO 6PX A DX
@@ -939,7 +970,7 @@ const handleAddEvent = async (
 
                       <View style={{flexDirection:'column'}} >
 
-                        <View style={{flexDirection:'row'}}>
+                        <View style={{flexDirection:'row', flexWrap: 'wrap',}}>
                           {/* 1) SE GIORNO SINGOLO STAMPA DATA SINGOLA CON MESE ESTESO (E ANNO, SOLO SE DIVERSO DALL'ANNO IN CORSO) 
                               2) SE PERIODO STAMPA DOPPIA DATA CON MESE ABBREVIATO
                                  STAMPA ANNO SOLO SE NON E' UN EVENTO RICORRENTE*/}
@@ -956,7 +987,7 @@ const handleAddEvent = async (
                               {months[holiday.startDate.getMonth()]?.label.slice(0,3)}
                               {' '}
                               {holiday.repeatOnDate || holiday.repeatOnDay ? '' : holiday.startDate.getFullYear()} 
-                              {' - '}
+                              {'-'}
                               {holiday.endDate.getDate()}
                               {' '}
                               {months[holiday.endDate.getMonth()]?.label.slice(0,3)}
@@ -978,10 +1009,13 @@ const handleAddEvent = async (
                     </View>
                     <View>
                     <View style={styles.itemActions}>
-                      <TouchableOpacity onPress={() => handleEdit(index)}>
+                      <TouchableOpacity onPress={() => handleShare(index)}>
+                        <IconSymbol name="square.and.arrow.up" size={24} color={colors.blueBar} />
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => handleEdit(index)} style={{marginLeft:10}}>
                         <IconSymbol name="pencil" size={20} color={colors.blueBar} />
                       </TouchableOpacity>
-                      <TouchableOpacity onPress={() => handleDelete(index)} style={{ marginLeft: 12 }}>
+                      <TouchableOpacity onPress={() => handleDelete(index)} style={{ marginLeft: 10}}>
                         <IconSymbol name="trash" size={20} color={colors.blueBar} />
                       </TouchableOpacity>
                     </View>
@@ -1116,7 +1150,7 @@ const handleAddEvent = async (
                   fontSize:18,
                   fontWeight:600,
                   color: colors.blueBar,
-                }}>{dataLabel(myLanguage, 27)}</Text>
+                }}>{dataLabel(myLanguage, 26)}</Text>
           </TouchableOpacity>
 
 

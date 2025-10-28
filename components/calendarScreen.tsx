@@ -63,8 +63,6 @@ const useThemeColors = () => {
 
 const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
-
-
 /* ============================================================================= 
 CALENDARSCREEN - print calendario
 ============================================================================= */
@@ -82,6 +80,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
   const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
   const monthsToLoad = 3; // ADV OGNI x CARDS
 
+  // VALORI PASSATI DAL CONTEXT
   const { 
     newPersonalHolydays,
     nationalExcluded,

@@ -14,28 +14,18 @@ type IconSymbolName = keyof typeof MAPPING;
  * - see SF Symbols in the [SF Symbols](https://developer.apple.com/sf-symbols/) app.
  */
 const MAPPING = {
-  'gobackward':'settings-backup-restore', // restore preferences
-  'calendar.circle': 'event',
-  'list.dash': 'list', // route holydays
-  'gear': 'settings', // route preferences
-  'calendar': 'calendar-month',  // route index
-  'ellipsis': 'more-vert', // three-dots
-  'plus': 'add', // fab button
-  'arrow.left': 'arrow-back', // back
-  'pencil': 'edit',
-  'trash': 'delete',
-  'trash.circle.fill':'delete-sweep', // DELETE ALL
-  'multiply': 'close',
-  'bell': 'notifications',  // CAMPANELLA OUTILNED
-  'bell.circle.fill': 'circle-notifications', // CAMPANELLA FILLED
-  'calendar.badge.plus' : 'edit-calendar',
-  'checkmark.circle.fill': 'check-circle', // CHECK BLU RIGHE NATIONALHOLIDAY
-  'xmark.circle': 'cancel', // CROSS GRIGIO RIGHE NATIONAL HOLIDAY
-  'xmark': 'close',     // X CHIUSURA
-  'checkmark': 'check',  // CHECK CONFERMA
-  'repeat':'repeat',
-  'info.circle.fill': 'info'
-
+  'gobackward':'settings-backup-restore',         // RESTORE MYCOUNTRY
+  'pencil': 'edit',                               // EDIT ITEM (SPECIAL DAYS)
+  'trash': 'delete',                              // TRASH ITEM
+  'plus': 'add',                                  // ADD NEW DATE
+  'bell': 'notifications',                        // CAMPANELLA
+  'checkmark.circle.fill': 'check-circle',        // CHECK BLU RIGHE NATIONALHOLIDAY
+  'xmark.circle': 'cancel',                       // x GRIGIO RIGHE NATIONAL HOLIDAY
+  'xmark': 'close',                               // X CHIUSURA
+  'checkmark': 'check',                           // CHECK CONFERMA
+  'repeat':'repeat',                              // RIPETE OGNI ANNO
+  'square.and.arrow.up': 'share',                 // CONDIVIDI
+  'info.circle.fill':'info'                       // COME FUNZIONA?
 } as IconMapping;
 
 /**
