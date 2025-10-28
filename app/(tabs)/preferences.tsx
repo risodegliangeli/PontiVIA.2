@@ -337,11 +337,7 @@ export default function Preferences() {
       style={[styles.image, {alignItems:'center'}]}>
         <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
 
-
-
-
-
-          {/* ==================== TITOLO PAGINA + PULSANTE RESET ==================== */}
+          {/* ======================== TITOLO PAGINA  ======================== */}
           <View style={styles.pageTitle}>
             <Text style={styles.sectionTitle}>{switchNames(myLanguage,12)}</Text>
           </View>
@@ -356,7 +352,6 @@ export default function Preferences() {
           </View>
 
           {/* ==================== DROPDOWN DURATA PONTI ==================== */}
-
           <View style={styles.groupContainer}>
             <Text style={[styles.listTitle, {textAlign:'center'}]}>{switchNames(myLanguage, 11)}</Text>
             <DropdownComponent 
@@ -472,7 +467,7 @@ export default function Preferences() {
                   fontSize:18,
                   fontWeight:600,
                   color: colors.blueBar,
-                }}>{switchNames(myLanguage, 17)}</Text>
+                }}>{switchNames(myLanguage, 16)}</Text>
           </TouchableOpacity>
 
 

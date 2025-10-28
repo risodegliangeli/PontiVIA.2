@@ -18,11 +18,10 @@ interface DropDownComponentProps{
 /* ================================================================ */
 const DropdownComponent: React.FC<DropDownComponentProps> = ({language, selectedValue, onChange}) => {
   
-  
   const dataLabel = [
-    datepickerLabels(language, 1) + ' 😊',
-    datepickerLabels(language, 2) + ' 😀',
-    datepickerLabels(language, 3) + '🤪'
+    '😊  ' + datepickerLabels(language, 1) ,
+    '😀  ' + datepickerLabels(language, 2) ,
+    '🤪  ' + datepickerLabels(language, 3) 
   ];
   const data = [
   { label: dataLabel[0], value: 1 },
@@ -39,7 +38,7 @@ const DropdownComponent: React.FC<DropDownComponentProps> = ({language, selected
       padding: 0,
     },
     dropdown: {
-      height: 32,
+      height: 64,
       // borderColor: colors.disabled,
       //borderWidth: 1,
       borderRadius: 16,
@@ -48,8 +47,7 @@ const DropdownComponent: React.FC<DropDownComponentProps> = ({language, selected
       color: colors.textRed,
       backgroundColor: 'rgba(255,255,255,.25)',
       marginBottom: 24,
-      // elevation: 2,
-
+      //elevation: 2,
       // shadowColor: colors.text, // iOS shadow
       // shadowOffset: {
       //   width: 0,

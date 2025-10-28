@@ -410,8 +410,9 @@ const CalendarScreen = ({callerPreferences}: any) => {
   async function handleShare (description: string) {
     //const itemToShare: any = newPersonalHolydays[index];
       try {
-          let msg = `${dataLabel(myLanguage,12)}\n*${dataLabel(myLanguage, 9)}*\n${ description }\n------\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
-        const result = await Share.share({
+          let msg = `${dataLabel(myLanguage,12)}\n\n*${dataLabel(myLanguage, 9)}*\n${ description }\n------\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
+          //let msg = "intent://holydays/#Intent;scheme=pontivia;package=com.angelieassociati.pontivia;end";
+          const result = await Share.share({
           message: msg,
         });
         if (result.action === Share.sharedAction) {
@@ -544,7 +545,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
         </View>
         <TouchableOpacity
           onPress={() => setVisibleToast(false)}>
-          <IconSymbol name="multiply" size={28} color={colors.black} />
+          <IconSymbol name="xmark" size={28} color={colors.black} />
         </TouchableOpacity>
       </View>
       )

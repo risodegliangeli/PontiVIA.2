@@ -88,7 +88,6 @@ export function dataLabel(language, item) {
             'Modifica lista dei giorni',            // 15
             'Come funziona?',                       // 16
             'FAQ / Info Privacy'                    // 17
-
         ],
         'fr': [
             'Pâques',                               // 0
@@ -619,7 +618,6 @@ export function calendarScrenLabels(language, item) {
             'Aggiungi',                                 // 11
             'Vorrei condididere con te questo evento:', // 12
             'Scarica PontiVIA!'                         // 13
-
         ],
         'fr':[
             'Pont !',                                   // 0

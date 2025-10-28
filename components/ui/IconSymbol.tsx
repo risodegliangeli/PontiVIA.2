@@ -25,7 +25,28 @@ const MAPPING = {
   'checkmark': 'check',                           // CHECK CONFERMA
   'repeat':'repeat',                              // RIPETE OGNI ANNO
   'square.and.arrow.up': 'share',                 // CONDIVIDI
-  'info.circle.fill':'info'                       // COME FUNZIONA?
+  'info.circle.fill':'info',                      // COME FUNZIONA?
+  'calendar.badge.plus' : 'edit-calendar',        // PULS CALENDARIO MODAL PONTE
+  // 'gobackward':'settings-backup-restore', // restore preferences
+  // 'calendar.circle': 'event',
+  // 'list.dash': 'list', // route holydays
+  // 'gear': 'settings', // route preferences
+  // 'calendar': 'calendar-month',  // route index
+  // 'ellipsis': 'more-vert', // three-dots
+  // 'plus': 'add', // fab button
+  // 'arrow.left': 'arrow-back', // back
+  // 'pencil': 'edit',
+  // 'trash': 'delete',
+  // 'trash.circle.fill':'delete-sweep', // DELETE ALL
+  // 'multiply': 'close',
+  // 'bell': 'notifications',  // CAMPANELLA OUTILNED
+  // 'bell.circle.fill': 'circle-notifications', // CAMPANELLA FILLED
+  // 'checkmark.circle.fill': 'check-circle', // CHECK BLU RIGHE NATIONALHOLIDAY
+  // 'xmark.circle': 'cancel', // CROSS GRIGIO RIGHE NATIONAL HOLIDAY
+  // 'xmark': 'close',     // X CHIUSURA
+  // 'checkmark': 'check',  // CHECK CONFERMA
+  // 'repeat':'repeat',
+  // 'info.circle.fill': 'info'
 } as IconMapping;
 
 /**
