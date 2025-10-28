@@ -340,7 +340,6 @@ export function holydayLabels(language,item) {
         'FAQ / Infos Confidentialité',                              // 27
         'Je voudrais partager cet événement avec toi :',            // 28
         'Télécharge PontiVIA !'                                     // 29
-
     ],  
     'es':[
         'Mis fechas',                                               // 0
@@ -617,7 +616,10 @@ export function calendarScrenLabels(language, item) {
             ' (1 giorno)',                              // 8
             'Possibile ponte!',                         // 9
             'Annulla',                                  // 10
-            'Aggiungi'                                  // 11
+            'Aggiungi',                                 // 11
+            'Vorrei condididere con te questo evento:', // 12
+            'Scarica PontiVIA!'                         // 13
+
         ],
         'fr':[
             'Pont !',                                   // 0
@@ -631,7 +633,10 @@ export function calendarScrenLabels(language, item) {
             ' (1 jour)',                                // 8
             'Pont possible !',                          // 9
             'Annuler',                                  // 10
-            'Ajouter'                                   // 11
+            'Ajouter',                                  // 11
+            'Je voudrais partager cet événement avec toi :',            // 28
+            'Télécharge PontiVIA !'                                     // 29
+
         ],
         'es':[
             '¡Puente!',                                 // 0
@@ -645,7 +650,9 @@ export function calendarScrenLabels(language, item) {
             ' (1 día)',                                 // 8
             '¡Posible puente!',                         // 9
             'Cancelar',                                 // 10
-            'Añadir'                                    // 11
+            'Añadir',                                    // 11
+            'Me gustaría compartir este evento contigo:',               // 28
+            '¡Descarga PontiVIA!'                                       // 29
         ],
         'de':[
             'Brücke!',                                  // 0
@@ -659,7 +666,9 @@ export function calendarScrenLabels(language, item) {
             ' (1 Tag)',                                 // 8
             'Mögliche Brücke!',                         // 9
             'Abbrechen',                                // 10
-            'Hinzufügen'                                // 11
+            'Hinzufügen',                                // 11
+            'Ich möchte dieses Ereignis mit dir teilen:',               // 28
+            'Lade PontiVIA herunter!'                                   // 29
         ],  
         'en':[
             'Bridge!',                                  // 0
@@ -673,7 +682,9 @@ export function calendarScrenLabels(language, item) {
             ' (1 day)',                                 // 8
             'Possible bridge!',                         // 9
             'Cancel',                                   // 10
-            'Add'                                       // 11
+            'Add',                                       // 11
+            'I would like to share this event with you:',               // 28
+            'Download PontiVIA!'                                        // 29
         ],
         'nl':[
             'Brug!',                                    // 0
@@ -687,7 +698,9 @@ export function calendarScrenLabels(language, item) {
             ' (1 dag)',                                 // 8
             'Mogelijke brug!',                          // 9
             'Annuleren',                                // 10
-            'Toevoegen'                                 // 11
+            'Toevoegen',                                 // 11
+            'Ik wil deze gebeurtenis met je delen:',                    // 28
+            'Download PontiVIA!'                                        // 29
         ],
         'pt':[
             'Ponte!',                                   // 0
@@ -701,7 +714,9 @@ export function calendarScrenLabels(language, item) {
             ' (1 dia)',                                 // 8
             'Ponte possível!',                          // 9
             'Cancelar',                                 // 10
-            'Adicionar'                                 // 11
+            'Adicionar',                                 // 11
+            'Gostaria de compartilhar este evento com você:',           // 28
+            'Baixe PontiVIA!'                                           // 29
         ],
         'hr': [
             'Most!',                                    // 0
@@ -715,7 +730,9 @@ export function calendarScrenLabels(language, item) {
             ' (1 dan)',                                 // 8
             'Moguć most!',                              // 9
             'Otkaži',                                   // 10
-            'Dodaj'                                     // 11
+            'Dodaj',                                     // 11
+            'Želio bih podijeliti ovaj događaj s tobom:',               // 28
+            'Preuzmi PontiVIA!'                                         // 29
         ],
         'si': [
             'Most!',                                    // 0
@@ -729,7 +746,9 @@ export function calendarScrenLabels(language, item) {
             ' (1 dan)',                                 // 8
             'Možen most!',                              // 9
             'Prekliči',                                 // 10
-            'Dodaj'                                     // 11
+            'Dodaj',                                     // 11
+            'Rad bi delil ta dogodek s teboj:',                         // 28
+            'Prenesi PontiVIA!'                                         // 29
         ],
         'gr': [
             'Γέφυρα!',                                  // 0
@@ -743,8 +762,10 @@ export function calendarScrenLabels(language, item) {
             ' (1 μέρα)',                                // 8
             'Πιθανή γέφυρα!',                           // 9
             'Ακύρωση',                                  // 10
-            'Προσθήκη'                                  // 11
-        ]
+            'Προσθήκη',                                  // 11
+            'Θα ήθελα να μοιραστώ αυτό το γεγονός μαζί σου:',           // 28
+            'Κατέβασε το PontiVIA!'                                     // 29
+    ]
     };
     return dataLabel[language][item];
 }

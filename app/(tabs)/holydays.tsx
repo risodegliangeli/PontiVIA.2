@@ -475,9 +475,9 @@ export default function HolydaysScreen() {
     const [goBack, setGoBack] = useState<boolean>(false); // FLAG 'goBack' PER TORNARE ALLA PAGINA CHIAMANTE
 
     useEffect(() => {
-      console.log('- - deep link -->', params);
+      // console.log('- - deep link -->', params);
       if (params === undefined) {
-          console.log('- - params undefined: link diretto');
+          // console.log('- - params undefined: link diretto');
           return;
       }
       // se la chiamata (newItem) arrirva da una long press su una data
@@ -487,7 +487,9 @@ export default function HolydaysScreen() {
         handleExternalAddDate(receivedDate, action); // GESTISCE GIORNO SINGOLO (DA LONG PRESS)
       }
       // se la chiamata (newItemFromExternal) arriva da un deep link esterno
-      // es.: pontivia://holydays?action=newItemFromExternal&pStartDate=2025-10-19T12:00:00.000Z&pEndDate=2025-10-26T12:00:00.000Z&pDescription=Ricorrenza%20mia%20personale&pRODate=true&pRODay=false
+      /* es.: 
+        pontivia://holydays?action=newItemFromExternal&pStartDate=2025-10-19T12:00:00.000Z&pEndDate=2025-10-26T12:00:00.000Z&pDescription=Ricorrenza%20mia%20personale&pRODate=true&pRODay=false
+      */
       if (params.action === 'newItemFromExternal') {
         handleDeepLinkAddDate(
           params.pStartDate,
@@ -746,13 +748,13 @@ const handleAddEvent = async (
   };
 
 
-
-  const handleShare = async (index: any) => {
+/* ============================================================================= 
+  SHARE
+  ============================================================================= */
+  async function handleShare (index: any) {
     const itemToShare: any = newPersonalHolydays[index];
       try {
-
           let msg = `${dataLabel(myLanguage, 28)}\n*${ itemToShare.startDate }*\n_${ itemToShare.description }_\n------\n\n${dataLabel(myLanguage, 29)} \nhttp://pontivia-2025.web.app`;
-
         const result = await Share.share({
           message: msg,
         });

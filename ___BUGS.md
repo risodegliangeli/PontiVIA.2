@@ -31,14 +31,6 @@
 
 
 
-- ### CONDIVISIONE DATE PERSONALI
-  -- con altri utenti che hanno PontiVIA! installato
-  -- se non installato te lo fa installare
-  -- oppure inviare via WhatsApp
-
----
-
-
 - #### TOOLTIP
   aggiungere a fianco delle label delle PREFERENCES
 
@@ -71,6 +63,12 @@
 
 
 
+- ### CONDIVISIONE DATE PERSONALI
+  -- con altri utenti che hanno PontiVIA! installato
+  -- se non installato te lo fa installare
+  -- oppure inviare via WhatsApp
+
+---
 
 - ### CREARE PAGINA WEB SUPPORTO
   -- Firebase

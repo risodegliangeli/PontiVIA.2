@@ -1,18 +1,14 @@
-// console.log('[PREFERENCES.TSX]');
-
 import useLocalizationData from '@/app/data/data';
 import DropdownComponent from '@/components/ui/DropdownComponent'; // DROPDOWN DURATA PONTI
-// import DropdownFDOW from '@/components/ui/DropdownFDoW'; // DROPDOWN GIORNO SETTIMANA --- moment. disabled
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Suspense, useState, useEffect, useRef } from 'react';
 import { Colors } from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import { getLocales,  } from 'expo-localization';
-import { dataLabel as switchNames } from '@/components/dataLabel';
+import { dataLabel as switchNames } from '@/components/dataLabel'; // LABEL LOCALIZZATE
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import * as Linking from 'expo-linking';
-
 import {
   ImageBackground,
   Platform,
@@ -34,7 +30,6 @@ mobileAds()
   .initialize()
   .then(adapterStatuses => {
     console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
-    
   });
 
 // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
@@ -155,7 +150,7 @@ export default function Preferences() {
     pageTitle: {
       flex:1,
       width:'100%',
-      height:60,
+      height:54,
       flexDirection:'row',
       justifyContent:'center',
       alignItems:'flex-start',

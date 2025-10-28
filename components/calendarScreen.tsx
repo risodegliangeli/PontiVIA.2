@@ -1,5 +1,3 @@
-// console.log('<CALENDARSCREEN>');
-
 import React, { useCallback, useEffect, useRef, useState, Suspense } from 'react';
 import {
   ActivityIndicator,
@@ -7,6 +5,7 @@ import {
   Image,
   Platform,
   Pressable,
+  Share,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -22,7 +21,7 @@ import { useHolydays } from '@/context/HolydaysContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { addMonths, isWithinInterval } from "date-fns";
 import * as Calendar from 'expo-calendar'; // ACCESSO AL CALENDARIO DI SISTEMA
-import { calendarScrenLabels as dataLabel } from '@/components/dataLabel';
+import { calendarScrenLabels as dataLabel } from '@/components/dataLabel'; // LABEL LOCALIZZATE
 import { useNavigation } from '@react-navigation/native';
 
 // GOOGLE ADMOB ///////////////////////////////////
@@ -33,15 +32,11 @@ mobileAds()
   .initialize()
   .then(adapterStatuses => {
     console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
-    
   });
 
 // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
 // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
 const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
-
-// const adUnitId = TestIds;
-// GOOGLE ADMOB ///////////////////////////////////
 
 // NOMI MESI E GIORNI
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
@@ -401,13 +396,37 @@ const CalendarScreen = ({callerPreferences}: any) => {
 
   const navigation = useNavigation();
 
-  // CHIAMA LA PAGINA holydays COL DATEPICKER APERTO SULLA DATA DA INSERIRE
+  // LONG PRESS: CHIAMA LA PAGINA holydays COL DATEPICKER APERTO SULLA DATA DA INSERIRE ///////////////////
   const handleGoToHolydays = (date: Date, action: string | undefined) => {
     const dateString = date.toISOString(); 
     navigation.navigate(
       'holydays' as never, {date: dateString, action: action} as never, 
       );
   };
+
+/* ============================================================================= 
+  SHARE
+  ============================================================================= */
+  async function handleShare (description: string) {
+    //const itemToShare: any = newPersonalHolydays[index];
+      try {
+          let msg = `${dataLabel(myLanguage,12)}\n*${dataLabel(myLanguage, 9)}*\n${ description }\n------\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
+        const result = await Share.share({
+          message: msg,
+        });
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            // OK -> shared with activity type of result.activityType
+          } else {
+            // shared
+          }
+        } else if (result.action === Share.dismissedAction) {
+          // CANCEL -> dismissed
+        }
+      } catch (error) {
+        console.error(error);
+      }
+  }
 
   /* ============================================================================= 
   (CALLBACK) AGGIUNGE MESI AL CALENDARIO
@@ -544,9 +563,20 @@ const CalendarScreen = ({callerPreferences}: any) => {
     const BridgeToast: React.FC<BridgeHolydayInterface> = ({title, description, bridgeStart, bridgeEnds}) => {
       return (
         <View style={{width:'100%', flexDirection:'column', }}>
+
+          <View style={{ width:'100%', flexDirection:'row', justifyContent:'flex-end', }}>  
+            <TouchableOpacity
+              onPress={ () => 
+                //console.log('SHARE BRIDGE', dataLabel(myLanguage, 9), description,);
+                handleShare(description)
+               }>
+              <IconSymbol name="square.and.arrow.up" size={24} color={colors.blueBar} />
+            </TouchableOpacity>
+          </View>
+
           <View style={{ width:'100%', flexDirection:'row', justifyContent:'flex-start', }}>
             <Image 
-              source={require('@/assets/images/icon_girl-off.png')}
+              source={require('@/assets/images/icon_girl-on.png')}
               style={{width:48, height:48, resizeMode:'contain', marginRight: 16}}
             />
             <View style={{ flex:1, }}>
