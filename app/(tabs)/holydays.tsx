@@ -153,7 +153,7 @@ export default function HolydaysScreen() {
       marginRight:12,
     },
     holidayRow: { 
-      flex:1,
+      //flex:1,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -170,6 +170,7 @@ export default function HolydaysScreen() {
       fontSize: 16,
       paddingLeft: 8,
       color: colors.text,
+      //borderWidth:1,
     },
     itemActions: {
       flexDirection: 'row',
@@ -394,7 +395,7 @@ export default function HolydaysScreen() {
   }
 
   /* ============================================================================= 
-  // GESTISCE LE CHIAMATE 'newItem' DA DEEP LINK E APRE LA DATEPICKER
+  // GESTISCE LE CHIAMATE 'newItemFromExternal' DA DEEP LINK E APRE LA DATEPICKER
   ============================================================================= */
   function handleDeepLinkAddDate(
     pStartDate: string,
@@ -470,7 +471,9 @@ export default function HolydaysScreen() {
       pDescription?: string,
       pRODate?: boolean,
       pRODay?: boolean
-      }; // LEGGE PARAMETRI
+      }; 
+      
+    // LEGGE PARAMETRI
     //const [params, setParams] = useState<RouteParams>(useRoute());
     const [goBack, setGoBack] = useState<boolean>(false); // FLAG 'goBack' PER TORNARE ALLA PAGINA CHIAMANTE
 
@@ -488,7 +491,7 @@ export default function HolydaysScreen() {
       }
       // se la chiamata (newItemFromExternal) arriva da un deep link esterno
       /* es.: 
-        pontivia://holydays?action=newItemFromExternal&pStartDate=2025-10-19T12:00:00.000Z&pEndDate=2025-10-26T12:00:00.000Z&pDescription=Ricorrenza%20mia%20personale&pRODate=true&pRODay=false
+        pontivia://holydays?action=newItemFromExternal&pStartDate=2025-11-18&pDescription=XXBeaujolais%20demand%20in%20Paris&pEndDate=2025-11-22&pRODate=true
       */
       if (params.action === 'newItemFromExternal') {
         handleDeepLinkAddDate(
@@ -754,7 +757,19 @@ const handleAddEvent = async (
   async function handleShare (index: any) {
     const itemToShare: any = newPersonalHolydays[index];
       try {
-          let msg = `${dataLabel(myLanguage, 28)}\n*${ itemToShare.startDate }*\n_${ itemToShare.description }_\n------\n\n${dataLabel(myLanguage, 29)} \nhttp://pontivia-2025.web.app`;
+        // Vorrei condividere questo evento ecc
+        let msg = `${dataLabel(myLanguage, 28)}\n\n${ (itemToShare.startDate).toLocaleDateString() }\n*${itemToShare.description}*\n\n------\n\n`;
+        
+        // gestione link pontivia://
+        msg += `pontivia://holydays`;
+        if (itemToShare.startDate) {msg += `?action=newItemFromExternal&pStartDate=${(itemToShare.startDate).getFullYear()}-${(itemToShare.startDate).getMonth() + 1}-${(itemToShare.startDate).getDate()}`};
+        if (itemToShare.description !== '') {msg += `&pDescription=${(itemToShare.description).replace(/ /g, "%20")}`;}
+        if (itemToShare.endDate) {msg += `&pEndDate=${(itemToShare.endDate).getFullYear()}-${(itemToShare.endDate).getMonth() + 1}-${(itemToShare.endDate).getDate()}`}
+        if (itemToShare.repeatOnDate) {msg += `&pRODate=true`}
+        if (itemToShare.repeatOnDay) {msg += `&pRODay=true`}
+        
+        // link download
+        msg += `\n\n${dataLabel(myLanguage, 29)} \nhttp://pontivia-2025.web.app`;
         const result = await Share.share({
           message: msg,
         });
@@ -915,6 +930,7 @@ const handleAddEvent = async (
         {/* CARD GIORNI SPECIALI ############################################################################# */}
         {newPersonalHolydays.length > 0 && (
           <Suspense>
+            {/* CARD */}
             <View style={styles.listItem}>
 
               {/* LABEL SEZIONE CON PULSANTE CANCELLAZIONE */}
@@ -952,81 +968,114 @@ const handleAddEvent = async (
               {/* LISTA RIGHE */}
               {newPersonalHolydays.sort((a: any, b: any) => a.startDate - b.startDate).map((holiday, index) => (
                 <React.Fragment key={index}>
-                  <View style={styles.holidayRow }>
-                    <View style={{ 
-                      flexDirection:'row', 
-                      justifyContent:'flex-start', 
+                  <View style={{
+                    flexDirection:'column',
+                    }}>
+
+                    {/* RIGA */}
+                    <View style={{
+                      width:'100%',
+                      flexDirection:'row',
                       alignItems:'flex-start',
-                      //borderWidth:1,
-                      maxWidth:'70%'}}>
-                      
-                      {/* CERCHIO COLORATO CON DATA */}
-                      {holiday.endDate ? // 1) STAMPA CERCHIETTO SOTTOSTANTE IN OGNI CASO, 2) SE E' UN PERIODO SPOSTATO 6PX A DX
-                        <View style={[styles.dot32noshadow, {marginLeft:6}]} />
-                          :
-                        <View style={styles.dot32noshadow} />
-                      }
-                      <View style={styles.dot32}>
-                        <Text style={styles.dot32text}>{holiday.startDate.getDate()}</Text>
+                      }}>
+                      {/* DOT32 */}
+                      <View>
+                        {holiday.endDate ? 
+                          <View style={[styles.dot32noshadow, {marginLeft:6}]} />
+                            :
+                          <View style={styles.dot32noshadow} />
+                        }
+                        <View style={styles.dot32}>
+                          <Text style={styles.dot32text}>{holiday.startDate.getDate()}</Text>
+                        </View>
                       </View>
 
-                      <View style={{flexDirection:'column'}} >
-
-                        <View style={{flexDirection:'row', flexWrap: 'wrap',}}>
-                          {/* 1) SE GIORNO SINGOLO STAMPA DATA SINGOLA CON MESE ESTESO (E ANNO, SOLO SE DIVERSO DALL'ANNO IN CORSO) 
-                              2) SE PERIODO STAMPA DOPPIA DATA CON MESE ABBREVIATO
-                                 STAMPA ANNO SOLO SE NON E' UN EVENTO RICORRENTE*/}
-                          {!holiday.endDate ? 
-                            <>
-                              <Text style={styles.itemDate}>{`${holiday.startDate.getDate()} ${months[holiday.startDate.getMonth()]?.label}`}</Text>
-                              {/*  SCRIVE ANNO (SOLO SE DIVERSO DALL' ANNO CORRENTE) */}
-                              {holiday.startDate.getFullYear() !== new Date().getFullYear() && <Text style={styles.itemDate}>{holiday.startDate.getFullYear()}</Text>}
-                            </>
+                      {/* TESTO */}
+                      <View style={{flex:1, flexDirection:'column', paddingRight:12}}>
+                        {!holiday.endDate ? 
+                          <>
+                            <Text style={styles.itemDate}>{`${holiday.startDate.getDate()} ${months[holiday.startDate.getMonth()]?.label}`}</Text>
+                            {/*  SCRIVE ANNO (SOLO SE DIVERSO DALL' ANNO CORRENTE) */}
+                            {holiday.startDate.getFullYear() !== new Date().getFullYear() && <Text style={styles.itemDate}>{holiday.startDate.getFullYear()}</Text>}
+                          </>
                           :
-                            <Text style={styles.itemDate}>
-                              {holiday.startDate.getDate()}
-                              {' '}
-                              {months[holiday.startDate.getMonth()]?.label.slice(0,3)}
-                              {' '}
-                              {holiday.repeatOnDate || holiday.repeatOnDay ? '' : holiday.startDate.getFullYear()} 
-                              {'-'}
-                              {holiday.endDate.getDate()}
-                              {' '}
-                              {months[holiday.endDate.getMonth()]?.label.slice(0,3)}
-                              {' '}
-                              {holiday.repeatOnDate || holiday.repeatOnDay ? '' : holiday.endDate.getFullYear()}
+                          <Text style={styles.itemDate}>
+                            {holiday.startDate.getDate()}
+                            {' '}
+                            {months[holiday.startDate.getMonth()]?.label.slice(0,3)}
+                            {' '}
+                            {holiday.repeatOnDate || holiday.repeatOnDay ? '' : holiday.startDate.getFullYear()} 
+                            {'-'}
+                            {holiday.endDate.getDate()}
+                            {' '}
+                            {months[holiday.endDate.getMonth()]?.label.slice(0,3)}
+                            {' '}
+                            {holiday.repeatOnDate || holiday.repeatOnDay ? null : holiday.endDate.getFullYear()}
+                          </Text>
+                        }
+
+                        {/* DESCRIZIONE */}
+                        <Text 
+                          style={[
+                            styles.itemDescription, 
+                            {
+                              flex:1,
+                              flexWrap:'wrap',
+                            }]}> 
+                          {holiday.description}
+                        </Text>
+
+                        {/* REPEAT ON DATE/DAY */}
+                        {(holiday.repeatOnDate || holiday.repeatOnDay) && 
+                          <View style={{flexDirection:'row', alignItems:'flex-end'}}>
+                            <IconSymbol 
+                              size={16} 
+                              name="repeat" 
+                              color={colors.text} 
+                              style={{marginTop:8, marginLeft:10, marginRight:4, }}/>
+                            <Text style={[
+                              styles.itemDescription, 
+                              {
+                              paddingLeft: 0, 
+                              maxWidth:240, 
+                              fontStyle:'italic', 
+                              fontWeight:400
+                              }
+                            ]}>
+                              {(holiday.repeatOnDate || holiday.repeatOnDay) && dataLabel(myLanguage, 15)}
                             </Text>
-                          }
-                        </View>
-
-                        <Text style={[styles.itemDescription, {maxWidth:240}]} numberOfLines={1} ellipsizeMode="tail">{holiday.description}</Text>
-
-                        <View style={{flexDirection:'row', alignItems:'flex-end'}}>
-                          {(holiday.repeatOnDate || holiday.repeatOnDay) && <IconSymbol size={16} name="repeat" color={colors.text} style={{marginTop:8, marginLeft:10, marginRight:4, }}/>}
-                          <Text style={[styles.itemDescription, {paddingLeft: 0, maxWidth:240, fontStyle:'italic', fontWeight:400}]}>{(holiday.repeatOnDate || holiday.repeatOnDay) && dataLabel(myLanguage, 15)}</Text>
-                        </View>
-
+                          </View>
+                        }
                       </View>
 
+                      {/* ICONE CONDIVISIONE */}
+                      <View>
+                        <View style={{
+                          flexDirection:'row',
+                          justifyContent:'flex-end',
+                          //backgroundColor:'fuchsia', 
+                          }}>
+                          <View style={styles.itemActions}>
+                            <TouchableOpacity onPress={() => handleShare(index)}>
+                              <IconSymbol name="square.and.arrow.up" size={24} color={colors.blueBar} />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => handleEdit(index)} style={{marginLeft:10}}>
+                              <IconSymbol name="pencil" size={20} color={colors.blueBar} />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => handleDelete(index)} style={{ marginLeft: 10}}>
+                              <IconSymbol name="trash" size={20} color={colors.blueBar} />
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      </View>
                     </View>
-                    <View>
-                    <View style={styles.itemActions}>
-                      <TouchableOpacity onPress={() => handleShare(index)}>
-                        <IconSymbol name="square.and.arrow.up" size={24} color={colors.blueBar} />
-                      </TouchableOpacity>
-                      <TouchableOpacity onPress={() => handleEdit(index)} style={{marginLeft:10}}>
-                        <IconSymbol name="pencil" size={20} color={colors.blueBar} />
-                      </TouchableOpacity>
-                      <TouchableOpacity onPress={() => handleDelete(index)} style={{ marginLeft: 10}}>
-                        <IconSymbol name="trash" size={20} color={colors.blueBar} />
-                      </TouchableOpacity>
-                    </View>
-                    </View>
+
                   </View>
                   {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
-                  {index !== newPersonalHolydays.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
+                  {index !== newPersonalHolydays.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border, marginVertical:16}}></View>}
                 </React.Fragment>
               ))}
+
             </View>
           </Suspense>
         )}

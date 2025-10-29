@@ -305,7 +305,7 @@ export function holydayLabels(language,item) {
         'Questa data è già presente ',                              // 25
         'Come funziona?',                                           // 26
         'FAQ / Info Privacy',                                       // 27 ex 'FAQ / Info Privacy'
-        'Vorrei condididere con te questo evento:',                 // 28
+        'Vorrei condividere con te questo evento:',                 // 28
         'Scarica PontiVIA!'                                         // 29
     ],
     'fr':[
@@ -616,7 +616,7 @@ export function calendarScrenLabels(language, item) {
             'Possibile ponte!',                         // 9
             'Annulla',                                  // 10
             'Aggiungi',                                 // 11
-            'Vorrei condididere con te questo evento:', // 12
+            'Vorrei condividere con te questo evento:', // 12
             'Scarica PontiVIA!'                         // 13
         ],
         'fr':[
