@@ -18,7 +18,7 @@ import * as SplashScreen from 'expo-splash-screen';
 export default function TabLayout() {
 
 SplashScreen.setOptions({
-  duration: 2000, // Esempio: 1000 millisecondi (1 secondo)
+  duration: 1500, // Esempio: 1000 millisecondi (1 secondo)
   fade: true,
 });
 
@@ -68,7 +68,7 @@ SplashScreen.setOptions({
             tabBar={ props => <SplittedBar {...props} />}
             screenOptions={{
               headerShown: false,
-              animation: 'shift', // fade | shift | none
+              animation: 'fade', // fade | shift | none
               transitionSpec: {
                 animation: 'timing',
                 config: {
@@ -116,6 +116,9 @@ SplashScreen.setOptions({
                 ),
               }}
             />
+
+
+            
           </Tabs>          
         </ThemeProvider>
       </MenuProvider>

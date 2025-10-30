@@ -479,7 +479,7 @@ export default function Preferences() {
           </View>
 
           {/* INFO / PRIVACY  ############################################################################# */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
               style={[styles.groupContainer, {
                 flex:1,
                 padding:16,
@@ -497,7 +497,7 @@ export default function Preferences() {
                     fontWeight:600,
                     color: colors.blueBar,
                   }}>{switchNames(myLanguage, 16)}</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {/* SPACER  ############################################################################# */}
           <View style={{ height: 240 }} />

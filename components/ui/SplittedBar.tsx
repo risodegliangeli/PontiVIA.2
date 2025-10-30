@@ -32,10 +32,7 @@ const useThemeColors = () => {
 export default function CustomTabBar({ route, focused: isFocused, event, state, descriptors, navigation}) {
 
   const myLanguage = (getLocales()[0].languageTag).slice(0,2);
-
   const [splittedTotalWidth, setSplittedTotalWidth] = useState<number>(0);
-
-  // DIMENSIONI WINDOW
   const windowWidth: number = Dimensions.get('window').width;
   
   useEffect( () => {
@@ -188,7 +185,6 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
       borderRadius: splittedBarHeigth,
       overflow:'hidden',
       backgroundColor: colors.tabBarBackgroundIos,
-      // elevation:4,
       shadowColor: colors.black, // iOS shadow
       shadowOffset: {
         width: 2,
@@ -256,43 +252,28 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
     },
     // FOCUSED DOT PLAIN (ANDROID)
     backgroundDotPlain: {
-      width: doubleItemsSize/2 - itemsInternalPadding,
       height: splittedBarHeigth - itemsInternalPadding * 2,
-
-      borderRadius: '100%', //splittedBarHeigth,
-      borderWidth:1,
-      borderColor: 'rgba(217,217,217,1)',
-
+      opacity:.75,
+      borderRadius: 999, //splittedBarHeigth,
       backgroundColor: colors.tabBarFocusDotAndroid,
-
-      elevation:0,
-      shadowColor: colors.black, 
-      shadowOffset: {
-        width: 2,
-        height: 4, 
-      },
-      shadowOpacity: 0.35,
-      shadowRadius: 8            
+      borderWidth:1,
+      borderColor: 'rgba(0, 0, 0, .08)'
     },
     // FOCUSED DOT LIQUID (IOS)
     backgroundDotLiquid: {
-      width: doubleItemsSize/2 - itemsInternalPadding,
       height: splittedBarHeigth - itemsInternalPadding * 2,
-
-      borderRadius: 999, //splittedBarHeigth,
-      // borderWidth:1,
-      // borderColor: 'rgba(255, 255, 255, .75)',
- 
+      borderRadius: 999, 
       backgroundColor: colors.tabBarFocusDotIos,
-
-      elevation:4,
       shadowColor: colors.black, 
       shadowOffset: {
-        width: 1,
+        width: 0,
         height: 2, 
       },
-      shadowOpacity: 0.35,
-      shadowRadius: 2            
+      shadowOpacity: 0.55,
+      shadowRadius: 4,
+      borderWidth:1,
+      borderColor: 'rgba(0, 0, 0, .06)'
+           
     },
   });
 
@@ -320,27 +301,34 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
 
     }, [isIndexFocused, isHolydaysFocused, isPreferencesFocused]);
 
+    // POSIZIONE FOCUSED DOT
     const translateX = animatedValue.interpolate({ // POSIZIONE IN BASE AI TAB
       inputRange: [-1, 0, 1],
       outputRange: [
-        -10, // INDEX        
-        splittedTotalWidth - doubleItemsSize - 32, // HOLYDAYS
-        splittedTotalWidth - splittedBarHeigth + 4 // PREFERENCES
+        (splittedBarHeigth/8) * -1,                 // INDEX        
+        splittedTotalWidth/4 + itemsInternalPadding*2,       // HOLYDAYS
+        splittedTotalWidth - splittedBarHeigth + 4  // PREFERENCES
       ], 
     });
+    // PARAMETRI ALLUNGAMENTO ORIZZONTALE
     const scaleX = animatedValue.interpolate({ // VALORE ORIZZONTALE
       inputRange: [-1, -0.5, 0, 0.5, 1],
       outputRange: [.8, 1.3, .8, 1.3, 1], // si allunga durante il movimento
     });
+    // PARAMETRI ALLUNGAMENTO VERTICALE
     const scaleY = animatedValue.interpolate({ // VALORE VERTICALE
       inputRange: [-1, -0.5, 0, 0.5,  1],
-      outputRange: [.75, 0.6, .75, 0.6, 1], // si schiaccia durante il movimento
+      outputRange: [.8, 0.5, .8, 0.5, 1], // si schiaccia durante il movimento
     });
+
+    // EFFETTO ALLUNGAMENTO IN BASE AI PARAMETRI SOPRA
     const animatedWidth = animatedValue.interpolate({
-      inputRange: [-1, 0, 1],
+      inputRange: [-1, -0.25, 0, 0.75, 1],
       outputRange: [
-        doubleItemsSize*.65, // - itemsInternalPadding,
-        doubleItemsSize*.65 - itemsInternalPadding,
+        doubleItemsSize*.64,
+        doubleItemsSize*.5,
+        doubleItemsSize*.64, // - itemsInternalPadding,
+        doubleItemsSize*.5,
         splittedBarHeigth - itemsInternalPadding * 2 - 2
       ],
     });
@@ -365,19 +353,19 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
       1: {color: 'rgba(0,0,0, 1)'}
     },
   });
-  const gradientColors = gradient.colors;
-  const locations = gradient.locations;
+  // const gradientColors = gradient.colors;
+  // const locations = gradient.locations;
 
   return (
     <View style={styles.bottomSpace}>
 
       {/*  ===== SPLITTED TABBAR ===== */}
-      {/* index   0: base che definisce le misure di tutto (splittedBase)
-                  1: tondo opaco di sfondo doppio e singolo (doubleItems/singleItem)
-                  2: binario di scorrimento del focused dot (RailBeyond)
-                  3: contenitore trasparente identico a #0
-                  4: touchables icons
-                    */}     
+      {/* z-index   0: base che definisce le misure di tutto (splittedBase)
+                    1: tondo opaco di sfondo doppio e singolo (doubleItems/singleItem)
+                    2: binario di scorrimento del focused dot (RailBeyond)
+                    3: contenitore trasparente identico a #0
+                    4: touchables icons
+      */}     
 
       {/* BASE GENERALE WIDTH 100% DEI CONTENITORI */}   
       <View style={styles.splittedBase}>      
@@ -386,24 +374,26 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
         <View style={{
           width:doubleItemsSize,
           borderRadius: splittedBarHeigth,
-          elevation:16,
+          elevation:18,
           shadowColor: colors.black, 
-          shadowOffset: { width: 2, height: 8, },
-          shadowOpacity: 0.35,
+          shadowOffset: { width: 0, height: 8, },
+          shadowOpacity: 0.45,
           shadowRadius: 12,   
-          marginVertical:8,       
+          marginVertical:8, 
+          borderWidth: 1, 
+          borderColor: Platform.OS === 'ios' ? colors.tabBarBorderIos : colors.tabBarBorderAndroid,     
           }}>
-
-            {/* BLUR/NON BLUR DOPPIO */}
+            {/* BLUR DOPPIO 
+                se iOS = blur
+                se Android & light Theme = blur
+                altrimenti no blur */}
             {Platform.OS === 'ios' ? 
-              <BlurView
-                style={styles.iosBlurView} // IOS: BLUR
-                intensity={24}
-              /> 
+              <BlurView style={styles.iosBlurView} intensity={24} /> 
             :
-              <View
-                style={styles.androidBlurView} // ANDROID: NO BLUR, SEMPLICE VIEW
-              /> 
+              useColorScheme() === 'light' ?
+                <BlurView style={styles.iosBlurView} intensity={14} experimentalBlurMethod="dimezisBlurView" />
+                :
+                <View style={styles.androidBlurView} />
             }
         </View>
 
@@ -411,33 +401,32 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
         <View style={{
           width:splittedBarHeigth,
           borderRadius: splittedBarHeigth,
-          elevation:4,
+          elevation:18,
           shadowColor: colors.black, 
           shadowOffset: {
             width: 2,
             height: 4, 
           },
-          shadowOpacity: 0.35,
-          shadowRadius: 8            
+          shadowOpacity: 0.45,
+          shadowRadius: 12,
+          borderWidth: 1, 
+          borderColor: colors.tabBarBorderIos,     
           }}>
 
-            {/* BLUR/NON BLUR SINGOLO */}
+            {/* BLUR SINGOLO */}
             {Platform.OS === 'ios' ? 
-              <BlurView
-                style={styles.iosBlurView}
-                intensity={16}
-                //experimentalBlurMethod="dimezisBlurView"
-              /> 
+              <BlurView style={styles.iosBlurView} intensity={16} />               
             :
-            <View
-                style={styles.androidBlurView}
-              /> 
+              useColorScheme() === 'light' ?
+                <BlurView style={styles.iosBlurView} intensity={14} experimentalBlurMethod="dimezisBlurView" />
+                :
+                <View style={styles.androidBlurView} /> 
             }
         </View>        
-        
 
         {/* FOCUSED DOT ANIMATO */}
         <RailBeyond />  
+
       </View>
 
       <View style={styles.splittedBase}>{/* index 3 */}  
@@ -459,6 +448,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
             <PrefIcon />  
           </TouchableOpacity>
         </View>
+
         {/* SINGOLO */}
         <View style={styles.singleItemTransparent}>
           <TouchableOpacity style={[styles.singleItemTouchable, styles.singleItemTransparent]}

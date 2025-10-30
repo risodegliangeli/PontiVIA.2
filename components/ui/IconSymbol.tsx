@@ -27,6 +27,8 @@ const MAPPING = {
   'square.and.arrow.up': 'share',                 // CONDIVIDI
   'info.circle.fill':'info',                      // COME FUNZIONA?
   'calendar.badge.plus' : 'edit-calendar',        // PULS CALENDARIO MODAL PONTE
+  'chevron.right.circle':'arrow-circle-right',    // NAVIGAZIONE INFO
+  'chevron.left.circle':'arrow-circle-left',      // NAVIGAZIONE INFO
   // 'gobackward':'settings-backup-restore', // restore preferences
   // 'calendar.circle': 'event',
   // 'list.dash': 'list', // route holydays

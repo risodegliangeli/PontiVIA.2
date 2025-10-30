@@ -1,8 +1,3 @@
-import { Colors } from '@/constants/Colors';
-import MaskedView from '@react-native-masked-view/masked-view';
-import { BlurView } from 'expo-blur';
-import { Image } from 'expo-image';
-import { LinearGradient } from 'expo-linear-gradient';
 import React, { useEffect, useRef } from 'react';
 import {
   Animated,
@@ -13,8 +8,14 @@ import {
   Text,
   TouchableOpacity,
   useColorScheme,
-  View
+  View, 
+  Image
 } from 'react-native';
+import { Colors } from '@/constants/Colors';
+//import { Image } from 'expo-image';
+import { LinearGradient } from 'expo-linear-gradient';
+import MaskedView from '@react-native-masked-view/masked-view';
+import { BlurView } from 'expo-blur';
 import { easeGradient } from 'react-native-easing-gradient';
 
 const w = Dimensions.get('window').width;
@@ -29,7 +30,14 @@ const useThemeColors = () => {
                                                 MAIN
                                       
 ########################################################################################################### */
-export default function CustomTabBar({ route, focused: isFocused, event, state, descriptors, navigation}) {
+export default function CustomTabBar({ 
+  state, 
+  navigation,
+  // route, 
+  // focused: isFocused, 
+  //event, 
+  //descriptors, 
+}) {
   
   // GESTIONE COLORI
   const colors = useThemeColors();  

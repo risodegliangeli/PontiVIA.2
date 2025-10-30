@@ -888,7 +888,7 @@ const handleAddEvent = async (
             onPress={ () => {
               Alert.alert(
                 dataLabel(myLanguage, 7),  // Attenzione
-                'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?',// Vuoi eliminare tutte le date ecc.?
+                'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?\n\n(ONLY TEMPORARILY EXTERNAL)',// Vuoi eliminare tutte le date ecc.?
                 [
                   {
                     text: dataLabel(myLanguage, 9), // Annulla
@@ -1199,7 +1199,7 @@ const handleAddEvent = async (
         </View>
 
         {/* INFO / PRIVACY ########################################################################### */}
-        <TouchableOpacity
+        {/* <TouchableOpacity
             style={[styles.listItem, {
               flex:1,
               padding:16,
@@ -1217,7 +1217,7 @@ const handleAddEvent = async (
                   fontWeight:600,
                   color: colors.blueBar,
                 }}>{dataLabel(myLanguage, 26)}</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
         {/* SPACER ################################################################################### */}
         <View style={{height:240}}></View>

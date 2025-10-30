@@ -15,7 +15,7 @@ export const Colors = {
     tabBarBorderAndroid: 'rgba(255, 255, 255, 0.65)',
     tabBarInactiveItem: 'rgba(99, 99, 99, 1)',
     tabBarFocusDotIos: 'rgba(219, 219, 219, 0.55)',
-    tabBarFocusDotAndroid: 'rgba(217,217,217,1)',
+    tabBarFocusDotAndroid: 'rgba(184, 184, 184, 0.75)',
     tabBarActiveItem: 'rgba(0, 136, 255, 1)',
     text: 'rgba(51, 51, 51, 1)',            // TESTO NERO #333
     disabled: 'rgba(51, 51, 51, .5)',       // NERO 50%
@@ -45,11 +45,11 @@ export const Colors = {
     tabBarBackground: 'rgba(51, 51, 51, .55)',
     tabBarBackgroundIos: 'rgba(134,103,133,1)',
     tabBarBackgroundAndroid: 'rgba(134,103,133,1)',
-    tabBarBorderIos: 'rgba(255, 255, 255, .08)',
+    tabBarBorderIos: 'rgba(141, 141, 141, 0.08)',
     tabBarBorderAndroid: 'rgba(255, 255, 255, 0.08)',
     tabBarInactiveItem: 'rgba(255, 255, 255, 1)',
     tabBarFocusDotIos: 'rgba(215,191,214,1)',
-    tabBarFocusDotAndroid: 'rgba(215,191,214,1)',
+    tabBarFocusDotAndroid: 'rgba(215,191,214,.8)',
     tabBarActiveItem: 'rgba(0, 136, 255, 1)',
     text: 'rgba(255, 255, 255, 1)',         // BIANCO
     disabled: 'rgba(255, 255, 255, .6)',    // BIANCO 50%
