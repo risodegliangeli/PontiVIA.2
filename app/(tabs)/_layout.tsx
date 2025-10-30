@@ -1,7 +1,7 @@
 import SplittedBar from '@/components/ui/SplittedBar';// MY CUSTOM SPLITTED BAR
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Tabs } from 'expo-router';
-import { StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet, useColorScheme, View, Text } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu';
 import MaskedView from "@react-native-masked-view/masked-view";
 import { BlurView } from 'expo-blur';
@@ -62,7 +62,7 @@ SplashScreen.setOptions({
   return (
     <HolydaysProvider>
       <MenuProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>          
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}> 
           <Tabs
             initialRouteName="index"
             tabBar={ props => <SplittedBar {...props} />}
@@ -116,7 +116,7 @@ SplashScreen.setOptions({
                 ),
               }}
             />
-          </Tabs>
+          </Tabs>          
         </ThemeProvider>
       </MenuProvider>
     </HolydaysProvider>

@@ -33,7 +33,7 @@ import * as Linking from 'expo-linking';
 
 // GOOGLE ADMOB ///////////////////////////////////
 import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
-import { launchDuration } from 'expo-updates';
+//import { launchDuration } from 'expo-updates';
 
 // INIZIALIZZA ADMOB
 mobileAds()
@@ -47,7 +47,6 @@ mobileAds()
 const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 // const adUnitId = TestIds;
 // GOOGLE ADMOB ///////////////////////////////////
-
 
 // TYPE HOLYDAY (vecchio)--> MUORE COL REFACTORING
 type Holiday = {          // DEFINIZIONE DI holiday
@@ -881,24 +880,40 @@ const handleAddEvent = async (
         <View style={{
         flexDirection:'column',
         alignItems:'center',
-        gap:16,
         }}>
-          <Text style={[styles.sectionTitle, { flex:1, marginBottom:32}]}>{dataLabel(myLanguage, 0)}</Text> 
+          <Text style={[styles.sectionTitle, { flex:1, marginBottom:6}]}>{dataLabel(myLanguage, 0)}</Text> 
+
           {/* COME FUNZIONA? */}
-          {/* <Pressable
+          <Pressable
             onPress={ () => {
+              Alert.alert(
+                dataLabel(myLanguage, 7),  // Attenzione
+                'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?',// Vuoi eliminare tutte le date ecc.?
+                [
+                  {
+                    text: dataLabel(myLanguage, 9), // Annulla
+                    style: "cancel"
+                  },
+                  { 
+                    text: 'Prosegui', // Elimina
+                    onPress: async () => {
+                      await Linking.openURL('https://pontivia-2025.web.app/')
+                    }
+                  }
+                ]
+              );
             }}>
               <Text style={{
-                fontSize:18,
+                fontSize:16,
                 fontWeight:'600',
                 color: colors.blueBar,
                 marginBottom:32,
               }}>
                 {dataLabel(myLanguage, 26)}</Text>
-          </Pressable> */}
+          </Pressable>
         </View>
 
-        {/* PULSANTONE + GIORNI SPECIALI ########################################################################## */}
+        {/* PULSANTONE + GIORNI SPECIALI ############################################################# */}
         <TouchableOpacity 
           style={styles.specialDays}
           onPress={ () => { 
@@ -927,7 +942,7 @@ const handleAddEvent = async (
         </View>
 
 
-        {/* CARD GIORNI SPECIALI ############################################################################# */}
+        {/* CARD GIORNI SPECIALI ##################################################################### */}
         {newPersonalHolydays.length > 0 && (
           <Suspense>
             {/* CARD */}
@@ -968,9 +983,7 @@ const handleAddEvent = async (
               {/* LISTA RIGHE */}
               {newPersonalHolydays.sort((a: any, b: any) => a.startDate - b.startDate).map((holiday, index) => (
                 <React.Fragment key={index}>
-                  <View style={{
-                    flexDirection:'column',
-                    }}>
+                  <View style={{flexDirection:'column',}}>
 
                     {/* RIGA */}
                     <View style={{
@@ -978,6 +991,7 @@ const handleAddEvent = async (
                       flexDirection:'row',
                       alignItems:'flex-start',
                       }}>
+
                       {/* DOT32 */}
                       <View>
                         {holiday.endDate ? 
@@ -1021,6 +1035,7 @@ const handleAddEvent = async (
                             {
                               flex:1,
                               flexWrap:'wrap',
+                              marginTop:4,
                             }]}> 
                           {holiday.description}
                         </Text>
@@ -1068,6 +1083,7 @@ const handleAddEvent = async (
                           </View>
                         </View>
                       </View>
+
                     </View>
 
                   </View>
@@ -1080,99 +1096,98 @@ const handleAddEvent = async (
           </Suspense>
         )}
        
-        {/* FESTIVITA NAZIONALI ############################################################################# */}
-        
-        {/* TITOLO */}
-        <View style={styles.listItem}>
-                  <Text style={[ styles.listTitle, { textAlign:'center' } ]}>{dataLabel(myLanguage, 2)}</Text>
+        {/* FESTIVITA NAZIONALI ###################################################################### */}
+          <View style={styles.listItem}>
+            {/* TITOLO */}
+            <Text style={[ styles.listTitle, { textAlign:'center' } ]}>{dataLabel(myLanguage, 2)}</Text>
 
-          {/* DROPDOWN PAESE */}
-          <View style={styles.dropDownCountry}>
-            <DropdownCountry 
-              selectedValue={myCountry}
-              onChange={ async (item) => {
-                setMyCountry(item);
-                await saveData(item, 'myCountry');
-                setNationalExcluded([]);
-                await saveData([], 'nationalExcluded');
-              }}
-            />
-            { myCountry.slice(0,2) === myLanguage  ? null : <ResetCountryButton/> }
-          </View>
+            {/* DROPDOWN PAESE */}
+            <View style={styles.dropDownCountry}>
+              <DropdownCountry 
+                selectedValue={myCountry}
+                onChange={ async (item) => {
+                  setMyCountry(item);
+                  await saveData(item, 'myCountry');
+                  setNationalExcluded([]);
+                  await saveData([], 'nationalExcluded');
+                }}
+              />
+              { myCountry.slice(0,2) === myLanguage  ? null : <ResetCountryButton/> }
+            </View>
 
-          {nationalHolydays.map((holiday, index) => (
-            <React.Fragment key={index} >
-              <View 
-                key={index} 
-                style={[styles.holidayRow, {justifyContent:'space-between', alignItems:'center'}]}>
-                  <View style={[styles.holidayRow, {justifyContent:'flex-start', alignItems:'flex-start'}]}>
-                    <View style={{width:44, height:44, borderRadius:24, backgroundColor: colors.dot32}}>
-                      <Text style={styles.dot32text}>{holiday.day}</Text>
+            {nationalHolydays.map((holiday, index) => (
+              <React.Fragment key={index} >
+                <View 
+                  key={index} 
+                  style={[styles.holidayRow, {justifyContent:'space-between', alignItems:'center'}]}>
+                    <View style={[styles.holidayRow, {justifyContent:'flex-start', alignItems:'flex-start'}]}>
+                      <View style={{width:44, height:44, borderRadius:24, backgroundColor: colors.dot32}}>
+                        <Text style={styles.dot32text}>{holiday.day}</Text>
+                      </View>
+                      <View style={{flexDirection:'column'}}>
+                        <Text 
+                          style={[
+                            styles.itemDate,
+                            {
+                              color: nationalExcluded.indexOf(index) !== -1 ? colors.disabled : colors.text 
+                            }
+                          ]} >
+                          {`${holiday.day} ${months[holiday.month]?.label}`}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.itemDescription,
+                            {
+                              maxWidth: 240,
+                              color: nationalExcluded.indexOf(index) !== -1 ? colors.disabled : colors.text
+                            }
+                          ]}
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                        >
+                          {holiday.description}
+                        </Text>
+                      </View>
                     </View>
-                    <View style={{flexDirection:'column'}}>
-                      <Text 
-                        style={[
-                          styles.itemDate,
-                          {
-                            color: nationalExcluded.indexOf(index) !== -1 ? colors.disabled : colors.text 
-                          }
-                        ]} >
-                        {`${holiday.day} ${months[holiday.month]?.label}`}
-                      </Text>
-                      <Text
-                        style={[
-                          styles.itemDescription,
-                          {
-                            maxWidth: 240,
-                            color: nationalExcluded.indexOf(index) !== -1 ? colors.disabled : colors.text
-                          }
-                        ]}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                      >
-                        {holiday.description}
-                      </Text>
-                    </View>
-                  </View>
-                  <TouchableOpacity
-                    onPress={ async () => {                      
-                      // RIGA DA NON CONTEGGIARE
-                      // 1) SE NON ESISTE NELLA LISTA
-                      if (nationalExcluded.indexOf(index) === -1) {                        
-                        // AGGIUNGE A nationalExcluded
-                        let tempNationalExcluded: number[] = [...nationalExcluded, index];
-                          setNationalExcluded(tempNationalExcluded);
-                          await saveData(tempNationalExcluded, 'nationalExcluded');
-                      } else { 
-                        // ALTRIMENTI ELIMINA DA nationalExcluded
-                        let tempNationalExcluded: number[] = nationalExcluded.filter(i => i !== index);
-                          setNationalExcluded(tempNationalExcluded);
-                          await saveData(tempNationalExcluded, 'nationalExcluded');
+                    <TouchableOpacity
+                      onPress={ async () => {                      
+                        // RIGA DA NON CONTEGGIARE
+                        // 1) SE NON ESISTE NELLA LISTA
+                        if (nationalExcluded.indexOf(index) === -1) {                        
+                          // AGGIUNGE A nationalExcluded
+                          let tempNationalExcluded: number[] = [...nationalExcluded, index];
+                            setNationalExcluded(tempNationalExcluded);
+                            await saveData(tempNationalExcluded, 'nationalExcluded');
+                        } else { 
+                          // ALTRIMENTI ELIMINA DA nationalExcluded
+                          let tempNationalExcluded: number[] = nationalExcluded.filter(i => i !== index);
+                            setNationalExcluded(tempNationalExcluded);
+                            await saveData(tempNationalExcluded, 'nationalExcluded');
+                        }
+                      }}>
+                      {nationalExcluded.indexOf(index) === -1 ?
+                        <IconSymbol 
+                          style={{paddingBottom:8,}}
+                          size={24} 
+                          name={"checkmark.circle.fill"}
+                          color={colors.blueBar} 
+                          />
+                        :
+                        <IconSymbol 
+                          style={{paddingBottom:8,}}
+                          size={24} 
+                          name={"xmark"}
+                          color={colors.disabled} 
+                          />
                       }
-                    }}>
-                    {nationalExcluded.indexOf(index) === -1 ?
-                      <IconSymbol 
-                        style={{paddingBottom:8,}}
-                        size={24} 
-                        name={"checkmark.circle.fill"}
-                        color={colors.blueBar} 
-                        />
-                      :
-                      <IconSymbol 
-                        style={{paddingBottom:8,}}
-                        size={24} 
-                        name={"xmark"}
-                        color={colors.disabled} 
-                        />
-                    }
-                  </TouchableOpacity>
-              </View> 
+                    </TouchableOpacity>
+                </View> 
 
-              {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
-              {index !== nationalHolydays.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
-            </React.Fragment>
-          ))}
-        </View>
+                {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
+                {index !== nationalHolydays.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
+              </React.Fragment>
+            ))}
+          </View>
 
         {/* GOOGLE ADMOB ############################################################################# */}
         <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
@@ -1183,7 +1198,7 @@ const handleAddEvent = async (
               size={BannerAdSize.MEDIUM_RECTANGLE}/>
         </View>
 
-        {/* INFO / PRIVACY */}
+        {/* INFO / PRIVACY ########################################################################### */}
         <TouchableOpacity
             style={[styles.listItem, {
               flex:1,
@@ -1204,8 +1219,7 @@ const handleAddEvent = async (
                 }}>{dataLabel(myLanguage, 26)}</Text>
           </TouchableOpacity>
 
-
-        {/* SPACER */}
+        {/* SPACER ################################################################################### */}
         <View style={{height:240}}></View>
 
       </ScrollView>

@@ -36,9 +36,6 @@ interface DropdownCountryProps {
 /* ================================================================ */
 const DropdownCountry: React.FC<DropdownCountryProps> = ({selectedValue, onChange}) => {
 
-
-
-
   const renderItem = (item) => {
     return (
       <View style={[
@@ -55,8 +52,6 @@ const DropdownCountry: React.FC<DropdownCountryProps> = ({selectedValue, onChang
       </View>
     );
   };
-
-
 
   const { 
         myCountry, 
@@ -147,7 +142,6 @@ const DropdownCountry: React.FC<DropdownCountryProps> = ({selectedValue, onChang
 
   useEffect ( () => {
     setValue(myCountry);
-    // console.log('(DropdownCountry.tsx) *useEffect* --> è cambiato myCountry');
   }, [myCountry]);
 
   return (

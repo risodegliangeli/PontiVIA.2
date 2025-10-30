@@ -12,6 +12,7 @@ import * as Linking from 'expo-linking';
 import {
   ImageBackground,
   Platform,
+  Alert,
   ScrollView,
   StyleSheet,
   Switch,
@@ -20,21 +21,22 @@ import {
   useColorScheme,
   View,
   ViewStyle,
+  Pressable,
   } from 'react-native';
 
 // GOOGLE ADMOB ///////////////////////////////////
-import mobileAds, { BannerAd, BannerAdSize, useForeground } from 'react-native-google-mobile-ads';
+  import mobileAds, { BannerAd, BannerAdSize, useForeground } from 'react-native-google-mobile-ads';
 
-// INIZIALIZZA ADMOB
-mobileAds()
-  .initialize()
-  .then(adapterStatuses => {
-    console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
-  });
+  // INIZIALIZZA ADMOB
+  mobileAds()
+    .initialize()
+    .then(adapterStatuses => {
+      console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
+    });
 
-// ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
-// DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
-const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
+  // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
+  // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
+  const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 // GOOGLE ADMOB ///////////////////////////////////
 
 // NOMI GIORNI LOCALIZZATI
@@ -104,11 +106,8 @@ export default function Preferences() {
   
   // AGGANCIA LE VARIABILI myPreferences E preferences DAL CONTEXT
   const { 
-    //preferences, setPreferences, // CONTEXT PREFERENCES
     myPreferences, setMyPreferences,
-    //myLanguage
     } = useHolydays();
-    //console.log(`[PREFERENCES]> myPreferences ricevute dal Context: ${JSON.stringify(myPreferences)}`);
 
   // CARICA VARIABILE 'PREFERENCES' DAL LOCAL STORAGE
   const loadPreferences = async () => {
@@ -134,7 +133,6 @@ export default function Preferences() {
   }, []);
 
   const [dropdownSelected, setDropdownSelected] = useState<number>(Math.trunc(myPreferences.bridgeDuration)); 
-
 
   // GESTISCE PULSANTE 'MODIFICA LISTA FESTIVITA'
   const handleEditHolydays = () => { navigation.navigate('holydays') };
@@ -163,7 +161,6 @@ export default function Preferences() {
       fontWeight: '600',
       textAlign: 'center',
       color: colors.text,
-      paddingBottom:16,
     },
     // CONTAINER TITOLO PAGINA
     sectionContainer: {
@@ -338,8 +335,41 @@ export default function Preferences() {
         <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
 
           {/* ======================== TITOLO PAGINA  ======================== */}
-          <View style={styles.pageTitle}>
-            <Text style={styles.sectionTitle}>{switchNames(myLanguage,12)}</Text>
+          <View style={{
+            flexDirection:'column',
+            alignItems:'center',
+            }}>            
+            <Text style={[styles.sectionTitle, {flex:1, marginBottom:6}]}>
+              {switchNames(myLanguage,12)}
+            </Text>
+            {/* COME FUNZIONA? */}
+            <Pressable
+              onPress={ () => {
+                Alert.alert(
+                  'Attenzione',  // Attenzione
+                  'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?',// Vuoi eliminare tutte le date ecc.?
+                  [
+                    {
+                      text: 'Annulla', // Annulla
+                      style: "cancel"
+                    },
+                    { 
+                      text: 'Prosegui', // Elimina
+                      onPress: async () => {
+                        await Linking.openURL('https://pontivia-2025.web.app/')
+                      }
+                    }
+                  ]
+                );                
+              }}>
+                <Text style={{
+                  fontSize:16,
+                  fontWeight:'600',
+                  color: colors.blueBar,
+                  marginBottom:32,
+                }}>
+                  {switchNames(myLanguage, 16)}</Text>
+            </Pressable>
           </View>
 
           {/* GOOGLE ADMOB ############################################################################# */}
@@ -375,6 +405,7 @@ export default function Preferences() {
               await savePreferences();
             }}
           /> */}
+
           {/* ==================== SETTIMANA ==================== */}
           <View style={styles.groupContainer}>
             <View style={{width:'100%'}}>
@@ -394,6 +425,7 @@ export default function Preferences() {
             <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
             <PreferenceSwitch preferenceKey="lunedi"  />
           </View>
+
           {/* ==================== FESTIVITA NAZIONALI ==================== */}   
           <Suspense> 
             <View style={styles.groupContainer}>
@@ -416,9 +448,9 @@ export default function Preferences() {
               </View>
             </View>
           </Suspense>  
+
           {/* ==================== RICORRENZE CATTOLICHE  ==================== */}
           <Suspense>
-
             <View style={styles.groupContainer}>
               <View style={{width:'100%'}}>
                 <Text style={[styles.listTitle, {textAlign:'center'}]}>{switchNames(myLanguage, 14)}</Text>
@@ -437,7 +469,6 @@ export default function Preferences() {
             </View>
           </Suspense>
 
-
           {/* GOOGLE ADMOB ############################################################################# */}
           <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
             <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
@@ -447,29 +478,26 @@ export default function Preferences() {
                 size={BannerAdSize.MEDIUM_RECTANGLE}/>
           </View>
 
-
-
-        {/* INFO / PRIVACY  ############################################################################# */}
-        <TouchableOpacity
-            style={[styles.groupContainer, {
-              flex:1,
-              padding:16,
-              flexDirection:'row',
-              justifyContent:'center',
-              alignItems:'center',
-              gap:8,
-            }]}
-            onPress={ async () => {
-              await Linking.openURL('https://pontivia-2025.web.app/')
-              }}>
-                <IconSymbol size={28} name="info.circle.fill" color={colors.blueBar}/>
-                <Text style={{
-                  fontSize:18,
-                  fontWeight:600,
-                  color: colors.blueBar,
-                }}>{switchNames(myLanguage, 16)}</Text>
+          {/* INFO / PRIVACY  ############################################################################# */}
+          <TouchableOpacity
+              style={[styles.groupContainer, {
+                flex:1,
+                padding:16,
+                flexDirection:'row',
+                justifyContent:'center',
+                alignItems:'center',
+                gap:8,
+              }]}
+              onPress={ async () => {
+                await Linking.openURL('https://pontivia-2025.web.app/')
+                }}>
+                  <IconSymbol size={28} name="info.circle.fill" color={colors.blueBar}/>
+                  <Text style={{
+                    fontSize:18,
+                    fontWeight:600,
+                    color: colors.blueBar,
+                  }}>{switchNames(myLanguage, 16)}</Text>
           </TouchableOpacity>
-
 
           {/* SPACER  ############################################################################# */}
           <View style={{ height: 240 }} />

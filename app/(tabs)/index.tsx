@@ -5,12 +5,13 @@ import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useMemo, useRef,  } from 'react';
-import { Animated, Easing, ImageBackground, StyleSheet, useColorScheme, Text, TouchableOpacity } from 'react-native';
+import { Animated, Easing, ImageBackground, StyleSheet, useColorScheme, Text, TouchableOpacity, View } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { MovingHands } from '@/components/ui/MovingHands'; // MIO
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 // import { getLocales, } from 'expo-localization';
 import { indexLabels as dataLabel } from '@/components/dataLabel';
+import InfoPoint from '@/components/ui/InfoPoint';
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -73,7 +74,7 @@ export default function HomeScreen() {
   const cloud01Anim = new Animated.Value(0); // NUVOLETTA 1
   const cloud02Anim = new Animated.Value(0); // NUVOLETTA 2
 
-  // ANIMAZIONE //////////////////////////////////////////////////////
+  // ANIMAZIONE - 1 spostamento /////////////////////////////////////////////
   const startAnimation = () => {
 
       Animated.timing(logoSize, { // 1) TESTO E MANINA SI RIDUCONO (NON CAMBIA OPACITY)
@@ -115,6 +116,9 @@ export default function HomeScreen() {
       }, 500);
   }
 
+  // ANIMAZIONE - 2 opacita /////////////////////////////////////////////////
+  const cardOpacity = useRef(new Animated.Value(1)).current;
+
   // ANIMAZIONE DITO AL BOOT, SPARISCE DOPO 8 SEC.
   useEffect(() => {
     animationTimeout.current = setTimeout(() => {
@@ -136,8 +140,9 @@ export default function HomeScreen() {
     // CONTAINER CARDS CALENDARIO
     container: {
       transform: [
-        { translateY: cardMarginTop }
+        { translateY: cardMarginTop } // ANIM. SPOSTAMENTO
       ],
+      opacity: cardOpacity,           // ANIM. OPACITA
       flex: 1,
       width: '100%',
       maxWidth:600,
@@ -226,10 +231,13 @@ export default function HomeScreen() {
 
                 {/* WRAPPER TESTO E MANINA */}
                 <Animated.View style={styles.welcome}>
+                  
                   {/* TESTO WELCOME */}
                   <Text style={styles.welcomeText}>{dataLabel(myLanguage, 0)}</Text>
+                  
                   {/* MANINA ANIMATA */}
                   <MovingHands />
+
                 </Animated.View>
 
               {/* NUVOLETTA 1 */}
@@ -247,8 +255,12 @@ export default function HomeScreen() {
 
           </Animated.View>
 
+          {/* INFO */}
+          <InfoPoint />
+
           {/* STATUSBAR */}
           <StatusBar style={ useColorScheme() === 'dark' ? 'light' : 'dark' } />
+
       </ImageBackground> 
   );
 }

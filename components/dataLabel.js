@@ -672,7 +672,7 @@ export function calendarScrenLabels(language, item) {
             'Bridge!',                                  // 0
             'PontiVIA! found this bridge for you',      // 1
             'bridges found!',                           // 2
-            'bridge found!',                            // 3
+            'bridge day found!',                            // 3
             'From ',                                    // 4
             ' to ',                                     // 5
             ' days)',                                   // 6
