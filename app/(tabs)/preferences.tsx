@@ -9,6 +9,7 @@ import { getLocales,  } from 'expo-localization';
 import { dataLabel as switchNames } from '@/components/dataLabel'; // LABEL LOCALIZZATE
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import * as Linking from 'expo-linking';
+import SideLabel from '@/components/ui/SideLabel';
 import {
   ImageBackground,
   Platform,
@@ -343,7 +344,7 @@ export default function Preferences() {
               {switchNames(myLanguage,12)}
             </Text>
             {/* COME FUNZIONA? */}
-            <Pressable
+            {/* <Pressable
               onPress={ () => {
                 Alert.alert(
                   'Attenzione',  // Attenzione
@@ -369,7 +370,7 @@ export default function Preferences() {
                   marginBottom:32,
                 }}>
                   {switchNames(myLanguage, 16)}</Text>
-            </Pressable>
+            </Pressable> */}
           </View>
 
           {/* GOOGLE ADMOB ############################################################################# */}
@@ -499,8 +500,44 @@ export default function Preferences() {
                   }}>{switchNames(myLanguage, 16)}</Text>
           </TouchableOpacity> */}
 
+                      {/* COME FUNZIONA? */}
+            <Pressable
+              onPress={ () => {
+                Alert.alert(
+                  'Attenzione',  // Attenzione
+                  'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?',// Vuoi eliminare tutte le date ecc.?
+                  [
+                    {
+                      text: 'Annulla', // Annulla
+                      style: "cancel"
+                    },
+                    { 
+                      text: 'Prosegui', // Elimina
+                      onPress: async () => {
+                        await Linking.openURL('https://pontivia-2025.web.app/')
+                      }
+                    }
+                  ]
+                );                
+              }}>
+                <Text style={{
+                  fontSize:16,
+                  fontWeight:'600',
+                  color: colors.blueBar,
+                  marginBottom:32,
+                }}>
+                  {switchNames(myLanguage, 16)}</Text>
+            </Pressable>
+
+
+          {/* INFOPOINT  ############################################################################# */}          
+          <Suspense>
+            <SideLabel />
+          </Suspense>
+
           {/* SPACER  ############################################################################# */}
           <View style={{ height: 240 }} />
+
         </ScrollView>
     </ImageBackground>
   );

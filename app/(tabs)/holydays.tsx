@@ -30,6 +30,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewDatepicker from '@/components/NewDatepicker';         // MIO DATEPICKER ✌🏻
 //import { withTiming } from 'react-native-reanimated';
 import * as Linking from 'expo-linking';
+import SideLabel from '@/components/ui/SideLabel';
 
 // GOOGLE ADMOB ///////////////////////////////////
 import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
@@ -880,11 +881,12 @@ const handleAddEvent = async (
         <View style={{
         flexDirection:'column',
         alignItems:'center',
+        marginBottom: 32
         }}>
-          <Text style={[styles.sectionTitle, { flex:1, marginBottom:6}]}>{dataLabel(myLanguage, 0)}</Text> 
+          <Text style={[styles.sectionTitle, { flex:1, }]}>{dataLabel(myLanguage, 0)}</Text> 
 
           {/* COME FUNZIONA? */}
-          <Pressable
+          {/* <Pressable
             onPress={ () => {
               Alert.alert(
                 dataLabel(myLanguage, 7),  // Attenzione
@@ -910,7 +912,7 @@ const handleAddEvent = async (
                 marginBottom:32,
               }}>
                 {dataLabel(myLanguage, 26)}</Text>
-          </Pressable>
+          </Pressable> */}
         </View>
 
         {/* PULSANTONE + GIORNI SPECIALI ############################################################# */}
@@ -1219,6 +1221,35 @@ const handleAddEvent = async (
                 }}>{dataLabel(myLanguage, 26)}</Text>
           </TouchableOpacity> */}
 
+          {/* COME FUNZIONA? */}
+          <Pressable
+            onPress={ () => {
+              Alert.alert(
+                dataLabel(myLanguage, 7),  // Attenzione
+                'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?\n\n(ONLY TEMPORARILY EXTERNAL)',// Vuoi eliminare tutte le date ecc.?
+                [
+                  {
+                    text: dataLabel(myLanguage, 9), // Annulla
+                    style: "cancel"
+                  },
+                  { 
+                    text: 'Prosegui', // Elimina
+                    onPress: async () => {
+                      await Linking.openURL('https://pontivia-2025.web.app/')
+                    }
+                  }
+                ]
+              );
+            }}>
+              <Text style={{
+                fontSize:16,
+                fontWeight:'600',
+                color: colors.blueBar,
+                marginBottom:32,
+              }}>
+                {dataLabel(myLanguage, 26)}</Text>
+          </Pressable>
+
         {/* SPACER ################################################################################### */}
         <View style={{height:240}}></View>
 
@@ -1282,6 +1313,12 @@ const handleAddEvent = async (
             </View>
         </Modal>
       </Suspense>
+
+      {/* INFOPOINT */}
+      <Suspense>
+        <SideLabel />
+      </Suspense>
+
     </ImageBackground>
   );
 }

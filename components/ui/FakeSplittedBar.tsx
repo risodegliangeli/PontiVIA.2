@@ -1,22 +1,22 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Colors } from '@/constants/Colors';
-import { BlurView } from 'expo-blur';
+// import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
-import { getLocales,  } from 'expo-localization';
-import { splittedBarLabel as splittedLabels } from '@/components/dataLabel';
+// import { getLocales,  } from 'expo-localization';
+// import { splittedBarLabel as splittedLabels } from '@/components/dataLabel';
 import {PulseCalendar} from '@/components/ui/PulseCalendar';
 import {
-  Animated,
+  //Animated,
   Dimensions,
-  Easing,
+  //Easing,
   Platform,
   StyleSheet,
-  Text,
-  TouchableOpacity,
+  //Text,
+  //TouchableOpacity,
   useColorScheme,
   View
 } from 'react-native';
-import { easeGradient } from 'react-native-easing-gradient';
+//import { easeGradient } from 'react-native-easing-gradient';
 import { PulseWand } from '@/components/ui/PulseWand';
 import { PulseGirl } from '@/components/ui/PulseGirl';
 
@@ -47,7 +47,7 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
   const doubleItemsSize: number = Math.trunc(splittedTotalWidth*.65);
   const singleItemImageSize: string = '70%';
   const doubleItemsImageSize: string = '50%';
-  const splittedFromBottom: number = Platform.OS === 'ios' ? 68 : 104;
+  const splittedFromBottom: number = Platform.OS === 'ios' ? 28 : 44;
   const itemsInternalPadding: number = 3;
 
   useEffect( () => {

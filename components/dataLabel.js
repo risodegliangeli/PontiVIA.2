@@ -56,61 +56,38 @@ export function indexLabels(language, item) {
         'Nessun ponte in vista?\nScorri il calendario e imposta\ni filtri e i tuoi giorni',
         'LE MIE DATE: qui aggiungi le tue ferie e i giorni speciali che contano per te',
         'I FILTRI: qui selezioni i tuoi giorni liberi e scegli quali festività includere',
-        'IL CALENDARIO: qui scopri i ponti perfetti per pianificare le tue vacanze ideali'
+        'IL CALENDARIO: qui scopri i ponti perfetti per pianificare le tue vacanze ideali',
+        'Come funziona?'
     ],
     'fr': [
         'Pas de pont en vue?\nFaites défiler le calendrier\net définissez les filtres et vos dates',
-        '',
-        '',
-        ''
+        'Come funziona?'
     ],
     'es': [
         '¿Ningún puente a la vista?\nDesliza el calendario y configura\nlos filtros y tus días',
-        '',
-        '',
-        ''
+        'Come funziona?' 
     ],
     'de': [
         'Keine Brücke in Sicht?\nBlättern Sie im Kalender vorwärts\nund stellen Sie die Filter und Ihre Daten ein',
-        '',
-        '',
-        ''
     ],
     'en': [
         'No bridge in sight?\nScroll the calendar and set\nfilters and your days',
-        '',
-        '',
-        ''
     ],
     'nl': [
         'Geen brug in zicht?\nScroll door de kalender en stel\nfilters en je dagen in',
-        '',
-        '',
-        ''
     ],
     'pt': [
         'Nenhuma ponte à vista?\nDeslize o calendário e configure\nos filtros e seus dias',
-        '',
-        '',
-        ''
+        'Come funziona?', 
     ],
     'hr': [
         'Nema mosta na vidiku?\nSkrolaj kalendar i postavi\nfiltere i svoje dane',
-        '',
-        '',
-        ''
     ],
     'si': [
         'Ni mosta na vidiku?\nDrsaj po koledarju in nastavi\nfiltre in svoje dni',
-        '',
-        '',
-        ''
     ],
     'gr': [
         'Καμία γέφυρα στον ορίζοντα;\nΚύλισε το ημερολόγιο και όρισε\nφίλτρα και τις μέρες σου',
-        '',
-        '',
-        ''
     ]
   };
   return dataLabel[language][item];
