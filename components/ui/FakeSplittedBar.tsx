@@ -4,6 +4,7 @@ import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import { getLocales,  } from 'expo-localization';
 import { splittedBarLabel as splittedLabels } from '@/components/dataLabel';
+import {PulseCalendar} from '@/components/ui/PulseCalendar';
 import {
   Animated,
   Dimensions,
@@ -16,6 +17,8 @@ import {
   View
 } from 'react-native';
 import { easeGradient } from 'react-native-easing-gradient';
+import { PulseWand } from '@/components/ui/PulseWand';
+import { PulseGirl } from '@/components/ui/PulseGirl';
 
 const w = Dimensions.get('window').width;
 
@@ -108,10 +111,13 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
       elevation:12,         
     },
     doubleItemsTransparent: {
+      flex:2,
       width: doubleItemsSize,
       height: splittedBarHeigth*.90,
       flexDirection:'row',
-      alignItems:'center'
+      alignItems:'center',
+      // borderWidth:1,
+      // borderColor:'red'
     },
     doubleItemsTouchable: {
       flex:2, 
@@ -223,17 +229,62 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
         </View>        
       </View>
 
+
+
+
       <View style={styles.splittedBase}> 
 
         {/* DOPPIO */}
-        <View style={styles.doubleItemsTransparent}>
-          <Image style={styles.doubleItemsIcon} source={require("@/assets/images/icon_calendar-off.png")} /> 
-          <Image style={styles.doubleItemsIcon} source={require("@/assets/images/icon_wand-off.png")} /> 
+        <View style={{
+          //width: Math.trunc(doubleItemsSize*.65),
+          width: '65%',
+          height: splittedBarHeigth*.90,
+          flexDirection:'row'
+        }}>
+          
+            {/* PULSE CALENDAR */}
+            <View style={{
+              width:'50%', 
+              justifyContent:'center',
+              alignContent: 'center',
+              alignItems: 'center'
+            }}>
+              {index === 1 ?
+              <PulseCalendar />
+              :
+              <Image 
+                source={require("@/assets/images/icon_calendar-off.png")} 
+                style={{width:'50%', height:'50%', resizeMode:'contain'}}  /> 
+              }
+            </View>
+
+            {/* PULSE MAGIC WAND */}
+            <View style={{
+              width:'50%', 
+              justifyContent:'center',
+              alignContent: 'center',
+              alignItems: 'center'
+            }}>
+            {index === 2 ?
+              <PulseWand />
+              :
+              <Image 
+                source={require("@/assets/images/icon_wand-off.png")}
+                style={{width:'50%', height:'50%', resizeMode:'contain'}} /> 
+            }
+            </View>
         </View>
 
         {/* SINGOLO */}
         <View style={styles.singleItemTransparent}>
-          <Image style={styles.singleItemIcon} source={require("@/assets/images/icon_girl-off.png")} />       
+          {index === 3 ?
+            <PulseGirl />
+            :
+            <Image style={styles.singleItemIcon} source={require("@/assets/images/icon_girl-off.png")} />       
+
+        }
+        
+        
         </View>
       </View>
       

@@ -1,10 +1,3 @@
-// console.log('[INDEX.TSX]');
-
-// import { PREFERENCES } from '@/app/(tabs)/preferences';
-import { CalendarScreen } from '@/components/calendarScreen';
-import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
-import { StatusBar } from 'expo-status-bar';
-import { Suspense, useEffect, useMemo, useRef, useState,  } from 'react';
 import { 
   Animated, 
   Easing, 
@@ -15,17 +8,20 @@ import {
   TouchableOpacity, 
   View, 
   Modal, 
-  Pressable,
-  Platform
+  Platform,
+  // Pressable,
+  // Dimensions
   } from 'react-native';
+import { CalendarScreen } from '@/components/calendarScreen';
+import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT
+import { StatusBar } from 'expo-status-bar';
+import { Suspense, useEffect, useMemo, useRef, useState,  } from 'react';
 import { Colors } from '@/constants/Colors';
-import { MovingHands } from '@/components/ui/MovingHands'; // MIO
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import { getLocales, } from 'expo-localization';
+import { MovingHands } from '@/components/ui/MovingHands';      // MIO
 import { indexLabels as dataLabel } from '@/components/dataLabel';
-//import InfoPoint from '@/components/ui/InfoPoint';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import FakeSplittedBar  from '@/components/ui/FakeSplittedBar';
+import Svg, {Path} from 'react-native-svg';
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -49,6 +45,10 @@ export default function HomeScreen() {
     myCountry, 
     myLanguage
   } = useHolydays();
+
+  const SVG_VIEWBOX = "0 0 1024 850";
+
+  // const {width, height} = Dimensions.get("screen" );
 
   /* ============================================================================= 
       LETTURA STORAGE DATI
@@ -133,7 +133,7 @@ export default function HomeScreen() {
   }
   // VISIBILITA INFO ANIMATE
   const [infoModalVisible, setInfoModalVisible] = useState<boolean>(false);
-  const infoModalPosition = useRef(new Animated.Value(-100)).current;
+  // const infoModalPosition = useRef(new Animated.Value(-100)).current;
   const [infoStep, setInfoStep] = useState<number>(1);
 
   // ANIMAZIONE - 2 opacita /////////////////////////////////////////////////
@@ -160,24 +160,12 @@ export default function HomeScreen() {
       return (    
         <View style={styles.label}>
             <TouchableOpacity
-                onPress={ () => 
-                  setInfoModalVisible(!infoModalVisible)
-                }>
+                onPress={ () => setInfoModalVisible(!infoModalVisible)}>
                 <IconSymbol name="info.circle.fill" size={24} color={colors.white} />
             </TouchableOpacity>
         </View>  
       )
   }
-
-
-
-
-
-
-
-
-
-
 
   // FOGLI DI STILE
   const styles = StyleSheet.create({
@@ -197,7 +185,8 @@ export default function HomeScreen() {
     image: {      
       flex: 1,
       width: '100%',
-      alignItems:'center'
+      alignItems:'center',
+      
     },
     // CONTAINER ESTERNO DEL WRAPPER 
     wrapperContainer: {
@@ -269,10 +258,10 @@ export default function HomeScreen() {
       shadowRadius: 8 // Match elevation for iOS
       },
     infoBalloon: {
-      width:'90%',
-      minHeight:300,
-      backgroundColor: colors.cardBackground,
-      borderRadius:24,
+      width:'100%',
+      minHeight:350,
+      //backgroundColor: colors.cardBackground,
+      //borderRadius:24,
       flexDirection: 'column',
       justifyContent: 'flex-start',
       alignItems:'center',
@@ -306,8 +295,23 @@ export default function HomeScreen() {
       textAlign:'center',
       paddingTop: Platform.OS === 'ios' ? 6 : 3,
     },
-    
+    svg: {
+      position: 'absolute',
+      top:0, left:'-10%',
+      width: '130%',
+      height: 400,
+      resizeMode: 'contain',
+      opacity: .9,
 
+      elevation:12,
+      shadowColor: colors.black, // iOS shadow
+      shadowOffset: {
+      width: 4,
+      height: 6, // Match elevation for iOS
+      },
+      shadowOpacity: 0.45,
+      shadowRadius: 8 // Match elevation for iOS
+    }
   });
 
   return (  
@@ -368,13 +372,12 @@ export default function HomeScreen() {
           {/* ISTRUZIONI ANIMATE //////////////////////////////////////////////////////////// */}
           <Suspense>
             <Modal
-            // modal full screen e fissa: si sposta fuori il contenuto
               visible={infoModalVisible}
-              transparent={false} // false: così sormonta la bottom bar
-              backdropColor={'#333'} // colore sempre pieno: altrimenti si vede la bar
+              transparent={false}           // false: così sormonta la bottom bar
+              backdropColor={'#333'}      // colore sempre pieno: altrimenti si vede la bar
               animationType={'fade'}
               hardwareAccelerated={true}
-            >
+              >
               <ImageBackground 
                 source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg') }
                 resizeMode="cover" 
@@ -392,97 +395,132 @@ export default function HomeScreen() {
                           justifyContent: 'center',
                           alignItems:'center',
                         }]}>
+
                       <Animated.View
                         style={styles.infoBalloon}>
+                        <Svg 
+                          viewBox={SVG_VIEWBOX} 
+                          preserveAspectRatio="xMidYMid meet" 
+                          fill="none"
+                          style={styles.svg}>
+                            {infoStep === 1 ?                           
+                            <Path d="M227.819 23.9698C2.35535 77.5555 -17.1372 274.062 8.8884 376.058C-30.6492 555.397 79.7243 679.167 210.254 726.497C210.254 726.497 247 740.285 274 743.272C281 781 274 850.5 274 850.5C274 850.5 324 823 351 747.275C363.879 746.468 379.256 744.602 394.696 740.285C503.395 769.618 725.386 732.673 752.945 726.497C789.5 733.5 820.5 732.5 843.272 720.322C881.547 735.245 1059.14 632.327 1017.8 376.058C1051.48 54.845 830.513 14.8125 707.014 39.5131C631.996 39.5131 488.086 -37.8874 227.819 23.9698Z" fill={colors.cardBackground} />
+                            :
+                            infoStep === 2 ?
+                            <Path d="M227.819 23.9698C2.35535 77.5555 -17.1372 274.062 8.8884 376.058C-30.6492 555.397 79.7243 679.167 210.254 726.497C210.254 726.497 247 740.285 274 743.272C291.78 746.24 309.548 747.795 327 747.889C340.5 747.889 367.5 747.889 394.696 740.285C415.01 745.767 439.281 748.934 465.5 750.42C465.5 750.42 472 795 511.5 849C523 790.5 542 750.715 542 750.715C638.177 746.98 735.321 730.447 752.945 726.497C789.5 733.5 820.5 732.5 843.272 720.322C881.547 735.245 1059.14 632.327 1017.8 376.058C1051.48 54.845 830.513 14.8125 707.014 39.5131C631.996 39.5131 488.086 -37.8874 227.819 23.9698Z" fill={colors.cardBackground}/>
+                            :
+                            <Path d="M227.819 23.9698C2.35535 77.5555 -17.1372 274.062 8.8884 376.058C-49.2877 639.939 217.101 783.511 394.696 740.285C503.395 769.618 725.386 732.673 752.945 726.497C763.5 801.5 816 849.5 816 849.5C816 849.5 823.5 777.5 843.272 720.322C881.547 735.245 1059.14 632.327 1017.8 376.058C1051.48 54.845 830.513 14.8125 707.014 39.5131C631.996 39.5131 488.086 -37.8874 227.819 23.9698Z" fill={colors.cardBackground}/>
+                          }
+                        </Svg>
 
-                          {/* TITOLO + CHIUSURA */}
-                          <View style={{
-                            width:'100%', flexDirection:'row', justifyContent:'space-between', marginBottom:48,
+                          <View style={{ // CONTENITORE TESTI DENTRO BALLOON
+                            flex:1,
+                            flexDirection:'column',
+                            justifyContent:'space-around', // VER
+                            alignItems:'center', // HOR
+                            paddingHorizontal:12,
+                            paddingTop:32,
+                            paddingBottom:12,
                             }}>
-                            <View style={{width:28, }}/>
-                            <Text style={styles.sectionTitle}>Come funziona?</Text>
-                            <TouchableOpacity
-                              onPress={ () => {
-                                setInfoModalVisible(!infoModalVisible);
-                                setInfoStep(1)}}>
-                                <IconSymbol name='xmark' size={28} color={colors.disabled} />
-                            </TouchableOpacity>
-                          </View>
 
-                          {/* NUMERI */}
-                          <View style={{
-                            width:'100%', 
+                            {/* TITOLO + CHIUSURA */}
+                            <View style={{
+                              width:'100%', 
+                              flexDirection:'row', 
+                              justifyContent:'space-between',
+                              }}>
+                              <View style={{
+                                width:28, 
+                                }}/>
+                              <Text style={styles.sectionTitle}>Come funziona?</Text>
+                              <TouchableOpacity
+                                onPress={ () => {
+                                  setInfoModalVisible(!infoModalVisible);
+                                  setInfoStep(1)}}>
+                                  <IconSymbol name='xmark' size={Platform.OS === 'ios' ? 20 : 28} color={colors.blueBar} />
+                              </TouchableOpacity>
+                            </View>
+
+                            {/* NUMERI */}
+                            <View style={{
+                              width:'100%', 
+                              // borderWidth:1,
+                              flexDirection:'row', 
+                              justifyContent:'space-between', 
+                              alignItems: 'center',
+                              }}>
+                              <TouchableOpacity onPress={ () => setInfoStep(1)}>
+                                <View style={[styles.dot32, {backgroundColor:colors.blueBar}]}>
+                                  <Text style={styles.dot32text}>1</Text>
+                                </View>
+                              </TouchableOpacity>
+
+                              <View style={{
+                                width: 50, 
+                                height:4, 
+                                backgroundColor: infoStep >=2 ? colors.blueBar : '#666'
+                                }}/>
+
+                              <TouchableOpacity onPress={ () => setInfoStep(2)}>
+                                <View style={[
+                                  styles.dot32, 
+                                    {backgroundColor: infoStep >=2 ? colors.blueBar : '#666'}
+                                  ]}>
+                                  <Text style={styles.dot32text}>2</Text>
+                                </View>
+                              </TouchableOpacity>
+
+                              <View style={{
+                                width: 50, 
+                                height:4, 
+                                backgroundColor: infoStep >=3 ? colors.blueBar : '#666'
+                                }}/>
+
+                              <TouchableOpacity onPress={ () => setInfoStep(3)}>
+                                <View style={[
+                                  styles.dot32, 
+                                    {backgroundColor: infoStep >=3 ? colors.blueBar : '#666'}
+                                  ]}>                                
+                                  <Text style={styles.dot32text}>3</Text>
+                                </View>
+                              </TouchableOpacity>
+                            </View>
+
+                            {/* DIDASCALIA */}
+                            <View style={{width:'100%', }}>
+                              <Text style={{
+                                fontSize:20, 
+                                lineHeight:28, 
+                                color: colors.text, 
+                                textAlign: 'center'}}>
+                                {dataLabel(myLanguage, infoStep)}
+                              </Text>
+                            </View>
+
+                            {/* FRECCETTE NAVIGAZIONE */}
+                            <View style={{
+                            width:'45%', 
                             flexDirection:'row', 
-                            justifyContent:'space-around', 
-                            alignItems: 'center',
-                            marginBottom:48,
+                            justifyContent:'space-between', 
+                            // position:'absolute',
+                            
+                            // bottom:24,
                             }}>
-                            <TouchableOpacity onPress={ () => setInfoStep(1)}>
-                              <View style={[styles.dot32, {backgroundColor:colors.blueBar}]}>
-                                <Text style={styles.dot32text}>1</Text>
-                              </View>
-                            </TouchableOpacity>
+                              <TouchableOpacity
+                                onPress={ () => {
+                                  if (infoStep > 1) setInfoStep( infoStep - 1 )
+                                  }}>                              
+                                <IconSymbol name='chevron.left.circle' size={28} color={colors.disabled} />
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                onPress={ () => {
+                                  if (infoStep < 3) setInfoStep( infoStep + 1 )
+                                  }}>
+                                <IconSymbol name='chevron.right.circle' size={28} color={colors.disabled} />
+                              </TouchableOpacity>
+                            </View>
+                        </View>
 
-                            <View style={{
-                              width: 50, 
-                              height:4, 
-                              backgroundColor: infoStep >=2 ? colors.blueBar : '#dedede'
-                              }}/>
-
-                            <TouchableOpacity onPress={ () => setInfoStep(2)}>
-                              <View style={[
-                                styles.dot32, 
-                                  {backgroundColor: infoStep >=2 ? colors.blueBar : '#dedede'}
-                                ]}>
-                                <Text style={styles.dot32text}>2</Text>
-                              </View>
-                            </TouchableOpacity>
-
-                            <View style={{
-                              width: 50, 
-                              height:4, 
-                              backgroundColor: infoStep >=3 ? colors.blueBar : '#dedede'
-                              }}/>
-
-                            <TouchableOpacity onPress={ () => setInfoStep(3)}>
-                              <View style={[
-                                styles.dot32, 
-                                  {backgroundColor: infoStep >=3 ? colors.blueBar : '#dedede'}
-                                ]}>                                
-                                <Text style={styles.dot32text}>3</Text>
-                              </View>
-                            </TouchableOpacity>
-                          </View>
-
-                          {/* DIDASCALIA */}
-                          <View style={{width:'100%', marginBottom:64,}}>
-                            <Text style={{fontSize:18, lineHeight:26, color: colors.text}}>
-                              {dataLabel(myLanguage, infoStep)}
-                            </Text>
-                          </View>
-
-                          {/* FRECCETTE NAVIGAZIONE */}
-                          <View style={{
-                          width:'100%', 
-                          flexDirection:'row', 
-                          justifyContent:'space-between', 
-                          position:'absolute',
-                          
-                          bottom:24,
-                          }}>
-                            <TouchableOpacity
-                              onPress={ () => {
-                                if (infoStep > 1) setInfoStep( infoStep - 1 )
-                                }}>                              
-                              <IconSymbol name='chevron.left.circle' size={28} color={colors.disabled} />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              onPress={ () => {
-                                if (infoStep < 3) setInfoStep( infoStep + 1 )
-                                }}>
-                              <IconSymbol name='chevron.right.circle' size={28} color={colors.disabled} />
-                            </TouchableOpacity>
-                          </View>
                       </Animated.View>
                     </View>
 
@@ -494,8 +532,6 @@ export default function HomeScreen() {
 
             </Modal>
           </Suspense>
-
-
 
           {/* STATUSBAR */}
           <StatusBar style={ useColorScheme() === 'dark' ? 'light' : 'dark' } />
