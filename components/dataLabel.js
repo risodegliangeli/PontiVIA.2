@@ -54,9 +54,9 @@ export function indexLabels(language, item) {
   const dataLabel = {
     'it': [
         'Nessun ponte in vista?\nScorri il calendario e imposta\ni filtri e i tuoi giorni',
-        'Lorem ipsum dolor sit amet, atque sed consectetur adipiscing elit',
-        'Ut enim ad minim veniam, quis nostrud exercitation ullamco officia',
-        'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui'
+        'LE MIE DATE: qui aggiungi le tue ferie e i giorni speciali che contano per te',
+        'I FILTRI: qui selezioni i tuoi giorni liberi e scegli quali festività includere',
+        'IL CALENDARIO: qui scopri i ponti perfetti per pianificare le tue vacanze ideali'
     ],
     'fr': [
         'Pas de pont en vue?\nFaites défiler le calendrier\net définissez les filtres et vos dates',
@@ -64,19 +64,54 @@ export function indexLabels(language, item) {
         '',
         ''
     ],
-    'es': ['¿Ningún puente a la vista?\nDesliza el calendario y configura\nlos filtros y tus días'],
-    'de': ['Keine Brücke in Sicht?\nBlättern Sie im Kalender vorwärts\nund stellen Sie die Filter und Ihre Daten ein'],
+    'es': [
+        '¿Ningún puente a la vista?\nDesliza el calendario y configura\nlos filtros y tus días',
+        '',
+        '',
+        ''
+    ],
+    'de': [
+        'Keine Brücke in Sicht?\nBlättern Sie im Kalender vorwärts\nund stellen Sie die Filter und Ihre Daten ein',
+        '',
+        '',
+        ''
+    ],
     'en': [
         'No bridge in sight?\nScroll the calendar and set\nfilters and your days',
-            'Lorem ipsum dolor sit amet, atque sed consectetur adipiscing elit',
-        'Ut enim ad minim veniam, quis nostrud exercitation ullamco officia',
-        'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui'
-        ],
-    'nl': ['Geen brug in zicht?\nScroll door de kalender en stel\nfilters en je dagen in'],
-    'pt': ['Nenhuma ponte à vista?\nDeslize o calendário e configure\nos filtros e seus dias'],
-    'hr': ['Nema mosta na vidiku?\nSkrolaj kalendar i postavi\nfiltere i svoje dane'],
-    'si': ['Ni mosta na vidiku?\nDrsaj po koledarju in nastavi\nfiltre in svoje dni'],
-    'gr': ['Καμία γέφυρα στον ορίζοντα;\nΚύλισε το ημερολόγιο και όρισε\nφίλτρα και τις μέρες σου']
+        '',
+        '',
+        ''
+    ],
+    'nl': [
+        'Geen brug in zicht?\nScroll door de kalender en stel\nfilters en je dagen in',
+        '',
+        '',
+        ''
+    ],
+    'pt': [
+        'Nenhuma ponte à vista?\nDeslize o calendário e configure\nos filtros e seus dias',
+        '',
+        '',
+        ''
+    ],
+    'hr': [
+        'Nema mosta na vidiku?\nSkrolaj kalendar i postavi\nfiltere i svoje dane',
+        '',
+        '',
+        ''
+    ],
+    'si': [
+        'Ni mosta na vidiku?\nDrsaj po koledarju in nastavi\nfiltre in svoje dni',
+        '',
+        '',
+        ''
+    ],
+    'gr': [
+        'Καμία γέφυρα στον ορίζοντα;\nΚύλισε το ημερολόγιο και όρισε\nφίλτρα και τις μέρες σου',
+        '',
+        '',
+        ''
+    ]
   };
   return dataLabel[language][item];
 }

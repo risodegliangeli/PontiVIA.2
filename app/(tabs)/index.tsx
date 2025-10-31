@@ -46,7 +46,7 @@ export default function HomeScreen() {
     myLanguage
   } = useHolydays();
 
-  const SVG_VIEWBOX = "0 0 1024 850";
+  const SVG_VIEWBOX = "0 0 654 506";
 
   // const {width, height} = Dimensions.get("screen" );
 
@@ -297,11 +297,11 @@ export default function HomeScreen() {
     },
     svg: {
       position: 'absolute',
-      top:0, left:'-10%',
-      width: '130%',
+      top:0, left:'-30%',
+      width: '175%',
       height: 400,
       resizeMode: 'contain',
-      opacity: .9,
+      opacity: 1,
 
       elevation:12,
       shadowColor: colors.black, // iOS shadow
@@ -383,153 +383,166 @@ export default function HomeScreen() {
                 resizeMode="cover" 
                 style={styles.image} >
 
-                  {/* <Pressable 
-                    style={StyleSheet.absoluteFill}
-                    onPress={ () => setInfoModalVisible(!infoModalVisible)}>
-                  */}
-                    <View
-                      style={[
-                        StyleSheet.absoluteFill,
-                        {
-                          flexDirection: 'column',
-                          justifyContent: 'center',
-                          alignItems:'center',
-                        }]}>
+                <View
+                  style={[
+                    StyleSheet.absoluteFill,
+                    {
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems:'center',
+                    }]}>
 
-                      <Animated.View
-                        style={styles.infoBalloon}>
-                        <Svg 
-                          viewBox={SVG_VIEWBOX} 
-                          preserveAspectRatio="xMidYMid meet" 
-                          fill="none"
-                          style={styles.svg}>
-                            {infoStep === 1 ?                           
-                            <Path d="M227.819 23.9698C2.35535 77.5555 -17.1372 274.062 8.8884 376.058C-30.6492 555.397 79.7243 679.167 210.254 726.497C210.254 726.497 247 740.285 274 743.272C281 781 274 850.5 274 850.5C274 850.5 324 823 351 747.275C363.879 746.468 379.256 744.602 394.696 740.285C503.395 769.618 725.386 732.673 752.945 726.497C789.5 733.5 820.5 732.5 843.272 720.322C881.547 735.245 1059.14 632.327 1017.8 376.058C1051.48 54.845 830.513 14.8125 707.014 39.5131C631.996 39.5131 488.086 -37.8874 227.819 23.9698Z" fill={colors.cardBackground} />
-                            :
+                  <View style={{
+                    width:'100%',
+                    flexDirection:'row',
+                    justifyContent:'flex-end',
+                    paddingRight: 24,
+                  }}>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor:colors.cardBackground,
+                        padding:12,
+                        borderRadius:'100%'
+                      }}
+                      onPress={ () => {
+                        setInfoModalVisible(!infoModalVisible);
+                        setInfoStep(1)}}>
+                        <IconSymbol name='xmark' size={Platform.OS === 'ios' ? 20 : 28} color={colors.blueBar} />
+                    </TouchableOpacity>
+                  </View>
+
+                  <Animated.View
+                    style={styles.infoBalloon}>
+                    <Svg 
+                      viewBox={SVG_VIEWBOX} 
+                      preserveAspectRatio="xMidYMid meet" 
+                      fill="none"
+                      style={styles.svg}>
+                        {infoStep === 1 ?                           
+                          <Path d="M617.22 176.741C635.246 9.14016 303.827 -59.7463 135.345 60.9828C-23.1991 98.3852 -49.0849 287.527 93.0509 353.573C74.3808 404.773 141.112 440.836 228.946 455.77L214.386 505.549C244.199 487.795 260.146 460.091 260.146 460.091C369.17 471.925 497.454 453.015 537.485 393.343C590.178 393.343 714.287 305.281 617.22 176.741Z" fill={colors.cardBackground}/>
+                          :
                             infoStep === 2 ?
-                            <Path d="M227.819 23.9698C2.35535 77.5555 -17.1372 274.062 8.8884 376.058C-30.6492 555.397 79.7243 679.167 210.254 726.497C210.254 726.497 247 740.285 274 743.272C291.78 746.24 309.548 747.795 327 747.889C340.5 747.889 367.5 747.889 394.696 740.285C415.01 745.767 439.281 748.934 465.5 750.42C465.5 750.42 472 795 511.5 849C523 790.5 542 750.715 542 750.715C638.177 746.98 735.321 730.447 752.945 726.497C789.5 733.5 820.5 732.5 843.272 720.322C881.547 735.245 1059.14 632.327 1017.8 376.058C1051.48 54.845 830.513 14.8125 707.014 39.5131C631.996 39.5131 488.086 -37.8874 227.819 23.9698Z" fill={colors.cardBackground}/>
+                            <Path d="M617.22 176.553C635.246 9.13045 303.827 -59.6828 135.345 60.9181C-23.1991 98.2806 -49.0849 287.222 93.0509 353.197C69.5904 417.466 180.978 457.859 299.637 462.498C299.637 462.498 306.738 489.883 330.879 505.503V462.887C419.48 461.613 505.919 439.928 537.485 392.925C590.178 392.925 714.287 304.957 617.22 176.553Z" fill={colors.cardBackground}/>
                             :
-                            <Path d="M227.819 23.9698C2.35535 77.5555 -17.1372 274.062 8.8884 376.058C-49.2877 639.939 217.101 783.511 394.696 740.285C503.395 769.618 725.386 732.673 752.945 726.497C763.5 801.5 816 849.5 816 849.5C816 849.5 823.5 777.5 843.272 720.322C881.547 735.245 1059.14 632.327 1017.8 376.058C1051.48 54.845 830.513 14.8125 707.014 39.5131C631.996 39.5131 488.086 -37.8874 227.819 23.9698Z" fill={colors.cardBackground}/>
-                          }
-                        </Svg>
+                            <Path d="M617.22 176.553C635.246 9.13045 303.827 -59.6828 135.345 60.9181C-23.1991 98.2806 -49.0849 287.222 93.0509 353.197C62.6179 436.567 259.098 479.759 404.013 456.849C404.013 456.849 408.274 489.173 449.456 505.503L428.155 452.301C477.305 441.45 517.927 422.047 537.485 392.925C590.178 392.925 714.287 304.957 617.22 176.553Z" fill={colors.cardBackground}/>
+                      }
+                    </Svg>
 
-                          <View style={{ // CONTENITORE TESTI DENTRO BALLOON
-                            flex:1,
-                            flexDirection:'column',
-                            justifyContent:'space-around', // VER
-                            alignItems:'center', // HOR
-                            paddingHorizontal:12,
-                            paddingTop:32,
-                            paddingBottom:12,
-                            }}>
+                      <View style={{ // CONTENITORE TESTI DENTRO BALLOON
+                        flex:1,
+                        flexDirection:'column',
+                        justifyContent:'space-around', // VER
+                        alignItems:'center', // HOR
+                        paddingHorizontal:12,
+                        paddingTop:32,
+                        paddingBottom:12,
+                        }}>
 
-                            {/* TITOLO + CHIUSURA */}
-                            <View style={{
-                              width:'100%', 
-                              flexDirection:'row', 
-                              justifyContent:'space-between',
-                              }}>
-                              <View style={{
-                                width:28, 
-                                }}/>
-                              <Text style={styles.sectionTitle}>Come funziona?</Text>
-                              <TouchableOpacity
-                                onPress={ () => {
-                                  setInfoModalVisible(!infoModalVisible);
-                                  setInfoStep(1)}}>
-                                  <IconSymbol name='xmark' size={Platform.OS === 'ios' ? 20 : 28} color={colors.blueBar} />
-                              </TouchableOpacity>
-                            </View>
-
-                            {/* NUMERI */}
-                            <View style={{
-                              width:'100%', 
-                              // borderWidth:1,
-                              flexDirection:'row', 
-                              justifyContent:'space-between', 
-                              alignItems: 'center',
-                              }}>
-                              <TouchableOpacity onPress={ () => setInfoStep(1)}>
-                                <View style={[styles.dot32, {backgroundColor:colors.blueBar}]}>
-                                  <Text style={styles.dot32text}>1</Text>
-                                </View>
-                              </TouchableOpacity>
-
-                              <View style={{
-                                width: 50, 
-                                height:4, 
-                                backgroundColor: infoStep >=2 ? colors.blueBar : '#666'
-                                }}/>
-
-                              <TouchableOpacity onPress={ () => setInfoStep(2)}>
-                                <View style={[
-                                  styles.dot32, 
-                                    {backgroundColor: infoStep >=2 ? colors.blueBar : '#666'}
-                                  ]}>
-                                  <Text style={styles.dot32text}>2</Text>
-                                </View>
-                              </TouchableOpacity>
-
-                              <View style={{
-                                width: 50, 
-                                height:4, 
-                                backgroundColor: infoStep >=3 ? colors.blueBar : '#666'
-                                }}/>
-
-                              <TouchableOpacity onPress={ () => setInfoStep(3)}>
-                                <View style={[
-                                  styles.dot32, 
-                                    {backgroundColor: infoStep >=3 ? colors.blueBar : '#666'}
-                                  ]}>                                
-                                  <Text style={styles.dot32text}>3</Text>
-                                </View>
-                              </TouchableOpacity>
-                            </View>
-
-                            {/* DIDASCALIA */}
-                            <View style={{width:'100%', }}>
-                              <Text style={{
-                                fontSize:20, 
-                                lineHeight:28, 
-                                color: colors.text, 
-                                textAlign: 'center'}}>
-                                {dataLabel(myLanguage, infoStep)}
-                              </Text>
-                            </View>
-
-                            {/* FRECCETTE NAVIGAZIONE */}
-                            <View style={{
-                            width:'45%', 
-                            flexDirection:'row', 
-                            justifyContent:'space-between', 
-                            // position:'absolute',
-                            
-                            // bottom:24,
-                            }}>
-                              <TouchableOpacity
-                                onPress={ () => {
-                                  if (infoStep > 1) setInfoStep( infoStep - 1 )
-                                  }}>                              
-                                <IconSymbol name='chevron.left.circle' size={28} color={colors.disabled} />
-                              </TouchableOpacity>
-                              <TouchableOpacity
-                                onPress={ () => {
-                                  if (infoStep < 3) setInfoStep( infoStep + 1 )
-                                  }}>
-                                <IconSymbol name='chevron.right.circle' size={28} color={colors.disabled} />
-                              </TouchableOpacity>
-                            </View>
+                        {/* TITOLO + CHIUSURA */}
+                        <View style={{
+                          width:'100%', 
+                          flexDirection:'row', 
+                          justifyContent:'center',
+                          }}>
+                          {/* <View style={{
+                            width:28, 
+                            }}/> */}
+                          <Text style={[styles.sectionTitle, {flex:1, textAlign: 'center'}]}>Come funziona?</Text>
+                          {/* <TouchableOpacity
+                            onPress={ () => {
+                              setInfoModalVisible(!infoModalVisible);
+                              setInfoStep(1)}}>
+                              <IconSymbol name='xmark' size={Platform.OS === 'ios' ? 20 : 28} color={colors.blueBar} />
+                          </TouchableOpacity> */}
                         </View>
 
-                      </Animated.View>
+                        {/* NUMERI */}
+                        <View style={{
+                          width:'100%', 
+                          // borderWidth:1,
+                          flexDirection:'row', 
+                          justifyContent:'space-between', 
+                          alignItems: 'center',
+                          }}>
+                          <TouchableOpacity onPress={ () => setInfoStep(1)}>
+                            <View style={[styles.dot32, {backgroundColor:colors.blueBar}]}>
+                              <Text style={styles.dot32text}>1</Text>
+                            </View>
+                          </TouchableOpacity>
+
+                          <View style={{
+                            width: 50, 
+                            height:4, 
+                            backgroundColor: infoStep >=2 ? colors.blueBar : '#666'
+                            }}/>
+
+                          <TouchableOpacity onPress={ () => setInfoStep(2)}>
+                            <View style={[
+                              styles.dot32, 
+                                {backgroundColor: infoStep >=2 ? colors.blueBar : '#666'}
+                              ]}>
+                              <Text style={styles.dot32text}>2</Text>
+                            </View>
+                          </TouchableOpacity>
+
+                          <View style={{
+                            width: 50, 
+                            height:4, 
+                            backgroundColor: infoStep >=3 ? colors.blueBar : '#666'
+                            }}/>
+
+                          <TouchableOpacity onPress={ () => setInfoStep(3)}>
+                            <View style={[
+                              styles.dot32, 
+                                {backgroundColor: infoStep >=3 ? colors.blueBar : '#666'}
+                              ]}>                                
+                              <Text style={styles.dot32text}>3</Text>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+
+                        {/* DIDASCALIA */}
+                        <View style={{width:'100%', }}>
+                          <Text style={{
+                            fontSize:20,
+                            fontWeight:600, 
+                            lineHeight:28, 
+                            color: colors.text, 
+                            textAlign: 'center'}}>
+                            {dataLabel(myLanguage, infoStep)}
+                          </Text>
+                        </View>
+
+                        {/* FRECCETTE NAVIGAZIONE */}
+                        <View style={{
+                        width:'45%', 
+                        flexDirection:'row', 
+                        justifyContent:'space-between', 
+                        // position:'absolute',
+                        
+                        // bottom:24,
+                        }}>
+                          <TouchableOpacity
+                            onPress={ () => {
+                              if (infoStep > 1) setInfoStep( infoStep - 1 )
+                              }}>                              
+                            <IconSymbol name='chevron.left.circle' size={28} color={colors.disabled} />
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={ () => {
+                              if (infoStep < 3) setInfoStep( infoStep + 1 )
+                              }}>
+                            <IconSymbol name='chevron.right.circle' size={28} color={colors.disabled} />
+                          </TouchableOpacity>
+                        </View>
                     </View>
 
-                  {/* </Pressable> */}
-                  <FakeSplittedBar 
-                    index={infoStep}/>
-                
-              </ImageBackground>
+                  </Animated.View>
+                </View>
 
+                <FakeSplittedBar 
+                  index={infoStep}/>
+              </ImageBackground>
             </Modal>
           </Suspense>
 
