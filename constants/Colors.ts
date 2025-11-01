@@ -41,7 +41,7 @@ export const Colors = {
   //        DARK
   //
   // /////////////////////
-    blueBar: '#43a7ff',
+    blueBar: '#31bdfdff',
     tabBarBackground: 'rgba(51, 51, 51, .55)',
     tabBarBackgroundIos: 'rgba(134,103,133,1)',
     tabBarBackgroundAndroid: 'rgba(134,103,133,1)',

@@ -1226,14 +1226,14 @@ const handleAddEvent = async (
             onPress={ () => {
               Alert.alert(
                 dataLabel(myLanguage, 7),  // Attenzione
-                'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?\n\n(ONLY TEMPORARILY EXTERNAL)',// Vuoi eliminare tutte le date ecc.?
+                dataLabel(myLanguage, 30),// Vuoi eliminare tutte le date ecc.?
                 [
                   {
                     text: dataLabel(myLanguage, 9), // Annulla
                     style: "cancel"
                   },
                   { 
-                    text: 'Prosegui', // Elimina
+                    text: dataLabel(myLanguage, 31), // Elimina
                     onPress: async () => {
                       await Linking.openURL('https://pontivia-2025.web.app/')
                     }
@@ -1242,12 +1242,13 @@ const handleAddEvent = async (
               );
             }}>
               <Text style={{
-                fontSize:16,
+                fontSize:18,
                 fontWeight:'600',
                 color: colors.blueBar,
                 marginBottom:32,
+                textAlign: 'center'
               }}>
-                {dataLabel(myLanguage, 26)}</Text>
+                {dataLabel(myLanguage, 27)}</Text>
           </Pressable>
 
         {/* SPACER ################################################################################### */}

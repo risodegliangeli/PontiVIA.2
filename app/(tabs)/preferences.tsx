@@ -333,8 +333,10 @@ export default function Preferences() {
         }
       resizeMode="cover" 
       style={[styles.image, {alignItems:'center'}]}>
-        <ScrollView style={styles.scrollview} showsVerticalScrollIndicator={false}>
 
+        <ScrollView 
+          style={styles.scrollview} 
+          showsVerticalScrollIndicator={false} >
           {/* ======================== TITOLO PAGINA  ======================== */}
           <View style={{
             flexDirection:'column',
@@ -343,34 +345,6 @@ export default function Preferences() {
             <Text style={[styles.sectionTitle, {flex:1, marginBottom:6}]}>
               {switchNames(myLanguage,12)}
             </Text>
-            {/* COME FUNZIONA? */}
-            {/* <Pressable
-              onPress={ () => {
-                Alert.alert(
-                  'Attenzione',  // Attenzione
-                  'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?',// Vuoi eliminare tutte le date ecc.?
-                  [
-                    {
-                      text: 'Annulla', // Annulla
-                      style: "cancel"
-                    },
-                    { 
-                      text: 'Prosegui', // Elimina
-                      onPress: async () => {
-                        await Linking.openURL('https://pontivia-2025.web.app/')
-                      }
-                    }
-                  ]
-                );                
-              }}>
-                <Text style={{
-                  fontSize:16,
-                  fontWeight:'600',
-                  color: colors.blueBar,
-                  marginBottom:32,
-                }}>
-                  {switchNames(myLanguage, 16)}</Text>
-            </Pressable> */}
           </View>
 
           {/* GOOGLE ADMOB ############################################################################# */}
@@ -480,65 +454,44 @@ export default function Preferences() {
           </View>
 
           {/* INFO / PRIVACY  ############################################################################# */}
-          {/* <TouchableOpacity
-              style={[styles.groupContainer, {
-                flex:1,
-                padding:16,
-                flexDirection:'row',
-                justifyContent:'center',
-                alignItems:'center',
-                gap:8,
-              }]}
-              onPress={ async () => {
-                await Linking.openURL('https://pontivia-2025.web.app/')
-                }}>
-                  <IconSymbol size={28} name="info.circle.fill" color={colors.blueBar}/>
-                  <Text style={{
-                    fontSize:18,
-                    fontWeight:600,
-                    color: colors.blueBar,
-                  }}>{switchNames(myLanguage, 16)}</Text>
-          </TouchableOpacity> */}
-
-                      {/* COME FUNZIONA? */}
-            <Pressable
-              onPress={ () => {
-                Alert.alert(
-                  'Attenzione',  // Attenzione
-                  'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?',// Vuoi eliminare tutte le date ecc.?
-                  [
-                    {
-                      text: 'Annulla', // Annulla
-                      style: "cancel"
-                    },
-                    { 
-                      text: 'Prosegui', // Elimina
-                      onPress: async () => {
-                        await Linking.openURL('https://pontivia-2025.web.app/')
-                      }
+          <Pressable
+            onPress={ () => {
+              Alert.alert(
+                'Attenzione',  // Attenzione
+                switchNames(myLanguage, 18),// Vuoi eliminare tutte le date ecc.?
+                [
+                  {
+                    text: 'Annulla', // Annulla
+                    style: "cancel"
+                  },
+                  { 
+                    text: switchNames(myLanguage, 19), // Elimina
+                    onPress: async () => {
+                      await Linking.openURL('https://pontivia-2025.web.app/')
                     }
-                  ]
-                );                
+                  }
+                ]
+              );                
+            }}>
+              <Text style={{
+                fontSize:18,
+                fontWeight:'800',
+                textAlign: 'center',
+                color: colors.blueBar,
+                marginBottom:32,
               }}>
-                <Text style={{
-                  fontSize:16,
-                  fontWeight:'600',
-                  color: colors.blueBar,
-                  marginBottom:32,
-                }}>
-                  {switchNames(myLanguage, 16)}</Text>
-            </Pressable>
-
-
-          {/* INFOPOINT  ############################################################################# */}          
-          <Suspense>
-            <SideLabel />
-          </Suspense>
+                {switchNames(myLanguage, 17)}</Text>
+          </Pressable>
 
           {/* SPACER  ############################################################################# */}
           <View style={{ height: 240 }} />
-
         </ScrollView>
+
+        {/* INFOPOINT  ############################################################################# */}          
+        <Suspense>
+          <SideLabel />
+        </Suspense>
+
     </ImageBackground>
   );
 }

@@ -6,11 +6,6 @@ import {
   useColorScheme, 
   Text, 
   TouchableOpacity, 
-  // View, 
-  // Modal, 
-  // Platform,
-  // Pressable,
-  // Dimensions
   } from 'react-native';
 import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT
@@ -19,9 +14,6 @@ import { Suspense, useEffect, useMemo, useRef, useState,  } from 'react';
 import { Colors } from '@/constants/Colors';
 import { MovingHands } from '@/components/ui/MovingHands';      // MIO
 import { indexLabels as dataLabel } from '@/components/dataLabel';
-// import { IconSymbol } from '@/components/ui/IconSymbol';
-// import FakeSplittedBar  from '@/components/ui/FakeSplittedBar';
-// import Svg, {Path} from 'react-native-svg';
 import SideLabel from '@/components/ui/SideLabel';
 
 const useThemeColors = () => {
@@ -46,10 +38,6 @@ export default function HomeScreen() {
     myCountry, 
     myLanguage
   } = useHolydays();
-
-  //const SVG_VIEWBOX = "0 0 654 506";
-
-  // const {width, height} = Dimensions.get("screen" );
 
   /* ============================================================================= 
       LETTURA STORAGE DATI
@@ -132,10 +120,6 @@ export default function HomeScreen() {
         }).start()
       }, 500);
   }
-  // VISIBILITA INFO ANIMATE
-  // const [infoModalVisible, setInfoModalVisible] = useState<boolean>(false);
-  // // const infoModalPosition = useRef(new Animated.Value(-100)).current;
-  // const [infoStep, setInfoStep] = useState<number>(1);
 
   // ANIMAZIONE - 2 opacita /////////////////////////////////////////////////
   const cardOpacity = useRef(new Animated.Value(1)).current;
@@ -155,18 +139,6 @@ export default function HomeScreen() {
     if (animationTimeout.current) clearTimeout(animationTimeout.current); // AZZERA IL TIMER
     startAnimation();
   };
-
-  // INFOPOINT BUTTON //////////////////////////////////////////////////////
-  // const InfoPoint = () => {
-  //     return (    
-  //       <View style={styles.label}>
-  //           <TouchableOpacity
-  //               onPress={ () => setInfoModalVisible(!infoModalVisible)}>
-  //               <IconSymbol name="info.circle.fill" size={24} color={colors.white} />
-  //           </TouchableOpacity>
-  //       </View>  
-  //     )
-  // }
 
   // FOGLI DI STILE
   const styles = StyleSheet.create({
@@ -235,84 +207,6 @@ export default function HomeScreen() {
         {scale: cloud02Anim.interpolate({ inputRange: [0, 1], outputRange: [0, 1], }), },
       ],
     },
-    // // INFOPOINT
-    // label: {
-    //   position:'absolute',
-    //   top:72,
-    //   left:-56,
-    //   zIndex:999999,
-    //   width:90,
-    //   height:28,
-    //   borderRadius:24,
-    //   flex:1,
-    //   flexDirection:'row',
-    //   justifyContent:'flex-end',
-    //   padding:2,
-    //   backgroundColor:colors.blueBar,
-    //   elevation:12,
-    //   shadowColor: colors.black, // iOS shadow
-    //   shadowOffset: {
-    //   width: 4,
-    //   height: 6, // Match elevation for iOS
-    //   },
-    //   shadowOpacity: 0.45,
-    //   shadowRadius: 8 // Match elevation for iOS
-    //   },
-    // infoBalloon: {
-    //   width:'100%',
-    //   minHeight:350,
-    //   //backgroundColor: colors.cardBackground,
-    //   //borderRadius:24,
-    //   flexDirection: 'column',
-    //   justifyContent: 'flex-start',
-    //   alignItems:'center',
-    //   padding:24,
-    // },
-    //     // TITOLO PAGINA
-    // sectionTitle: {
-    //   fontSize: 20,
-    //   fontWeight: '600',
-    //   textAlign: 'center',
-    //   color: colors.text,
-    // },
-    // dot32: {
-    //   width:44, 
-    //   height:44, 
-    //   borderRadius:24, 
-    //   backgroundColor: '#dedede',
-    //   flexDirection:'row',
-    //   justifyContent:'center',
-    //   alignContent:'center',
-    //   alignItems:'center'
-    // },
-    // dot32text:{
-    //   position:'absolute',
-    //   top:0, left:0,
-    //   width: '100%',
-    //   height:'100%',
-    //   fontSize:28,
-    //   fontWeight: 600,
-    //   color: 'rgba(255, 255, 255, 1)',
-    //   textAlign:'center',
-    //   paddingTop: Platform.OS === 'ios' ? 6 : 3,
-    // },
-    // svg: {
-    //   position: 'absolute',
-    //   top:0, left:'-30%',
-    //   width: '175%',
-    //   height: 400,
-    //   resizeMode: 'contain',
-    //   opacity: 1,
-
-    //   elevation:12,
-    //   shadowColor: colors.black, // iOS shadow
-    //   shadowOffset: {
-    //   width: 4,
-    //   height: 6, // Match elevation for iOS
-    //   },
-    //   shadowOpacity: 0.45,
-    //   shadowRadius: 8 // Match elevation for iOS
-    // }
   });
 
   return (  
@@ -364,14 +258,12 @@ export default function HomeScreen() {
                 style={styles.cloud02}
               />            
             </TouchableOpacity>
-
           </Animated.View>
 
           {/* INFO */}
           <Suspense>
             <SideLabel />
           </Suspense>
-          
 
           {/* STATUSBAR */}
           <StatusBar style={ useColorScheme() === 'dark' ? 'light' : 'dark' } />

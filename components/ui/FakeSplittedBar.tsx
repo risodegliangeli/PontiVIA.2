@@ -1,24 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Colors } from '@/constants/Colors';
-// import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
-// import { getLocales,  } from 'expo-localization';
-// import { splittedBarLabel as splittedLabels } from '@/components/dataLabel';
-import {PulseCalendar} from '@/components/ui/PulseCalendar';
 import {
-  //Animated,
   Dimensions,
-  //Easing,
   Platform,
+  Pressable,
   StyleSheet,
-  //Text,
-  //TouchableOpacity,
   useColorScheme,
   View
 } from 'react-native';
-//import { easeGradient } from 'react-native-easing-gradient';
 import { PulseWand } from '@/components/ui/PulseWand';
 import { PulseGirl } from '@/components/ui/PulseGirl';
+import {PulseCalendar} from '@/components/ui/PulseCalendar';
 
 const w = Dimensions.get('window').width;
 
@@ -29,6 +22,7 @@ const useThemeColors = () => {
 
 interface FakeSplittedBarInterface {
   index: number;
+  action: (x: number) => void;
 }
 
 /* ###########################################################################################################
@@ -38,7 +32,8 @@ interface FakeSplittedBarInterface {
 ########################################################################################################### */
 //  const SimpleToast: React.FC<SimpleToastInterface> = ({
 const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
-  index
+  index,
+  action
   }) => {
 
   const [splittedTotalWidth, setSplittedTotalWidth] = useState<number>(0);
@@ -107,7 +102,7 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
       height:'100%', 
       borderRadius: splittedBarHeigth,
       overflow:'hidden',
-      backgroundColor: useColorScheme() === 'light' ? colors.white : colors.disabled,
+      backgroundColor: colors.white,
       elevation:12,         
     },
     doubleItemsTransparent: {
@@ -194,7 +189,6 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
   return (
     <View style={styles.bottomSpace}>
       {/* BASE GENERALE WIDTH 100% DEI CONTENITORI */}   
-
       <View style={styles.splittedBase}>      
         
         {/* BASE PULSANTE DOPPIO TRASPARENTE DENTRO AL QUALE WRAPPARE IL BLUR */}
@@ -229,65 +223,65 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
         </View>        
       </View>
 
-
-
-
       <View style={styles.splittedBase}> 
-
         {/* DOPPIO */}
         <View style={{
           //width: Math.trunc(doubleItemsSize*.65),
           width: '65%',
           height: splittedBarHeigth*.90,
           flexDirection:'row'
-        }}>
+          }}>
           
             {/* PULSE CALENDAR */}
-            <View style={{
-              width:'50%', 
-              justifyContent:'center',
-              alignContent: 'center',
-              alignItems: 'center'
-            }}>
+            <Pressable 
+              onPress = { () => action(1) }
+              style={{
+                width:'50%', 
+                justifyContent:'center',
+                alignContent: 'center',
+                alignItems: 'center'
+              }}>
               {index === 1 ?
               <PulseCalendar />
               :
               <Image 
                 source={require("@/assets/images/icon_calendar-off.png")} 
-                style={{width:'50%', height:'50%', resizeMode:'contain'}}  /> 
+                style={{width:'50%', height:'50%', resizeMode:'contain', opacity: .25}}  /> 
               }
-            </View>
+            </Pressable>
 
             {/* PULSE MAGIC WAND */}
-            <View style={{
+            <Pressable
+              onPress = { () => action(2) }
+              style={{
               width:'50%', 
               justifyContent:'center',
               alignContent: 'center',
               alignItems: 'center'
-            }}>
-            {index === 2 ?
-              <PulseWand />
-              :
-              <Image 
-                source={require("@/assets/images/icon_wand-off.png")}
-                style={{width:'50%', height:'50%', resizeMode:'contain'}} /> 
-            }
-            </View>
+              }}>
+                {index === 2 ?
+                  <PulseWand />
+                  :
+                  <Image 
+                    source={require("@/assets/images/icon_wand-off.png")}
+                    style={{width:'50%', height:'50%', resizeMode:'contain', opacity: .25}} /> 
+                }
+            </Pressable>
         </View>
 
         {/* SINGOLO */}
-        <View style={styles.singleItemTransparent}>
+        <Pressable 
+          onPress = { () => action(3) }
+          style={styles.singleItemTransparent}>
           {index === 3 ?
             <PulseGirl />
             :
-            <Image style={styles.singleItemIcon} source={require("@/assets/images/icon_girl-off.png")} />       
-
-        }
-        
-        
-        </View>
+            <Image 
+              source={require("@/assets/images/icon_girl-off.png")}
+              style={[styles.singleItemIcon, {opacity: .25}]} />       
+          }
+        </Pressable>
       </View>
-      
     </View>
   );
 }

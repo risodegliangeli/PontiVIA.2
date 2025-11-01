@@ -7,43 +7,53 @@ export function splittedBarLabel(language, item) {
     const countryLabels = {
         'it':[
             'Le mie date', 
-            'Filtri'
+            'Filtri',
+            ''
         ],
         'fr': [
             'Mes Dates', 
-            'Filtres'
+            'Filtres',
+            ''
         ],
         'es': [
             'Mis Fechas', 
-            'Filtros'
+            'Filtros',
+            ''
         ],
         'de': [
             'Meine Daten', 
-            'Filter'
+            'Filter',
+            ''
         ],
         'en': [
             'My Dates', 
-            'Filters'
+            'Filters',
+            ''
         ],
         'nl': [
             'Mijn Data', 
-            'Filters'
+            'Filters',
+            ''
         ],
         'pt': [
             'Minhas Datas', 
-            'Filtros'
+            'Filtros',
+            ''
         ],
         'hr': [
             'Moji datumi',
-            'Filteri',        
+            'Filteri', 
+            ''       
         ],
         'si': [
             'Moji datumi',
-            'Filtri',        
+            'Filtri',  
+            ''      
         ],
         'gr': [
             'Οι ημερομηνίες μου',
-            'Φίλτρα',        
+            'Φίλτρα', 
+            ''      
         ],
     };
     return countryLabels[language][item];
@@ -54,40 +64,74 @@ export function indexLabels(language, item) {
   const dataLabel = {
     'it': [
         'Nessun ponte in vista?\nScorri il calendario e imposta\ni filtri e i tuoi giorni',
-        'LE MIE DATE: qui aggiungi le tue ferie e i giorni speciali che contano per te',
-        'I FILTRI: qui selezioni i tuoi giorni liberi e scegli quali festività includere',
-        'IL CALENDARIO: qui scopri i ponti perfetti per pianificare le tue vacanze ideali',
-        'Come funziona?'
+        'LE MIE DATE: aggiungi qui le tue ferie e tutti quei giorni in cui non lavori (es. compleanno, patrono della città ecc)',
+        'I FILTRI: seleziona qui i giorni liberi della settimana e scegli quali festività includere nel calcolo',
+        'IL CALENDARIO: scopri qui i ponti perfetti per pianificare le tue vacanze ideali!',
+        'Cosa puoi fare con PontiVIA?'
     ],
     'fr': [
         'Pas de pont en vue?\nFaites défiler le calendrier\net définissez les filtres et vos dates',
-        'Come funziona?'
+        'MES DATES : ajoutez ici vos congés et tous les jours où vous ne travaillez pas (ex. anniversaire, fête du saint patron, etc.)',  // 32
+        'LES FILTRES : sélectionnez ici les jours libres de la semaine et choisissez quelles fêtes inclure dans le calcul',  // 33
+        'LE CALENDRIER : découvrez ici les ponts parfaits pour planifier vos vacances idéales !',  // 34
+        'Que pouvez-vous faire avec PontiVIA ?'                                     // 35
     ],
     'es': [
         '¿Ningún puente a la vista?\nDesliza el calendario y configura\nlos filtros y tus días',
-        'Come funziona?' 
+        'MIS FECHAS: añade aquí tus vacaciones y todos los días en que no trabajas (ej. cumpleaños, patrón de la ciudad, etc.)',  // 32
+        'LOS FILTROS: selecciona aquí los días libres de la semana y elige qué festividades incluir en el cálculo',  // 33
+        'EL CALENDARIO: ¡descubre aquí los puentes perfectos para planificar tus vacaciones ideales!',  // 34
+        '¿Qué puedes hacer con PontiVIA?'                                           // 35
     ],
     'de': [
         'Keine Brücke in Sicht?\nBlättern Sie im Kalender vorwärts\nund stellen Sie die Filter und Ihre Daten ein',
+        'MEINE TERMINE: Fügen Sie hier Ihren Urlaub und alle Tage hinzu, an denen Sie nicht arbeiten (z.B. Geburtstag, Stadtpatron usw.)',  // 32
+        'DIE FILTER: Wählen Sie hier die freien Wochentage aus und entscheiden Sie, welche Feiertage in die Berechnung einbezogen werden sollen',  // 33
+        'DER KALENDER: Entdecken Sie hier die perfekten Brücken, um Ihren idealen Urlaub zu planen!',  // 34
+        'Was können Sie mit PontiVIA tun?'                                          // 35
+
     ],
     'en': [
         'No bridge in sight?\nScroll the calendar and set\nfilters and your days',
+        'MY DATES: add here your holidays and all the days when you don\'t work (e.g. birthday, city patron saint, etc.)',  // 32
+        'FILTERS: select here your weekly days off and choose which holidays to include in the calculation',  // 33
+        'THE CALENDAR: discover here the perfect bridges to plan your ideal vacations!',  // 34
+        'What can you do with PontiVIA?'                                            // 35
     ],
     'nl': [
         'Geen brug in zicht?\nScroll door de kalender en stel\nfilters en je dagen in',
+        'MIJN DATUMS: voeg hier je vakanties en alle dagen waarop je niet werkt toe (bijv. verjaardag, stadspatroon, enz.)',  // 32
+        'DE FILTERS: selecteer hier je vrije weekdagen en kies welke feestdagen je in de berekening wilt opnemen',  // 33
+        'DE KALENDER: ontdek hier de perfecte bruggen om je ideale vakanties te plannen!',  // 34
+        'Wat kun je doen met PontiVIA?'                                             // 35
     ],
     'pt': [
         'Nenhuma ponte à vista?\nDeslize o calendário e configure\nos filtros e seus dias',
-        'Come funziona?', 
+        'MINHAS DATAS: adicione aqui suas férias e todos os dias em que você não trabalha (ex. aniversário, padroeiro da cidade, etc.)',  // 32
+        'OS FILTROS: selecione aqui os dias livres da semana e escolha quais feriados incluir no cálculo',  // 33
+        'O CALENDÁRIO: descubra aqui as pontes perfeitas para planejar suas férias ideais!',  // 34
+        'O que você pode fazer com PontiVIA?'                                       // 35
     ],
     'hr': [
         'Nema mosta na vidiku?\nSkrolaj kalendar i postavi\nfiltere i svoje dane',
+        'MOJI DATUMI: dodaj ovdje svoj godišnji odmor i sve dane kada ne radiš (npr. rođendan, gradski svetac patron, itd.)',  // 32
+        'FILTERI: odaberi ovdje slobodne dane u tjednu i odaberi koje praznike uključiti u izračun',  // 33
+        'KALENDAR: otkrij ovdje savršene mostove za planiranje svojih idealnih praznika!',  // 34
+        'Što možeš raditi s PontiVIA?'                                              // 35
     ],
     'si': [
         'Ni mosta na vidiku?\nDrsaj po koledarju in nastavi\nfiltre in svoje dni',
+        'MOJI DATUMI: dodaj tukaj svoj letni dopust in vse dni, ko ne delaš (npr. rojstni dan, mestni zavetnik, itd.)',  // 32
+        'FILTRI: izberi tukaj proste tedenske dni in izberi, katere praznike vključiti v izračun',  // 33
+        'KOLEDAR: odkrij tukaj popolne mostove za načrtovanje svojih idealnih počitnic!',  // 34
+        'Kaj lahko narediš s PontiVIA?'                                             // 35
     ],
     'gr': [
         'Καμία γέφυρα στον ορίζοντα;\nΚύλισε το ημερολόγιο και όρισε\nφίλτρα και τις μέρες σου',
+        'ΟΙ ΗΜΕΡΟΜΗΝΙΕΣ ΜΟΥ: προσθέστε εδώ τις διακοπές σας και όλες τις μέρες που δεν εργάζεστε (π.χ. γενέθλια, πολιούχος της πόλης, κ.λπ.)',  // 32
+        'ΤΑ ΦΙΛΤΡΑ: επιλέξτε εδώ τις ελεύθερες ημέρες της εβδομάδας και διαλέξτε ποιες αργίες να συμπεριληφθούν στον υπολογισμό',  // 33
+        'ΤΟ ΗΜΕΡΟΛΟΓΙΟ: ανακαλύψτε εδώ τις τέλειες γέφυρες για να σχεδιάσετε τις ιδανικές σας διακοπές!',  // 34
+        'Τι μπορείτε να κάνετε με το PontiVIA;'    
     ]
   };
   return dataLabel[language][item];
@@ -114,7 +158,9 @@ export function dataLabel(language, item) {
             'Festività cattoliche',                 // 14
             'Modifica lista dei giorni',            // 15
             'Come funziona?',                       // 16
-            'FAQ / Info Privacy'                    // 17
+            'FAQ / Info Privacy',                    // 17
+            'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?',    // 30
+            'Prosegui',                                                 // 31
         ],
         'fr': [
             'Pâques',                               // 0
@@ -134,7 +180,10 @@ export function dataLabel(language, item) {
             'Fêtes religieuses',                    // 14
             'Modifier la liste',                    // 15
             'Comment ça marche ?',                  // 16
-            'FAQ / Infos Confidentialité'           // 17
+            'FAQ / Infos Confidentialité',           // 17
+            'Vous allez être redirigé vers une page externe. Voulez-vous continuer ?',  // 30
+            'Continuer',                                                // 31
+
         ],
         'es': [
             'Pascua',                               // 0
@@ -154,7 +203,9 @@ export function dataLabel(language, item) {
             'Festividades religiosas',              // 14
             'Editar lista',                         // 15
             '¿Cómo funciona?',                  // 16
-            'FAQ / Info Privacidad'           // 17
+            'FAQ / Info Privacidad',           // 17
+            'Está a punto de ser redirigido a una página externa. ¿Desea continuar?', // 30
+            'Continuar',                                                // 31
         ],
         'de': [
             'Ostern',                               // 0
@@ -174,7 +225,9 @@ export function dataLabel(language, item) {
             'Religiöse Feiertage',                  // 14
             'Liste bearbeiten',                     // 15
             'Wie funktioniert es?',                  // 16
-            'FAQ / Datenschutz-Info'           // 17
+            'FAQ / Datenschutz-Info',           // 17
+            'Sie werden zu einer externen Seite weitergeleitet. Möchten Sie fortfahren?', // 30
+            'Fortfahren',                                               // 31
         ],
         'en': [
             'Easter',                               // 0
@@ -194,7 +247,9 @@ export function dataLabel(language, item) {
             'Religious holidays',                   // 14
             'Edit list',                            // 15
             'How does it work?',                  // 16
-            'FAQ / Privacy Info'           // 17
+            'FAQ / Privacy Info',           // 17
+            'You are about to be redirected to an external page. Do you want to continue?', // 30
+            'Continue',                                                 // 31
         ],
         'nl': [
             'Pasen',                                // 0
@@ -214,7 +269,9 @@ export function dataLabel(language, item) {
             'Religieuze feestdagen',                // 14
             'Lijst bewerken',                       // 15
             'Hoe werkt het?',                  // 16
-            'FAQ / Privacy Info'           // 17
+            'FAQ / Privacy Info',           // 17
+            'U wordt doorgestuurd naar een externe pagina. Wilt u doorgaan?',// 30
+            'Doorgaan',                                                 // 31
         ],
         'pt': [
             'Páscoa',                               // 0
@@ -234,7 +291,9 @@ export function dataLabel(language, item) {
             'Feriados religiosos',                  // 14
             'Editar lista',                         // 15
             'Como funciona?',                  // 16
-            'FAQ / Info Privacidade'           // 17
+            'FAQ / Info Privacidade',           // 17
+            'Você está prestes a ser redirecionado para uma página externa. Deseja continuar?',  // 30
+            'Continuar',                                                // 31
         ],
         'hr': [
             'Uskrs',                                // 0
@@ -254,7 +313,9 @@ export function dataLabel(language, item) {
             'Vjerski praznici',                     // 14
             'Uredi listu',                          // 15
             'Kako funkcionira?',                  // 16
-            'FAQ / Info o privatnosti'           // 17
+            'FAQ / Info o privatnosti',           // 17
+            'Bit ćete preusmjereni na vanjsku stranicu. Želite li nastaviti?', // 30
+            'Nastavi',                                                  // 31
         ],
         'si': [
             'Velika noč',                           // 0
@@ -274,7 +335,9 @@ export function dataLabel(language, item) {
             'Verski prazniki',                      // 14
             'Uredi seznam',                         // 15
             'Kako deluje?',                  // 16
-            'FAQ / Info o zasebnosti'           // 17
+            'FAQ / Info o zasebnosti',           // 17
+            'Preusmerjeni boste na zunanjo stran. Želite nadaljevati?', // 30
+            'Nadaljuj',                                                 // 31
         ],
         'gr': [
             'Πάσχα',                                // 0
@@ -293,8 +356,10 @@ export function dataLabel(language, item) {
             'Αργίες της εβδομάδας',                 // 13
             'Θρησκευτικές γιορτές',                 // 14
             'Επεξεργασία λίστας',                   // 15
-            'Πώς λειτουργεί;',                  // 16
-            'FAQ / Πληροφορίες Απορρήτου'           // 17
+            'Πώς λειτουργεί;',                      // 16
+            'FAQ / Πληροφορίες Απορρήτου',          // 17
+            'Πρόκειται να ανακατευθυνθείτε σε εξωτερική σελίδα. Θέλετε να συνεχίσετε;',  // 18
+            'Συνέχεια',                             // 19
         ]
     };
     return countryLabels[language][item];
@@ -333,7 +398,9 @@ export function holydayLabels(language,item) {
         'Come funziona?',                                           // 26
         'FAQ / Info Privacy',                                       // 27 ex 'FAQ / Info Privacy'
         'Vorrei condividere con te questo evento:',                 // 28
-        'Scarica PontiVIA!'                                         // 29
+        'Scarica PontiVIA!',                                        // 29
+        'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?',    // 30
+        'Prosegui',                                                 // 31
     ],
     'fr':[
         'Mes dates',                                                // 0
@@ -365,7 +432,9 @@ export function holydayLabels(language,item) {
         'Comment ça marche ?',                                      // 26
         'FAQ / Infos Confidentialité',                              // 27
         'Je voudrais partager cet événement avec toi :',            // 28
-        'Télécharge PontiVIA !'                                     // 29
+        'Télécharge PontiVIA !',                                    // 29
+        'Vous allez être redirigé vers une page externe. Voulez-vous continuer ?',  // 30
+        'Continuer',                                                // 31
     ],  
     'es':[
         'Mis fechas',                                               // 0
@@ -397,11 +466,13 @@ export function holydayLabels(language,item) {
         '¿Cómo funciona?',                                          // 26
         'FAQ / Info Privacidad',                                    // 27
         'Me gustaría compartir este evento contigo:',               // 28
-        '¡Descarga PontiVIA!'                                       // 29
+        '¡Descarga PontiVIA!',                                      // 29
+        'Está a punto de ser redirigido a una página externa. ¿Desea continuar?', // 30
+        'Continuar',                                                // 31
     ],  
     'de':[
         'Meine Termine',                                            // 0
-        'Füge deine Termine ein',                                      // 1
+        'Füge deine Termine ein',                                   // 1
         'Die nationalen Feiertage',                                 // 2
         'Die langen Zeiträume',                                     // 3
         'Deine besonderen Tage',                                    // 4
@@ -429,7 +500,9 @@ export function holydayLabels(language,item) {
         'Wie funktioniert es?',                                     // 16
         'FAQ / Datenschutz-Info',                                   // 17
         'Ich möchte dieses Ereignis mit dir teilen:',               // 28
-        'Lade PontiVIA herunter!'                                   // 29
+        'Lade PontiVIA herunter!',                                  // 29
+        'Sie werden zu einer externen Seite weitergeleitet. Möchten Sie fortfahren?', // 30
+        'Fortfahren',                                               // 31
     ],
     'en':[
         'My dates',                                                 // 0
@@ -461,7 +534,9 @@ export function holydayLabels(language,item) {
         'How does it work?',                                        // 16
         'FAQ / Privacy Info',                                       // 17
         'I would like to share this event with you:',               // 28
-        'Download PontiVIA!'                                        // 29
+        'Download PontiVIA!',                                       // 29
+        'You are about to be redirected to an external page. Do you want to continue?', // 30
+        'Continue',                                                 // 31
     ],
     'nl':[
         'Mijn datums',                                              // 0
@@ -493,7 +568,9 @@ export function holydayLabels(language,item) {
         'Hoe werkt het?',                                           // 16
         'FAQ / Privacy Info',                                       // 17
         'Ik wil deze gebeurtenis met je delen:',                    // 28
-        'Download PontiVIA!'                                        // 29
+        'Download PontiVIA!',                                       // 29
+        'U wordt doorgestuurd naar een externe pagina. Wilt u doorgaan?',// 30
+        'Doorgaan',                                                 // 31
     ],
     'pt':[
         'Minhas datas',                                             // 0
@@ -522,10 +599,12 @@ export function holydayLabels(language,item) {
         'Atenção, o evento se sobrepõe a ',                         // 23
         'Atenção, o evento está em conflito com ',                  // 24
         'Esta data já está presente ',                              // 25
-        'Como funciona?',                  // 16
-        'FAQ / Info Privacidade',           // 17
+        'Como funciona?',                                           // 16
+        'FAQ / Info Privacidade',                                   // 17
         'Gostaria de compartilhar este evento com você:',           // 28
-        'Baixe PontiVIA!'                                           // 29
+        'Baixe PontiVIA!',                                          // 29
+        'Você está prestes a ser redirecionado para uma página externa. Deseja continuar?',  // 30
+        'Continuar',                                                // 31
     ],
     'hr': [
         'Moji datumi',                                              // 0
@@ -555,9 +634,12 @@ export function holydayLabels(language,item) {
         'Pažnja, događaj je u sukobu s ',                           // 24
         'Ovaj datum je već prisutan ',                              // 25
         'Kako funkcionira?',                                        // 16
-    'FAQ / Info o privatnosti',                                     // 17
+        'FAQ / Info o privatnosti',                                 // 17
         'Želio bih podijeliti ovaj događaj s tobom:',               // 28
-        'Preuzmi PontiVIA!'                                         // 29
+        'Preuzmi PontiVIA!',                                        // 29
+        'Bit ćete preusmjereni na vanjsku stranicu. Želite li nastaviti?', // 30
+        'Nastavi',                                                  // 31
+
     ],
     'si': [
         'Moji datumi',                                              // 0
@@ -589,7 +671,9 @@ export function holydayLabels(language,item) {
         'Kako deluje?',                                             // 16
         'FAQ / Info o zasebnosti',                                  // 17
         'Rad bi delil ta dogodek s teboj:',                         // 28
-        'Prenesi PontiVIA!'                                         // 29
+        'Prenesi PontiVIA!',                                        // 29
+        'Preusmerjeni boste na zunanjo stran. Želite nadaljevati?', // 30
+        'Nadaljuj',                                                 // 31
     ],
     'gr': [
         'Οι ημερομηνίες μου',                                       // 0
@@ -621,7 +705,9 @@ export function holydayLabels(language,item) {
         'Πώς λειτουργεί;',                                          // 16
         'FAQ / Πληροφορίες Απορρήτου',                              // 17
         'Θα ήθελα να μοιραστώ αυτό το γεγονός μαζί σου:',           // 28
-        'Κατέβασε το PontiVIA!'                                     // 29
+        'Κατέβασε το PontiVIA!',                                    // 29
+        'Πρόκειται να ανακατευθυνθείτε σε εξωτερική σελίδα. Θέλετε να συνεχίσετε;',  // 30
+        'Συνέχεια',                                                 // 31
     ]
     };
     return dataLabel[language][item];
