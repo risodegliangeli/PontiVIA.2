@@ -150,7 +150,7 @@ export default function HomeScreen() {
       opacity: cardOpacity,           // ANIM. OPACITA
       flex: 1,
       width: '100%',
-      maxWidth:600,
+      maxWidth: 550,
       paddingHorizontal:0,      
       alignItems:'center',
     }, 

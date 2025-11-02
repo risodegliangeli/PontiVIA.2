@@ -144,7 +144,7 @@ export default function Preferences() {
       width:'100%',
       backgroundColor: 'transparent',
       paddingTop: 90,
-      maxWidth: 600,
+      maxWidth: 550,
     },
     pageTitle: {
       flex:1,

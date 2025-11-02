@@ -159,11 +159,11 @@ const SideLabel = () => {
                         {
                             flexDirection: 'column',
                             justifyContent: 'center',
-                            alignItems:'center',
-                            maxWidth:600,
+                            //alignItems:'center',
+                            //maxWidth: 550,
                             position:'absolute',
-                            left:'50%',
-                            transform: [{translateX:'-50%'}]
+                            // left:'50%',
+                            // transform: [{translateX:'-50%'}]
                         }]}>
 
                         {/* TESTI   */}
@@ -174,6 +174,8 @@ const SideLabel = () => {
                                     flexDirection:'column',
                                     justifyContent:'center', // VER
                                     alignItems:'center', // HOR
+                                    //borderWidth:2,
+                                    maxWidth: 550,
                                 }}>
 
                                 {/* COME FUNZIONA PONTIVIA? */}
@@ -192,6 +194,7 @@ const SideLabel = () => {
                                 {/* NAVIGAZIONE E PALLINI */}
                                 <View style={{
                                     width:'55%', 
+                                    //maxWidth: 314,
                                     flexDirection:'row', 
                                     justifyContent:'space-between', 
                                     alignItems:'center'
@@ -227,9 +230,14 @@ const SideLabel = () => {
                         {/* DIDASCALIA */}
                         <View style={{
                             width:'100%',
-                            paddingHorizontal:75,
+                            maxWidth: 550,
+                            //flex:1,
+                            //paddingHorizontal:75,
                             position:'absolute',
+                            left:'50%',
+                            transform: [{translateX: '-50%'}],
                             bottom: 160,
+                            
                             }}>
                             <Text style={styles.dida}>
                             {dataLabel(myLanguage, infoStep)}

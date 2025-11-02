@@ -127,7 +127,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
     fltList:{
       flex:1,
       backgroundColor: 'transparent', 
-      maxWidth: 600, // CENTRATO SU TABLET
+      maxWidth: 550, // CENTRATO SU TABLET
     },
     card: {
       flex:1,

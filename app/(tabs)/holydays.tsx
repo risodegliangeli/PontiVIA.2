@@ -116,7 +116,7 @@ export default function HolydaysScreen() {
       width:'100%',
       backgroundColor: 'transparent',
       paddingTop: 90,
-      maxWidth:600,
+      maxWidth: 550,
     },
     // TITOLO PAGINA
     sectionTitle: {
@@ -225,7 +225,7 @@ export default function HolydaysScreen() {
     },
     modalContainer: {
       width:'95%',
-      maxWidth:600,
+      maxWidth: 550,
       backgroundColor:'white',
       borderRadius:24,
       flexDirection:'column',
