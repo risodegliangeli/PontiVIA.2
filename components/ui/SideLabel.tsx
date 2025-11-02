@@ -1,5 +1,5 @@
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, useColorScheme, Platform, ImageBackground, } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Modal, useColorScheme, Platform, ImageBackground, Pressable, } from "react-native";
 import { useState } from 'react';
 import { Colors } from '@/constants/Colors';
 //import Svg, {Path} from 'react-native-svg';
@@ -54,7 +54,7 @@ const SideLabel = () => {
       },
       shadowOpacity: 0.45,
       shadowRadius: 16 // Match elevation for iOS
-      },
+    },
     infoBalloon: {
       width:'100%',
       minHeight:120,
@@ -104,7 +104,7 @@ const SideLabel = () => {
         letterSpacing: .6,
         color: colors.white, 
         textAlign: 'center'
-        }
+    }
     })
 
     return (
@@ -151,7 +151,8 @@ const SideLabel = () => {
                             <IconSymbol name='xmark' size={Platform.OS === 'ios' ? 28 : 36} color={colors.white} />
                         </TouchableOpacity>
                     </View>
-
+                    
+                    {/* WRAPPER PRINCIPALE */}
                     <View
                         style={[
                         StyleSheet.absoluteFill,
@@ -159,12 +160,16 @@ const SideLabel = () => {
                             flexDirection: 'column',
                             justifyContent: 'center',
                             alignItems:'center',
+                            maxWidth:600,
+                            position:'absolute',
+                            left:'50%',
+                            transform: [{translateX:'-50%'}]
                         }]}>
 
-
+                        {/* TESTI   */}
                         <View style={styles.infoBalloon}>
                             <View 
-                                style={{ // CONTENITORE TESTI DENTRO BALLOON
+                                style={{ 
                                     flex:1,
                                     flexDirection:'column',
                                     justifyContent:'center', // VER
@@ -197,11 +202,17 @@ const SideLabel = () => {
                                             }}>                              
                                         <IconSymbol name='chevron.left' size={Platform.OS === 'ios' ? 20:28} color={colors.white} />
                                     </TouchableOpacity>
-                                    <View style={{width:12, height:12, borderRadius:12,
+                                    <Pressable 
+                                        onPress={ () => setInfoStep(1) }
+                                        style={{width:12, height:12, borderRadius:12,
                                         backgroundColor: infoStep === 1 ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, .5)' }}/>
-                                    <View style={{width:12, height:12, borderRadius:12,
+                                    <Pressable 
+                                        onPress={ () => setInfoStep(2) }
+                                        style={{width:12, height:12, borderRadius:12,
                                         backgroundColor: infoStep === 2 ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, .5)'}}/>
-                                    <View style={{width:12, height:12, borderRadius:12,
+                                    <Pressable 
+                                        onPress={ () => setInfoStep(3) }
+                                        style={{width:12, height:12, borderRadius:12,
                                         backgroundColor: infoStep === 3 ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, .5)'}}/>
                                     <TouchableOpacity
                                         onPress={ () => {
@@ -216,7 +227,7 @@ const SideLabel = () => {
                         {/* DIDASCALIA */}
                         <View style={{
                             width:'100%',
-                            paddingHorizontal:50,
+                            paddingHorizontal:75,
                             position:'absolute',
                             bottom: 160,
                             }}>
