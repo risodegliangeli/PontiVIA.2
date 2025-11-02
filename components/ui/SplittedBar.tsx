@@ -367,10 +367,9 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
                     4: touchables icons
       */}     
 
-      {/* BASE GENERALE WIDTH 100% DEI CONTENITORI */}   
+      {/* 1) SFONDO GRIGIO SDOPPIATO PER I PULSANTI */}   
       <View style={styles.splittedBase}>      
-        
-        {/* BASE PULSANTE DOPPIO TRASPARENTE DENTRO AL QUALE WRAPPARE IL BLUR */}
+        {/* BASE PULSANTE DOPPIO (CON BLUR SOVRAPPOSTO) */}
         <View style={{
           width:doubleItemsSize,
           borderRadius: splittedBarHeigth,
@@ -397,7 +396,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
             }
         </View>
 
-        {/* BASE PULSANTE SINGOLO TRASPARENTE DENTRO AL QUALE WRAPPARE IL BLUR */}
+        {/* BASE PULSANTE SINGOLO (CON BLUR SOVRAPPOSTO) */}
         <View style={{
           width:splittedBarHeigth,
           borderRadius: splittedBarHeigth,
@@ -424,14 +423,14 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
             }
         </View>        
 
-        {/* FOCUSED DOT ANIMATO */}
+        {/* 2) LIVELLO CON FOCUSED DOT ANIMATO */}
         <RailBeyond />  
 
       </View>
-
+      
+      {/* 3) WRAPPER SOVRAPPOSTO AI FONDINI CON DENTRO I PULSANTI */}
       <View style={styles.splittedBase}>{/* index 3 */}  
-        
-        {/* DOPPIO */}
+        {/* CONTENITORE DOPPIO */}
         <View style={styles.doubleItemsTransparent}>
           <TouchableOpacity 
             style={[styles.doubleItemsTouchable, {paddingLeft:12}]}
@@ -449,7 +448,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
           </TouchableOpacity>
         </View>
 
-        {/* SINGOLO */}
+        {/* CONTENITORE SINGOLO */}
         <View style={styles.singleItemTransparent}>
           <TouchableOpacity style={[styles.singleItemTouchable, styles.singleItemTransparent]}
             key={'index'}
@@ -457,7 +456,6 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
             <IndexIcon />        
           </TouchableOpacity>
         </View>
-
       </View>
     </View>
   );
