@@ -231,13 +231,11 @@ const SideLabel = () => {
                         <View style={{
                             width:'100%',
                             maxWidth: 550,
-                            //flex:1,
-                            //paddingHorizontal:75,
+                            paddingHorizontal:24,
                             position:'absolute',
                             left:'50%',
                             transform: [{translateX: '-50%'}],
                             bottom: 160,
-                            
                             }}>
                             <Text style={styles.dida}>
                             {dataLabel(myLanguage, infoStep)}

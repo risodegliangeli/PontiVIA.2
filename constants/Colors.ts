@@ -41,14 +41,14 @@ export const Colors = {
   //        DARK
   //
   // /////////////////////
-    blueBar: '#31bdfdff',
+    blueBar: '#0A7AE1',
     tabBarBackground: 'rgba(51, 51, 51, .55)',
-    tabBarBackgroundIos: 'rgba(134,103,133,1)',
+    tabBarBackgroundIos: '#292929', //'rgba(134,103,133,1)',
     tabBarBackgroundAndroid: 'rgba(134,103,133,1)',
     tabBarBorderIos: 'rgba(141, 141, 141, 0.08)',
     tabBarBorderAndroid: 'rgba(255, 255, 255, 0.08)',
     tabBarInactiveItem: 'rgba(255, 255, 255, 1)',
-    tabBarFocusDotIos: 'rgba(215,191,214,1)',
+    tabBarFocusDotIos: 'black', //'rgba(215,191,214,1)',
     tabBarFocusDotAndroid: 'rgba(215,191,214,.8)',
     tabBarActiveItem: 'rgba(0, 136, 255, 1)',
     text: 'rgba(255, 255, 255, 1)',         // BIANCO
@@ -63,7 +63,7 @@ export const Colors = {
     bridgeDay: 'rgba(255, 204, 51, 1)',
     bridgeBackground: '#43a7ff', //'rgba(255, 204, 51, 1)',  // PONTE EVIDENZIATO
     tint: tintColorDark,
-    cancelButton: '#999',
+    cancelButton: '#292929', //'#999',
     white: '#fff',
     black: '#333',
     modalBackground: 'rgba(239,234,239,1)',

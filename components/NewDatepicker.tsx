@@ -1,5 +1,5 @@
 import {useState, useEffect, } from 'react';
-import {  View, Text, Image, TextInput, TouchableOpacity, StyleSheet,  } from 'react-native';
+import {  View, Text, Image, TextInput, TouchableOpacity, StyleSheet, useColorScheme  } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { addDays, subDays, compareAsc, getDay, differenceInDays, startOfMonth } from 'date-fns';
 import { getLocales,  } from 'expo-localization';
@@ -7,6 +7,8 @@ import useLocalizationData from '@/app/data/data';
 import DateTimePicker from 'react-native-ui-datepicker'; // https://www.npmjs.com/package/react-native-ui-datepicker
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { datepickerLabels as dataLabel } from '@/components/dataLabel';
+import { Colors } from '@/constants/Colors';
+
 
 // INTERFACCIA COMPONENT
 interface NewDatepickerInterface {
@@ -70,15 +72,21 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   initialIndex,
   onCancel,
   onConfirm
-}) => {
-
-  //console.log( `<NEWDATEPICKER>` );
+  }) => {
 
   // LINGUA DI SISTEMA
   language = (getLocales()[0].languageTag).slice(0,2);
 
   // NOMI MESI E GIORNI DELLA SETTIMANA LETTI DAL data
   const { months, localizedDays } = useLocalizationData();
+
+  // GESTIONE COLORI
+  const useThemeColors = () => {
+    const colorScheme = useColorScheme();
+    return Colors[colorScheme ?? 'light'];
+  };
+
+  const colors = useThemeColors();
 
   // COPIA DEI PROPS IN INGRESSO PER USO INTERNO
   const [myStartDate, setMyStartDate] = useState<Date>(createUTCDate(startDate));     // DATA INIZIO
@@ -116,7 +124,6 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
     { label: dropdownLabel[2], value: 3 },
     { label: dropdownLabel[3], value: null },
     ];
-
   
   /* RADIOBUTTON REPEAT-ON-DATE/ON-DAY
   INIZIALMENTE false ENTRAMBI, SI ATTIVANO/DISATTIVANO QND L'UTENTE APRE/CHIUDE IL GRUPPO RADIOBUTTON
@@ -144,23 +151,26 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
 
   // STILI
   const styles = StyleSheet.create({
-    modalContainer: {
+    modalContainer: { // CONTENUTO INTERNO ALLA MODAL
       width:'100%',
       flexDirection:'column',
-      gap:32,
+      gap:24,
       alignItems:'center', // HOR
-      justifyContent:'center',
-      alignContent:'center',
+      //justifyContent:'center',
+      //alignContent:'center',
+      borderWidth:1
     },    
     listTitle: {
-      color: '#333',
+      //flex:1,
+      minWidth:'100%',
+      color: colors.text,
       fontSize: 18,
       fontWeight: '600',
-      paddingBottom: 12,
+      //paddingBottom: 12,
       textAlign:'center', 
     },
     textInput: {
-      width: '100%',
+      minWidth: '100%',
       fontSize:20,
       fontWeight:400,
       paddingBottom:8,
@@ -190,13 +200,16 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       gap:8,
       minWidth: '49%',
       maxWidth: '50%',
+      color: colors.text,
     },
     dateFromText: {
       fontSize:16,
+      color: colors.text,
       },
-      repeatText: {
+    repeatText: {
       fontSize:16,
-      color: '#0088ff'
+      fontWeight: 600,
+      color: colors.blueBar,
     },
     // DROPDOWN
     dropdownStyle: {
@@ -208,6 +221,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       },
       dropdownSelectedTextStyle: {
       fontSize: 16,
+      color: colors.text,
     },
     repeatButton: {
       flexDirection: 'row',
@@ -216,17 +230,17 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
     },
     dropdownPlaceholderStyle:{
       fontSize: 16,
-      color: 'rgba(51,51,51,.5)',
+      color: colors.text, //'rgba(51,51,51,.5)',
     },
     // RADIOBUTTON
     radioContainer: {
-      width:'100%',
+      minWidth:'100%',
       flexDirection: 'column',
       justifyContent: 'space-around',
       paddingVertical:24,
       paddingHorizontal: 12,
       borderWidth:1,
-      borderColor: '#dedede',
+      borderColor: colors.blueBar,
       borderRadius:8,
       minHeight:80,
       gap:24,
@@ -241,7 +255,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       width: 20,
       borderRadius: 10,
       borderWidth: 1,
-      borderColor: '#333',
+      borderColor: colors.text,
       alignItems: 'center',
       justifyContent: 'center',
       marginRight: 8,
@@ -254,61 +268,75 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       backgroundColor: '#0088FF',
     },   
     radioButtonLabel: {
-      fontSize:14,
+      fontSize:15,
+      color: colors.text,
       flex:1,
     }, 
     // PULSANTI ADD/CANCEL
     modalButtons: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginTop: 20,
+      minWidth:'100%',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      gap:12,
+      // borderWidth:1,
     },
-    addButton: {
-      //backgroundColor: '#00',
-      borderColor: '#0088FF',
-      borderWidth: 1,
-      padding: 15,
-      borderRadius: 8,
+
+    cancelButton: {
+      paddingVertical: 12,
+      paddingHorizontal:20,
+      maxHeight:44,
+      backgroundColor: colors.cancelButton,
+      borderRadius: 99,
       alignItems: 'center',
-      flex: 1,
-      marginLeft: 10,
-    },
-    addButtonText: {
-      color: '#0088ff',
+      justifyContent:'center',
+      minWidth:'100%',
+      elevation:1,
+      shadowColor: colors.black, // iOS shadow
+      shadowOffset: {
+        width: 1,
+        height: 1, // Match elevation for iOS
+      },
+      shadowOpacity: 0.15,
+      shadowRadius: 3 // Match elevation for iOS
+      },
+    cancelButtonText: {
+      color: colors.text,
       fontSize: 16,
       fontWeight: 'bold',
-    },
-    cancelButton: {
-      borderWidth:1,
-      borderColor:  'rgba(51, 51, 51, .5)',
-      padding: 15,
-      borderRadius: 8,
+    },    
+    addButton: {
+      minWidth:'100%',
+      flexDirection:'row',
+      paddingVertical: 12,
+      maxHeight:44,
+      backgroundColor: colors.bridgeBackground,
+      borderRadius: 99,
       alignItems: 'center',
-      flex: 1,
-      marginRight: 10,
+      justifyContent:'center',
+      alignContent:'center',
+      //marginLeft: 4,
+
     },
-    cancelButtonText: {
-      color:  'rgba(51, 51, 51, .5)',
+    addButtonText: {
+      color: colors.white,
       fontSize: 16,
       fontWeight: 'bold',
     },
     datepickerContainer: {
       position:'absolute',
       top:12,
-      marginHorizontal:24,
+      marginHorizontal:12,
       paddingHorizontal:24,
       paddingVertical:24,
       flexDirection:'column',
       //gap:20,
       justifyContent:'space-between',
       width:'100%',
-      flex:1,
-      borderRadius:12,
-      backgroundColor:'#fafafa',
-      borderWidth:2,
-      borderColor: '#efefef',
+      //flex:1,
+      borderRadius:32,
+      backgroundColor: colors.textNegative, //'rgba(255, 255, 255, .95)',
       elevation:6,
-      shadowColor: '#000000', // iOS shadow
+      shadowColor: colors.text, // iOS shadow
       shadowOffset: {
         width: 0,
         height: 16, // Match elevation for iOS
@@ -323,7 +351,6 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       color: '#cc0000',
     }
   })
-
 
   /* --------------------------------------------------
   GESTISCE LA DROPDOWN PARTENDO DALLA DIFFERENZA TRA DATE
@@ -357,32 +384,31 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
     setLowerRadioButtonLabel(`${dataLabel(language, 9)} ${dataLabel(language, 9 + getWeekdayRecurrence(myStartDate))} ${localizedDays[getDay(myStartDate) === 0 ? 6 : getDay(myStartDate) - 1]} di ${ months[myStartDate.getMonth()].label } `);
   }, [myStartDate, myEndDate]);
 
-
+  // CONTENUTO _INTERNO_ DELLA MODAL
   return (
-    <View style={styles.modalContainer}>
-
-
-
-      {/* MODAL */}
-      <View style={styles.modalContainer} >
-        {/* TITOLO MODAL */}
+    <>       
+      {/* TITOLO MODAL cambia se si inserisce o si edita in item ============= */}
         <Text style={styles.listTitle}>
           {initialIndex !== null ? dataLabel(language, 19) : dataLabel(language, 0)}
-          </Text>
+        </Text>
 
-        {/* ERRORE <-- IN ARRIVO DAL CHIAMANTE */}
+        {/* ERRORE <-- IN ARRIVO DAL CHIAMANTE ================================= */}
         {isError && <Text style={styles.errorMsg}>{errorMsg}</Text>}
 
-        {/* INPUT TEXT  */}
+        {/* INPUT TEXT ========================================================= */}
         <TextInput
           key={'description'}
           style={styles.textInput}
           placeholder={dataLabel(language, 7)}
-          placeholderTextColor={descriptionAlert ? 'red' : '#929292'}
+          placeholderTextColor={descriptionAlert ? 
+            'red' 
+            : 
+            useColorScheme() === 'light' ? '#666' : '#dedede'} // gestisce errore
           value={myDescription}
           onChangeText={setMyDescription}
         />
-        {/* DATE FROM - TO*/}
+
+        {/* DATE FROM - TO ====================================================== */}
         <View style={styles.dateContainer}>
           {/* ROW 1 - DA */}
           <View style={styles.dateContainerRow}>
@@ -398,6 +424,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               style={styles.dateFrom}>
               <Text key='fromDate' style={styles.dateFromText}>{myStartDate.toLocaleDateString()}</Text>{IcoCalendar}
             </TouchableOpacity>
+
             {/* DROPDOWN DURATA */}
             <View style={{width:'48%'}}>
               <Dropdown
@@ -412,7 +439,6 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                 onFocus={() => setIsFocus(true)}
                 onBlur={() => setIsFocus(false)}
                 onChange={ (item) => {
-                   
                   let v: number = item.value;
                   switch (v) {
                     case 1:
@@ -460,7 +486,8 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               <Text key='toDate' style={styles.dateFromText}>{myEndDate?.toLocaleDateString()}</Text>{IcoCalendar}
             </TouchableOpacity>
           </View>}
-          {/* ROW 3 - BOTTONE RIPETE */}
+
+          {/* ROW 3 - BOTTONE RIPETE ================================================ */}
           <View style={[styles.dateContainerRow, {maxWidth:'50%', justifyContent:'flex-start'}]}>
             <TouchableOpacity 
               style={styles.repeatButton}
@@ -479,15 +506,17 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               >
               {IcoRepeat}<Text 
               style={[styles.repeatText, 
-                !radioButton && {color: '#333333'}
+                !radioButton && {color: colors.text}
               ]}>
                 {dataLabel(language, 8)}
                 </Text>{IcoArrow}
 
             </TouchableOpacity>
           </View>
-          {/* ROW 4 - RADIOBUTTON */}
+
+          {/* ROW 4 - RADIOBUTTON =================================================== */}
           {radioButton && <View style={styles.radioContainer}>
+
             {/* UPPER */}
             <TouchableOpacity
               style={styles.radioOption}
@@ -503,6 +532,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                   {upperRadioButtonLabel}
               </Text>
             </TouchableOpacity>
+
             {/* LOWER */}
             <TouchableOpacity
               style={styles.radioOption}
@@ -518,34 +548,39 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                 {lowerRadioButtonLabel}
               </Text>
             </TouchableOpacity>
-          </View>}          
-          {/* PULSANTI ANNULLA-SALVA GENERALI */}
-          <View style={styles.modalButtons}>
-            <TouchableOpacity 
-              style={styles.cancelButton} 
-              onPress={ () => onCancel() }>
-              <Text style={styles.cancelButtonText}>{dataLabel(language, 5)}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={styles.addButton} 
-              onPress={ () => 
-              myDescription ?
-                onConfirm(
-                  createUTCDate(myStartDate), 
-                  myEndDate && createUTCDate(myEndDate), 
-                  myDescription, 
-                  upperRadioButtonActive, 
-                  lowerRadioButtonActive) 
-              :
-                setDescriptionAlert(true)
-              }>
-              <Text style={styles.addButtonText}>
-                {initialIndex !== null ? dataLabel(language, 18) : dataLabel(language, 6)}
-                </Text>
-            </TouchableOpacity>
-          </View>
+
+          </View>}  
+
+
+
         </View>
-      </View>
+
+        {/* PULSANTI ANNULLA-SALVA ================================================= */}
+        <View style={styles.modalButtons}>
+          <TouchableOpacity 
+            style={styles.cancelButton} 
+            onPress={ () => onCancel() }>
+            <Text style={styles.cancelButtonText}>{dataLabel(language, 5)}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.addButton} 
+            onPress={ () => 
+            myDescription ?
+              onConfirm(
+                createUTCDate(myStartDate), 
+                myEndDate && createUTCDate(myEndDate), 
+                myDescription, 
+                upperRadioButtonActive, 
+                lowerRadioButtonActive) 
+            :
+              setDescriptionAlert(true)
+            }>
+            <Text style={styles.addButtonText}>
+              {initialIndex !== null ? dataLabel(language, 18) : dataLabel(language, 6)}
+              </Text>
+          </TouchableOpacity>
+        </View>
+
 
       {/* DATEPICKER - GRIGLIA CALENDARIO */}
       {datepickerVisible && 
@@ -558,23 +593,13 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
             maxDate={maxDate}
             minDate={minDate}
             onChange={({date}) => {
-
               // VARIABILE DI SERVIZIO
               let d: Date | null = createUTCDate(date);
-
-              // console.log(`- - caller: ${datepickerCaller}`);
-              // console.log(`- - selectedDate: ${createUTCDate(date)?.toLocaleDateString()}`);
-              // console.log(`- - myStartDate: ${myStartDate.toLocaleDateString()}`);
-              // console.log(`- - myEndDate: ${myEndDate?.toLocaleDateString()}`);
-              // console.log(`- - maxDate: ${maxDate?.toLocaleDateString()}`);
-              // console.log(`- - minDate: ${minDate?.toLocaleDateString()}`);
-
               if (datepickerCaller === 'startDate') { 
                 setMyStartDate(d); 
               } else { 
                 setMyEndDate(d); 
               }; 
-              
               setSelectedDate(d); // AGGIORNA DATA NEL FILED
               // setMaxDate(null); // RESETTA maxdate
               // setMinDate(null);
@@ -589,9 +614,9 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
             //timeZone={'UTC'}
             locale={language}
             style={{
-            // backgroundColor: 'transparent',
-            // borderWidth:1,
-            // paddingTop: 24
+              backgroundColor: colors.textNegative,
+              // borderWidth:1,
+              // paddingTop: 24
             }}
             //navigationPosition={'right'}
             styles={{
@@ -600,25 +625,29 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               //today: { borderWidth: 0, backgroundColor:'transparent', }, 
               //today_label: { color: '#333333'},
               selected: { backgroundColor: '#FF778F', borderRadius:'12%' }, 
-              selected_label: { color: 'white' },
+              selected_label: { color: colors.text}, //'rgba(255, 255, 255, 1)' },
               selected_month: {backgroundColor: '#FF778F'},
               //year_selector_label: { display:'none'},
               //day_cell:{backgroundColor:'#dedede'},
-              month_selector_label: {fontSize: 16, fontWeight:600, textTransform:'capitalize'},
-              year_selector_label: {fontSize: 16, fontWeight:600, textTransform:'capitalize'},
-              day_label: {fontSize:16, color: '#333333'},
-              button_next: { backgroundColor: '#FF778F', borderRadius:'100%', },
+              month_selector_label: {fontSize: 16, fontWeight:600, textTransform:'capitalize', color:colors.text},
+              year_selector_label: {fontSize: 16, fontWeight:600, textTransform:'capitalize', color:colors.text},
+              day_label: {fontSize:16, color: colors.text},
+              button_next: { backgroundColor: colors.cancelButton, borderRadius:'100%', padding:12 },
               button_next_image:{color:'red'},
-              button_prev: { backgroundColor: '#FF778F', borderRadius:'100%', },
+              button_prev: { backgroundColor: colors.cancelButton, borderRadius:'100%', padding:12},
             }}
           />          
           
-          <View style={{width: '100%', height:1, backgroundColor:'#dedede', marginBottom: 24}} />
+          {/* <View style={{width: '100%', height:1, backgroundColor:'#dedede', marginBottom: 24}} /> */}
           
+
+
+
+
           <View style={[styles.modalButtons, {marginTop:0}]}>
             {/* CHIUDE CALENDARIO */}
             <TouchableOpacity 
-              //style={[styles.cancelButton, {borderWidth:1}]} 
+              style={styles.cancelButton} 
               onPress={ () => 
                 setDatepickerVisible(false) // CHIUDE IL DATEPICKER E LASCIA INVARIATO
               }>
@@ -626,7 +655,8 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               <IconSymbol size={24} name="xmark" color={'#969696'} style={{marginLeft:0}} />
             </TouchableOpacity>
             {/* CONFERMA CALENDARIO */}
-            <TouchableOpacity 
+            <TouchableOpacity
+            style={styles.addButton}  
               onPress={ () => {
                 datepickerCaller === 'startDate' ? // AGGIORNA LA VARIABILE CHIAMANTE
                   setMyStartDate(selectedDate) 
@@ -634,14 +664,13 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                   setMyEndDate(selectedDate); 
                 setDatepickerVisible(false) // CHIUDE IL DATEPICKER
               }}>
-              <IconSymbol size={24} name="checkmark" color={'#0088ff'} style={{marginRight:0}} />
+              <IconSymbol size={24} name="checkmark" color={colors.white} style={{marginRight:0}} />
             </TouchableOpacity>
           </View>
 
         </View>
       }
-      
-    </View>
+    </>
   );
 }
 

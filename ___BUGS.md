@@ -1,7 +1,15 @@
 # TICKET:
 
 
+- ### RIVEDERE CONDIVISIONE
+  -- condivisione da index (file: calendarScreen.tsx) -> async function handleShare
 
+---
+
+- ### GRAFICA MODAL CARICAMENTO
+  -- adeguare liquid glass
+
+---
 
 - ### CAROUSEL APERTURA
   -- react-native-snap-carousel
@@ -9,17 +17,13 @@
 ---
 
 - #### ALERT possibili ponti
+  -- background
 
 ---
 
 - #### ALERT eventi personali
   -- aggiungere checkbox CAMPANELLA nelle due modal (giono singolo e periodo):
   -- "Ricordami di questa data [ 7 ] giorni prima"
-
----
-
-- ### SimpleToast FESTIVITA: RENDERE EDITABILE
-  -- aggiungere pulsante 'modifica' (o cancella) nel toast
 
 ---
 
@@ -37,7 +41,7 @@
 ---
 
 - #### PAGINA HELP
-  -- creare una pagina grafica di spiegazioni
+  -- portare pgina FAQ dentro
 
 
 - #### geolocalizzazione per santo del giorno

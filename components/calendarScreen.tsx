@@ -356,19 +356,21 @@ const CalendarScreen = ({callerPreferences}: any) => {
       shadowRadius: 12 // Match elevation for iOS
     },
     modalButtons: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      width:'100%',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      gap:12,
     },
     cancelButton: {
-      paddingVertical: 10,
+      paddingVertical: 12,
       paddingHorizontal:20,
-      maxHeight:46,
+      maxHeight:44,
       backgroundColor: colors.cancelButton,
-      borderRadius: 8,
+      borderRadius: 99,
       alignItems: 'center',
       justifyContent:'center',
-      width:'auto',
-      marginRight: 4,
+      width:'100%',
+      //marginRight: 4,
     },
     cancelButtonText: {
       color: colors.text,
@@ -376,16 +378,17 @@ const CalendarScreen = ({callerPreferences}: any) => {
       fontWeight: 'bold',
     },    
     addButton: {
-      flex: 1,
+      width:'100%',
       flexDirection:'row',
-      padding: 10,
-      maxHeight:46,
+      paddingVertical: 12,
+      maxHeight:44,
       backgroundColor: colors.bridgeBackground,
-      borderRadius: 8,
+      borderRadius: 99,
       alignItems: 'center',
       justifyContent:'center',
       alignContent:'center',
-      marginLeft: 4,
+      //marginLeft: 4,
+
     },
     addButtonText: {
       color: colors.white,
@@ -404,28 +407,40 @@ const CalendarScreen = ({callerPreferences}: any) => {
       );
   };
 
-/* ============================================================================= 
+  /* ============================================================================= 
   SHARE
+
+  funzione di condivisione, in ingresso 
+  - 'type' tipo di condivisione 'holyday' o 'bridge' (cambia il tipo di condivisione)
+  - 'description' descrizione della festività
+
   ============================================================================= */
-  async function handleShare (description: string) {
-    //const itemToShare: any = newPersonalHolydays[index];
-      try {
-          let msg = `${dataLabel(myLanguage,12)}\n\n*${dataLabel(myLanguage, 9)}*\n${ description }\n------\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
-          const result = await Share.share({
-          message: msg,
-        });
-        if (result.action === Share.sharedAction) {
-          if (result.activityType) {
-            // OK -> shared with activity type of result.activityType
-          } else {
-            // shared
-          }
-        } else if (result.action === Share.dismissedAction) {
-          // CANCEL -> dismissed
-        }
-      } catch (error) {
-        console.error(error);
+  async function handleShare (type: string, description: string) {
+    try {
+      let msg = '';
+      if (type === 'holyday') {
+        // MESSAGGIO: festività inserita dall'utente
+        msg = `${dataLabel(myLanguage,12)}\n\n${ description }\n------\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
+      } else {
+        // MESSAGGIO: possibile ponte
+        msg = `${dataLabel(myLanguage,12)}\n\n*${dataLabel(myLanguage, 9)}*\n${ description }\n------\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
       }
+      const result = await Share.share({
+        message: msg,
+        });
+        
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // OK -> shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // CANCEL -> dismissed
+      }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   /* ============================================================================= 
@@ -510,12 +525,12 @@ const CalendarScreen = ({callerPreferences}: any) => {
 
   /* ============================================================================= 
     (CALLBACK) RENDER DELLE CARD DELLA FLATLIST
-        determina il tipo di giorno (festivo, sabato, domenica, ponte, feriale).
-        1 (Festivo), -1 (Ponte), undefined (Feriale). 
-        true o false se il giorno è interno al mese
-        l'array finale sarà come questo esempio:
-        day[0]                      day[1]    day[2]            day[3]
-        2025-05-26T12:00:00.000Z,   1,        "Ferragosto",     false],
+      determina il tipo di giorno (festivo, sabato, domenica, ponte, feriale).
+      1 (Festivo), -1 (Ponte), undefined (Feriale). 
+      true o false se il giorno è interno al mese
+      l'array finale sarà come questo esempio:
+      day[0]                      day[1]    day[2]            day[3]
+      2025-05-26T12:00:00.000Z,   1,        "Ferragosto",     false],
   ============================================================================= */
   const renderMonthCard = useCallback(({ item: month, index }) => {
 
@@ -527,25 +542,47 @@ const CalendarScreen = ({callerPreferences}: any) => {
       description: string;
     }
     const HolydayToast: React.FC<HolydayToastInterface> = ({title, description}) => {
+      // CONTENUTO CHE STA _DENTRO_ AL TOAST
       return (
-      <View style={{
-        width:'100%', 
-        flexDirection:'row', 
-        gap:8, 
-        alignItems:'flex-start', 
-        justifyContent:'space-between'
-        }}>
-        <View style={{flex:1, flexDirection:'row', gap:8, alignContent:'flex-start', }}>
+      <View style={{width:'100%', flexDirection:'column', gap:12}}>
+      
+        {/* PULS. SHARE */}
+        <View style={{ width:'100%', flexDirection:'row', justifyContent:'flex-end', }}>  
+          <TouchableOpacity
+            onPress={ () => 
+              handleShare('holyday', description)
+              }>
+            <IconSymbol name="square.and.arrow.up" size={24} color={colors.blueBar} />
+          </TouchableOpacity>
+        </View>
+
+        {/* TESTI */}
+        <View style={{
+          width:'100%', 
+          flexDirection:'row', 
+          gap:8, 
+          alignItems:'flex-start', 
+          justifyContent:'space-between',
+          //backgroundColor:'green',
+          }}>
           <IconSymbol name="calendar" size={28} color={colors.black} />
-          <View style={{flex:1, }}>
+          <View style={{width:'100%', }}>
             <Text style={[styles.monthTitle, {color: colors.black, textAlign:'left', paddingLeft:0} ]}>{title}</Text>
             <Text style={[styles.dayNumber, {color: colors.black, textAlign:'left', }]}>{description}</Text>
           </View>
         </View>
-        <TouchableOpacity
-          onPress={() => setVisibleToast(false)}>
-          <IconSymbol name="xmark" size={28} color={colors.black} />
-        </TouchableOpacity>
+
+        {/* SPAZIATORE */}
+        <View style={{width:'100%', height:12}} />
+
+        {/* PULSANTI ANNULLA */}
+        <View style={styles.modalButtons }>
+          <TouchableOpacity 
+            style={styles.cancelButton} 
+            onPress={() => setVisibleToast(false)}>
+            <Text style={styles.cancelButtonText}>{dataLabel(myLanguage, 10)}</Text>
+          </TouchableOpacity>
+        </View> 
       </View>
       )
     }
@@ -561,18 +598,21 @@ const CalendarScreen = ({callerPreferences}: any) => {
     }
 
     const BridgeToast: React.FC<BridgeHolydayInterface> = ({title, description, bridgeStart, bridgeEnds}) => {
+      // CONTENUTO CHE STA _DENTRO_ AL TOAST
       return (
-        <View style={{width:'100%', flexDirection:'column', }}>
+        <View style={{width:'100%', flexDirection:'column', gap:12}}>
 
+          {/* PULS. SHARE */}
           <View style={{ width:'100%', flexDirection:'row', justifyContent:'flex-end', }}>  
             <TouchableOpacity
               onPress={ () => 
-                handleShare(description)
+                handleShare('bridge', description)
                }>
               <IconSymbol name="square.and.arrow.up" size={24} color={colors.blueBar} />
             </TouchableOpacity>
           </View>
 
+          {/* CORPO MESSAGGIO */}
           <View style={{ width:'100%', flexDirection:'row', justifyContent:'flex-start', }}>
             <Image 
               source={require('@/assets/images/icon_girl-on.png')}
@@ -586,8 +626,11 @@ const CalendarScreen = ({callerPreferences}: any) => {
             </View>
           </View>
 
+          {/* SPAZIATORE */}
+          <View style={{width:'100%', height:24}} />
+
           {/* PULSANTI ANNULLA/AGGIUNGI */}
-          <View style={[styles.modalButtons, {marginTop:24}]}>
+          <View style={styles.modalButtons }>
             <TouchableOpacity 
               style={styles.cancelButton} 
               onPress={() => setVisibleToast(false)}>
@@ -618,10 +661,6 @@ const CalendarScreen = ({callerPreferences}: any) => {
         </View>
       )
     }
-
-
-
-
 
     return (    
       <React.Fragment key={`${month.y}-${month.m}-${index}`}>
@@ -680,64 +719,64 @@ const CalendarScreen = ({callerPreferences}: any) => {
 
                         // ON PRESS
                         onPress={ () => {
-                            if (day[2] != undefined) {
-                              if (day[1] > 0) {
-                                setToastPosition('center');
-                                setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
-                                setOverlayBackground('rgba(50, 50, 50, 0.05)') // COLORE OVERLAY
-                                setToastRadius([12,12,12,12]); // STONDATURA
-                                setPaddingFromTop(48); // MARGINE TOP
-                                setPaddingFromBottom(48); // MARGINE BOTTTOM
-                                setToastAnimation('fade');
-                                setToastBody( 
-                                  <HolydayToast 
-                                    title={day[2]} 
-                                    description={day[0].toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})} />
-                                );
-                                setToastOnClose(undefined); 
-                                setVisibleToast(true); 
-                              } else {
-                                /* MODAL/SimpleToast --> POSSIBILE PONTE */
-                                let bridgeDescription: string = '';
-                                let bridgeStartAt: Date;
-                                let bridgeEndsAt: Date;
-                                month.bridges.forEach( (interval: any, index: number) => {
-                                  if (isWithinInterval(day[0], {start: interval.da, end: interval.a})) {
-                                    if (interval.length > 1) {
-                                      bridgeDescription += dataLabel(myLanguage, 4); // Dal
-                                      bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                                      bridgeDescription += dataLabel(myLanguage, 5); // fino al
-                                      bridgeDescription += interval.a.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                                      bridgeDescription += ' (' + interval.length + dataLabel(myLanguage, 6); // giorni
-                                      // PRIMO E ULTIMO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
-                                      bridgeStartAt = month.bridges[index].da;
-                                      bridgeEndsAt = month.bridges[index].a;
-                                    } else {
-                                      bridgeDescription += dataLabel(myLanguage, 7); // Il
-                                      bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                                      bridgeDescription += dataLabel(myLanguage, 8); // (1 giorno)
-                                      // UNICO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
-                                      bridgeStartAt = bridgeEndsAt = interval.da;
-                                    }
-                              } 
-                              });
-                              setVisibleToast(true); 
+                          if (day[2] != undefined) {
+                            if (day[1] > 0) {
                               setToastPosition('center');
-                              setToastBackground('rgba(255, 255, 255, 1)'); // SFONDO TOAST
-                              setOverlayBackground('rgba(50, 50, 50, 0.05)'); // COLORE OVERLAY
-                              setToastRadius([12,12,12,12]); // STONDATURA
-                              setPaddingFromTop(48); // MARGINE TOP
-                              setPaddingFromBottom(48); // MARGINE BOTTTOM
+                              setToastBackground('rgba(255, 255, 255, .94)');  // SFONDO TOAST
+                              setOverlayBackground('rgba(50, 50, 50, 0.15)')  // COLORE OVERLAY
+                              setToastRadius([32, 32, 32, 32]);                    // STONDATURA
+                              setPaddingFromTop(48);                            // MARGINE TOP
+                              setPaddingFromBottom(48);                         // MARGINE BOTTOM
+                              setToastAnimation('fade');                        // EFFETTO
                               setToastBody( 
-                              <BridgeToast 
-                                title={day[2]}
-                                description={bridgeDescription}
-                                bridgeStart={bridgeStartAt}
-                                bridgeEnds={bridgeEndsAt}
-                              />);
-                              setToastAnimation('fade');
+                                <HolydayToast 
+                                  title={day[2]} 
+                                  description={day[0].toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})} />
+                              );
                               setToastOnClose(undefined); 
-                            }
+                              setVisibleToast(true); 
+                            } else {
+                              /* MODAL/SimpleToast --> POSSIBILE PONTE */
+                              let bridgeDescription: string = '';
+                              let bridgeStartAt: Date;
+                              let bridgeEndsAt: Date;
+                              month.bridges.forEach( (interval: any, index: number) => {
+                                if (isWithinInterval(day[0], {start: interval.da, end: interval.a})) {
+                                  if (interval.length > 1) {
+                                    bridgeDescription += dataLabel(myLanguage, 4); // Dal
+                                    bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                    bridgeDescription += dataLabel(myLanguage, 5); // fino al
+                                    bridgeDescription += interval.a.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                    bridgeDescription += ' (' + interval.length + dataLabel(myLanguage, 6); // giorni
+                                    // PRIMO E ULTIMO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
+                                    bridgeStartAt = month.bridges[index].da;
+                                    bridgeEndsAt = month.bridges[index].a;
+                                  } else {
+                                    bridgeDescription += dataLabel(myLanguage, 7); // Il
+                                    bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                    bridgeDescription += dataLabel(myLanguage, 8); // (1 giorno)
+                                    // UNICO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
+                                    bridgeStartAt = bridgeEndsAt = interval.da;
+                                  }
+                            } 
+                            });
+                            setVisibleToast(true); 
+                            setToastPosition('center');
+                            setToastBackground('rgba(255, 255, 255, .94)'); // SFONDO TOAST
+                            setOverlayBackground('rgba(50, 50, 50, 0.05)'); // COLORE OVERLAY
+                            setToastRadius([32, 32, 32, 32]); // STONDATURA
+                            setPaddingFromTop(48); // MARGINE TOP
+                            setPaddingFromBottom(48); // MARGINE BOTTTOM
+                            setToastBody( 
+                            <BridgeToast 
+                              title={day[2]}
+                              description={bridgeDescription}
+                              bridgeStart={bridgeStartAt}
+                              bridgeEnds={bridgeEndsAt}
+                            />);
+                            setToastAnimation('fade');
+                            setToastOnClose(undefined); 
+                          }
                             }
                           }
                         }

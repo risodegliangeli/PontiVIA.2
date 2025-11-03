@@ -318,7 +318,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
     // PARAMETRI ALLUNGAMENTO VERTICALE
     const scaleY = animatedValue.interpolate({ // VALORE VERTICALE
       inputRange: [-1, -0.5, 0, 0.5,  1],
-      outputRange: [.8, 0.5, .8, 0.5, 1], // si schiaccia durante il movimento
+      outputRange: [.8, 1.2, .8, 1.2, 1], // si schiaccia durante il movimento
     });
 
     // EFFETTO ALLUNGAMENTO IN BASE AI PARAMETRI SOPRA

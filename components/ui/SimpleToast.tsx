@@ -21,7 +21,7 @@ interface SimpleToastInterface {
 const SimpleToast: React.FC<SimpleToastInterface> = ({ 
   isSTVisible, 
   isSTPosition = 'center', 
-  isSTBackground = 'rgba(255, 255, 255, 1)', // DEFAULT
+  isSTBackground = 'rgba(255, 255, 255, .9)', // DEFAULT
   isOverlayBackground = 'rgba(0, 0, 0, .5)', // DEFAULT
   isSTRadius = [0, 0, 0, 0],
   isSTpaddingFromTop = 0, 
@@ -33,9 +33,10 @@ const SimpleToast: React.FC<SimpleToastInterface> = ({
 
   const styles = StyleSheet.create({
     baseST: {
-      minWidth:'85%',
-      maxWidth: '90%',
+      minWidth: 314,  //'85%',
+      maxWidth: 550,  //'90%',
       padding:24, 
+      marginHorizontal:32,
       backgroundColor: isSTBackground,
       borderTopLeftRadius: Array.isArray(isSTRadius) ? isSTRadius[0] || 0 : isSTRadius || 0, // checks if the value is an array
       borderTopRightRadius: Array.isArray(isSTRadius) ? isSTRadius[1] || 0 : isSTRadius || 0,
@@ -43,14 +44,14 @@ const SimpleToast: React.FC<SimpleToastInterface> = ({
       borderBottomRightRadius: Array.isArray(isSTRadius) ? isSTRadius[3] || 0 : isSTRadius || 0,
       alignItems: 'center',
       justifyContent: 'center',
-      // elevation: 6,
-      // shadowColor: 'rgba(0, 0, 0, .45)',
-      // shadowOffset: {
-      //   width: 2,
-      //   height: 6,
-      // },
-      // shadowOpacity: 0.25,
-      // shadowRadius: 6,
+      elevation: 18,
+      shadowColor: 'rgba(0, 0, 0, .45)',
+      shadowOffset: {
+        width: 2,
+        height: 18,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 18,
     },
     modalContainer: {
       width:'100%',
