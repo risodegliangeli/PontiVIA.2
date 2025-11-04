@@ -177,6 +177,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       paddingBottom:8,
       borderBottomWidth: 1,
       borderBottomColor: '#FF778F',
+      color: useColorScheme() === 'light' ? colors.black : colors.white,
     },
     dateContainer: {
       width:'100%',
@@ -408,7 +409,6 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
 
         {/* DATE FROM - TO ====================================================== */}
         <View style={styles.dateContainer}>
-
           {/* ROW 1 - DA */}
           <View style={styles.dateContainerRow}>
             {/* FROM */}
@@ -550,9 +550,6 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
             </TouchableOpacity>
 
           </View>}  
-
-
-
         </View>
 
         {/* PULSANTI ANNULLA-SALVA ================================================= */}
@@ -584,7 +581,6 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               </Text>
           </TouchableOpacity>
         </View>
-
 
       {/* DATEPICKER - GRIGLIA CALENDARIO */}
       {datepickerVisible && 

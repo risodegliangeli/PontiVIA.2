@@ -59,7 +59,9 @@ const useThemeColors = () => {
 const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
 /* ============================================================================= 
-CALENDARSCREEN - print calendario
+
+                MAIN CALENDARSCREEN - print calendario
+
 ============================================================================= */
 const CalendarScreen = ({callerPreferences}: any) => {
 
@@ -84,7 +86,223 @@ const CalendarScreen = ({callerPreferences}: any) => {
     myLanguage
   } = useHolydays();
 
+  /* ---------------------------------------------------------------┐ 
+  SHARE
+
+  funzione di condivisione, in ingresso 
+  - 'type' tipo di condivisione 'holyday' o 'bridge' 
+    (cambia il tipo di condivisione)
+  - 'id' record completo dell'array newPersonalHolydays 
+    (servirà in futuro per edit/delete)
+      id[0]: Mon Nov 17 2025 13:00:00 GMT+0100 
+      id[1]: 1 
+      id[2]: Giorno sfortunato per me 
+      id[3]: true
+  └---------------------------------------------------------------- */
+  async function handleShare ( 
+    type: string, 
+    id: any, 
+    // title: string, 
+    // description: string
+  ) {
+    try {
+      let msg = '';
+      let formattedData = id[0].getFullYear() + "-" + (id[0].getMonth() + 1 ) + "-" + id[0].getDate();
+      let humanReadableData = id[0].toLocaleDateString(myLanguage, {day: 'numeric', month: 'long', year: 'numeric'});
+      // console.log(`\n\n\nid[0]: ${id[0]} \nid[1]: ${id[1]} \nid[2]: ${id[2]} \nid[3]: ${id[3]}`);
+
+      if (type === 'holyday') {
+        // /////////////////////////
+        // TIPO: FESTIVITA' SEMPLICE
+        // /////////////////////////
+
+        // "Vorrei condividere con te ecc."
+        msg = `${dataLabel(myLanguage,12)}\n\n*${id[2]}*\n${humanReadableData}\n------\n\n`;
+        
+        // nb.aggiunge a pontivia solo se festività inserita dall'utente
+        // verificare se esiste un RODate o RODay
+
+        // cerca evento in myPersonalHolydays
+        console.log()
+
+        msg += `iOS:\n`;
+        msg += `pontivia://holydays?action=newItemFromExternal&pStartDate=${formattedData}`;
+        msg += `&pDescription=${id[2].replace(/ /g, "%20")}`;
+        
+        // "Scarica PontiVIA!"
+        msg += `\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
+
+      } else {
+        // /////////////////////////
+        // TIPO: POSSIBILE PONTE
+        // /////////////////////////
+
+        // MESSAGGIO: possibile ponte
+        msg = `${dataLabel(myLanguage,12)}\n\n*${dataLabel(myLanguage, 9)}*\n${humanReadableData}`;
+        msg += `\n------\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
+      }
+      const result = await Share.share({
+        message: msg,
+        });
+        
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // OK -> shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // CANCEL -> dismissed
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  /* ---------------------------------------------------------------┐ 
+  CONTENUTO PER MODAL GIORNO FESTIVO (usa SimpleToast.tsx)
+  └---------------------------------------------------------------- */
+  interface HolydayToastInterface {
+    id: any;              // INTERO CONTENUTO DEL RECORD
+    title: string;        // TITOLO EVENTO (anche id[1])
+    description: string;  // DESCRIZIONE EVENTO (anche id[2])
+  }
+  const HolydayToast: React.FC<HolydayToastInterface> = ({id, title, description}) => {
+    // CONTENUTO CHE STA _DENTRO_ AL TOAST
+    return (
+    <View style={{ maxWidth:'100%', flexDirection:'column', gap:12, }}>
+    
+      {/* PULS. SHARE + EDIT + DELETE */}
+      <View style={{ width:'100%', flexDirection:'row', justifyContent:'flex-end'}}>  
+        
+        {/* SHARE */}
+        <TouchableOpacity
+          onPress={ () => {
+            handleShare('holyday', id,  );
+            }}>
+          <IconSymbol name="square.and.arrow.up" size={24} color={colors.blueBar} />
+        </TouchableOpacity>
+
+        {/* EDIT da implementare ? */}
+        {/* <TouchableOpacity onPress={() => null} style={{marginLeft:10}}>
+          <IconSymbol name="pencil" size={24} color={colors.blueBar} />
+        </TouchableOpacity> */}
+
+        {/* DELETE da implementare ? */}
+        {/* <TouchableOpacity onPress={() => null} style={{ marginLeft: 10}}>
+          <IconSymbol name="trash" size={24} color={colors.blueBar} />
+        </TouchableOpacity> */}
+      </View>
+
+      {/* TESTI */}
+      <View style={{
+        minWidth:'100%', 
+        flexDirection:'row', 
+        gap:8, 
+        alignItems:'flex-start', 
+        justifyContent:'space-between',
+        //backgroundColor:'green',
+        }}>
+        <IconSymbol name="calendar" size={28} color={colors.black} />
+        <View style={{width:'100%', }}>
+          <Text style={[styles.monthTitle, {color: colors.black, textAlign:'left', paddingLeft:0} ]}>{title}</Text>
+          <Text style={[styles.dayNumber, {color: colors.black, textAlign:'left', }]}>{description}</Text>
+        </View>
+      </View>
+
+      {/* SPAZIATORE */}
+      <View style={{width:'100%', height:12}} />
+
+      {/* PULSANTI ANNULLA */}
+      <View style={styles.modalButtons }>
+        <TouchableOpacity 
+          style={styles.cancelButton} 
+          onPress={() => setVisibleToast(false)}>
+          <Text style={styles.cancelButtonText}>{dataLabel(myLanguage, 10)}</Text>
+        </TouchableOpacity>
+      </View> 
+    </View>
+    )
+  }
+  
+  /* ---------------------------------------------------------------┐ 
+  CONTENUTO PER MODAL POSSIBILE PONTE (usa SimpleToast.tsx)
+  └---------------------------------------------------------------- */
+  interface BridgeHolydayInterface {
+    id: number;
+    title: string;
+    description: string;
+    bridgeStart: Date;
+    bridgeEnds: Date;
+  }
+  const BridgeToast: React.FC<BridgeHolydayInterface> = ({id, title, description, bridgeStart, bridgeEnds}) => {
+    // CONTENUTO CHE STA _DENTRO_ AL TOAST
+    return (
+      <View style={{width:'100%', flexDirection:'column', gap:12}}>
+
+        {/* PULS. SHARE */}
+        <View style={{ width:'100%', flexDirection:'row', justifyContent:'flex-end', }}>  
+          <TouchableOpacity
+            onPress={ () => 
+              handleShare('bridge', id,  )
+              }>
+            <IconSymbol name="square.and.arrow.up" size={24} color={colors.blueBar} />
+          </TouchableOpacity>
+        </View>
+
+        {/* CORPO MESSAGGIO */}
+        <View style={{ width:'100%', flexDirection:'row', justifyContent:'flex-start', }}>
+          <Image 
+            source={require('@/assets/images/icon_girl-on.png')}
+            style={{width:48, height:48, resizeMode:'contain', marginRight: 16}}
+          />
+          <View style={{ flex:1, }}>
+            <Text style={[styles.monthTitle, {color: colors.black, paddingLeft:0}]}>{dataLabel(myLanguage, 9)}</Text> 
+            { title && <Text style={[styles.dayNumber, { color: colors.black, lineHeight: 22, textAlign:'left'}]}>
+              {description}
+              </Text> }
+          </View>
+        </View>
+
+        {/* SPAZIATORE */}
+        <View style={{width:'100%', height:24}} />
+
+        {/* PULSANTI ANNULLA/AGGIUNGI */}
+        <View style={styles.modalButtons }>
+          <TouchableOpacity 
+            style={styles.cancelButton} 
+            onPress={() => setVisibleToast(false)}>
+            <Text style={styles.cancelButtonText}>{dataLabel(myLanguage, 10)}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.addButton} 
+              onPress={ async () => {
+                try {
+                  const eventDetails = {
+                    title: dataLabel(myLanguage, 0),    // Ponte!
+                    startDate: bridgeStart,
+                    endDate: bridgeEnds,
+                    notes: dataLabel(myLanguage, 1),    // PontiVIA! ha trovato questo ponte ecc..
+                    allDay: false,
+                  };
+                  await Calendar.createEventInCalendarAsync(eventDetails);
+                  } catch (e) {
+                    console.error('Errore durante l\'apertura del calendario:', e);
+                  } finally {
+                    setVisibleToast(false);
+                  }
+              }}
+            >
+            <Text style={styles.addButtonText}>{dataLabel(myLanguage, 11)} </Text><IconSymbol name="calendar.badge.plus" size={24} color={colors.white} />
+          </TouchableOpacity>
+        </View> 
+      </View>
+    )
+  }
+
+  /* ---------------------------------------------------------------┐ 
   // CONTROLLO PRIVILEGI ACCESSO AL CALENDARIO
+  └---------------------------------------------------------------- */
   useEffect(() => {
   ( async () => {
     const { status } = await Calendar.requestCalendarPermissionsAsync();
@@ -407,47 +625,12 @@ const CalendarScreen = ({callerPreferences}: any) => {
       );
   };
 
-  /* ============================================================================= 
-  SHARE
-
-  funzione di condivisione, in ingresso 
-  - 'type' tipo di condivisione 'holyday' o 'bridge' (cambia il tipo di condivisione)
-  - 'description' descrizione della festività
-
-  ============================================================================= */
-  async function handleShare (type: string, description: string) {
-    try {
-      let msg = '';
-      if (type === 'holyday') {
-        // MESSAGGIO: festività inserita dall'utente
-        msg = `${dataLabel(myLanguage,12)}\n\n${ description }\n------\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
-      } else {
-        // MESSAGGIO: possibile ponte
-        msg = `${dataLabel(myLanguage,12)}\n\n*${dataLabel(myLanguage, 9)}*\n${ description }\n------\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
-      }
-      const result = await Share.share({
-        message: msg,
-        });
-        
-      if (result.action === Share.sharedAction) {
-        if (result.activityType) {
-          // OK -> shared with activity type of result.activityType
-        } else {
-          // shared
-        }
-      } else if (result.action === Share.dismissedAction) {
-        // CANCEL -> dismissed
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  /* ============================================================================= 
+  /* ---------------------------------------------------------------┐ 
   (CALLBACK) AGGIUNGE MESI AL CALENDARIO
-  MEMORIZZA - E NON RICALCOLA - IL RISULTATO DELLA FUNZIONE FINCHE' NON CAMBIA 
-  IL VALORE DI UNA DIPENDENZA: isLoading, hasMore, currentLoadDate, monthsToLoad, PREFERENCES.bridgeDuration
-  ============================================================================= */
+  MEMORIZZA - E NON RICALCOLA - IL RISULTATO DELLA FUNZIONE FINCHE' 
+  NON CAMBIA IL VALORE DI UNA DIPENDENZA: isLoading, hasMore, 
+  currentLoadDate, monthsToLoad, PREFERENCES.bridgeDuration
+  └---------------------------------------------------------------- */
   const loadMoreCalendarData = useCallback( async (
     myCountry: string,
     newPersonalHolydays: NewHolyday[],
@@ -492,9 +675,9 @@ const CalendarScreen = ({callerPreferences}: any) => {
     }
   }, [ isLoading, hasMore, currentLoadDate, monthsToLoad, callerPreferences, myPreferences ]);
 
-  /* ============================================================================= 
-    (USEEFFECTS) GESTISCE GLI EFFETTI COLLATERALI DEL CAMBIO DI 'PREFERENCES'
-  ============================================================================= */
+  /* ---------------------------------------------------------------┐ 
+    (USEEFFECTS) GESTISCE GLI EFFETTI DEL CAMBIO DI 'PREFERENCES'
+  └---------------------------------------------------------------- */
   useEffect( () => {
     if (callerPreferences) {
       const startDate = createUTCDate(new Date().getFullYear(), new Date().getMonth(), 1); 
@@ -523,7 +706,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
     myCountry
   ]);
 
-  /* ============================================================================= 
+  /* ---------------------------------------------------------------┐ 
     (CALLBACK) RENDER DELLE CARD DELLA FLATLIST
       determina il tipo di giorno (festivo, sabato, domenica, ponte, feriale).
       1 (Festivo), -1 (Ponte), undefined (Feriale). 
@@ -531,136 +714,8 @@ const CalendarScreen = ({callerPreferences}: any) => {
       l'array finale sarà come questo esempio:
       day[0]                      day[1]    day[2]            day[3]
       2025-05-26T12:00:00.000Z,   1,        "Ferragosto",     false],
-  ============================================================================= */
+  └---------------------------------------------------------------- */
   const renderMonthCard = useCallback(({ item: month, index }) => {
-
-    /* -----------------------------------------------------
-    MODAL CHE MOSTRA UN GIORNO FESTIVO (usa SimpleToast.tsx)
-    ----------------------------------------------------- */
-    interface HolydayToastInterface {
-      title: string;
-      description: string;
-    }
-    const HolydayToast: React.FC<HolydayToastInterface> = ({title, description}) => {
-      // CONTENUTO CHE STA _DENTRO_ AL TOAST
-      return (
-      <View style={{ maxWidth:'100%', flexDirection:'column', gap:12, }}>
-      
-        {/* PULS. SHARE */}
-        <View style={{ width:'100%', flexDirection:'row', justifyContent:'flex-end'}}>  
-          <TouchableOpacity
-            onPress={ () => 
-              handleShare('holyday', description)
-              }>
-            <IconSymbol name="square.and.arrow.up" size={24} color={colors.blueBar} />
-          </TouchableOpacity>
-        </View>
-
-        {/* TESTI */}
-        <View style={{
-          minWidth:'100%', 
-          flexDirection:'row', 
-          gap:8, 
-          alignItems:'flex-start', 
-          justifyContent:'space-between',
-          //backgroundColor:'green',
-          }}>
-          <IconSymbol name="calendar" size={28} color={colors.black} />
-          <View style={{width:'100%', }}>
-            <Text style={[styles.monthTitle, {color: colors.black, textAlign:'left', paddingLeft:0} ]}>{title}</Text>
-            <Text style={[styles.dayNumber, {color: colors.black, textAlign:'left', }]}>{description}</Text>
-          </View>
-        </View>
-
-        {/* SPAZIATORE */}
-        <View style={{width:'100%', height:12}} />
-
-        {/* PULSANTI ANNULLA */}
-        <View style={styles.modalButtons }>
-          <TouchableOpacity 
-            style={styles.cancelButton} 
-            onPress={() => setVisibleToast(false)}>
-            <Text style={styles.cancelButtonText}>{dataLabel(myLanguage, 10)}</Text>
-          </TouchableOpacity>
-        </View> 
-      </View>
-      )
-    }
-    
-    /* -----------------------------------------------------
-    MODAL CHE MOSTRA UN POSSIBILE PONTE (usa SimpleToast.tsx)
-    ------------------------------------------------------ */
-    interface BridgeHolydayInterface {
-      title: string;
-      description: string;
-      bridgeStart: Date;
-      bridgeEnds: Date;
-    }
-
-    const BridgeToast: React.FC<BridgeHolydayInterface> = ({title, description, bridgeStart, bridgeEnds}) => {
-      // CONTENUTO CHE STA _DENTRO_ AL TOAST
-      return (
-        <View style={{width:'100%', flexDirection:'column', gap:12}}>
-
-          {/* PULS. SHARE */}
-          <View style={{ width:'100%', flexDirection:'row', justifyContent:'flex-end', }}>  
-            <TouchableOpacity
-              onPress={ () => 
-                handleShare('bridge', description)
-               }>
-              <IconSymbol name="square.and.arrow.up" size={24} color={colors.blueBar} />
-            </TouchableOpacity>
-          </View>
-
-          {/* CORPO MESSAGGIO */}
-          <View style={{ width:'100%', flexDirection:'row', justifyContent:'flex-start', }}>
-            <Image 
-              source={require('@/assets/images/icon_girl-on.png')}
-              style={{width:48, height:48, resizeMode:'contain', marginRight: 16}}
-            />
-            <View style={{ flex:1, }}>
-              <Text style={[styles.monthTitle, {color: colors.black, paddingLeft:0}]}>{dataLabel(myLanguage, 9)}</Text> 
-              { title && <Text style={[styles.dayNumber, { color: colors.black, lineHeight: 22, textAlign:'left'}]}>
-                {description}
-                </Text> }
-            </View>
-          </View>
-
-          {/* SPAZIATORE */}
-          <View style={{width:'100%', height:24}} />
-
-          {/* PULSANTI ANNULLA/AGGIUNGI */}
-          <View style={styles.modalButtons }>
-            <TouchableOpacity 
-              style={styles.cancelButton} 
-              onPress={() => setVisibleToast(false)}>
-              <Text style={styles.cancelButtonText}>{dataLabel(myLanguage, 10)}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={styles.addButton} 
-                onPress={ async () => {
-                  try {
-                    const eventDetails = {
-                      title: dataLabel(myLanguage, 0),    // Ponte!
-                      startDate: bridgeStart,
-                      endDate: bridgeEnds,
-                      notes: dataLabel(myLanguage, 1),    // PontiVIA! ha trovato questo ponte ecc..
-                      allDay: false,
-                    };
-                    await Calendar.createEventInCalendarAsync(eventDetails);
-                    } catch (e) {
-                      console.error('Errore durante l\'apertura del calendario:', e);
-                    } finally {
-                      setVisibleToast(false);
-                    }
-                }}
-              >
-              <Text style={styles.addButtonText}>{dataLabel(myLanguage, 11)} </Text><IconSymbol name="calendar.badge.plus" size={24} color={colors.white} />
-            </TouchableOpacity>
-          </View> 
-        </View>
-      )
-    }
 
     return (    
       <React.Fragment key={`${month.y}-${month.m}-${index}`}>
@@ -698,18 +753,22 @@ const CalendarScreen = ({callerPreferences}: any) => {
           <View style={{width:'100%', height: 1, backgroundColor: 'rgba(0,0,0,.05)', marginBottom: 0, }}></View>
           <View style={{width:'100%', height: 1, backgroundColor: colors.white, marginBottom: 12, }}></View>
           
-          {/* INTERNO DELLA CARD */}
+          {/* CONTENUTO DELLA CARD */}
           <View style={{borderBottomLeftRadius: 16, borderBottomRightRadius: 16, overflow: 'hidden'}}>
             <View style={styles.daysGrid}>
               {month.table.map((day: any, dayIndex: number) => {
                 return (
-                  <View key={`day-container-${day[0]}-${dayIndex}`} style={styles.dayCell}>
-                    {/* 1) SE NON ESISTE day[3] E' GIORNO ESTERNO AL MESE E NON SI STAMPA */}
-                    {/* 2) TUTTI I GIORNI SONO TOUCHABLEOPACITY MA... */}
+                  <View 
+                    key={`day-container-${day[0]}-${dayIndex}`} 
+                    style={styles.dayCell} >
+                    {/* a) SE NON ESISTE day[3] E' GIORNO ESTERNO AL MESE E NON SI STAMPA 
+                        b) TUTTI I GIORNI SONO TOUCHABLEOPACITY MA...
+                         
+                        */}
                     {day[3] &&
                       <Pressable 
                         key={`key,${day[0]},${dayIndex}`}
-                        //android_ripple={{ color: colors.blueBar, borderless: false }}
+                        android_ripple={{ color: colors.blueBar, borderless: false }}
                         style={({pressed}) => [
                           styles.squaredTouchable,
                           // sfondo solo se area premuta, altrimenti sfondo trasparente
@@ -721,6 +780,9 @@ const CalendarScreen = ({callerPreferences}: any) => {
                         onPress={ () => {
                           if (day[2] != undefined) {
                             if (day[1] > 0) {
+
+                              console.log(`\tcondividi:\n\tday[0]: ${day[0]} - day[1]: ${day[1]} - day[2]: ${day[2]} - day[3]: ${day[3]}`);
+
                               setToastPosition('center');
                               setToastBackground('rgba(255, 255, 255, .94)');  // SFONDO TOAST
                               setOverlayBackground('rgba(50, 50, 50, 0.15)')  // COLORE OVERLAY
@@ -730,6 +792,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
                               setToastAnimation('fade');                        // EFFETTO
                               setToastBody( 
                                 <HolydayToast 
+                                  id={day} // passo anche l'intero record -> day[0], day[1], day[2], day[3] 
                                   title={day[2]} 
                                   description={day[0].toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})} />
                               );
@@ -769,6 +832,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
                             setPaddingFromBottom(48); // MARGINE BOTTTOM
                             setToastBody( 
                             <BridgeToast 
+                              id={day}
                               title={day[2]}
                               description={bridgeDescription}
                               bridgeStart={bridgeStartAt}
@@ -907,9 +971,9 @@ const CalendarScreen = ({callerPreferences}: any) => {
     
   }, []);
 
-  /* ============================================================================= 
+  /* ---------------------------------------------------------------┐ 
     (CALLBACK) RENDER FOOTER
-  ============================================================================= */
+  └---------------------------------------------------------------- */
   const renderFooter = useCallback(() => {
 
     // NON MOSTRARE SE NON E' IN FASE DI CARICAMENTO E CI SONO ANCORA DATI
@@ -967,7 +1031,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
         bouncesZoom={false}               // ← Disabilita zoom accidentali
       />
 
-      {/* SimpleToast ###################################################################### */}
+      {/* SimpleToast */}
       <Suspense>
         <SimpleToast
           isSTVisible={visibleToast}
@@ -982,8 +1046,6 @@ const CalendarScreen = ({callerPreferences}: any) => {
           onClose={ () => setVisibleToast(false) }
         />
       </Suspense>
-
-
     </>
   );
 };

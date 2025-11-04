@@ -31,9 +31,7 @@ import SideLabel from '@/components/ui/SideLabel';
 
 // GOOGLE ADMOB ///////////////////////////////////
 import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
-//import { launchDuration } from 'expo-updates';
-
-// INIZIALIZZA ADMOB
+// init ADMOB
 mobileAds()
   .initialize()
   .then(adapterStatuses => {
@@ -44,7 +42,7 @@ mobileAds()
 // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
 const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
-// TYPE HOLYDAY (vecchio)--> 
+// TYPE Holiday
 type Holiday = {          // DEFINIZIONE DI holiday
   day: number;            // GIORNO
   month: number;          // MESE
@@ -69,7 +67,9 @@ const useThemeColors = () => {
 // LEGGE NOMI DEI MESI LOCALIZZATI DA data.tsx
 const { months } = useLocalizationData();
 
-// FUNZIONE DI SCRITURA SU STORAGE DATI
+/* ---------------------------------------------------------------┐ 
+FUNZIONE DI SCRITURA SU STORAGE DATI
+└---------------------------------------------------------------- */
 const saveData = async (data: any, key: string) => {
   try {
     const jsonValue = JSON.stringify(data);
@@ -89,16 +89,16 @@ export default function HolydaysScreen() {
   const colors = useThemeColors();
   const navigation = useNavigation();
 
-  // ADMOB
+  // puntatatore ADMOB
   const bannerRef = useRef<BannerAd>(null);
   // (iOS) WKWebView can terminate if app is in a "suspended state", resulting in an empty banner when app returns to foreground. Therefore it's advised to "manually" request a new ad when the app is foregrounded (https://groups.google.com/g/google-admob-ads-sdk/c/rwBpqOUr8m8).
   useForeground(() => {
     Platform.OS === 'ios' && bannerRef.current?.load();
   }); 
 
-  /* ============================================================================= 
+  /* ---------------------------------------------------------------┐ 
   STYLESHEET
-  ============================================================================= */
+  └---------------------------------------------------------------- */
   const styles =StyleSheet.create({
     // SFONDO
     image: {      
@@ -376,9 +376,10 @@ export default function HolydaysScreen() {
     myLanguage
     } = useHolydays();
     
-  /* ============================================================================= 
-  // GESTISCE LE CHIAMATE 'newItem' DA UNA LONG PRESS SUL CALENDARIO E APRE LA DATEPICKER
-  ============================================================================= */
+  /* ---------------------------------------------------------------┐ 
+  // GESTISCE LE CHIAMATE 'newItem' DA UNA LONG PRESS SUL CALENDARIO 
+  // E APRE LA DATEPICKER
+  └---------------------------------------------------------------- */
   function handleExternalAddDate(receivedDate: Date, action: string) {
     setInitialIndex(null);                  // INDEX, SERVE PER L'EDIT
     setDpickerStartDate(receivedDate);      // START
@@ -390,9 +391,9 @@ export default function HolydaysScreen() {
     showModalSingleDate();                  // APRE MODAL
   }
 
-  /* ============================================================================= 
+  /* ---------------------------------------------------------------┐ 
   // GESTISCE LE CHIAMATE 'newItemFromExternal' DA DEEP LINK E APRE LA DATEPICKER
-  ============================================================================= */
+  └---------------------------------------------------------------- */
   function handleDeepLinkAddDate(
     pStartDate: string,
     pEndDate?: string | undefined,
@@ -410,9 +411,9 @@ export default function HolydaysScreen() {
       showModalSingleDate();                  // APRE MODAL
   }
 
-  /* ============================================================================= 
+  /* ---------------------------------------------------------------┐ 
    GESTIONE MODAL NEWDATEPICKER
-   ============================================================================= */
+  └---------------------------------------------------------------- */
   const [isModalSingleDateVisible, setIsModalSingleDateVisible] = useState<boolean>(false);
   //const [modalIsOpen, setModalIsOpen] = useState<boolean>(false); // FLAG DUPLICATO, SERVE PER L'EFFETTO GENIUS
 
@@ -444,8 +445,9 @@ export default function HolydaysScreen() {
     setIsModalSingleDateVisible(false);
   };
 
-  // GESTISCE CHIAMATE ESTERNE //////////////////////////////////////////////
-    // interfaccia parametri in arrivo dal link
+  /* ---------------------------------------------------------------┐ 
+  // GESTISCE CHIAMATE ESTERNE 
+  └---------------------------------------------------------------- */
   interface RouteParams {
     date?: string;    // Data passata internamente (e.g., '2024-09-23T00:00:00.000Z')
     action?: string;  // Azione passta acon deep link (es. 'addDate')
@@ -497,11 +499,11 @@ export default function HolydaysScreen() {
     }
   }, [params]);
 
-  /* WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW 
+  /* ---------------------------------------------------------------┐ 
 
-      SCRIPT PER AGGIUNTA EVENTO 
+      SCRIPTING PER AGGIUNTA EVENTO 
 
-  WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW */
+  └---------------------------------------------------------------- */
   // FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
   const normalizeDate = (date: Date | null): Date | null => {
     if (!date) return null;
@@ -531,9 +533,9 @@ export default function HolydaysScreen() {
   return normDate >= normStart && normDate <= normEnd;
   };
 
-  /* ============================================================================= 
+  /* ---------------------------------------------------------------┐ 
             HANDLE ADD EVENT (nuovo)
-  ============================================================================= */
+  └---------------------------------------------------------------- */
   const handleAddEvent = async (
     myStartDate: Date, 
     myEndDate: Date | null, 
@@ -719,9 +721,9 @@ export default function HolydaysScreen() {
   } 
   };
 
-  /* ============================================================================= 
+  /* ---------------------------------------------------------------┐ 
     EDIT ITEM (SINGOLO E PERIODO) - REFACTORED
-    ============================================================================= */
+  └---------------------------------------------------------------- */
   // LA FUNZIONE RICEVE SOLO L'INDICE 'index' DEL RECORD DA EDITARE DA newPersonalHolydays
   const handleEdit = (index: number) => {
     // Controlla se l'indice è valido
@@ -741,9 +743,9 @@ export default function HolydaysScreen() {
     showModalSingleDate();
   };
 
-/* ============================================================================= 
+  /* ---------------------------------------------------------------┐ 
   SHARE
-  ============================================================================= */
+  └---------------------------------------------------------------- */
   async function handleShare (index: any) {
     const itemToShare: any = newPersonalHolydays[index];
       try {
@@ -751,8 +753,9 @@ export default function HolydaysScreen() {
         let msg = `${dataLabel(myLanguage, 28)}\n\n${ (itemToShare.startDate).toLocaleDateString() }\n*${itemToShare.description}*\n\n------\n\n`;
         
         // gestione link pontivia://
-        msg += `pontivia://holydays`;
-        if (itemToShare.startDate) {msg += `?action=newItemFromExternal&pStartDate=${(itemToShare.startDate).getFullYear()}-${(itemToShare.startDate).getMonth() + 1}-${(itemToShare.startDate).getDate()}`};
+        msg += `iOS:\n`
+        msg += `pontivia://holydays?action=newItemFromExternal`;
+        if (itemToShare.startDate) {msg += `&pStartDate=${(itemToShare.startDate).getFullYear()}-${(itemToShare.startDate).getMonth() + 1}-${(itemToShare.startDate).getDate()}`};
         if (itemToShare.description !== '') {msg += `&pDescription=${(itemToShare.description).replace(/ /g, "%20")}`;}
         if (itemToShare.endDate) {msg += `&pEndDate=${(itemToShare.endDate).getFullYear()}-${(itemToShare.endDate).getMonth() + 1}-${(itemToShare.endDate).getDate()}`}
         if (itemToShare.repeatOnDate) {msg += `&pRODate=true`}
@@ -777,9 +780,9 @@ export default function HolydaysScreen() {
       }
   }
 
-  /* ============================================================================= 
+  /* ---------------------------------------------------------------┐ 
    DELETE ITEM --- Refactored
-   ============================================================================= */
+  └---------------------------------------------------------------- */
   const handleDelete = async (index: number) => {
     let itemDescription = `${newPersonalHolydays[index].startDate.getDate()} ${months[newPersonalHolydays[index].startDate.getMonth()]?.label} (${newPersonalHolydays[index].description})`;
     
@@ -821,10 +824,10 @@ export default function HolydaysScreen() {
     )
   }
 
-  /* ============================================================================= 
+  /* ---------------------------------------------------------------┐ 
   * useEffect * AL CAMBIO DI myCountry
   Viene richiamato ogni volta che myCountry cambia, per aggiornare le festività nazionali
-  ============================================================================= */
+  └---------------------------------------------------------------- */
   useEffect( () => {
     setNationalHolydays(getLocalHolydas(myCountry));    // RICHIAMO LA FUNZIONE getLocalHolydas (DA data.tsx)
     async () => await saveData(myCountry, 'myCountry');

@@ -6,10 +6,9 @@
 
 ---
 
-- ### GRAFICA MODAL CARICAMENTO
-  -- adeguare liquid glass
+- ### AGGIUNGERE 'EDIT' NELL TOAST
+  -- a fianco della condivisione aggiungere Edit + Delete
 
----
 
 - ### CAROUSEL APERTURA
   -- react-native-snap-carousel
@@ -65,6 +64,10 @@
 # TICKET RISOLTI:
 
 
+- ### GRAFICA MODAL CARICAMENTO
+  -- adeguare a liquid glass
+
+---
 
 
 - ### CONDIVISIONE DATE PERSONALI
