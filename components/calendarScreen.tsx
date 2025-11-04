@@ -356,7 +356,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
       shadowRadius: 12 // Match elevation for iOS
     },
     modalButtons: {
-      width:'100%',
+      minWidth:'100%',
       flexDirection: 'column',
       justifyContent: 'center',
       gap:12,
@@ -544,10 +544,10 @@ const CalendarScreen = ({callerPreferences}: any) => {
     const HolydayToast: React.FC<HolydayToastInterface> = ({title, description}) => {
       // CONTENUTO CHE STA _DENTRO_ AL TOAST
       return (
-      <View style={{width:'100%', flexDirection:'column', gap:12}}>
+      <View style={{ maxWidth:'100%', flexDirection:'column', gap:12, }}>
       
         {/* PULS. SHARE */}
-        <View style={{ width:'100%', flexDirection:'row', justifyContent:'flex-end', }}>  
+        <View style={{ width:'100%', flexDirection:'row', justifyContent:'flex-end'}}>  
           <TouchableOpacity
             onPress={ () => 
               handleShare('holyday', description)
@@ -558,7 +558,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
 
         {/* TESTI */}
         <View style={{
-          width:'100%', 
+          minWidth:'100%', 
           flexDirection:'row', 
           gap:8, 
           alignItems:'flex-start', 

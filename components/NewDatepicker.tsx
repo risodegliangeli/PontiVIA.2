@@ -53,13 +53,11 @@ function getWeekdayRecurrence(targetDate: Date) {
     return recurrenceNumber;
 }
 
-/* =========================================================
+/* ==========================================================================================
 
-              NewDatepicker - 2025 G. Angeli 
+                                          MAIN
 
-                          MAIN
-
-========================================================= */
+========================================================================================== */
 const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   language,
   startDate,
@@ -103,7 +101,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   // SWITCH VISIBILE/NON VISIBILE PER I SINGOLI ELEMENTI
   const [toDate, setToDate] = useState( myEndDate ? true : false); // SECONDA DATA
   const [radioButton, setRadioButton] = useState( repeatOnDate || repeatOnDay ? true : false); // GRUPPO RADIOBUTTON
-  //const [rotateArrow, setRotateArrow] = useState<string>('0deg');
+  const [rotateArrow, setRotateArrow] = useState<string>('0deg');
   const [datepickerVisible, setDatepickerVisible] = useState(false); // CALENDARIO
 
   // DROPDOWN GIORNI DI DURATA EVENTO
@@ -136,18 +134,21 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   const [lowerRadioButtonLabel, setLowerRadioButtonLabel] = useState<string>(); // {/*es. Ripete ogni anno, il quarto giovedì di settembre*/}
 
   // ICONE USATE NELLO SCRIPT
-  const IcoCalendar = <Image source={require('@/assets/images/ico_calendar_picker.png')} style={{width:13, height:14, resizeMode:'contain'}}/>;
-  const IcoRepeat = <Image 
-    style={{width:13, height:14, resizeMode:'contain'}}
-    source={
-      radioButton ? require('@/assets/images/ico_repeat_picker.png') : require('@/assets/images/ico_repeat_picker_black.png')
-    }/>;
-  const IcoArrow = <Image 
-  source={
-    radioButton ? require('@/assets/images/ico_arrow_blue.png') : require('@/assets/images/ico_arrow_black.png')
-  } 
-  style={{ width:24, height:24, resizeMode:'contain', }
-}/>
+  const IcoCalendar = <IconSymbol 
+          size={16} 
+          name="calendar" 
+          color={colors.text} 
+          style={{marginTop:2}}/>;;
+  const IcoRepeat = <IconSymbol 
+          size={16} 
+          name="repeat" 
+          color={radioButton ? colors.blueBar : colors.text} 
+          style={{marginRight:4, }}/>;
+  const IcoArrow = <IconSymbol 
+          size={16} 
+          name="chevron.up"
+          color={radioButton ? colors.blueBar : colors.text} 
+          style={{marginRight:4, transform: [{rotate: rotateArrow}]}}/>;
 
   // STILI
   const styles = StyleSheet.create({
@@ -297,7 +298,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
         height: 1, // Match elevation for iOS
       },
       shadowOpacity: 0.15,
-      shadowRadius: 3 // Match elevation for iOS
+      shadowRadius: 1 // Match elevation for iOS
       },
     cancelButtonText: {
       color: colors.text,
@@ -348,7 +349,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       fontSize:16,
       fontWeight:600,
       textAlign:'center',
-      color: '#cc0000',
+      color: colors.textRed,
     }
   })
 
@@ -400,16 +401,14 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
           key={'description'}
           style={styles.textInput}
           placeholder={dataLabel(language, 7)}
-          placeholderTextColor={descriptionAlert ? 
-            'red' 
-            : 
-            useColorScheme() === 'light' ? '#666' : '#dedede'} // gestisce errore
+          placeholderTextColor={descriptionAlert ? colors.textRed : colors.text } // gestisce errore
           value={myDescription}
           onChangeText={setMyDescription}
         />
 
         {/* DATE FROM - TO ====================================================== */}
         <View style={styles.dateContainer}>
+
           {/* ROW 1 - DA */}
           <View style={styles.dateContainerRow}>
             {/* FROM */}
@@ -471,6 +470,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               } />
             </View>
           </View>
+
           {/* ROW 2 - A */}
           {toDate && <View style={styles.dateContainerRow}>
             {/* TO */}
@@ -494,11 +494,11 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               onPress={ () => {
                 if (!radioButton) { 
                   setRadioButton(true)  // SE GRUPPO RADIOBUTTON SPENTO LO SI ACCENDE
-                  //setRotateArrow('180deg'); // SI RUOTA LA FRECCIA
+                  setRotateArrow('180deg'); // SI RUOTA LA FRECCIA
                   setUpperRadioButtonActive(true) // E SI IMPOSTA true IL PRIMO
                 } else {
                   setRadioButton(false) // ALTRIMENTI SI SPEGNE IL GRUPPO
-                  //setRotateArrow('0deg');
+                  setRotateArrow('0deg');
                   setUpperRadioButtonActive(false)  // E SI RIPORTANO A false I DUE RADIOBUTTON
                   setLowerRadioButtonActive(false)
                 }
@@ -557,11 +557,15 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
 
         {/* PULSANTI ANNULLA-SALVA ================================================= */}
         <View style={styles.modalButtons}>
+
+          {/* CANCEL */}
           <TouchableOpacity 
             style={styles.cancelButton} 
             onPress={ () => onCancel() }>
             <Text style={styles.cancelButtonText}>{dataLabel(language, 5)}</Text>
           </TouchableOpacity>
+
+          {/* CONFIRM */}
           <TouchableOpacity 
             style={styles.addButton} 
             onPress={ () => 
@@ -572,8 +576,8 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                 myDescription, 
                 upperRadioButtonActive, 
                 lowerRadioButtonActive) 
-            :
-              setDescriptionAlert(true)
+              :
+                setDescriptionAlert(true)
             }>
             <Text style={styles.addButtonText}>
               {initialIndex !== null ? dataLabel(language, 18) : dataLabel(language, 6)}
