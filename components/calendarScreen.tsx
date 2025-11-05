@@ -58,6 +58,12 @@ const useThemeColors = () => {
 
 const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
+// FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
+const normalizeDate = (date: Date | null): Date | null => {
+  if (!date) return null;
+  return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0));
+};
+
 /* ============================================================================= 
 
                 MAIN CALENDARSCREEN - print calendario
@@ -89,58 +95,101 @@ const CalendarScreen = ({callerPreferences}: any) => {
   /* ---------------------------------------------------------------┐ 
   SHARE
 
-  funzione di condivisione, in ingresso 
+  in ingresso:
   - 'type' tipo di condivisione 'holyday' o 'bridge' 
     (cambia il tipo di condivisione)
   - 'id' record completo dell'array newPersonalHolydays 
-    (servirà in futuro per edit/delete)
+    (servirà in futuro per edit/delete) ->
       id[0]: Mon Nov 17 2025 13:00:00 GMT+0100 
       id[1]: 1 
       id[2]: Giorno sfortunato per me 
       id[3]: true
   └---------------------------------------------------------------- */
   async function handleShare ( 
-    type: string, 
-    id: any, 
-    // title: string, 
-    // description: string
+    type: ('holyday' | 'bridge'), // tipo di condivisione 'holyday' o 'bridge'
+    id: any, // viene passato il record completo (vedi sopra)
   ) {
     try {
       let msg = '';
-      let formattedData = id[0].getFullYear() + "-" + (id[0].getMonth() + 1 ) + "-" + id[0].getDate();
-      let humanReadableData = id[0].toLocaleDateString(myLanguage, {day: 'numeric', month: 'long', year: 'numeric'});
-      // console.log(`\n\n\nid[0]: ${id[0]} \nid[1]: ${id[1]} \nid[2]: ${id[2]} \nid[3]: ${id[3]}`);
+      let link = `pontivia://holydays?action=newItemFromExternal`;
 
       if (type === 'holyday') {
-        // /////////////////////////
-        // TIPO: FESTIVITA' SEMPLICE
-        // /////////////////////////
+        // ////////////////////////////
+        // TIPO: FESTIVITA' (1+ GIORNI)
+        // ////////////////////////////
+        msg = `${dataLabel(myLanguage,12)}\n\n`;    // "Vorrei condividere con te"
+        msg += `*${id[2]}*\n`;                    // nome evento
 
-        // "Vorrei condividere con te ecc."
-        msg = `${dataLabel(myLanguage,12)}\n\n*${id[2]}*\n${humanReadableData}\n------\n\n`;
-        
-        // nb.aggiunge a pontivia solo se festività inserita dall'utente
-        // verificare se esiste un RODate o RODay
+        // Check: cerca se quella data esiste in newPersonalHolydays:
+        const isPersonalHolyday = newPersonalHolydays.some( (item: any, index: number) => {
+          // la description è presente in myPersonalHolydays?
+          if (id[2] === item.description) {
+            // SI (la data esiste in myPersonalHolydays)
+            
+            // il record in myPersonalHolydays ha anche una endDate?
+            if (newPersonalHolydays[index].endDate === null) {
+              // [ NO = quindi evento di 1 giorno]
 
-        // cerca evento in myPersonalHolydays
-        console.log()
+              // controllo di conferma: data del giorno premuto = data dell'evento sull'array?
+              if (id[0].getTime() === newPersonalHolydays[index].startDate.getTime()) {
+                // si aggiunge al msg la data in formato human-readable
+                msg += newPersonalHolydays[index].startDate.toLocaleDateString(myLanguage, {day: 'numeric', month: 'long', year: 'numeric'});
+                // si forma la seconda parte del link
+                link += `&pStartDate=${id[0].getFullYear()}-${id[0].getMonth() + 1}-${id[0].getDate()}`;
+                // trattandosi di evento inserito dall'utente
+                // si aggiungono al link anchei description, pRODate e pRODay
+                link += `&pDescription=${newPersonalHolydays[index].description?.replace(/ /g, "%20")}`;
+                if (newPersonalHolydays[index].repeatOnDate) link += '&pRODate=true'
+                if (newPersonalHolydays[index].repeatOnDay) link += '&pRODay=true'
+                return true;
+              };
+            } else {
+              // [ SI = quindi la data appartiene a un evento di più giorni]
 
-        msg += `iOS:\n`;
-        msg += `pontivia://holydays?action=newItemFromExternal&pStartDate=${formattedData}`;
-        msg += `&pDescription=${id[2].replace(/ /g, "%20")}`;
-        
-        // "Scarica PontiVIA!"
-        msg += `\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
+              // controllo di conferma: data giorno premuto compresa tra startDate e endDate?
+              if (isWithinInterval(new Date(id[0]), {start: newPersonalHolydays[index].startDate, end: newPersonalHolydays[index].endDate})) {
+                // si aggiunge al msg la doppia data in formato human readable
+                msg += newPersonalHolydays[index].startDate.toLocaleDateString(myLanguage, {day: 'numeric', month: 'long', year: 'numeric'});
+                msg += ' - ';
+                msg += newPersonalHolydays[index].endDate.toLocaleDateString(myLanguage, {day: 'numeric', month: 'long', year: 'numeric'});
+                // idem, si forma il link con la doppia data
+                link += `&pStartDate=${newPersonalHolydays[index].startDate.getFullYear()}-${newPersonalHolydays[index].startDate.getMonth() + 1}-${newPersonalHolydays[index].startDate.getDate()}`;
+                link += `&pEndDate=${newPersonalHolydays[index].endDate.getFullYear()}-${newPersonalHolydays[index].endDate.getMonth() + 1}-${newPersonalHolydays[index].endDate.getDate()}`;
+                // trattandosi di evento inserito dall'utente
+                // si aggiungono al link anchei description, pRODate e pRODay
+                link += `&pDescription=${newPersonalHolydays[index].description?.replace(/ /g, "%20")}`;
+                if (newPersonalHolydays[index].repeatOnDate) link += '&pRODate=true'
+                if (newPersonalHolydays[index].repeatOnDay) link += '&pRODay=true'
+                return true;
+              };
+            }
+          } 
+        });
 
+        // se la data NON è inserita dall'utente
+        // si aggiunge al msg la data della probabile festivita nazionale in formato human-readable
+        if (!isPersonalHolyday) {
+          msg += id[0].toLocaleDateString(myLanguage, {day: 'numeric', month: 'long', year: 'numeric'}) + "\n\n";
+        }
+        // se la data è inserita dall'utente si aggiunge il link
+        if (isPersonalHolyday) {
+          msg += "\n\n" + link + "\n";
+        }
+        // in ogni caso si aggiunge "Scarica PontiVIA!"
+        msg += `\n---\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
       } else {
         // /////////////////////////
         // TIPO: POSSIBILE PONTE
         // /////////////////////////
 
-        // MESSAGGIO: possibile ponte
-        msg = `${dataLabel(myLanguage,12)}\n\n*${dataLabel(myLanguage, 9)}*\n${humanReadableData}`;
-        msg += `\n------\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
+        // MESSAGGIO: solo segnalazione ponte, niente link per inserire le date
+        msg += `${dataLabel(myLanguage,12)}\n\n`;
+        msg += `*${dataLabel(myLanguage, 9)}*\n`;
+        msg += `${id[0].toLocaleDateString(myLanguage, {day: 'numeric', month: 'long', year: 'numeric'})}\n\n`;
+        msg += `\n---\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
       }
+
+      // APRE SHARE DEL DISPOSITIVO
       const result = await Share.share({
         message: msg,
         });
@@ -148,11 +197,14 @@ const CalendarScreen = ({callerPreferences}: any) => {
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // OK -> shared with activity type of result.activityType
+          setVisibleToast(false);
         } else {
           // shared
+          setVisibleToast(false);
         }
       } else if (result.action === Share.dismissedAction) {
         // CANCEL -> dismissed
+        setVisibleToast(false);
       }
     } catch (error) {
       console.error(error);
@@ -203,10 +255,10 @@ const CalendarScreen = ({callerPreferences}: any) => {
         justifyContent:'space-between',
         //backgroundColor:'green',
         }}>
-        <IconSymbol name="calendar" size={28} color={colors.black} />
+        <IconSymbol name="calendar" size={28} color={colors.text} />
         <View style={{width:'100%', }}>
-          <Text style={[styles.monthTitle, {color: colors.black, textAlign:'left', paddingLeft:0} ]}>{title}</Text>
-          <Text style={[styles.dayNumber, {color: colors.black, textAlign:'left', }]}>{description}</Text>
+          <Text style={[styles.monthTitle, {color: colors.text, textAlign:'left', paddingLeft:0} ]}>{title}</Text>
+          <Text style={[styles.dayNumber, {color: colors.text, textAlign:'left', }]}>{description}</Text>
         </View>
       </View>
 
@@ -257,8 +309,8 @@ const CalendarScreen = ({callerPreferences}: any) => {
             style={{width:48, height:48, resizeMode:'contain', marginRight: 16}}
           />
           <View style={{ flex:1, }}>
-            <Text style={[styles.monthTitle, {color: colors.black, paddingLeft:0}]}>{dataLabel(myLanguage, 9)}</Text> 
-            { title && <Text style={[styles.dayNumber, { color: colors.black, lineHeight: 22, textAlign:'left'}]}>
+            <Text style={[styles.monthTitle, {color: colors.text, paddingLeft:0}]}>{dataLabel(myLanguage, 9)}</Text> 
+            { title && <Text style={[styles.dayNumber, { color: colors.text, lineHeight: 22, textAlign:'left'}]}>
               {description}
               </Text> }
           </View>
@@ -717,6 +769,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
   └---------------------------------------------------------------- */
   const renderMonthCard = useCallback(({ item: month, index }) => {
 
+
     return (    
       <React.Fragment key={`${month.y}-${month.m}-${index}`}>
         <View style={styles.card}>          
@@ -780,11 +833,8 @@ const CalendarScreen = ({callerPreferences}: any) => {
                         onPress={ () => {
                           if (day[2] != undefined) {
                             if (day[1] > 0) {
-
-                              console.log(`\tcondividi:\n\tday[0]: ${day[0]} - day[1]: ${day[1]} - day[2]: ${day[2]} - day[3]: ${day[3]}`);
-
                               setToastPosition('center');
-                              setToastBackground('rgba(255, 255, 255, .94)');  // SFONDO TOAST
+                              setToastBackground(colors.toastBackground);       // SFONDO TOAST
                               setOverlayBackground('rgba(50, 50, 50, 0.15)')  // COLORE OVERLAY
                               setToastRadius([32, 32, 32, 32]);                    // STONDATURA
                               setPaddingFromTop(48);                            // MARGINE TOP
@@ -825,7 +875,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
                             });
                             setVisibleToast(true); 
                             setToastPosition('center');
-                            setToastBackground('rgba(255, 255, 255, .94)'); // SFONDO TOAST
+                            setToastBackground(colors.toastBackground); // SFONDO TOAST
                             setOverlayBackground('rgba(50, 50, 50, 0.05)'); // COLORE OVERLAY
                             setToastRadius([32, 32, 32, 32]); // STONDATURA
                             setPaddingFromTop(48); // MARGINE TOP

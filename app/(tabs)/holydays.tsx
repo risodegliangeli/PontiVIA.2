@@ -501,7 +501,7 @@ export default function HolydaysScreen() {
 
   /* ---------------------------------------------------------------┐ 
 
-      SCRIPTING PER AGGIUNTA EVENTO 
+      BLOCCO DI SCRIPTING PER AGGIUNTA EVENTO 
 
   └---------------------------------------------------------------- */
   // FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO

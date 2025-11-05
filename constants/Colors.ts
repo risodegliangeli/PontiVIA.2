@@ -25,6 +25,7 @@ export const Colors = {
     headerText: '#434300',
     textRed: '#FF778F',     // GIORNI ROSSI
     cardBackground: 'rgba(252, 252, 249, .8)', // BAINCO 75%
+    toastBackground: 'rgba(255, 255, 255, .94) ',
     dropdownBackground: 'rgba(51, 51, 51, 0.06)', // BACKGROUND DELLA DROPDOWN
     bridgeDay: 'rgba(51, 51, 51,1)',
     bridgeBackground: '#0088ff',  // PONTE EVIDENZIATO
@@ -59,6 +60,7 @@ export const Colors = {
     headerText: 'rgba(255, 255, 255, 1)',   // BIANCO
     textRed: '#FF778F',
     cardBackground: 'rgba(71,64,71, 1)', // SCURO 100% PER COPRIRE LO SFONDO
+    toastBackground: 'rgba(0, 0, 0, 1) ',    
     dropdownBackground: 'rgba(255, 255, 255, 0.08)', // BACKGROUND DELLA DROPDOWN
     bridgeDay: 'rgba(255, 204, 51, 1)',
     bridgeBackground: '#43a7ff', //'rgba(255, 204, 51, 1)',  // PONTE EVIDENZIATO

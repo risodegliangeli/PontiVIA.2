@@ -143,12 +143,18 @@ const SideLabel = () => {
                         }}>
                         <TouchableOpacity
                             style={{
-                            padding:36,
+                            padding:6,
+                            marginTop:24,
+                            marginRight:24,
+                            backgroundColor: colors.cancelButton,
+                            borderRadius: 99,
                             }}
                             onPress={ () => {
                                 setInfoModalVisible(!infoModalVisible);
                                 setInfoStep(1)}}>
-                            <IconSymbol name='xmark' size={Platform.OS === 'ios' ? 28 : 36} color={colors.white} />
+                            <IconSymbol name='xmark' 
+                                size={Platform.OS === 'ios' ? 24 : 32} 
+                                color={useColorScheme() === 'light' ? colors.black : colors.disabled} />
                         </TouchableOpacity>
                     </View>
                     
