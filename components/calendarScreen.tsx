@@ -111,7 +111,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
   ) {
     try {
       let msg = '';
-      let link = `pontivia://holydays?action=newItemFromExternal`;
+      let link = `https://pontivia-2025.web.app/detect.html?action=newItemFromExternal`;
 
       if (type === 'holyday') {
         // ////////////////////////////
