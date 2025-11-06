@@ -45,12 +45,12 @@ export const Colors = {
     blueBar: '#0A7AE1',
     tabBarBackground: 'rgba(51, 51, 51, .55)',
     tabBarBackgroundIos: '#292929', //'rgba(134,103,133,1)',
-    tabBarBackgroundAndroid: 'rgba(134,103,133,1)',
+    tabBarBackgroundAndroid: 'rgba(0, 0, 0, .9)', //'rgba(134,103,133,1)',
     tabBarBorderIos: 'rgba(141, 141, 141, 0.08)',
     tabBarBorderAndroid: 'rgba(255, 255, 255, 0.08)',
     tabBarInactiveItem: 'rgba(255, 255, 255, 1)',
     tabBarFocusDotIos: 'black', //'rgba(215,191,214,1)',
-    tabBarFocusDotAndroid: 'rgba(215,191,214,.8)',
+    tabBarFocusDotAndroid: 'rgba(64, 64, 64, 0.9)', //'rgba(215,191,214,.8)',
     tabBarActiveItem: 'rgba(0, 136, 255, 1)',
     text: 'rgba(255, 255, 255, 1)',         // BIANCO
     disabled: 'rgba(255, 255, 255, .6)',    // BIANCO 50%

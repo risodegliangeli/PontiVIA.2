@@ -1,10 +1,7 @@
 # TICKET:
 
 
-- ### RIVEDERE CONDIVISIONE
-  -- condivisione da index (file: calendarScreen.tsx) -> async function handleShare
 
----
 
 - ### AGGIUNGERE 'EDIT' NELL TOAST
   -- a fianco della condivisione aggiungere Edit + Delete
@@ -63,6 +60,11 @@
 
 # TICKET RISOLTI:
 
+
+- ### RIVEDERE CONDIVISIONE
+  -- condivisione da index (file: calendarScreen.tsx) -> async function handleShare
+
+---
 
 - ### GRAFICA MODAL CARICAMENTO
   -- adeguare a liquid glass
