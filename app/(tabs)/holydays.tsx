@@ -26,8 +26,10 @@ import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
 import DropdownCountry from '@/components/ui/DropdownCountry';  // COUNTRY PICKER 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewDatepicker from '@/components/NewDatepicker';         // MIO DATEPICKER ✌🏻
-import * as Linking from 'expo-linking';
+//import * as Linking from 'expo-linking';
 import SideLabel from '@/components/ui/SideLabel';
+import Privacy from '@/components/Privacy';
+
 
 // GOOGLE ADMOB ///////////////////////////////////
 import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
@@ -750,17 +752,17 @@ export default function HolydaysScreen() {
     const itemToShare: any = newPersonalHolydays[index];
       try {
         // Vorrei condividere questo evento ecc
-        let msg = `${dataLabel(myLanguage, 28)}\n\n${ (itemToShare.startDate).toLocaleDateString() }\n*${itemToShare.description}*\n\n------\n\n`;
+        let msg = `${dataLabel(myLanguage, 28)}\n\n*${itemToShare.description}*\n${ (itemToShare.startDate).toLocaleDateString(myLanguage, {day: 'numeric', month: 'long', year: 'numeric'}) }\n\n---\n\n`;
         
         // gestione link pontivia://
-        msg += `iOS:\n`
-        msg += `pontivia://holydays?action=newItemFromExternal`;
+        msg += `📲\n`
+        msg += `https://pontivia-2025.web.app/detect.html?action=newItemFromExternal`;
         if (itemToShare.startDate) {msg += `&pStartDate=${(itemToShare.startDate).getFullYear()}-${(itemToShare.startDate).getMonth() + 1}-${(itemToShare.startDate).getDate()}`};
         if (itemToShare.description !== '') {msg += `&pDescription=${(itemToShare.description).replace(/ /g, "%20")}`;}
         if (itemToShare.endDate) {msg += `&pEndDate=${(itemToShare.endDate).getFullYear()}-${(itemToShare.endDate).getMonth() + 1}-${(itemToShare.endDate).getDate()}`}
         if (itemToShare.repeatOnDate) {msg += `&pRODate=true`}
         if (itemToShare.repeatOnDay) {msg += `&pRODay=true`}
-        
+
         // link download
         msg += `\n\n${dataLabel(myLanguage, 29)} \nhttp://pontivia-2025.web.app`;
         const result = await Share.share({
@@ -1160,39 +1162,13 @@ export default function HolydaysScreen() {
               size={BannerAdSize.MEDIUM_RECTANGLE}/>
         </View>
 
-        {/* COME FUNZIONA? */}
-        <Pressable
-          onPress={ () => {
-            Alert.alert(
-              dataLabel(myLanguage, 7),  // Attenzione
-              dataLabel(myLanguage, 30),// Vuoi eliminare tutte le date ecc.?
-              [
-                {
-                  text: dataLabel(myLanguage, 9), // Annulla
-                  style: "cancel"
-                },
-                { 
-                  text: dataLabel(myLanguage, 31), // Elimina
-                  onPress: async () => {
-                    await Linking.openURL('https://pontivia-2025.web.app/')
-                  }
-                }
-              ]
-            );
-          }}>
-            <Text style={{
-              fontSize:18,
-              fontWeight:'600',
-              color: colors.blueBar,
-              marginBottom:32,
-              textAlign: 'center'
-            }}>
-              {dataLabel(myLanguage, 27)}</Text>
-        </Pressable>
+        {/* PRIVACY */}
+        <Suspense>
+          <Privacy />
+        </Suspense>
 
         {/* SPACER ################################################################################### */}
-        <View style={{height:240}}></View>
-
+        <View style={{height:480}}></View>
       </ScrollView>
 
       {/* nuovo MODAL DATEPICKR ###################################################################### */}

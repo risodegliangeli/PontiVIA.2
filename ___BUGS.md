@@ -1,23 +1,13 @@
 # TICKET:
+#############################################################################
 
 
-
-
-- ### AGGIUNGERE 'EDIT' NELL TOAST
-  -- a fianco della condivisione aggiungere Edit + Delete
-
-
-- ### CAROUSEL APERTURA
-  -- react-native-snap-carousel
+- #### PAGINA HELP
+  -- portare pagina FAQ dentro
 
 ---
 
-- #### ALERT possibili ponti
-  -- background
-
----
-
-- #### ALERT eventi personali
+- #### ALERT eventi personali/possibili ponti
   -- aggiungere checkbox CAMPANELLA nelle due modal (giono singolo e periodo):
   -- "Ricordami di questa data [ 7 ] giorni prima"
 
@@ -28,24 +18,19 @@
 
 ---
 
+- #### ~~geolocalizzazione per santo del giorno~~
 
+--- 
 
-
-- #### TOOLTIP
+- #### ~~TOOLTIP~~
   aggiungere a fianco delle label delle PREFERENCES
 
 ---
 
-- #### PAGINA HELP
-  -- portare pgina FAQ dentro
+- ### ~~AGGIUNGERE 'EDIT' NELL TOAST~~
+  -- a fianco della condivisione aggiungere Edit + Delete
 
-
-- #### geolocalizzazione per santo del giorno
-
---- 
- 
-- #### SPLASH ICON & SCREEN
-
+---
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -60,6 +45,15 @@
 
 # TICKET RISOLTI:
 
+
+- ### CAROUSEL APERTURA
+  -- react-native-snap-carousel
+
+---
+
+- #### SPLASH ICON & SCREEN
+
+---
 
 - ### RIVEDERE CONDIVISIONE
   -- condivisione da index (file: calendarScreen.tsx) -> async function handleShare

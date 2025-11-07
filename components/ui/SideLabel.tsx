@@ -253,7 +253,6 @@ const SideLabel = () => {
                     index={infoStep}
                     action={ (x) => {
                         setInfoStep(x);
-                        //console.log('azione di ritorno', x)
                         } }/>
 
                 </ImageBackground>

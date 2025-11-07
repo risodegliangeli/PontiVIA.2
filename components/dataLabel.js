@@ -158,7 +158,7 @@ export function dataLabel(language, item) {
             'Festività cattoliche',                 // 14
             'Modifica lista dei giorni',            // 15
             'Come funziona?',                       // 16
-            'FAQ / Info Privacy',                    // 17
+            'Info Privacy',                    // 17
             'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?',    // 30
             'Prosegui',                                                 // 31
         ],
@@ -180,7 +180,7 @@ export function dataLabel(language, item) {
             'Fêtes religieuses',                    // 14
             'Modifier la liste',                    // 15
             'Comment ça marche ?',                  // 16
-            'FAQ / Infos Confidentialité',           // 17
+            'Infos Confidentialité',           // 17
             'Vous allez être redirigé vers une page externe. Voulez-vous continuer ?',  // 30
             'Continuer',                                                // 31
 
@@ -203,7 +203,7 @@ export function dataLabel(language, item) {
             'Festividades religiosas',              // 14
             'Editar lista',                         // 15
             '¿Cómo funciona?',                  // 16
-            'FAQ / Info Privacidad',           // 17
+            'Info Privacidad',           // 17
             'Está a punto de ser redirigido a una página externa. ¿Desea continuar?', // 30
             'Continuar',                                                // 31
         ],
@@ -225,7 +225,7 @@ export function dataLabel(language, item) {
             'Religiöse Feiertage',                  // 14
             'Liste bearbeiten',                     // 15
             'Wie funktioniert es?',                  // 16
-            'FAQ / Datenschutz-Info',           // 17
+            'Datenschutz-Info',           // 17
             'Sie werden zu einer externen Seite weitergeleitet. Möchten Sie fortfahren?', // 30
             'Fortfahren',                                               // 31
         ],
@@ -247,7 +247,7 @@ export function dataLabel(language, item) {
             'Religious holidays',                   // 14
             'Edit list',                            // 15
             'How does it work?',                  // 16
-            'FAQ / Privacy Info',           // 17
+            'Privacy Info',           // 17
             'You are about to be redirected to an external page. Do you want to continue?', // 30
             'Continue',                                                 // 31
         ],
@@ -269,7 +269,7 @@ export function dataLabel(language, item) {
             'Religieuze feestdagen',                // 14
             'Lijst bewerken',                       // 15
             'Hoe werkt het?',                  // 16
-            'FAQ / Privacy Info',           // 17
+            'Privacy Info',           // 17
             'U wordt doorgestuurd naar een externe pagina. Wilt u doorgaan?',// 30
             'Doorgaan',                                                 // 31
         ],
@@ -291,7 +291,7 @@ export function dataLabel(language, item) {
             'Feriados religiosos',                  // 14
             'Editar lista',                         // 15
             'Como funciona?',                  // 16
-            'FAQ / Info Privacidade',           // 17
+            'Info Privacidade',           // 17
             'Você está prestes a ser redirecionado para uma página externa. Deseja continuar?',  // 30
             'Continuar',                                                // 31
         ],
@@ -313,7 +313,7 @@ export function dataLabel(language, item) {
             'Vjerski praznici',                     // 14
             'Uredi listu',                          // 15
             'Kako funkcionira?',                  // 16
-            'FAQ / Info o privatnosti',           // 17
+            'Info o privatnosti',           // 17
             'Bit ćete preusmjereni na vanjsku stranicu. Želite li nastaviti?', // 30
             'Nastavi',                                                  // 31
         ],
@@ -335,7 +335,7 @@ export function dataLabel(language, item) {
             'Verski prazniki',                      // 14
             'Uredi seznam',                         // 15
             'Kako deluje?',                  // 16
-            'FAQ / Info o zasebnosti',           // 17
+            'Info o zasebnosti',           // 17
             'Preusmerjeni boste na zunanjo stran. Želite nadaljevati?', // 30
             'Nadaljuj',                                                 // 31
         ],
@@ -357,7 +357,7 @@ export function dataLabel(language, item) {
             'Θρησκευτικές γιορτές',                 // 14
             'Επεξεργασία λίστας',                   // 15
             'Πώς λειτουργεί;',                      // 16
-            'FAQ / Πληροφορίες Απορρήτου',          // 17
+            'Πληροφορίες Απορρήτου',          // 17
             'Πρόκειται να ανακατευθυνθείτε σε εξωτερική σελίδα. Θέλετε να συνεχίσετε;',  // 18
             'Συνέχεια',                             // 19
         ]
@@ -396,7 +396,7 @@ export function holydayLabels(language,item) {
         'Attenzione, l\'evento è in conflitto con ',                // 24
         'Questa data è già presente ',                              // 25
         'Come funziona?',                                           // 26
-        'FAQ / Info Privacy',                                       // 27 ex 'FAQ / Info Privacy'
+        'Info Privacy',                                       // 27 ex 'Info Privacy'
         'Vorrei condividere con te questo evento:',                 // 28
         'Scarica PontiVIA!',                                        // 29
         'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?',    // 30
@@ -430,7 +430,7 @@ export function holydayLabels(language,item) {
         'Attention, l\'événement est en conflit avec ',             // 24
         'Cette date est déjà présente ',                            // 25
         'Comment ça marche ?',                                      // 26
-        'FAQ / Infos Confidentialité',                              // 27
+        'Infos Confidentialité',                              // 27
         'Je voudrais partager cet événement avec toi :',            // 28
         'Télécharge PontiVIA !',                                    // 29
         'Vous allez être redirigé vers une page externe. Voulez-vous continuer ?',  // 30
@@ -464,7 +464,7 @@ export function holydayLabels(language,item) {
         'Atención, el evento está en conflicto con ',               // 24
         'Esta fecha ya está presente ',                             // 25
         '¿Cómo funciona?',                                          // 26
-        'FAQ / Info Privacidad',                                    // 27
+        'Info Privacidad',                                    // 27
         'Me gustaría compartir este evento contigo:',               // 28
         '¡Descarga PontiVIA!',                                      // 29
         'Está a punto de ser redirigido a una página externa. ¿Desea continuar?', // 30
@@ -498,7 +498,7 @@ export function holydayLabels(language,item) {
         'Achtung, das Ereignis steht in Konflikt mit ',             // 24
         'Dieses Datum ist bereits vorhanden ',                      // 25
         'Wie funktioniert es?',                                     // 16
-        'FAQ / Datenschutz-Info',                                   // 17
+        'Datenschutz-Info',                                   // 17
         'Ich möchte dieses Ereignis mit dir teilen:',               // 28
         'Lade PontiVIA herunter!',                                  // 29
         'Sie werden zu einer externen Seite weitergeleitet. Möchten Sie fortfahren?', // 30
@@ -532,7 +532,7 @@ export function holydayLabels(language,item) {
         'Warning, the event conflicts with ',                       // 24
         'This date is already present ',                            // 25
         'How does it work?',                                        // 16
-        'FAQ / Privacy Info',                                       // 17
+        'Privacy Info',                                       // 17
         'I would like to share this event with you:',               // 28
         'Download PontiVIA!',                                       // 29
         'You are about to be redirected to an external page. Do you want to continue?', // 30
@@ -566,7 +566,7 @@ export function holydayLabels(language,item) {
         'Let op, het evenement is in conflict met ',                // 24
         'Deze datum is al aanwezig ',                               // 25
         'Hoe werkt het?',                                           // 16
-        'FAQ / Privacy Info',                                       // 17
+        'Privacy Info',                                       // 17
         'Ik wil deze gebeurtenis met je delen:',                    // 28
         'Download PontiVIA!',                                       // 29
         'U wordt doorgestuurd naar een externe pagina. Wilt u doorgaan?',// 30
@@ -600,7 +600,7 @@ export function holydayLabels(language,item) {
         'Atenção, o evento está em conflito com ',                  // 24
         'Esta data já está presente ',                              // 25
         'Como funciona?',                                           // 16
-        'FAQ / Info Privacidade',                                   // 17
+        'Info Privacidade',                                   // 17
         'Gostaria de compartilhar este evento com você:',           // 28
         'Baixe PontiVIA!',                                          // 29
         'Você está prestes a ser redirecionado para uma página externa. Deseja continuar?',  // 30
@@ -634,7 +634,7 @@ export function holydayLabels(language,item) {
         'Pažnja, događaj je u sukobu s ',                           // 24
         'Ovaj datum je već prisutan ',                              // 25
         'Kako funkcionira?',                                        // 16
-        'FAQ / Info o privatnosti',                                 // 17
+        'Info o privatnosti',                                 // 17
         'Želio bih podijeliti ovaj događaj s tobom:',               // 28
         'Preuzmi PontiVIA!',                                        // 29
         'Bit ćete preusmjereni na vanjsku stranicu. Želite li nastaviti?', // 30
@@ -669,7 +669,7 @@ export function holydayLabels(language,item) {
         'Pozor, dogodek je v sporu z ',                             // 24
         'Ta datum je že prisoten ',                                 // 25
         'Kako deluje?',                                             // 16
-        'FAQ / Info o zasebnosti',                                  // 17
+        'Info o zasebnosti',                                  // 17
         'Rad bi delil ta dogodek s teboj:',                         // 28
         'Prenesi PontiVIA!',                                        // 29
         'Preusmerjeni boste na zunanjo stran. Želite nadaljevati?', // 30
@@ -703,7 +703,7 @@ export function holydayLabels(language,item) {
         'Προσοχή, το γεγονός έρχεται σε σύγκρουση με ',             // 24
         'Αυτή η ημερομηνία είναι ήδη παρούσα ',                     // 25
         'Πώς λειτουργεί;',                                          // 16
-        'FAQ / Πληροφορίες Απορρήτου',                              // 17
+        'Πληροφορίες Απορρήτου',                              // 17
         'Θα ήθελα να μοιραστώ αυτό το γεγονός μαζί σου:',           // 28
         'Κατέβασε το PontiVIA!',                                    // 29
         'Πρόκειται να ανακατευθυνθείτε σε εξωτερική σελίδα. Θέλετε να συνεχίσετε;',  // 30
@@ -1105,5 +1105,14 @@ export function datepickerLabels(language, item) {
             'Επεξεργασία συμβάντος',   // 19
         ],
     };
+    return dataLabel[language][item];
+}
+
+export function privacy(language, item) {
+    const dataLabel = {
+        'en': [
+            'Privacy Policy\nLast updated: 11/2025\n\nPontiVia! respects user privacy and is committed to protecting personal data in compliance with the General Data Protection Regulation (GDPR) and applicable regulations.\n\n2. Data Controller\nAngeli & Associati - Milan\nangelieassociati@gmail.com\n\n3. Data Collected\n3.1 Data provided directly by the user:\n- personal events: holidays, anniversaries and appointments voluntarily entered into the application,\n- preferences: selection of the reference country for holidays, language settings and search filters.\n\n3.2 Automatically collected data\nPontiVia! DOES NOT collect:\n- location data\n- contact information\n- login credentials\n- browsing or usage data\n- device identifiers\n\nWhen the user chooses to share dates or bridges with third parties through the app\'s sharing function, the shared information (event description, date, duration) is transmitted through the user\'s device sharing system. The app does not store or track what content is shared, with whom, or when. Sharing occurs exclusively at the user\'s voluntary initiative and under their full control.\n\nThe app works completely offline and does not transmit any data to external servers.\n\n4. Purpose of Processing\nPersonal data entered by the user (events, holidays, preferences) are processed exclusively to:\n- calculate available bridges between holidays\n- display the personalized calendar\n- provide application functionality\n\n5. Legal Basis for Processing\nProcessing is based on user consent (Article 6(1)(a) GDPR) provided through voluntary use of the application.\n\n6. Data Retention\nAll entered data is stored exclusively locally on the user\'s device. It is not transferred, synchronized or stored on external servers. Data remains on the device until:\n- the user manually deletes it\n- the application is uninstalled\n\n7. Data Sharing\nPontiVia! DOES NOT share, sell or transmit any personal data to third parties. The app does not contain:\n- social network integrations\n- cloud or automatic backup services\n\n8. User Rights\nIn accordance with GDPR, users have the right to:\n- access: view their data (available directly in the app)\n- rectification: modify entered data through the app interface\n- erasure: delete all data by uninstalling the application or manually deleting events\n- objection: cease using the application at any time\n\n9. Data Security\nPontiVia! adopts appropriate technical measures to protect data:\n- secure local storage on the device\n- no data transmission via internet\n- data access limited to the device user\n\n10. Minor Users\nThe application is suitable for users of all ages. It does not intentionally collect personal data from minors under 13 years of age. Since the app does not require registration nor collect identifying data, it can be used by minors under parental or guardian supervision.\n\n11. Changes to the Policy\nWe reserve the right to update this policy. Changes will be communicated through app updates or Store notifications.\n\n12. Contact\nFor privacy-related questions or requests, contact: angelieassociati@gmail.com\n\n13. Supervisory Authority\nUsers have the right to lodge a complaint with the competent supervisory authority:\nItaly: Data Protection Authority (www.garanteprivacy.it)\nUK: Information Commissioner\'s Office (ICO) (www.ico.org.uk)\nEU: Find your national authority at https://edpb.europa.eu/about-edpb/about-edpb/members_en\n'
+        ]
+    }
     return dataLabel[language][item];
 }

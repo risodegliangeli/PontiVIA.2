@@ -173,10 +173,10 @@ const CalendarScreen = ({callerPreferences}: any) => {
         }
         // se la data è inserita dall'utente si aggiunge il link
         if (isPersonalHolyday) {
-          msg += "\n\n" + link + "\n";
+          msg += `\n\n---\n\n📲\n` + link + "\n\n";
         }
         // in ogni caso si aggiunge "Scarica PontiVIA!"
-        msg += `\n---\n\n${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
+        msg += `${dataLabel(myLanguage, 13)} \nhttp://pontivia-2025.web.app`;
       } else {
         // /////////////////////////
         // TIPO: POSSIBILE PONTE

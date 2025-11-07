@@ -24,6 +24,7 @@ import {
   ViewStyle,
   Pressable,
   } from 'react-native';
+import Privacy from '@/components/Privacy';
 
 // GOOGLE ADMOB ///////////////////////////////////
   import mobileAds, { BannerAd, BannerAdSize, useForeground } from 'react-native-google-mobile-ads';
@@ -51,6 +52,9 @@ const useThemeColors = () => {
   const colorScheme = useColorScheme();
   return Colors[colorScheme ?? 'light'];
 };
+
+// VISIBILITA MODAL PRIVACY
+const [isPrivacyVisible, setIsPrivacyVisible] = useState<boolean>(true);
 
 export const PREFERENCES = {
   domenica:           { status: true, label: localizedDays[6].charAt(0).toUpperCase() + localizedDays[6].slice(1) },
@@ -454,43 +458,20 @@ export default function Preferences() {
           </View>
 
           {/* INFO / PRIVACY  ############################################################################# */}
-          <Pressable
-            onPress={ () => {
-              Alert.alert(
-                'Attenzione',  // Attenzione
-                switchNames(myLanguage, 18),// Vuoi eliminare tutte le date ecc.?
-                [
-                  {
-                    text: 'Annulla', // Annulla
-                    style: "cancel"
-                  },
-                  { 
-                    text: switchNames(myLanguage, 19), // Elimina
-                    onPress: async () => {
-                      await Linking.openURL('https://pontivia-2025.web.app/')
-                    }
-                  }
-                ]
-              );                
-            }}>
-              <Text style={{
-                fontSize:18,
-                fontWeight:'800',
-                textAlign: 'center',
-                color: colors.blueBar,
-                marginBottom:32,
-              }}>
-                {switchNames(myLanguage, 17)}</Text>
-          </Pressable>
+          <Suspense>
+            <Privacy />
+          </Suspense>
 
           {/* SPACER  ############################################################################# */}
-          <View style={{ height: 240 }} />
+          <View style={{ height: 480 }} />
         </ScrollView>
 
         {/* INFOPOINT  ############################################################################# */}          
         <Suspense>
           <SideLabel />
         </Suspense>
+
+
 
     </ImageBackground>
   );
