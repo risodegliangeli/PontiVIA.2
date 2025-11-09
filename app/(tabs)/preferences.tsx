@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import { getLocales,  } from 'expo-localization';
 import { dataLabel as switchNames } from '@/components/dataLabel'; // LABEL LOCALIZZATE
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
-import * as Linking from 'expo-linking';
+//import * as Linking from 'expo-linking';
 import SideLabel from '@/components/ui/SideLabel';
 import {
   ImageBackground,
@@ -56,41 +56,6 @@ const useThemeColors = () => {
 // VISIBILITA MODAL PRIVACY
 const [isPrivacyVisible, setIsPrivacyVisible] = useState<boolean>(true);
 
-export const PREFERENCES = {
-  domenica:           { status: true, label: localizedDays[6].charAt(0).toUpperCase() + localizedDays[6].slice(1) },
-  sabato:             { status: true, label: localizedDays[5].charAt(0).toUpperCase() + localizedDays[5].slice(1) },
-  venerdi:            { status: false, label: localizedDays[4].charAt(0).toUpperCase() + localizedDays[4].slice(1) },
-  giovedi:            { status: false, label: localizedDays[3].charAt(0).toUpperCase() + localizedDays[3].slice(1) },
-  mercoledi:          { status: false, label: localizedDays[2].charAt(0).toUpperCase() + localizedDays[2].slice(1) },
-  martedi:            { status: false, label: localizedDays[1].charAt(0).toUpperCase() + localizedDays[1].slice(1) },
-  lunedi:             { status: false, label: localizedDays[0].charAt(0).toUpperCase() + localizedDays[0].slice(1) },
-  pasqua:             { status: true, label: switchNames(myLanguage,0) },
-  lunediDellAngelo:   { status: true, label: switchNames(myLanguage,1) },
-  ascensione:         { status: false, label: switchNames(myLanguage,2) },
-  pentecoste:         { status: false, label: switchNames(myLanguage,3) },
-  lunediPentecoste:   { status: false, label: switchNames(myLanguage,4) },
-  corpusDomini:       {status: false, label: switchNames(myLanguage,5)}, 
-  festivitaNazionali: { status: true, label: switchNames(myLanguage,7)}, 
-  festivitaLocali:    { status: true, label: switchNames(myLanguage,8)}, 
-  festivitaPersonali: { status: true, label: switchNames(myLanguage,9)}, 
-  feriePersonali:     { status: true, label: switchNames(myLanguage,10)}, 
-  bridgeDuration:     3, 
-  firstDayOfWeek:     1,
-};
-
-/* ===================================================
-   SALVA VARIABILE 'PREFERENCES' SUL LOCAL STORAGE 
-=================================================== */
-const savePreferences = async () => {
-  try {
-    const jsonValue = JSON.stringify(PREFERENCES);
-    await AsyncStorage.setItem('PREFERENCES_KEY', jsonValue);
-    //console.log('Variabile PRFERENCES saved successfully (scritta su local storage)');
-  } catch (e) {
-    console.error('Failed to save preferences:', e);
-  }
-};
-
 /* ============================================================================= 
 
                           MAIN EXPORT - Preferences
@@ -114,33 +79,16 @@ export default function Preferences() {
     myPreferences, setMyPreferences,
     } = useHolydays();
 
-  // CARICA VARIABILE 'PREFERENCES' DAL LOCAL STORAGE
-  const loadPreferences = async () => {
-    try {
-      const jsonValue = await AsyncStorage.getItem('PREFERENCES_KEY');
-      if (jsonValue != null) {
-        const storedPreferences = JSON.parse(jsonValue);
-        Object.assign(PREFERENCES, storedPreferences);
-      }
-    } catch (e) {
-      console.error('Failed to load preferences:', e);
-    }
-  };
-
-  // CARICA VARIABILE 'PREFERENCES' DAL LOCAL STORAGE AL BOOT
+  // Nota: la inizializzazione/caricamento da storage viene gestita dal Provider
+  // qui ci limitiamo a marcare 'preferencesLoaded' true quando il context è pronto
   useEffect(() => {
-    const initializePreferences = async () => {
-      await loadPreferences();
-      setPreferencesLoaded(true);
-    };
-    initializePreferences();
-    setMyPreferences({...PREFERENCES});  // IDEM myPreferences
+    setPreferencesLoaded(true);
   }, []);
 
-  const [dropdownSelected, setDropdownSelected] = useState<number>(Math.trunc(myPreferences.bridgeDuration)); 
+  const [dropdownSelected, setDropdownSelected] = useState<number>(Math.trunc(myPreferences?.bridgeDuration ?? 3)); 
 
   // GESTISCE PULSANTE 'MODIFICA LISTA FESTIVITA'
-  const handleEditHolydays = () => { navigation.navigate('holydays') };
+  const handleEditHolydays = () => { navigation.navigate('holydays' as never) };
 
   // STILI PAGINA
   const styles = StyleSheet.create({
@@ -269,29 +217,25 @@ export default function Preferences() {
   });
 
   // AGGIORNA CONTEXT A OGNI CAMBIAMENTO DI PREFERENCES
-  useEffect( () => {
-    setMyPreferences({...PREFERENCES});
-  }, [PREFERENCES]);
-
   /* ===================================================
-    SWITCH DINAMICO 
+    SWITCH DINAMICO: usa myPreferences dal context
   =================================================== */
-  function PreferenceSwitch ({ preferenceKey }: { preferenceKey: keyof typeof PREFERENCES }) {
+  function PreferenceSwitch ({ preferenceKey }: { preferenceKey: string }) {
     const colors = useThemeColors();
-    const [isEnabled, setIsEnabled] = useState((PREFERENCES[preferenceKey] as { status: boolean }).status);
-    
-    // Sincronizza lo stato locale con la costante globale
-    useEffect(() => {
-      setIsEnabled((PREFERENCES[preferenceKey] as { status: boolean }).status);
-    }, [PREFERENCES[preferenceKey].status]);
+    const [isEnabled, setIsEnabled] = useState<boolean>(myPreferences?.[preferenceKey]?.status ?? false);
 
-    // cambia stato dello swiwtch
+    // Sincronizza lo stato locale con il valore dal context
+    useEffect(() => {
+      setIsEnabled(myPreferences?.[preferenceKey]?.status ?? false);
+    }, [myPreferences?.[preferenceKey]?.status]);
+
+    // cambia stato dello switch: aggiorna context e salva su AsyncStorage
     const toggleSwitch = async () => {
       const newStatus = !isEnabled;
       setIsEnabled(newStatus);
-      (PREFERENCES[preferenceKey] as { status: boolean }).status = newStatus;
-      await savePreferences();
-      setMyPreferences( { ...PREFERENCES });
+      const updated = { ...myPreferences, [preferenceKey]: { ...(myPreferences?.[preferenceKey] ?? {}), status: newStatus } };
+      setMyPreferences(updated);
+      try { await AsyncStorage.setItem('PREFERENCES_KEY', JSON.stringify(updated)); } catch (e) { console.error('Failed to save preferences:', e); }
     };
 
     // STILI DELLO SWITCH
@@ -316,7 +260,7 @@ export default function Preferences() {
 
     return (
       <View style={styles.preferenceRow as ViewStyle}>
-        <Text style={styles.text}>{(PREFERENCES[preferenceKey] as { label: string }).label}</Text>
+        <Text style={styles.text}>{(myPreferences?.[preferenceKey]?.label ?? preferenceKey)}</Text>
         <Switch
           trackColor={{ false: '#767577', true: '#767577' }} 
           thumbColor={isEnabled ? colors.textRed : '#f4f3f4'} 
@@ -368,9 +312,9 @@ export default function Preferences() {
               selectedValue={dropdownSelected}
               onChange={ async (value) => {
                 setDropdownSelected(value);           // POSIZIONA LA VOCE DELLA DROPDOWN
-                PREFERENCES.bridgeDuration = value;   // AGGIORNA IL VALORE DI bridgeDuration
-                setMyPreferences({ ...PREFERENCES }); // AGGIORNA LA VARIABILE myPreferences
-                await savePreferences();              // SALVA LE PREFERENCES SU LOCAL STORAGE
+                const updated = { ...myPreferences, bridgeDuration: value };
+                setMyPreferences(updated);            // AGGIORNA LA VARIABILE myPreferences
+                try { await AsyncStorage.setItem('PREFERENCES_KEY', JSON.stringify(updated)); } catch(e) { console.error('Failed to save preferences:', e); }
               }}
             />
           </View>       

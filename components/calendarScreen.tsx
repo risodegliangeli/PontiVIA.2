@@ -222,7 +222,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
   const HolydayToast: React.FC<HolydayToastInterface> = ({id, title, description}) => {
     // CONTENUTO CHE STA _DENTRO_ AL TOAST
     return (
-    <View style={{ maxWidth:'100%', flexDirection:'column', gap:12, }}>
+    <View style={{ width:'100%', flexDirection:'column', gap:12, }}>
     
       {/* PULS. SHARE + EDIT + DELETE */}
       <View style={{ width:'100%', flexDirection:'row', justifyContent:'flex-end'}}>  
@@ -246,26 +246,25 @@ const CalendarScreen = ({callerPreferences}: any) => {
         </TouchableOpacity> */}
       </View>
 
-      {/* TESTI */}
+      {/* ICONA E TESTI */}
       <View style={{
-        minWidth:'100%', 
+        width:'100%', 
         flexDirection:'row', 
         gap:8, 
         alignItems:'flex-start', 
-        justifyContent:'space-between',
-        //backgroundColor:'green',
+        justifyContent:'flex-start',
         }}>
         <IconSymbol name="calendar" size={28} color={colors.text} />
-        <View style={{width:'100%', }}>
-          <Text style={[styles.monthTitle, {color: colors.text, textAlign:'left', paddingLeft:0} ]}>{title}</Text>
-          <Text style={[styles.dayNumber, {color: colors.text, textAlign:'left', }]}>{description}</Text>
+        <View style={{flex:1, flexDirection:'column',}}>
+          <Text style={styles.monthTitle}>{title}</Text>
+          <Text style={styles.dayNumber}>{description}</Text>
         </View>
       </View>
 
       {/* SPAZIATORE */}
       <View style={{width:'100%', height:12}} />
 
-      {/* PULSANTI ANNULLA */}
+      {/* PULSANTe ANNULLA */}
       <View style={styles.modalButtons }>
         <TouchableOpacity 
           style={styles.cancelButton} 
@@ -427,7 +426,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
     monthTitle: {
       fontSize: 16,
       fontWeight: 600,
-      paddingLeft:24,
+      //paddingLeft:24,
       color: colors.headerText,
       marginBottom: 4,
       textAlign: 'left',
@@ -501,7 +500,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
     dayNumber: {
       fontSize: 16,
       color: colors.text,
-      textAlign: 'center',
+      textAlign: 'left',
     },
     dayNumberSunday: {
       color: colors.textRed,

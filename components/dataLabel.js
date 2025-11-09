@@ -715,7 +715,7 @@ export function holydayLabels(language,item) {
 
 // LABEL USATE IN calendarScreen.tsx
 export function calendarScrenLabels(language, item) {
-    const dataLabel: any = {
+    const dataLabel = {
         'it': [
             'Ponte!',                                   // 0
             'PontiVIA! ha trovato questo ponte per te', // 1
@@ -883,7 +883,7 @@ export function calendarScrenLabels(language, item) {
 
 // LABEL USATE IN NewDatepicker
 export function datepickerLabels(language, item) {
-    const dataLabel: any = {
+    const dataLabel = {
         'it': [
             'Aggiungi un evento',      // 0
             '1 giorno',                // 1

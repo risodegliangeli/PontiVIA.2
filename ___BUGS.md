@@ -4,6 +4,16 @@
 
 
 
+- ### CONDIVISIONE FESTIVITA NAZIONALI
+  -- solo se il Paese è diverso da quello locale
+
+---
+
+- ### LUNGHEZZA PONTE
+  -- a volte non legge correttamente la lunghezza ponte
+
+---
+
 - #### ALERT eventi personali/possibili ponti
   -- aggiungere checkbox CAMPANELLA nelle due modal (giono singolo e periodo):
   -- "Ricordami di questa data [ 7 ] giorni prima"
@@ -28,6 +38,11 @@
 
 # TICKET RISOLTI:
 
+
+- ### SIMPLETOAST descrizioni lunghe
+  -- mandare a capo descrizioni festività *nazionali* troppo lunghe
+
+---
 
 - #### ~~geolocalizzazione per santo del giorno~~
 
