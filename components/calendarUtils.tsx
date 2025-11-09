@@ -7,7 +7,7 @@ import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
 import { getLocales,  } from 'expo-localization';
 // import { Platform } from 'react-native';
 //import { da } from 'date-fns/locale'; // importa il Danese???
-import { dataLabel } from '@/components/dataLabel';
+import { dataLabel } from '@/constants/dataLabel';
 import  checkPersonalHolydays  from '@/components/checkPersonalHolydays';
 
 // TYPE Holiday (VECCHIO)

@@ -21,7 +21,7 @@ import { useHolydays } from '@/context/HolydaysContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { addMonths, isWithinInterval } from "date-fns";
 import * as Calendar from 'expo-calendar'; // ACCESSO AL CALENDARIO DI SISTEMA
-import { calendarScrenLabels as dataLabel } from '@/components/dataLabel'; // LABEL LOCALIZZATE
+import { calendarScrenLabels as dataLabel } from '@/constants/dataLabel'; // LABEL LOCALIZZATE
 import { useNavigation } from '@react-navigation/native';
 
 // GOOGLE ADMOB ///////////////////////////////////
@@ -31,7 +31,7 @@ import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground, } from 'reac
 mobileAds()
   .initialize()
   .then(adapterStatuses => {
-    console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
+    //console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
   });
 
 // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it

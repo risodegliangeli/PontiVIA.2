@@ -13,7 +13,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Suspense, useEffect, useMemo, useRef, useState,  } from 'react';
 import { Colors } from '@/constants/Colors';
 import { MovingHands } from '@/components/ui/MovingHands';      // MIO
-import { indexLabels as dataLabel } from '@/components/dataLabel';
+import { indexLabels as dataLabel } from '@/constants/dataLabel';
 import SideLabel from '@/components/ui/SideLabel';
 import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 
@@ -34,7 +34,7 @@ export default function HomeScreen() {
   (async () => {
     const { status } = await requestTrackingPermissionsAsync();
     if (status === 'granted') {
-      console.log('Yay! I have user permission to track data');
+      // console.log('ok permission to track data');
     }
   })();
   }, []);

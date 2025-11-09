@@ -2,7 +2,7 @@ import { Colors } from '@/constants/Colors';
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, useColorScheme } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
-import { datepickerLabels } from '@/components/dataLabel';
+import { datepickerLabels } from '@/constants/dataLabel';
 
 const useThemeColors = () => {
     const colorScheme = useColorScheme();

@@ -9,7 +9,7 @@ import {
   useColorScheme
 } from 'react-native';
 import { Colors } from '@/constants/Colors';
-import { holydayLabels as dataLabel } from '@/components/dataLabel';
+import { holydayLabels as dataLabel } from '@/constants/dataLabel';
 import { getLocales } from 'expo-localization';
 
 const useThemeColors = () => {

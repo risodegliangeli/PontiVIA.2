@@ -6,7 +6,7 @@ import { Suspense, useState, useEffect, useRef } from 'react';
 import { Colors } from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
 import { getLocales,  } from 'expo-localization';
-import { dataLabel as switchNames } from '@/components/dataLabel'; // LABEL LOCALIZZATE
+import { dataLabel as switchNames } from '@/constants/dataLabel'; // LABEL LOCALIZZATE
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 //import * as Linking from 'expo-linking';
 import SideLabel from '@/components/ui/SideLabel';
@@ -33,7 +33,7 @@ import Privacy from '@/components/Privacy';
   mobileAds()
     .initialize()
     .then(adapterStatuses => {
-      console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
+      //console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
     });
 
   // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it

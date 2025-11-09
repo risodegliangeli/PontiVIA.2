@@ -1,4 +1,4 @@
-import { dataLabel, privacy } from '@/components/dataLabel';
+import { dataLabel, privacy } from '@/constants/dataLabel';
 import { ScrollView, View, Text, Modal, ImageBackground, useColorScheme, StyleSheet, TouchableOpacity, Platform, Pressable} from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { IconSymbol } from '@/components/ui/IconSymbol';

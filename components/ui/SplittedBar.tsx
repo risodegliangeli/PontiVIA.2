@@ -3,7 +3,7 @@ import { Colors } from '@/constants/Colors';
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
 import { getLocales,  } from 'expo-localization';
-import { splittedBarLabel as splittedLabels } from '@/components/dataLabel';
+import { splittedBarLabel as splittedLabels } from '@/constants/dataLabel';
 import {
   Animated,
   Dimensions,

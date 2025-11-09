@@ -5,12 +5,13 @@
 
 
 - ### CONDIVISIONE FESTIVITA NAZIONALI
-  -- solo se il Paese è diverso da quello locale
+  -- solo se il Paese è diverso da quello locale?
 
 ---
 
 - ### LUNGHEZZA PONTE
   -- a volte non legge correttamente la lunghezza ponte
+  -- verificare dopo lo spostamento di PREFERENCES
 
 ---
 
@@ -20,10 +21,7 @@
 
 ---
 
-- ### SPOSTARE PREFERENCES
-  -- in data.js
 
----
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,6 +36,11 @@
 
 # TICKET RISOLTI:
 
+
+- ### SPOSTARE PREFERENCES
+  -- in data.js
+
+---
 
 - ### SIMPLETOAST descrizioni lunghe
   -- mandare a capo descrizioni festività *nazionali* troppo lunghe

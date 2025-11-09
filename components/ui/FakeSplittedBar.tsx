@@ -246,7 +246,8 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
               :
               <Image 
                 source={require("@/assets/images/icon_calendar-off.png")} 
-                style={{width:'50%', height:'50%', resizeMode:'contain', opacity: .25}}  /> 
+                contentFit='contain'
+                style={{width:'50%', height:'50%', opacity: .25}}  /> 
               }
             </Pressable>
 
@@ -264,7 +265,8 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
                   :
                   <Image 
                     source={require("@/assets/images/icon_wand-off.png")}
-                    style={{width:'50%', height:'50%', resizeMode:'contain', opacity: .25}} /> 
+                    contentFit='contain'
+                    style={{width:'50%', height:'50%', opacity: .25}} /> 
                 }
             </Pressable>
         </View>
@@ -278,6 +280,7 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
             :
             <Image 
               source={require("@/assets/images/icon_girl-off.png")}
+              contentFit='contain'
               style={[styles.singleItemIcon, {opacity: .25}]} />       
           }
         </Pressable>

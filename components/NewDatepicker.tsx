@@ -6,7 +6,7 @@ import { getLocales,  } from 'expo-localization';
 import useLocalizationData from '@/app/data/data';
 import DateTimePicker, { DateType, useDefaultStyles } from 'react-native-ui-datepicker'; // https://www.npmjs.com/package/react-native-ui-datepicker
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { datepickerLabels as dataLabel } from '@/components/dataLabel';
+import { datepickerLabels as dataLabel } from '@/constants/dataLabel';
 import { Colors } from '@/constants/Colors';
 
 

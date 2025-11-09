@@ -1,4 +1,4 @@
-console.log('[DATA.TSX]');
+// console.log('[DATA.TSX]');
 import { getLocales, } from 'expo-localization';
 
 /* ============================================================================= 

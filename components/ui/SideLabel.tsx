@@ -3,8 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal, useColorScheme, Platfo
 import { useState } from 'react';
 import { Colors } from '@/constants/Colors';
 //import Svg, {Path} from 'react-native-svg';
-import { indexLabels as dataLabel } from '@/components/dataLabel';
-//import { splittedBarLabel } from '@/components/dataLabel';
+import { indexLabels as dataLabel } from '@/constants/dataLabel';
+//import { splittedBarLabel } from '@/constants/dataLabel';
 import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT
 import FakeSplittedBar  from '@/components/ui/FakeSplittedBar';
 

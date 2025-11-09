@@ -2,7 +2,7 @@ import React, { createContext, ReactNode, useContext, useState, useEffect } from
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales, } from 'expo-localization';
 import { getLocalizedWeekdays } from '@/app/data/data';
-import { dataLabel } from '@/components/dataLabel';
+import { dataLabel } from '@/constants/dataLabel';
 
 // INTERFACCIA DI Holiday
 interface Holiday {

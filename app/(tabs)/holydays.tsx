@@ -21,7 +21,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import { getLocales,  } from 'expo-localization';
-import { holydayLabels as dataLabel } from '@/components/dataLabel';
+import { holydayLabels as dataLabel } from '@/constants/dataLabel';
 import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
 import DropdownCountry from '@/components/ui/DropdownCountry';  // COUNTRY PICKER 
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -37,7 +37,7 @@ import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react
 mobileAds()
   .initialize()
   .then(adapterStatuses => {
-    console.log('AdMob Initialized @ holydays.tsx'); // Initialization complete!
+    //console.log('AdMob Initialized @ holydays.tsx'); // Initialization complete!
   });
 
 // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
