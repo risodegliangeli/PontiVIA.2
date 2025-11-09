@@ -35,6 +35,7 @@
     "expo-status-bar": "~2.2.3",
     "expo-symbols": "^0.4.5",
     "expo-system-ui": "~5.0.11",
+    "expo-tracking-transparency": "~5.2.4",
     "expo-updates": "~0.28.17",
     "react": "19.0.0",
     "react-dom": "19.0.0",

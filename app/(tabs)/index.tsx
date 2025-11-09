@@ -15,6 +15,7 @@ import { Colors } from '@/constants/Colors';
 import { MovingHands } from '@/components/ui/MovingHands';      // MIO
 import { indexLabels as dataLabel } from '@/components/dataLabel';
 import SideLabel from '@/components/ui/SideLabel';
+import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -27,6 +28,16 @@ const useThemeColors = () => {
                                       
 ########################################################################################################### */
 export default function HomeScreen() {
+
+  // RICHIESTA PERMESSO PER TRACKING DI AdMob
+  useEffect(() => {
+  (async () => {
+    const { status } = await requestTrackingPermissionsAsync();
+    if (status === 'granted') {
+      console.log('Yay! I have user permission to track data');
+    }
+  })();
+  }, []);
 
   // GESTIONE COLORE
   const colors = useThemeColors();

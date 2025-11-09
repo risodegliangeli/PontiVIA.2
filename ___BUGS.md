@@ -2,10 +2,7 @@
 #############################################################################
 
 
-- #### PAGINA HELP
-  -- portare pagina FAQ dentro
 
----
 
 - #### ALERT eventi personali/possibili ponti
   -- aggiungere checkbox CAMPANELLA nelle due modal (giono singolo e periodo):
@@ -15,20 +12,6 @@
 
 - ### SPOSTARE PREFERENCES
   -- in data.js
-
----
-
-- #### ~~geolocalizzazione per santo del giorno~~
-
---- 
-
-- #### ~~TOOLTIP~~
-  aggiungere a fianco delle label delle PREFERENCES
-
----
-
-- ### ~~AGGIUNGERE 'EDIT' NELL TOAST~~
-  -- a fianco della condivisione aggiungere Edit + Delete
 
 ---
 
@@ -45,6 +28,25 @@
 
 # TICKET RISOLTI:
 
+
+- #### ~~geolocalizzazione per santo del giorno~~
+
+--- 
+
+- #### ~~TOOLTIP~~
+  aggiungere a fianco delle label delle PREFERENCES
+
+---
+
+- ### ~~AGGIUNGERE 'EDIT' NELL TOAST~~
+  -- a fianco della condivisione aggiungere Edit + Delete
+
+---
+
+- #### PAGINA ~~HELP~~ PRIVACY
+  -- portare pagina FAQ dentro
+
+---
 
 - ### CAROUSEL APERTURA
   -- react-native-snap-carousel

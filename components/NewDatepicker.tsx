@@ -4,7 +4,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { addDays, subDays, compareAsc, getDay, differenceInDays, startOfMonth } from 'date-fns';
 import { getLocales,  } from 'expo-localization';
 import useLocalizationData from '@/app/data/data';
-import DateTimePicker from 'react-native-ui-datepicker'; // https://www.npmjs.com/package/react-native-ui-datepicker
+import DateTimePicker, { DateType, useDefaultStyles } from 'react-native-ui-datepicker'; // https://www.npmjs.com/package/react-native-ui-datepicker
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { datepickerLabels as dataLabel } from '@/components/dataLabel';
 import { Colors } from '@/constants/Colors';
@@ -84,7 +84,8 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
     return Colors[colorScheme ?? 'light'];
   };
 
-  const colors = useThemeColors();
+  const colors = useThemeColors();            // COLORI
+  const defaultStyles = useDefaultStyles();   // STILI DEL DATEPICKER
 
   // COPIA DEI PROPS IN INGRESSO PER USO INTERNO
   const [myStartDate, setMyStartDate] = useState<Date>(createUTCDate(startDate));     // DATA INIZIO
@@ -368,7 +369,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       if ( compareAsc(myStartDate, myEndDate) > 0 ) { setValue(1) }
       // controllo
       let d = differenceInDays(myEndDate, myStartDate);
-      console.log(`- - useEffect: GESTISCE LA DROPDOWN PARTENDO DALLA DIFFERENZA\ndifferenceInDays = ${d}`);
+      //console.log(`- - useEffect: GESTISCE LA DROPDOWN PARTENDO DALLA DIFFERENZA\ndifferenceInDays = ${d}`);
       if (d > 0 && d <= 3 && value !== d + 1) {
         setValue(d + 1);
       } else if ((d <= 0 || d > 3) && value !== null) {
@@ -606,7 +607,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               }
             }
             containerHeight={220}
-            hideWeekdays={false}
+            hideWeekdays={true}
             disableMonthPicker={false}
             disableYearPicker={false}
             showOutsideDays={false}          
@@ -614,26 +615,28 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
             //timeZone={'UTC'}
             locale={language}
             style={{
-              backgroundColor: colors.textNegative,
+              //backgroundColor: colors.textNegative,
               // borderWidth:1,
               // paddingTop: 24
             }}
             //navigationPosition={'right'}
             styles={{
+              ...defaultStyles,
               header:{marginBottom:36},
-              //...defaultStyles,
               //today: { borderWidth: 0, backgroundColor:'transparent', }, 
               //today_label: { color: '#333333'},
-              selected: { backgroundColor: '#FF778F', borderRadius:'12%' }, 
+              //years: {color: colors.text},
+              selected: { backgroundColor: colors.textRed, borderRadius:'12%' }, 
               selected_label: { color: colors.text}, //'rgba(255, 255, 255, 1)' },
-              selected_month: {backgroundColor: '#FF778F'},
+              selected_month: {backgroundColor: colors.textRed},
               //year_selector_label: { display:'none'},
               //day_cell:{backgroundColor:'#dedede'},
               month_selector_label: {fontSize: 16, fontWeight:600, textTransform:'capitalize', color:colors.text},
               year_selector_label: {fontSize: 16, fontWeight:600, textTransform:'capitalize', color:colors.text},
-              day_label: {fontSize:16, color: colors.text},
+              //day: {borderWidth:1, paddingVertical:8, },
+              day_label: {fontSize:16, lineHeight:24, color: colors.text},
               button_next: { backgroundColor: colors.cancelButton, borderRadius:'100%', padding:12 },
-              button_next_image:{color:'red'},
+              //button_next_image:{color:'red'},
               button_prev: { backgroundColor: colors.cancelButton, borderRadius:'100%', padding:12},
             }}
           />          
