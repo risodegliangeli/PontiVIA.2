@@ -1,8 +1,8 @@
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, useColorScheme, Platform, ImageBackground, Pressable, } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Modal, useColorScheme, Platform, ImageBackground, Pressable, Dimensions} from "react-native";
 import { useState } from 'react';
 import { Colors } from '@/constants/Colors';
-//import Svg, {Path} from 'react-native-svg';
+import Svg, {Path} from 'react-native-svg';
 import { indexLabels as dataLabel } from '@/constants/dataLabel';
 //import { splittedBarLabel } from '@/constants/dataLabel';
 import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT
@@ -102,10 +102,14 @@ const SideLabel = () => {
         fontWeight:400, 
         lineHeight:28, 
         letterSpacing: .6,
-        color: colors.white, 
+        color: colors.text, 
         textAlign: 'center'
     }
     })
+
+    const viewBox="0 0 360 557";
+    const fill = useColorScheme() === 'light' ? 'rgba(255, 255, 255, .85)' : 'rgba(0, 0, 0, 1)'
+    const width = Dimensions.get("window").width;
 
     return (
         <>
@@ -132,8 +136,103 @@ const SideLabel = () => {
                         [StyleSheet.absoluteFill,
                         {
                             backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, .5)' : colors.cardBackground,
-                        }]
-                    } />
+                            flexDirection:'column',
+                            justifyContent:'center',
+                            alignItems:'center',
+                        }]}/>
+
+                    <View style={{ 
+                        //borderWidth:1,
+                        maxWidth: 600, 
+                        width: '100%', 
+                        alignSelf: 'center',
+                        position:'absolute',
+                        top:'50%', 
+                        transform: [{translateY: '-50%'}],
+                        //justifyContent:'center',
+                        //alignContent:'center',
+                        //gap:48,
+                        // alignItems:'center',
+                        }}>
+                        <Svg
+                            viewBox={viewBox}
+                            width="100%"
+                            height="100%"
+                            fill={fill}
+                            preserveAspectRatio="xMidYMid meet"
+                            style={{ aspectRatio: 360/557, maxWidth: width}}
+                            >
+                            <Path d="M478 260.2C478 373.679 394.663 470.191 278.428 505.77L299.014 557C265.848 540.988 250.408 512.966 250.408 512.966C227.507 517.872 204.138 520.4 179.5 520.4C14.643 520.4 -119 403.905 -119 260.2C-119 116.496 14.643 0 179.5 0C344.357 0 478 116.496 478 260.2Z" />
+                        </Svg>
+
+
+                        <View style={{
+                            //orderWidth:1,
+                            width:'100%',
+                            height:'100%',
+                            position:'absolute',
+                            top:0,
+                            flexDirection:'column',
+                            justifyContent:'center',
+                            gap:48,
+                            alignItems:'center',
+                            alignContent:'center',
+                            }}>
+                            <Text style={styles.sectionTitle}>
+                                {dataLabel(myLanguage, 4)}
+                            </Text>
+
+                            <Text style={[styles.dida, {paddingHorizontal:48}]}>
+                                {dataLabel(myLanguage, infoStep)}
+                            </Text>
+
+                            {/* SPLITTED BAR */}
+                            <FakeSplittedBar 
+                                index={infoStep}
+                                action={ (x) => {
+                                    setInfoStep(x);
+                                    }}/>
+                                    
+                            {/* PALLINI */}
+                            <View style={{
+                                width:'55%', 
+                                //maxWidth: 314,
+                                flexDirection:'row', 
+                                justifyContent:'space-between', 
+                                alignItems:'center'
+                                }}>
+                                <TouchableOpacity
+                                    onPress={ () => {
+                                        if (infoStep > 1) setInfoStep( infoStep - 1 )  
+                                        }}>                              
+                                    <IconSymbol name='chevron.left' size={Platform.OS === 'ios' ? 20:28} color={colors.disabled} />
+                                </TouchableOpacity>
+                                <Pressable 
+                                    onPress={ () => setInfoStep(1) }
+                                    style={{width:12, height:12, borderRadius:12,
+                                    backgroundColor: infoStep === 1 ? colors.blueBar : colors.cancelButton }}/>
+                                <Pressable 
+                                    onPress={ () => setInfoStep(2) }
+                                    style={{width:12, height:12, borderRadius:12,
+                                    backgroundColor: infoStep === 2 ? colors.blueBar : colors.cancelButton }}/>
+                                <Pressable 
+                                    onPress={ () => setInfoStep(3) }
+                                    style={{width:12, height:12, borderRadius:12,
+                                    backgroundColor: infoStep === 3 ? colors.blueBar : colors.cancelButton }}/>
+                                <TouchableOpacity
+                                    onPress={ () => {
+                                        if (infoStep < 3) setInfoStep( infoStep + 1 )
+                                        }}>
+                                    <IconSymbol name='chevron.right' size={Platform.OS === 'ios' ? 20:28} color={colors.disabled} />
+                                </TouchableOpacity>
+                            </View>  
+
+
+
+                        </View>
+
+
+                    </View>
 
                     {/* PULS CHIUSURA */}
                     <View style={{
@@ -156,104 +255,14 @@ const SideLabel = () => {
                                 size={Platform.OS === 'ios' ? 24 : 32} 
                                 color={useColorScheme() === 'light' ? colors.black : colors.disabled} />
                         </TouchableOpacity>
-                    </View>
-                    
-                    {/* WRAPPER PRINCIPALE */}
-                    <View
-                        style={[
-                        StyleSheet.absoluteFill,
-                        {
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            //alignItems:'center',
-                            //maxWidth: 550,
-                            position:'absolute',
-                            // left:'50%',
-                            // transform: [{translateX:'-50%'}]
-                        }]}>
+                    </View>  
 
-                        {/* TESTI   */}
-                        <View style={styles.infoBalloon}>
-                            <View 
-                                style={{ 
-                                    flex:1,
-                                    flexDirection:'column',
-                                    justifyContent:'center', // VER
-                                    alignItems:'center', // HOR
-                                    //borderWidth:2,
-                                    maxWidth: 550,
-                                }}>
 
-                                {/* COME FUNZIONA PONTIVIA? */}
-                                <Text 
-                                    style={[
-                                        styles.sectionTitle, 
-                                        {
-                                            color:colors.white, 
-                                            width:'100%', 
-                                            textAlign: 'center',
-                                            marginBottom:24,
-                                        }]}>
-                                    {dataLabel(myLanguage, 4)}
-                                </Text>
 
-                                {/* NAVIGAZIONE E PALLINI */}
-                                <View style={{
-                                    width:'55%', 
-                                    //maxWidth: 314,
-                                    flexDirection:'row', 
-                                    justifyContent:'space-between', 
-                                    alignItems:'center'
-                                    }}>
-                                    <TouchableOpacity
-                                        onPress={ () => {
-                                            if (infoStep > 1) setInfoStep( infoStep - 1 )  
-                                            }}>                              
-                                        <IconSymbol name='chevron.left' size={Platform.OS === 'ios' ? 20:28} color={colors.white} />
-                                    </TouchableOpacity>
-                                    <Pressable 
-                                        onPress={ () => setInfoStep(1) }
-                                        style={{width:12, height:12, borderRadius:12,
-                                        backgroundColor: infoStep === 1 ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, .5)' }}/>
-                                    <Pressable 
-                                        onPress={ () => setInfoStep(2) }
-                                        style={{width:12, height:12, borderRadius:12,
-                                        backgroundColor: infoStep === 2 ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, .5)'}}/>
-                                    <Pressable 
-                                        onPress={ () => setInfoStep(3) }
-                                        style={{width:12, height:12, borderRadius:12,
-                                        backgroundColor: infoStep === 3 ? 'rgba(255, 255, 255, 1)' : 'rgba(255, 255, 255, .5)'}}/>
-                                    <TouchableOpacity
-                                        onPress={ () => {
-                                            if (infoStep < 3) setInfoStep( infoStep + 1 )
-                                            }}>
-                                        <IconSymbol name='chevron.right' size={Platform.OS === 'ios' ? 20:28} color={colors.white} />
-                                    </TouchableOpacity>
-                                </View>                       
-                            </View>
-                        </View>
+ 
 
-                        {/* DIDASCALIA */}
-                        <View style={{
-                            width:'100%',
-                            maxWidth: 550,
-                            paddingHorizontal:24,
-                            position:'absolute',
-                            left:'50%',
-                            transform: [{translateX: '-50%'}],
-                            bottom: 160,
-                            }}>
-                            <Text style={styles.dida}>
-                            {dataLabel(myLanguage, infoStep)}
-                            </Text>
-                        </View>
-                    </View>
 
-                <FakeSplittedBar 
-                    index={infoStep}
-                    action={ (x) => {
-                        setInfoStep(x);
-                        } }/>
+
 
                 </ImageBackground>
             </Modal>

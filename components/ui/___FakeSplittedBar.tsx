@@ -56,11 +56,10 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
   const colors = useThemeColors();  
   const styles = StyleSheet.create({
     splittedBase: {
-      //position: 'absolute',
-      //bottom:splittedFromBottom,      
+      position: 'absolute',
       width: splittedTotalWidth, // LARGHEZZA SPLITTED BAR
       height: splittedBarHeigth, // ALTEZZA 
-
+      bottom:splittedFromBottom,
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems:'center', 
@@ -143,8 +142,8 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
     },
     bottomSpace: {
       width:'100%',
-      // position:'absolute',
-      // bottom: 0,
+      position:'absolute',
+      bottom: 0,
       flexDirection:'column',
       alignItems:'center',
     },
@@ -224,7 +223,7 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
         </View>        
       </View>
 
-      <View style={[styles.splittedBase, {position: 'absolute', }]}> 
+      <View style={styles.splittedBase}> 
         {/* DOPPIO */}
         <View style={{
           //width: Math.trunc(doubleItemsSize*.65),
