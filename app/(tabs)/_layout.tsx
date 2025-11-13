@@ -8,7 +8,7 @@ import { BlurView } from 'expo-blur';
 import { LinearGradient } from "expo-linear-gradient";
 import { easeGradient } from "react-native-easing-gradient";
 import * as SplashScreen from 'expo-splash-screen'; 
-import { useHolydays } from '@/context/HolydaysContext';
+import { useSplashCarousel } from '@/context/SplashCarouselContext';
 import { opacity } from 'react-native-reanimated/lib/typescript/Colors';
 //import { useContext } from 'react';
 //import { HolydaysProvider } from '@/context/HolydaysContext';// CONTEXT
@@ -62,18 +62,16 @@ export default function TabLayout() {
     )
   };
 
-  const { isCarouselVisible } = useHolydays();
-  console.log(`(tabs)/_layout isCarouselVisible: ${isCarouselVisible}`);
+  const { isCarouselVisible } = useSplashCarousel();
 
   return (
     <MenuProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}> 
         <Tabs
           initialRouteName="index"
-          tabBar={ props => <SplittedBar {...props}/>}
+          tabBar={ props => (isCarouselVisible ? null : <SplittedBar {...props}/>)}
           screenOptions={{
             headerShown: false,
-            tabBarStyle: isCarouselVisible ? { display:"none" } : undefined,
             animation: 'shift', // fade | shift | none
             transitionSpec: {
               animation: 'timing',

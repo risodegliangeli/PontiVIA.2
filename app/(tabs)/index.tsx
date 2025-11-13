@@ -10,6 +10,7 @@ import {
   } from 'react-native';
 import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT
+import { useSplashCarousel } from '@/context/SplashCarouselContext';
 import { StatusBar } from 'expo-status-bar';
 import { Suspense, useEffect, useMemo, useRef, useState,  } from 'react';
 import { Colors } from '@/constants/Colors';
@@ -50,8 +51,8 @@ export default function HomeScreen() {
     myPreferences, setMyPreferences,
     myCountry, 
     myLanguage,
-    isCarouselVisible, setIsCarouselVisible
   } = useHolydays();
+  const { isCarouselVisible, setIsCarouselVisible } = useSplashCarousel();
 
   /* ============================================================================= 
       LETTURA STORAGE DATI

@@ -5,6 +5,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { HolydaysProvider } from '@/context/HolydaysContext'; // CONTEXT
+import { SplashCarouselProvider } from '@/context/SplashCarouselContext';
 
 
 // GESTISCE LE CHIAMATE ESTERNE DEL TIPO pontivia://...
@@ -36,16 +37,23 @@ export default function RootLayout() {
   }
 
   return (
-    <HolydaysProvider>
-    <ThemeProvider 
-      value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
+    <SplashCarouselProvider>
+      <HolydaysProvider>
+        <ThemeProvider value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
           <Stack>
-            <Stack.Screen name="(tabs)" options={{ 
-              headerShown: false, headerStyle: {backgroundColor: 'transparent'}, headerTintColor: 'dark' }} />
+            <Stack.Screen
+              name="(tabs)"
+              options={{
+                headerShown: false,
+                headerStyle: { backgroundColor: 'transparent' },
+                headerTintColor: 'dark',
+              }}
+            />
             <Stack.Screen name="+not-found" />
           </Stack>
-      <StatusBar style="dark" />
-    </ThemeProvider>
-    </HolydaysProvider>
+          <StatusBar style="dark" />
+        </ThemeProvider>
+      </HolydaysProvider>
+    </SplashCarouselProvider>
   );
 }
