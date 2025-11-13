@@ -1,26 +1,29 @@
 import SplittedBar from '@/components/ui/SplittedBar';// MY CUSTOM SPLITTED BAR
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Tabs } from 'expo-router';
-import { StyleSheet, useColorScheme, View, Text } from 'react-native';
+import { StyleSheet, useColorScheme,   } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu';
 import MaskedView from "@react-native-masked-view/masked-view";
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from "expo-linear-gradient";
 import { easeGradient } from "react-native-easing-gradient";
-import { HolydaysProvider } from '@/context/HolydaysContext';// CONTEXT
 import * as SplashScreen from 'expo-splash-screen'; 
+import { useHolydays } from '@/context/HolydaysContext';
+import { opacity } from 'react-native-reanimated/lib/typescript/Colors';
+//import { useContext } from 'react';
+//import { HolydaysProvider } from '@/context/HolydaysContext';// CONTEXT
 
 /* ###########################################################################################################
 
-                                                MAIN
+                                      MAIN
                                       
 ########################################################################################################### */
 export default function TabLayout() {
 
-SplashScreen.setOptions({
-  duration: 1500, // Esempio: 1000 millisecondi (1 secondo)
-  fade: true,
-});
+  SplashScreen.setOptions({
+    duration: 1500, // Esempio: 1000 millisecondi (1 secondo)
+    fade: true,
+  });
 
   const colorScheme = useColorScheme();
   const gradient = easeGradient({
@@ -59,70 +62,69 @@ SplashScreen.setOptions({
     )
   };
 
+  const { isCarouselVisible } = useHolydays();
+  console.log(`(tabs)/_layout isCarouselVisible: ${isCarouselVisible}`);
+
   return (
-    <HolydaysProvider>
-      <MenuProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}> 
-          <Tabs
-            initialRouteName="index"
-            tabBar={ props => <SplittedBar {...props} />}
-            screenOptions={{
-              headerShown: false,
-              animation: 'fade', // fade | shift | none
-              transitionSpec: {
-                animation: 'timing',
-                config: {
-                  duration: 125,
-                },
+    <MenuProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}> 
+        <Tabs
+          initialRouteName="index"
+          tabBar={ props => <SplittedBar {...props}/>}
+          screenOptions={{
+            headerShown: false,
+            tabBarStyle: isCarouselVisible ? { display:"none" } : undefined,
+            animation: 'shift', // fade | shift | none
+            transitionSpec: {
+              animation: 'timing',
+              config: {
+                duration: 250,
               },
-            }}>
+            },
+          }}>
 
-            {/* ================================== INDEX ================================== */}
-            <Tabs.Screen
-              name="index"
-              options={{
-                title: '',
-                headerTitleAlign: 'center',
-                headerShown: true,
-                headerTransparent: true,
-                headerBackground: () => (
-                  <BlurPad/>
-                ),
-              }} />
-              
-            {/* ================================== HOLYDAYS LIST  ================================== */}
-            <Tabs.Screen
-              name="holydays"
-              options={{
-                title: '',
-                headerTitleAlign: 'center',
-                headerShown: true,
-                headerTransparent: true,
-                headerBackground: () => (
-                  <BlurPad/>
-                ),
-              }} />
-
-            {/* ================================== PREFERENCES  ================================== */}
-            <Tabs.Screen
-              name="preferences"
-              options={{
-                title: '',
-                headerTitleAlign: 'center',
-                headerShown: true,
-                headerTransparent: true,
-                headerBackground: () => (
-                  <BlurPad/>
-                ),
-              }}
-            />
-
-
+          {/* ================================== INDEX ================================== */}
+          <Tabs.Screen
+            name="index"
+            options={{
+              title: '',
+              headerTitleAlign: 'center',
+              headerShown: true,
+              headerTransparent: true,
+              headerBackground: () => (
+                <BlurPad/>
+              ),
+            }} />
             
-          </Tabs>          
-        </ThemeProvider>
-      </MenuProvider>
-    </HolydaysProvider>
+          {/* ================================== HOLYDAYS LIST  ================================== */}
+          <Tabs.Screen
+            name="holydays"
+            options={{
+              title: '',
+              headerTitleAlign: 'center',
+              headerShown: true,
+              headerTransparent: true,
+              headerBackground: () => (
+                <BlurPad/>
+              ),
+            }} />
+
+          {/* ================================== PREFERENCES  ================================== */}
+          <Tabs.Screen
+            name="preferences"
+            options={{
+              title: '',
+              headerTitleAlign: 'center',
+              headerShown: true,
+              headerTransparent: true,
+              headerBackground: () => (
+                <BlurPad/>
+              ),
+            }}
+          />
+        </Tabs>          
+      </ThemeProvider>
+    </MenuProvider>
   );
 }
 

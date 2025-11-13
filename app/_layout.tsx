@@ -1,13 +1,13 @@
-// console.log('[@/_Layout]');
-
+import 'react-native-reanimated';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { HolydaysProvider } from '@/context/HolydaysContext'; // CONTEXT
 
-// GESTISCE LE CHIAMATE ESTERNE pontivia://...
+
+// GESTISCE LE CHIAMATE ESTERNE DEL TIPO pontivia://...
 const linking = {
   prefixes: ['pontivia://'], 
   config: {
@@ -19,11 +19,11 @@ const linking = {
   },
 };
 
-/* ======================================================
+/* ###########################################################################################################
 
-MAIN
-
-====================================================== */
+                                      MAIN
+                                      
+########################################################################################################### */
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
@@ -36,6 +36,7 @@ export default function RootLayout() {
   }
 
   return (
+    <HolydaysProvider>
     <ThemeProvider 
       value={colorScheme === 'light' ? DarkTheme : DefaultTheme}>
           <Stack>
@@ -45,5 +46,6 @@ export default function RootLayout() {
           </Stack>
       <StatusBar style="dark" />
     </ThemeProvider>
+    </HolydaysProvider>
   );
 }

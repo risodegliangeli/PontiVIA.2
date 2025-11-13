@@ -6,6 +6,7 @@ import {
   useColorScheme, 
   Text, 
   TouchableOpacity, 
+  Modal
   } from 'react-native';
 import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT
@@ -16,6 +17,7 @@ import { MovingHands } from '@/components/ui/MovingHands';      // MIO
 import { indexLabels as dataLabel } from '@/constants/dataLabel';
 import SideLabel from '@/components/ui/SideLabel';
 import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
+import SplashCarousel from '@/components/ui/SplashCarousel';
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -47,7 +49,8 @@ export default function HomeScreen() {
     newPersonalHolydays,
     myPreferences, setMyPreferences,
     myCountry, 
-    myLanguage
+    myLanguage,
+    isCarouselVisible, setIsCarouselVisible
   } = useHolydays();
 
   /* ============================================================================= 
@@ -220,7 +223,8 @@ export default function HomeScreen() {
     },
   });
 
-  return (  
+  return ( 
+    
       <ImageBackground 
         source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg') }
         resizeMode="cover" 
@@ -276,9 +280,17 @@ export default function HomeScreen() {
             <SideLabel />
           </Suspense>
 
+          {isCarouselVisible && (
+          <SplashCarousel
+            visible={isCarouselVisible}
+            splashClose={() => setIsCarouselVisible(false)}
+          />
+          )}
+
           {/* STATUSBAR */}
           <StatusBar style={ useColorScheme() === 'dark' ? 'light' : 'dark' } />
 
       </ImageBackground> 
+      
   );
 }
