@@ -52,10 +52,7 @@ interface HolydaysContextType {
     setMyCountry: React.Dispatch<React.SetStateAction<string>>; 
 // GESTISCE LA LINGUA DELL'APP
   myLanguage: string;
-    setMyLanguage: React.Dispatch<React.SetStateAction<string>>; 
-  // GESTISCE IL CAROUSEL INIZIALE
-  isCarouselVisible: boolean;
-  setIsCarouselVisible: React.Dispatch<React.SetStateAction<boolean>>;
+    setMyLanguage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 // CREAZIONE DEL CONTEXT VERO E PROPRIO PER PASSARE I DATI IN TUTTA L'APP ======================
@@ -83,7 +80,6 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
   const [nationalExcluded, setNationalExcluded] = useState<number[]>([]); // FEST. NAZ. DA IGNORARE
   const [myCountry, setMyCountry] = useState(systemLanguage); // es: 'it-IT' --> DROPDOWN
   const [myLanguage, setMyLanguage] = useState(systemLanguage.slice(0,2)); // es 'it' --> LINGUA SISTEMA
-  const [isCarouselVisible, setIsCarouselVisible] = useState<boolean>(true);
   
   // CREA LE PREFERENCES DI DEFAULT (stesse chiavi che c'erano in app/(tabs)/preferences.tsx)
   const createDefaultPreferences = (languageTag: string) => {
@@ -154,8 +150,7 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
       nationalExcluded,     setNationalExcluded,    // FEST. NAZ. DA IGNORARE
       myCountry,            setMyCountry,           // DROPDOWN FESTIVITA PER PAESE
       myPreferences,        setMyPreferences,       // preferences 'nuovo' (distribuito da Context)
-      myLanguage,           setMyLanguage,
-      isCarouselVisible,    setIsCarouselVisible
+      myLanguage,           setMyLanguage
     }}>
       {children}
     </HolydaysContext.Provider>
