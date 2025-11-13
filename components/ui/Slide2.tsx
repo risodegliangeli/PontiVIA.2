@@ -10,21 +10,21 @@ import Animated, {
 
 export default function Slide2 () {
   const windowWidth = Dimensions.get("window").width;
-  const moveAnimation = useSharedValue(0);
-  const scaleAnimation = useSharedValue(1);
+  const moveAnimation = useSharedValue(-20);
+  const scaleAnimation = useSharedValue(1.5);
 
   useEffect(() => {
     moveAnimation.value = withRepeat( 
       withSequence(
         withTiming(
-            8, { duration: 1500 }), 
-            withTiming(0, { duration: 1500 })),
+            -20, { duration: 1500 }), 
+            withTiming(0, { duration: 1500 }), withTiming(-20, { duration: 1500 })),
             -1);
     scaleAnimation.value = withRepeat( 
       withSequence(
         withTiming(
-            1.1, { duration: 1600 }), 
-            withTiming(1, { duration: 1200 })),
+            1.5, { duration: 1600 }), 
+            withTiming(1, { duration: 800 }), withTiming(1.5, { duration: 800 })),
             -1);
   }, [moveAnimation, scaleAnimation]);
 
@@ -33,7 +33,7 @@ export default function Slide2 () {
   }));
   
   const animatedSecondStyle = useAnimatedStyle(() => ({
-      transform: [{ scaleX: scaleAnimation.value }],
+      transform: [{ scaleY: scaleAnimation.value }],
   }));
 
   const styles = StyleSheet.create ({

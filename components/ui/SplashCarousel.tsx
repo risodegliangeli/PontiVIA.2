@@ -7,7 +7,7 @@ import Slide1 from '@/components/ui/Slide1';
 import Slide2 from '@/components/ui/Slide2';
 import Slide3 from '@/components/ui/Slide3';
 import { Colors } from '@/constants/Colors';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+//import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 
 const useThemeColors = () => {
@@ -43,7 +43,7 @@ const SplashCarousel: React.FC<SplashInterface> = ({
   useEffect(() => {
       Animated.timing(scaleValue, { // RIDUCI/ESPANDI
       toValue: 1,
-      duration: 500,
+      duration: 750,
       easing: Easing.elastic(1.5),
       useNativeDriver: true,
     }).start();
@@ -128,7 +128,7 @@ const SplashCarousel: React.FC<SplashInterface> = ({
     {
       id:3, 
       action: <TouchableOpacity
-                style={styles.button} 
+                style={[styles.button, {padding:12, borderWidth:1, borderRadius:99, borderColor: colors.white}]} 
                 onPress={ splashClose } 
                 >
                 <Text style={[styles.textItalic, {textAlign: 'center'}]}>Go!</Text>
@@ -145,6 +145,7 @@ const SplashCarousel: React.FC<SplashInterface> = ({
       <Carousel
         ref={ref}
         autoPlay={false}
+        autoPlayInterval={5000}
         loop={false}
         pagingEnabled
         width={width}
@@ -158,19 +159,19 @@ const SplashCarousel: React.FC<SplashInterface> = ({
             transform: [{translateY:'-50%'}, {scale: scaleValue}], 
             }}>
             {frame[index].image}
-            <View style={{ height: 64 }} />
+            <View style={{ height: 32 }} />
             {frame[index].text}
             <View style={{ height: 32 }} />
             {frame[index].action}
           </Animated.View>
         )}
       />
-      <TouchableOpacity
-        style={{ position: 'absolute', top: 64, right: 20 }}
+      {/* <TouchableOpacity
+        style={{ position: 'absolute', top: 96, right: 20 }}
         onPress={splashClose}
       >
         <Text style={styles.textItalic}>Skip</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }
