@@ -152,26 +152,40 @@ const SplashCarousel: React.FC<SplashInterface> = ({
         height={height}
         data={frame}
         renderItem={({ index }) => (
-          <Animated.View style={{ 
-            alignItems: 'center', 
-            position:'absolute', 
-            top: '50%', 
-            transform: [{translateY:'-50%'}, {scale: scaleValue}], 
-            }}>
-            {frame[index].image}
-            <View style={{ height: 32 }} />
-            {frame[index].text}
-            <View style={{ height: 32 }} />
-            {frame[index].action}
-          </Animated.View>
+          Platform.OS === 'ios' ?
+            <Animated.View style={{ 
+              alignItems: 'center', 
+              position:'absolute', 
+              top: '50%', 
+              transform: [{translateY:'-50%'}, {scale: scaleValue}], 
+              }}>
+              {frame[index].image}
+              <View style={{ height: 32 }} />
+              {frame[index].text}
+              <View style={{ height: 32 }} />
+              {frame[index].action}
+            </Animated.View>
+          :
+            <View style={{ 
+              alignItems: 'center', 
+              position:'absolute', 
+              top: '50%', 
+              transform: [{translateY:'-50%'}, {scale: 1}], 
+              }}>
+              {frame[index].image}
+              <View style={{ height: 32 }} />
+              {frame[index].text}
+              <View style={{ height: 32 }} />
+              {frame[index].action}
+            </View>
         )}
       />
-      {/* <TouchableOpacity
-        style={{ position: 'absolute', top: 96, right: 20 }}
+      <TouchableOpacity
+        style={{ position: 'absolute', top: 96, right: 20, zIndex: 99 }}
         onPress={splashClose}
       >
         <Text style={styles.textItalic}>Skip</Text>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   );
 }
