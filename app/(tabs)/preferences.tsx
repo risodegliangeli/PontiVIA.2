@@ -33,13 +33,15 @@ import Privacy from '@/components/Privacy';
   mobileAds()
     .initialize()
     .then(adapterStatuses => {
-      //console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
+      console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
     });
 
   // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
   // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
   const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
-// GOOGLE ADMOB ///////////////////////////////////
+
+  // SWITCH ADV PER TEST
+  const isAdvertising: boolean = false; // SE ATTIVA CAMPAGNA AdMob
 
 // NOMI GIORNI LOCALIZZATI
 const { localizedDays } = useLocalizationData();
@@ -296,6 +298,7 @@ export default function Preferences() {
           </View>
 
           {/* GOOGLE ADMOB ############################################################################# */}
+          {isAdvertising &&
           <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
             <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
               <BannerAd 
@@ -303,6 +306,7 @@ export default function Preferences() {
                 unitId={adUnitId} 
                 size={BannerAdSize.MEDIUM_RECTANGLE}/>
           </View>
+          }
 
           {/* ==================== DROPDOWN DURATA PONTI ==================== */}
           <View style={styles.groupContainer}>
@@ -392,7 +396,8 @@ export default function Preferences() {
             </View>
           </Suspense>
 
-          {/* GOOGLE ADMOB ############################################################################# */}
+          {/* GOOGLE ADMOB ####################################################################### */}
+          {isAdvertising && 
           <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
             <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
               <BannerAd 
@@ -400,8 +405,9 @@ export default function Preferences() {
                 unitId={adUnitId} 
                 size={BannerAdSize.MEDIUM_RECTANGLE}/>
           </View>
+          }
 
-          {/* INFO / PRIVACY  ############################################################################# */}
+          {/* INFO / PRIVACY  ##################################################################### */}
           <Suspense>
             <Privacy />
           </Suspense>

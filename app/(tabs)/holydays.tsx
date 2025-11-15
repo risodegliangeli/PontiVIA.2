@@ -37,12 +37,15 @@ import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react
 mobileAds()
   .initialize()
   .then(adapterStatuses => {
-    //console.log('AdMob Initialized @ holydays.tsx'); // Initialization complete!
+    console.log('AdMob Initialized @ holydays.tsx'); // Initialization complete!
   });
 
 // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
 // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
 const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
+
+// SWITCH ADV PER TEST
+const isAdvertising: boolean = false; // SE ATTIVA CAMPAGNA AdMob
 
 // TYPE Holiday
 type Holiday = {          // DEFINIZIONE DI holiday
@@ -898,6 +901,8 @@ export default function HolydaysScreen() {
         </TouchableOpacity>
 
         {/* GOOGLE ADMOB ############################################################################# */}
+
+        {isAdvertising && 
         <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
           <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
             <BannerAd 
@@ -905,6 +910,7 @@ export default function HolydaysScreen() {
               unitId={adUnitId} 
               size={BannerAdSize.MEDIUM_RECTANGLE}/>
         </View>
+        }
 
         {/* CARD GIORNI SPECIALI ##################################################################### */}
         {newPersonalHolydays.length > 0 && (
@@ -1154,6 +1160,7 @@ export default function HolydaysScreen() {
         </View>
 
         {/* GOOGLE ADMOB ############################################################################# */}
+        {isAdvertising &&
         <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
           <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
             <BannerAd 
@@ -1161,6 +1168,7 @@ export default function HolydaysScreen() {
               unitId={adUnitId} 
               size={BannerAdSize.MEDIUM_RECTANGLE}/>
         </View>
+        }
 
         {/* PRIVACY */}
         <Suspense>

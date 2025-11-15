@@ -25,18 +25,21 @@ import { calendarScrenLabels as dataLabel } from '@/constants/dataLabel'; // LAB
 import { useNavigation } from '@react-navigation/native';
 
 // GOOGLE ADMOB ///////////////////////////////////
-import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground, } from 'react-native-google-mobile-ads';
+import mobileAds, { BannerAd, BannerAdSize, useForeground, } from 'react-native-google-mobile-ads';
 
 // INIZIALIZZA ADMOB
 mobileAds()
   .initialize()
   .then(adapterStatuses => {
-    //console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
+    console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
   });
 
 // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
 // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
 const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
+
+// FLAG ADV PER TEST
+const isAdvertising: boolean = false; // SE ATTIVA CAMPAGNA AdMob
 
 // NOMI MESI E GIORNI
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
@@ -79,8 +82,8 @@ const CalendarScreen = ({callerPreferences}: any) => {
     Platform.OS === 'ios' && bannerRef.current?.load();
   }); 
 
+
   const colors = useThemeColors();
-  const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
   const monthsToLoad = 3; // ADV OGNI x CARDS
 
   // VALORI PASSATI DAL CONTEXT
