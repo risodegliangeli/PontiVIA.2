@@ -19,6 +19,7 @@ import { indexLabels as dataLabel } from '@/constants/dataLabel';
 import SideLabel from '@/components/ui/SideLabel';
 import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import SplashCarousel from '@/components/ui/SplashCarousel';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -52,7 +53,33 @@ export default function HomeScreen() {
     myCountry, 
     myLanguage,
   } = useHolydays();
+
+  // SPLASHCAROUSEL SOLO AL PRIMO AVVIO
+
+  const [splashChecked, setSplashChecked] = useState(false);
   const { isCarouselVisible, setIsCarouselVisible } = useSplashCarousel();
+
+  useEffect(() => {
+    const checkSplashCarousel = async () => {
+      try {
+        const storedValue = await AsyncStorage.getItem('splashCarousel');
+        if (!storedValue) {
+          // Primo avvio → mostra e salva la voce
+          setIsCarouselVisible(true);
+          await AsyncStorage.setItem('splashCarousel', JSON.stringify(true));
+        } else {
+          // Avvii successivi → non mostrare
+          setIsCarouselVisible(false);
+        }
+      } catch (e) {
+        console.error('Errore lettura splashCarousel:', e);
+        setIsCarouselVisible(false);
+      } finally {
+        setSplashChecked(true);
+      }
+    };
+    checkSplashCarousel();
+  }, []);
 
   /* ============================================================================= 
       LETTURA STORAGE DATI
@@ -281,12 +308,13 @@ export default function HomeScreen() {
             <SideLabel />
           </Suspense>
 
-          {isCarouselVisible && (
+        {/* SPLASH CAROUSEL SOLO AL PRIMO AVVIO */}
+        {splashChecked && isCarouselVisible && (
           <SplashCarousel
-            visible={isCarouselVisible}
+            visible={splashChecked && isCarouselVisible}
             splashClose={() => setIsCarouselVisible(false)}
           />
-          )}
+        )}
 
           {/* STATUSBAR */}
           <StatusBar style={ useColorScheme() === 'dark' ? 'light' : 'dark' } />
