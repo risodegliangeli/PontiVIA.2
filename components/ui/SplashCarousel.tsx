@@ -1,22 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Dimensions, View, Text, Image, TouchableOpacity, StyleSheet, Modal, Platform, useColorScheme, Animated, Easing } from 'react-native';
-import Carousel, { ICarouselInstance, } from 'react-native-reanimated-carousel';
+import { Dimensions, View, Text, Image, TouchableOpacity, StyleSheet, Modal, Platform, useColorScheme, Animated, Easing, Pressable} from 'react-native';
+import Carousel, { ICarouselInstance, Pagination } from 'react-native-reanimated-carousel';
 import { useSharedValue } from "react-native-reanimated";
-//import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import Slide1 from '@/components/ui/Slide1';
 import Slide2 from '@/components/ui/Slide2';
 import Slide3 from '@/components/ui/Slide3';
 import { Colors } from '@/constants/Colors';
 //import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { splashCarousel as splashCarouselLabel } from '@/constants/dataLabel';
 
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
   return Colors[colorScheme ?? 'light'];
 };
-
-const width = Dimensions.get("window").width;
-const height = Dimensions.get("window").height;
 
 interface SplashInterface {
   visible: boolean;
@@ -33,10 +31,24 @@ const SplashCarousel: React.FC<SplashInterface> = ({
   splashClose,
   }) => {
 
+  let {height, width} = Dimensions.get('window');
+
+  const [myHeight, setMyHeight] = useState<number>(height);
+  const [myWidth, setMyWidth] = useState<number>(width);
+
+  // GESTISCE RIDIMENSIONAMENTO DELLA FINESTRA SU TABLET
+  useEffect( () => {
+    setMyHeight(Dimensions.get('window').height);
+    setMyWidth(Dimensions.get('window').width)
+    }, [Dimensions.get('window')]);
+
+  // RICEVE VARIABILI DAL CONTEXT
+  const { 
+    myLanguage
+    } = useHolydays();
+
   // GESTIONE COLORE
   const colors = useThemeColors();
-
-  //const [isCarouselVisible, setIsCarouselVisible] = useState<boolean>(true);
 
   const scaleValue  = useRef(new Animated.Value(2)).current;
   
@@ -50,115 +62,158 @@ const SplashCarousel: React.FC<SplashInterface> = ({
   }, [])
 
   const ref = useRef<ICarouselInstance>(null);
-  const progress = useSharedValue<number>(0);
+  const [dots, setDots] = useState<number>(1);
+
   const styles = StyleSheet.create ({
     text: {
-      fontSize: 28,
+      fontSize: 26,
+      fontWeight:800,
       fontStyle:'italic',
       color: '#ffffff',
       textAlign:'center',
       paddingHorizontal:24,
     },
+    textSecondLine: {
+      fontSize: 20,
+      fontWeight:400,
+      fontStyle:'italic',
+      color: '#ffffff',
+      textAlign:'center',
+      paddingHorizontal:24,
+      paddingVertical:8,
+    },
     textItalic: {
-      fontSize: 16,
+      fontSize: 18,
       fontWeight:600,
       color: '#fff',
       textAlign:'right',
       fontStyle: 'italic',
     },
     button: {
-      // paddingVertical:12,
-      // borderRadius:48,
-      backgroundColor: 'transparent',
-      marginTop:24,
-      borderWidth:0,
-      borderColor:'transparent',
+      backgroundColor: 'rgba(0, 0, 0, .08)',
+      padding:12,
+      borderRadius:99,
       paddingHorizontal:24
     },
     carouselView: {
-      //flex:1,
       position:'absolute',
       top:0,
       left:0,
-      //transform: [{translateY:'-50%'}],
-      width: width,
-      height: height,
-      flexDirection:'column',
-      //justifyContent: 'center',
-      //alignContent:'center',
-      //alignItems:'center',
-      //textAlign:'center',
-      paddingHorizontal:0,
       backgroundColor: '#E35527', 
-      //zIndex: 999,     
-      //borderWidth:8,
-      //transform: [{translateY: '-25%'}],
-      // alignItems:'center',
-      // alignContent:'center',
-      // flexDirection:'column',
-      //paddingVertical:48,
+      //maxWidth:600,
+    },
+    innerContent: {
+      justifyContent:'center',
+      alignItems: 'center', 
+      position:'absolute', 
+      top: '50%',
+      left: '50%', 
     }
   })
 
   const frame = [
     {
       id:1, 
-      action: <TouchableOpacity
-                style={styles.button} 
-                onPress={() => ref.current?.next({ animated: true })} >
-                <Text style={styles.textItalic}>Next</Text>
-              </TouchableOpacity>, 
+      // action: <TouchableOpacity
+      //           style={styles.button} 
+      //           onPress={() => ref.current?.next({ animated: true })} >
+      //           <Text style={styles.textItalic}>Next</Text>
+      //         </TouchableOpacity>, 
+      action: <></>,
       image:<Slide2/>,
-      text: <Text style={styles.text}>
-                È ora di staccare la spina...
-              </Text>
+      text: <><Text style={styles.text}>{splashCarouselLabel(myLanguage, 0)}</Text>
+            {splashCarouselLabel(myLanguage, 1) && <Text style={styles.text}>{splashCarouselLabel(myLanguage, 1)}</Text>}
+            <Text style={styles.textSecondLine}>{splashCarouselLabel(myLanguage, 2)}</Text></>
     },
     {
       id:2, 
-      action: <TouchableOpacity
-                style={styles.button} 
-                onPress={() => ref.current?.next({ animated: true })} >
-                <Text style={styles.textItalic}>Next</Text>
-              </TouchableOpacity>, 
+      // action: <TouchableOpacity
+      //           style={styles.button} 
+      //           onPress={() => ref.current?.next({ animated: true })} >
+      //           <Text style={styles.textItalic}>Next</Text>
+      //         </TouchableOpacity>, 
+      action: <></>,
       image: <Slide1/>,
-      text: <Text style={styles.text}>
-                aprire PontiVIA...
-              </Text>
+      text: <><Text style={styles.text}>{splashCarouselLabel(myLanguage, 3)}</Text>
+            {splashCarouselLabel(myLanguage, 4) && <Text style={styles.text}>{splashCarouselLabel(myLanguage, 4)}</Text>}
+            <Text style={styles.textSecondLine}>{splashCarouselLabel(myLanguage, 5)}</Text></>
     },
     {
       id:3, 
       action: <TouchableOpacity
-                style={[styles.button, {padding:12, borderWidth:1, borderRadius:99, borderColor: colors.white}]} 
+                style={[
+                  styles.button, 
+                  { 
+                    borderWidth:2, 
+                    borderColor: colors.white,
+                    elevation:18,
+                    shadowColor: colors.black, // iOS shadow
+                    shadowOffset: {
+                    width: 4,
+                    height: 18, // Match elevation for iOS
+                    },
+                    shadowOpacity: 0.45,
+                    shadowRadius: 16 // Match elevation for iOS
+                  }]} 
                 onPress={ splashClose } 
                 >
                 <Text style={[styles.textItalic, {textAlign: 'center'}]}>Go!</Text>
               </TouchableOpacity>, 
       image:<Slide3/>,
-      text: <Text style={styles.text}>
-                ... e partire per le vacanze!
-              </Text>
+      text: <><Text style={styles.text}>{splashCarouselLabel(myLanguage, 6)}</Text>
+            {splashCarouselLabel(myLanguage, 7) && <Text style={styles.text}>{splashCarouselLabel(myLanguage, 7)}</Text>}
+            <Text style={styles.textSecondLine}>{splashCarouselLabel(myLanguage, 8)}</Text></>
     },
-  ]
+  ];
 
-   return (
+  const ThreeDots = () => {
+    return (
+      <View style={{
+        position:'absolute',
+        bottom: 100,
+        width: 60, 
+        alignSelf:'center',
+        flexDirection:'row', 
+        justifyContent:'space-between', 
+        alignItems:'center'
+        }}>
+        <View 
+            style={{width:8, height:8, borderRadius:12,
+            backgroundColor: dots === 0 ? colors.white : 'rgba(255, 255, 255, .35)' }}/>
+        <View 
+            style={{width:8, height:8, borderRadius:12,
+            backgroundColor: dots === 1 ? colors.white : 'rgba(255, 255, 255, .35)' }}/>
+        <View 
+            style={{width:8, height:8, borderRadius:12,
+            backgroundColor: dots === 2 ? colors.white : 'rgba(255, 255, 255, .35)' }}/>
+      </View> 
+    )
+  }
+
+  return (
     <View style={styles.carouselView}>
       <Carousel
         ref={ref}
         autoPlay={false}
         autoPlayInterval={5000}
+				mode="parallax"
+				modeConfig={{
+					parallaxScrollingScale: 0.99,
+					parallaxScrollingOffset: 5,
+				}}
+        onProgressChange={ () => ref.current && setDots(ref.current.getCurrentIndex)}
         loop={false}
         pagingEnabled
-        width={width}
-        height={height}
+        width={myWidth}
+        height={myHeight}
         data={frame}
         renderItem={({ index }) => (
           Platform.OS === 'ios' ?
-            <Animated.View style={{ 
-              alignItems: 'center', 
-              position:'absolute', 
-              top: '50%', 
-              transform: [{translateY:'-50%'}, {scale: scaleValue}], 
-              }}>
+            <Animated.View style={[
+              styles.innerContent, 
+              { 
+                transform: [{translateY:'-50%'}, {translateX: '-50%'}, {scale: scaleValue}], 
+              }]}>
               {frame[index].image}
               <View style={{ height: 32 }} />
               {frame[index].text}
@@ -166,12 +221,11 @@ const SplashCarousel: React.FC<SplashInterface> = ({
               {frame[index].action}
             </Animated.View>
           :
-            <View style={{ 
-              alignItems: 'center', 
-              position:'absolute', 
-              top: '50%', 
-              transform: [{translateY:'-50%'}, {scale: 1}], 
-              }}>
+            <View style={[
+              styles.innerContent,
+              { 
+                transform: [{translateY:'-50%'}, {translateX: '-50%'}, {scale: 1}], 
+              }]}>
               {frame[index].image}
               <View style={{ height: 32 }} />
               {frame[index].text}
@@ -180,6 +234,9 @@ const SplashCarousel: React.FC<SplashInterface> = ({
             </View>
         )}
       />
+
+      {dots < 2 && <ThreeDots/>}
+
       <TouchableOpacity
         style={{ position: 'absolute', top: 96, right: 20, zIndex: 99 }}
         onPress={splashClose}

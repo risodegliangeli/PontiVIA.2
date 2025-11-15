@@ -11,7 +11,7 @@ import {
   View,
   useColorScheme,
   Platform,
-  Pressable,
+  // Pressable,
   Share,
   Easing
 } from 'react-native';

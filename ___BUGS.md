@@ -2,16 +2,8 @@
 #############################################################################
 
 
-
-
 - ### CONDIVISIONE FESTIVITA NAZIONALI
   -- solo se il Paese è diverso da quello locale?
-
----
-
-- ### LUNGHEZZA PONTE
-  -- a volte non legge correttamente la lunghezza ponte
-  -- verificare dopo lo spostamento di PREFERENCES
 
 ---
 
@@ -36,6 +28,12 @@
 
 # TICKET RISOLTI:
 
+
+- ### LUNGHEZZA PONTE
+  -- a volte non legge correttamente la lunghezza ponte
+  -- verificare dopo lo spostamento di PREFERENCES
+
+---
 
 - ### SPOSTARE PREFERENCES
   -- in data.js

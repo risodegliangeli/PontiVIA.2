@@ -6,18 +6,17 @@ import {
   useColorScheme, 
   Text, 
   TouchableOpacity, 
-  Modal
   } from 'react-native';
 import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT
 import { useSplashCarousel } from '@/context/SplashCarouselContext';
 import { StatusBar } from 'expo-status-bar';
-import { Suspense, useEffect, useMemo, useRef, useState,  } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState, } from 'react';
 import { Colors } from '@/constants/Colors';
 import { MovingHands } from '@/components/ui/MovingHands';      // MIO
 import { indexLabels as dataLabel } from '@/constants/dataLabel';
-import SideLabel from '@/components/ui/SideLabel';
 import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
+import SideLabel from '@/components/ui/SideLabel';
 import SplashCarousel from '@/components/ui/SplashCarousel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -55,8 +54,7 @@ export default function HomeScreen() {
   } = useHolydays();
 
   // SPLASHCAROUSEL SOLO AL PRIMO AVVIO
-
-  const [splashChecked, setSplashChecked] = useState(false);
+  const [splashChecked, setSplashChecked] = useState(true);
   const { isCarouselVisible, setIsCarouselVisible } = useSplashCarousel();
 
   useEffect(() => {
@@ -100,7 +98,7 @@ export default function HomeScreen() {
       if (myStoredPreferences) setMyPreferences(myStoredPreferences);
     };  
     initializeData(); 
-  }, [myPreferences]);
+  }, []);
 
   // MEMORIZZA LA KEY DEL CALENDARIO
   // la key forza il ricaricamento del calendario quando i dati cambiano.
@@ -252,74 +250,72 @@ export default function HomeScreen() {
   });
 
   return ( 
-    
-      <ImageBackground 
-        source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg') }
-        resizeMode="cover" 
-        style={styles.image} >
+    <ImageBackground 
+      source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg') }
+      resizeMode="cover" 
+      style={styles.image} >
 
-          {/* CARD CALENDARIO */}
-          <Animated.View 
-            key='card'
-            style={styles.container} // MARGINTOP = ANIMATO
-            >
-            <CalendarScreen 
-              key={calendarKey} 
-              callerPreferences={myPreferences} /> 
-          </Animated.View>
+        {/* CARD CALENDARIO */}
+        <Animated.View 
+          key='card'
+          style={styles.container} // MARGINTOP = ANIMATO
+          >
+          <CalendarScreen 
+            key={calendarKey} 
+            callerPreferences={myPreferences} /> 
+        </Animated.View>
 
-          {/* CONTAINER TESTO, MANINA E NUVOLETTE CHE A FINE ANIMAZIONE ESCE DALLA VIEW */}
-          <Animated.View 
-            key='logo'
-            style={styles.wrapperContainer}>
+        {/* CONTAINER TESTO, MANINA E NUVOLETTE CHE A FINE ANIMAZIONE ESCE DALLA VIEW */}
+        <Animated.View 
+          key='logo'
+          style={styles.wrapperContainer}>
 
-            {/* PULSANTE TRASP PER FAR PARTIRE SUBITO L'ANIMAZIONE */}
-            <TouchableOpacity 
-              onPress={handleLogoPress} 
-              style={{alignItems:'center'}}>
+          {/* PULSANTE TRASP PER FAR PARTIRE SUBITO L'ANIMAZIONE */}
+          <TouchableOpacity 
+            onPress={handleLogoPress} 
+            style={{alignItems:'center'}}>
 
-                {/* WRAPPER TESTO E MANINA */}
-                <Animated.View style={styles.welcome}>
-                  
-                  {/* TESTO WELCOME */}
-                  <Text style={styles.welcomeText}>{dataLabel(myLanguage, 0)}</Text>
-                  
-                  {/* MANINA ANIMATA */}
-                  <MovingHands />
+              {/* WRAPPER TESTO E MANINA */}
+              <Animated.View style={styles.welcome}>
+                
+                {/* TESTO WELCOME */}
+                <Text style={styles.welcomeText}>{dataLabel(myLanguage, 0)}</Text>
+                
+                {/* MANINA ANIMATA */}
+                <MovingHands />
 
-                </Animated.View>
+              </Animated.View>
 
-              {/* NUVOLETTA 1 */}
-              <Animated.Image
-                source={require('@/assets/images/cloud_01.png')}
-                style={styles.cloud01}
-              />
+            {/* NUVOLETTA 1 */}
+            <Animated.Image
+              source={require('@/assets/images/cloud_01.png')}
+              style={styles.cloud01}
+            />
 
-              {/* NUVOLETTA 2 */}
-              <Animated.Image
-                source={require('@/assets/images/cloud_02.png')}
-                style={styles.cloud02}
-              />            
-            </TouchableOpacity>
-          </Animated.View>
+            {/* NUVOLETTA 2 */}
+            <Animated.Image
+              source={require('@/assets/images/cloud_02.png')}
+              style={styles.cloud02}
+            />            
+          </TouchableOpacity>
+        </Animated.View>
 
-          {/* INFO */}
-          <Suspense>
-            <SideLabel />
-          </Suspense>
+        {/* INFO */}
+        <Suspense>
+          <SideLabel />
+        </Suspense>
 
-        {/* SPLASH CAROUSEL SOLO AL PRIMO AVVIO */}
-        {splashChecked && isCarouselVisible && (
-          <SplashCarousel
-            visible={splashChecked && isCarouselVisible}
-            splashClose={() => setIsCarouselVisible(false)}
-          />
-        )}
+      {/* SPLASH CAROUSEL SOLO AL PRIMO AVVIO */}
+      {splashChecked && isCarouselVisible && (
+        <SplashCarousel
+          visible={splashChecked && isCarouselVisible}
+          splashClose={() => setIsCarouselVisible(false)}
+        />
+      )}
 
-          {/* STATUSBAR */}
-          <StatusBar style={ useColorScheme() === 'dark' ? 'light' : 'dark' } />
+        {/* STATUSBAR */}
+        <StatusBar style={ useColorScheme() === 'dark' ? 'light' : 'dark' } />
 
-      </ImageBackground> 
-      
+    </ImageBackground> 
   );
 }

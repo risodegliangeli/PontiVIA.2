@@ -1116,3 +1116,119 @@ export function privacy(language, item) {
     }
     return dataLabel[language][item];
 }
+
+export function splashCarousel(language, item) {
+    const dataLabel = {
+        'it': [
+            'Stacca la spina e parti!',
+            '',
+            ' Trova tutti i ponti nascosti nel calendario',
+            'Con PontiVIA',
+            'scopri la magia!',
+            'Ogni festività diventa una vacanza',
+            'Via verso la tua',
+            'prossima avventura!',
+            'Il tuo boss può aspettare 😎'
+        ],
+        'fr': [
+            'Débranche et pars !',                             // 0
+            '',                                                // 1
+            ' Trouve tous les ponts cachés dans le calendrier', // 2
+            'Avec PontiVIA',                                   // 3
+            'découvre la magie !',                             // 4
+            'Chaque fête devient des vacances',                // 5
+            'En route vers ta',                                // 6
+            'prochaine aventure !',                            // 7
+            'Ton patron peut attendre 😎'                      // 8
+        ],
+        'es': [
+            '¡Desconecta y vete!',                             // 0
+            '',                                                // 1
+            ' Encuentra todos los puentes ocultos en el calendario', // 2
+            'Con PontiVIA',                                    // 3
+            '¡descubre la magia!',                             // 4
+            'Cada festivo se convierte en vacaciones',         // 5
+            'Rumbo a tu',                                      // 6
+            '¡próxima aventura!',                              // 7
+            'Tu jefe puede esperar 😎'                         // 8
+        ],
+        'de': [
+            'Steck aus und los!',                              // 0
+            '',                                                // 1
+            ' Finde alle versteckten Brücken im Kalender',     // 2
+            'Mit PontiVIA',                                    // 3
+            'entdeckst du die Magie!',                         // 4
+            'Jeder Feiertag wird zum Urlaub',                  // 5
+            'Auf zu deinem',                                   // 6
+            'nächsten Abenteuer!',                             // 7
+            'Dein Chef kann warten 😎'                         // 8
+        ],
+        'en': [
+            'Unplug and go!',                                  // 0
+            '',                                                // 1
+            ' Find all hidden bridges in the calendar',        // 2
+            'With PontiVIA',                                   // 3
+            'discover the magic!',                             // 4
+            'Every holiday becomes a vacation',                // 5
+            'Off to your',                                     // 6
+            'next adventure!',                                 // 7
+            'Your boss can wait 😎'                            // 8
+        ],
+        'nl': [
+            'Trek de stekker eruit en ga!',                    // 0
+            '',                                                // 1
+            ' Vind alle verborgen bruggen in de kalender',     // 2
+            'Met PontiVIA',                                    // 3
+            'ontdek je de magie!',                             // 4
+            'Elke feestdag wordt een vakantie',                // 5
+            'Op naar je',                                      // 6
+            'volgende avontuur!',                              // 7
+            'Je baas kan wachten 😎'                           // 8
+        ],
+        'pt': [
+            'Desliga e vai!',                                  // 0
+            '',                                                // 1
+            ' Encontra todas as pontes escondidas no calendário', // 2
+            'Com PontiVIA',                                    // 3
+            'descobre a magia!',                               // 4
+            'Cada feriado vira férias',                        // 5
+            'Rumo à tua',                                      // 6
+            'próxima aventura!',                               // 7
+            'O teu chefe pode esperar 😎'                      // 8
+        ],
+        'hr': [
+            'Isključi se i kreni!',                            // 0
+            '',                                                // 1
+            ' Pronađi sve skrivene mostove u kalendaru',       // 2
+            'S PontiVIA',                                      // 3
+            'otkrij čaroliju!',                                // 4
+            'Svaki praznik postaje odmor',                     // 5
+            'Na put prema tvojoj',                             // 6
+            'sljedećoj avanturi!',                             // 7
+            'Tvoj šef može čekati 😎'                          // 8
+        ],
+        'si': [
+            'Odklopi in pojdi!',                               // 0
+            '',                                                // 1
+            ' Najdi vse skrite mostove v koledarju',           // 2
+            'S PontiVIA',                                      // 3
+            'odkrij magijo!',                                  // 4
+            'Vsak praznik postane počitnice',                  // 5
+            'Naprej k tvoji',                                  // 6
+            'naslednji pustolovščini!',                        // 7
+            'Tvoj šef lahko počaka 😎'                         // 8
+        ],
+        'gr': [
+            'Αποσυνδέσου και φύγε!',                           // 0
+            '',                                                // 1
+            ' Βρες όλες τις κρυφές γέφυρες στο ημερολόγιο',    // 2
+            'Με το PontiVIA',                                  // 3
+            'ανακάλυψε τη μαγεία!',                            // 4
+            'Κάθε γιορτή γίνεται διακοπές',                    // 5
+            'Πάμε στην',                                       // 6
+            'επόμενη περιπέτειά σου!',                         // 7
+            'Ο αφεντικό σου μπορεί να περιμένει 😎'            // 8
+        ]
+    }
+    return dataLabel[language][item];
+}

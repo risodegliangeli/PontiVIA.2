@@ -7,7 +7,7 @@ import Animated, {
   Easing,
 } from 'react-native-reanimated';
 
-const Slide3 = ({ isVisible }) => {
+const Slide3 = () => {
   const windowWidth = Dimensions.get("window").width;
 
   const styles = StyleSheet.create ({
