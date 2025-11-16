@@ -24,7 +24,7 @@ export const Colors = {
     textNegative: 'rgba(255, 255, 255, 1)', // BIANCO
     headerText: '#434300',
     textRed: '#FF778F',     // GIORNI ROSSI
-    cardBackground: 'rgba(252, 252, 249, .8)', // BAINCO 75%
+    cardBackground: 'rgba(252, 252, 249, .9)', // BAINCO 75%
     toastBackground: 'rgba(255, 255, 255, .94) ',
     dropdownBackground: 'rgba(51, 51, 51, 0.06)', // BACKGROUND DELLA DROPDOWN
     bridgeDay: 'rgba(51, 51, 51,1)',
@@ -42,7 +42,7 @@ export const Colors = {
   //        DARK
   //
   // /////////////////////
-    blueBar: '#0A7AE1',
+    blueBar: '#78beff', //'#0A7AE1',
     tabBarBackground: 'rgba(51, 51, 51, .55)',
     tabBarBackgroundIos: '#292929', //'rgba(134,103,133,1)',
     tabBarBackgroundAndroid: 'rgba(0, 0, 0, .9)', //'rgba(134,103,133,1)',
@@ -59,7 +59,7 @@ export const Colors = {
     textNegative: 'rgba(0,0,0, 1)', // BIANCO
     headerText: 'rgba(255, 255, 255, 1)',   // BIANCO
     textRed: '#FF778F',
-    cardBackground: 'rgba(71,64,71, 1)', // SCURO 100% PER COPRIRE LO SFONDO
+    cardBackground: '#474047', // SCURO 100% PER COPRIRE LO SFONDO
     toastBackground: 'rgba(0, 0, 0, 1) ',    
     dropdownBackground: 'rgba(255, 255, 255, 0.08)', // BACKGROUND DELLA DROPDOWN
     bridgeDay: 'rgba(255, 204, 51, 1)',
@@ -69,7 +69,7 @@ export const Colors = {
     white: '#fff',
     black: '#333',
     modalBackground: 'rgba(239,234,239,1)',
-    dot32: 'rgba(134,103,133,1)',
+    dot32: '#cf9dcd',
 
   },
 };

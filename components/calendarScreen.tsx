@@ -39,7 +39,7 @@ mobileAds()
 const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
 // FLAG ADV PER TEST
-const isAdvertising: boolean = false; // SE ATTIVA CAMPAGNA AdMob
+const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
 
 // NOMI MESI E GIORNI
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
@@ -962,62 +962,13 @@ const CalendarScreen = ({callerPreferences}: any) => {
             E BANNER PICCOLI (BANNER)
         */}
         {isAdvertising && 
-          ((index + 1) % monthsToLoad === 0) && (
+          (index % monthsToLoad === 0 && 
             <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
               <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
-
-            {/* <BannerAd 
-              ref={bannerRef} 
-              unitId={adUnitId} 
-              size={BannerAdSize.MEDIUM_RECTANGLE}/> */}
-
-              {
-              Math.floor((index % 12 )/3) === 0 ?
-
-                <BannerAd 
-                  ref={bannerRef} 
-                  unitId={adUnitId} 
-                  size={BannerAdSize.MEDIUM_RECTANGLE}/>
-
-              : Math.floor((index % 12 )/3) === 1 ?
-
-                <BannerAd 
-                  ref={bannerRef} 
-                  unitId={adUnitId} 
-                  size={BannerAdSize.MEDIUM_RECTANGLE}/> 
-
-                : Math.floor((index % 12 )/3) === 2 ?
-
-                  <BannerAd 
-                    ref={bannerRef} 
-                    unitId={adUnitId} 
-                    size={BannerAdSize.MEDIUM_RECTANGLE}/> 
-
-                  :
-
-                  <BannerAd 
-                    ref={bannerRef} 
-                    unitId={adUnitId} 
-                    size={BannerAdSize.WIDE_SKYSCRAPER}/> 
-                  
-              }
-
+              <BannerAd ref={bannerRef} unitId={adUnitId} size={BannerAdSize.MEDIUM_RECTANGLE}/>
             </View>
           )
         }
-
-        {/* { Math.floor((index % 12 )/3) === 3 &&
-          <BannerAd 
-            unitId={adUnitId} 
-            size={BannerAdSize.ANCHORED_ADAPTIVE_BANNER} 
-            requestOptions={{
-              networkExtras: {
-              collapsible: 'bottom'
-              },
-            }}
-          />
-        } */}
-
       </React.Fragment>
     );
     

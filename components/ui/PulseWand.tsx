@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
+import { useColorScheme } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withRepeat,
-  withSequence,
   withTiming,
 } from 'react-native-reanimated';
 import { Image } from 'react-native';
@@ -25,7 +25,11 @@ export function PulseWand() {
 
   return (
     <Animated.View style={animatedStyle}>
-      <Image source={require('@/assets/images/icon_wand-on.png')} />
+      <Image source={useColorScheme() === 'light' ?
+        require('@/assets/images/icon_wand-on.png')
+        :
+        require('@/assets/images/icon_wand-on-dark.png')
+      }/>
     </Animated.View>
   );
 }

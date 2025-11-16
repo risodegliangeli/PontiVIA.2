@@ -75,7 +75,15 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
   // A SECONDA DELLA TAB ATTIVA GENERA LA ROW COI PULSANTI
   const IndexIcon = () => { // INDEX
     if (isIndexFocused) { 
-      return <Image style={styles.singleItemIcon} source={require("@/assets/images/icon_girl-on.png")} />  
+      return (
+      <Image 
+        style={styles.singleItemIcon} 
+        source={useColorScheme() === 'light' ?
+          require("@/assets/images/icon_girl-on.png")
+        :
+          require("@/assets/images/icon_girl-on-dark.png")
+        } />
+      )  
     } else {
       if (useColorScheme() === 'light') {
         return <Image style={styles.singleItemIcon} source={require("@/assets/images/icon_girl-off.png")} />  
@@ -88,7 +96,14 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
     if (isHolydaysFocused) {
       return (
         <>
-          <Image style={styles.doubleItemsIcon} source={require("@/assets/images/icon_calendar-on.png")} />
+          <Image 
+            style={styles.doubleItemsIcon} 
+            source={
+              useColorScheme() === 'light' ? 
+              require("@/assets/images/icon_calendar-on.png")
+              :
+              require("@/assets/images/icon_calendar-on-dark.png")
+              } />
           <Text style={styles.labelSelected}>{label[0]}</Text> 
         </>
       )
@@ -112,7 +127,13 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
     if (isPreferencesFocused) { 
       return (
         <>
-          <Image style={styles.doubleItemsIcon} source={require("@/assets/images/icon_wand-on.png")} />
+          <Image 
+            style={styles.doubleItemsIcon} 
+            source={useColorScheme() === 'light' ?
+              require("@/assets/images/icon_wand-on.png")
+            :
+              require("@/assets/images/icon_wand-on-dark.png")
+            } />
           <Text style={styles.labelSelected}>{splittedLabels(myLanguage,1)}</Text> 
         </>
       )
@@ -228,7 +249,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
       fontWeight:600,
     },
     labelSelected: {
-      color:colors.tabBarActiveItem, // BLU
+      color: colors.blueBar, // BLU
       fontSize:14,
       fontWeight:600,
     },

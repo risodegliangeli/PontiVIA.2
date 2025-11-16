@@ -186,14 +186,6 @@ export default function HolydaysScreen() {
       backgroundColor: colors.dot32, 
       borderWidth:1, 
       borderColor: colors.cardBackground,
-      // elevation:6,
-      // shadowColor: colors.black, // iOS shadow
-      // shadowOffset: {
-      //   width: 1,
-      //   height: 2, // Match elevation for iOS
-      // },
-      // shadowOpacity: 0.25,
-      // shadowRadius: 2 // Match elevation for iOS
     },
     dot32noshadow: {
       borderWidth:1, 
@@ -207,12 +199,12 @@ export default function HolydaysScreen() {
       height:'100%',
       fontSize:24,
       fontWeight: useColorScheme() === 'dark' ? 200 : 300,
-      color: 'rgba(255,255,255,1)',
+      color: colors.textNegative,
       textAlign:'center',
       justifyContent:'center',
       alignContent:'center',
       alignItems:'center',
-      paddingTop: Platform.OS === 'ios' ? 6:5,
+      paddingTop: Platform.OS === 'ios' ? 7 : 5,
       letterSpacing:-.5,
     },
     // MODAL
@@ -303,10 +295,7 @@ export default function HolydaysScreen() {
     // PULSANTONE AGGIUNGI GIORNI SPECIALI
     specialDays: {
       flex:1,
-      minHeight:64,
-      // borderWidth: 2,
-      // borderColor: '#0088ff',
-      // borderStyle: 'dotted',
+      minHeight:68,
       borderRadius: 99,
       backgroundColor: colors.blueBar,
       marginBottom:24,
@@ -326,8 +315,7 @@ export default function HolydaysScreen() {
     specialDaysLabel: {
       fontSize:20,
       fontWeight:400,
-      //color: '#0088ff',
-      color: colors.white,
+      color: colors.textNegative,
     },
     // DROPDOWN FESTIVITA PER PAESE
     dropDownCountry: {
@@ -896,7 +884,10 @@ export default function HolydaysScreen() {
             showModalSingleDate(); // --> APRE MODAL CON DATEPICKER
           }}
         >
-          <IconSymbol name="plus" size={36} color={colors.white} style={{marginRight: 12}}/>
+          <IconSymbol 
+            name="plus" size={36} 
+            color={colors.textNegative} 
+            style={{marginRight: 12}}/>
           <Text style={styles.specialDaysLabel}>{dataLabel(myLanguage, 1)}</Text>
         </TouchableOpacity>
 

@@ -1,10 +1,10 @@
 import {useState, useEffect, } from 'react';
-import {  View, Text, Image, TextInput, TouchableOpacity, StyleSheet, useColorScheme  } from 'react-native';
+import {  View, Text, TextInput, TouchableOpacity, StyleSheet, useColorScheme  } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { addDays, subDays, compareAsc, getDay, differenceInDays, startOfMonth } from 'date-fns';
-import { getLocales,  } from 'expo-localization';
+import { getLocales, } from 'expo-localization';
 import useLocalizationData from '@/app/data/data';
-import DateTimePicker, { DateType, useDefaultStyles } from 'react-native-ui-datepicker'; // https://www.npmjs.com/package/react-native-ui-datepicker
+import DateTimePicker, { useDefaultStyles } from 'react-native-ui-datepicker'; // https://www.npmjs.com/package/react-native-ui-datepicker
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { datepickerLabels as dataLabel } from '@/constants/dataLabel';
 import { Colors } from '@/constants/Colors';
@@ -390,7 +390,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   // CONTENUTO _INTERNO_ DELLA MODAL
   return (
     <>       
-      {/* TITOLO MODAL cambia se si inserisce o si edita in item ============= */}
+      {/* TITOLO MODAL cambia a seocnda se si inserisce o si edita in item ============= */}
         <Text style={styles.listTitle}>
           {initialIndex !== null ? dataLabel(language, 19) : dataLabel(language, 0)}
         </Text>

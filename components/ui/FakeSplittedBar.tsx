@@ -42,7 +42,7 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
   const doubleItemsSize: number = Math.trunc(splittedTotalWidth*.65);
   const singleItemImageSize: string = '70%';
   const doubleItemsImageSize: string = '50%';
-  const splittedFromBottom: number = Platform.OS === 'ios' ? 28 : 44;
+  //const splittedFromBottom: number = Platform.OS === 'ios' ? 28 : 44;
   const itemsInternalPadding: number = 3;
 
   useEffect( () => {
@@ -56,11 +56,8 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
   const colors = useThemeColors();  
   const styles = StyleSheet.create({
     splittedBase: {
-      //position: 'absolute',
-      //bottom:splittedFromBottom,      
       width: splittedTotalWidth, // LARGHEZZA SPLITTED BAR
       height: splittedBarHeigth, // ALTEZZA 
-
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems:'center', 
@@ -137,14 +134,12 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
       fontWeight:600,
     },
     labelSelected: {
-      color:colors.tabBarActiveItem, // BLU
+      color:colors.blueBar, // BLU
       fontSize:14,
       fontWeight:600,
     },
     bottomSpace: {
       width:'100%',
-      // position:'absolute',
-      // bottom: 0,
       flexDirection:'column',
       alignItems:'center',
     },
@@ -183,7 +178,6 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
       shadowRadius: 4,
       borderWidth:1,
       borderColor: 'rgba(0, 0, 0, .06)'
-           
     },
   });
 
