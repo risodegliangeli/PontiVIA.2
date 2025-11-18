@@ -52,6 +52,7 @@ export default function HomeScreen() {
     myCountry, 
     myLanguage,
   } = useHolydays();
+  const { isCarouselVisible, setIsCarouselVisible } = useSplashCarousel();
 
   // SPLASHCAROUSEL SOLO AL PRIMO AVVIO
   const [splashChecked, setSplashChecked] = useState(true);
