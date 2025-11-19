@@ -108,7 +108,7 @@ const SideLabel = () => {
     })
 
     const viewBox="0 0 360 557";
-    const fill = useColorScheme() === 'light' ? 'rgba(255, 255, 255, .85)' : 'rgba(0, 0, 0, 1)'
+    const fill = useColorScheme() === 'light' ? 'rgba(255, 255, 255, .85)' : 'rgba(255, 255, 255, .15)'
     const width = Dimensions.get("window").width;
 
     return (
@@ -142,18 +142,14 @@ const SideLabel = () => {
                         }]}/>
 
                     <View style={{ 
-                        //borderWidth:1,
                         maxWidth: 600, 
                         width: '100%', 
                         alignSelf: 'center',
                         position:'absolute',
                         top:'50%', 
                         transform: [{translateY: '-50%'}],
-                        //justifyContent:'center',
-                        //alignContent:'center',
-                        //gap:48,
-                        // alignItems:'center',
                         }}>
+
                         <Svg
                             viewBox={viewBox}
                             width="100%"
@@ -165,18 +161,17 @@ const SideLabel = () => {
                             <Path d="M478 260.2C478 373.679 394.663 470.191 278.428 505.77L299.014 557C265.848 540.988 250.408 512.966 250.408 512.966C227.507 517.872 204.138 520.4 179.5 520.4C14.643 520.4 -119 403.905 -119 260.2C-119 116.496 14.643 0 179.5 0C344.357 0 478 116.496 478 260.2Z" />
                         </Svg>
 
-
                         <View style={{
-                            //orderWidth:1,
                             width:'100%',
-                            height:'100%',
+                            height:'70%',
                             position:'absolute',
                             top:0,
                             flexDirection:'column',
-                            justifyContent:'center',
+                            justifyContent:'space-between',
                             gap:48,
                             alignItems:'center',
                             alignContent:'center',
+                            marginVertical:94,
                             }}>
                             <Text style={styles.sectionTitle}>
                                 {dataLabel(myLanguage, 4)}
@@ -186,52 +181,54 @@ const SideLabel = () => {
                                 {dataLabel(myLanguage, infoStep)}
                             </Text>
 
-                            {/* SPLITTED BAR */}
-                            <FakeSplittedBar 
-                                index={infoStep}
-                                action={ (x) => {
-                                    setInfoStep(x);
-                                    }}/>
-                                    
-                            {/* PALLINI */}
                             <View style={{
-                                width:'55%', 
-                                //maxWidth: 314,
-                                flexDirection:'row', 
-                                justifyContent:'space-between', 
-                                alignItems:'center'
+                                flexDirection:'column',
+                                alignItems:'center',
+                                gap:48,
                                 }}>
-                                <TouchableOpacity
-                                    onPress={ () => {
-                                        if (infoStep > 1) setInfoStep( infoStep - 1 )  
-                                        }}>                              
-                                    <IconSymbol name='chevron.left' size={Platform.OS === 'ios' ? 20:28} color={colors.disabled} />
-                                </TouchableOpacity>
-                                <Pressable 
-                                    onPress={ () => setInfoStep(1) }
-                                    style={{width:12, height:12, borderRadius:12,
-                                    backgroundColor: infoStep === 1 ? colors.blueBar : colors.cancelButton }}/>
-                                <Pressable 
-                                    onPress={ () => setInfoStep(2) }
-                                    style={{width:12, height:12, borderRadius:12,
-                                    backgroundColor: infoStep === 2 ? colors.blueBar : colors.cancelButton }}/>
-                                <Pressable 
-                                    onPress={ () => setInfoStep(3) }
-                                    style={{width:12, height:12, borderRadius:12,
-                                    backgroundColor: infoStep === 3 ? colors.blueBar : colors.cancelButton }}/>
-                                <TouchableOpacity
-                                    onPress={ () => {
-                                        if (infoStep < 3) setInfoStep( infoStep + 1 )
-                                        }}>
-                                    <IconSymbol name='chevron.right' size={Platform.OS === 'ios' ? 20:28} color={colors.disabled} />
-                                </TouchableOpacity>
-                            </View>  
-
+                                {/* SPLITTED BAR */}
+                                <FakeSplittedBar 
+                                    index={infoStep}
+                                    action={ (x) => {
+                                        setInfoStep(x);
+                                        }}/>
+                                {/* PALLINI */}
+                                <View style={{
+                                    width:'55%', 
+                                    //maxWidth: 314,
+                                    flexDirection:'row', 
+                                    justifyContent:'space-between', 
+                                    alignItems:'center'
+                                    }}>
+                                    <TouchableOpacity
+                                        onPress={ () => {
+                                            if (infoStep > 1) setInfoStep( infoStep - 1 )  
+                                            }}>                              
+                                        <IconSymbol name='chevron.left' size={Platform.OS === 'ios' ? 20:28} color={colors.disabled} />
+                                    </TouchableOpacity>
+                                    <Pressable 
+                                        onPress={ () => setInfoStep(1) }
+                                        style={{width:12, height:12, borderRadius:12,
+                                        backgroundColor: infoStep === 1 ? colors.blueBar : colors.cancelButton }}/>
+                                    <Pressable 
+                                        onPress={ () => setInfoStep(2) }
+                                        style={{width:12, height:12, borderRadius:12,
+                                        backgroundColor: infoStep === 2 ? colors.blueBar : colors.cancelButton }}/>
+                                    <Pressable 
+                                        onPress={ () => setInfoStep(3) }
+                                        style={{width:12, height:12, borderRadius:12,
+                                        backgroundColor: infoStep === 3 ? colors.blueBar : colors.cancelButton }}/>
+                                    <TouchableOpacity
+                                        onPress={ () => {
+                                            if (infoStep < 3) setInfoStep( infoStep + 1 )
+                                            }}>
+                                        <IconSymbol name='chevron.right' size={Platform.OS === 'ios' ? 20:28} color={colors.disabled} />
+                                    </TouchableOpacity>
+                                </View>  
+                            </View>
 
 
                         </View>
-
-
                     </View>
 
                     {/* PULS CHIUSURA */}
@@ -245,7 +242,7 @@ const SideLabel = () => {
                             padding:6,
                             marginTop:24,
                             marginRight:24,
-                            backgroundColor: colors.cancelButton,
+                            backgroundColor: useColorScheme() === 'light' ? colors.cancelButton : 'rgba(255, 255, 255, .15)',
                             borderRadius: 99,
                             }}
                             onPress={ () => {
@@ -256,14 +253,6 @@ const SideLabel = () => {
                                 color={useColorScheme() === 'light' ? colors.black : colors.disabled} />
                         </TouchableOpacity>
                     </View>  
-
-
-
- 
-
-
-
-
                 </ImageBackground>
             </Modal>
         </>

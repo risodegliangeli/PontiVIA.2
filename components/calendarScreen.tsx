@@ -39,7 +39,7 @@ mobileAds()
 const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
 // FLAG ADV PER TEST
-const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
+const isAdvertising: boolean = false; // SE ATTIVA CAMPAGNA AdMob
 
 // NOMI MESI E GIORNI
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI

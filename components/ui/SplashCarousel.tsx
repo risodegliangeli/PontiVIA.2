@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Dimensions, View, Text, Image, TouchableOpacity, StyleSheet, Modal, Platform, useColorScheme, Animated, Easing, Pressable} from 'react-native';
-import Carousel, { ICarouselInstance, Pagination } from 'react-native-reanimated-carousel';
-import { useSharedValue } from "react-native-reanimated";
+import { Dimensions, View, Text, TouchableOpacity, StyleSheet,  Platform, useColorScheme, Animated, Easing, } from 'react-native';
+import Carousel, { ICarouselInstance,  } from 'react-native-reanimated-carousel';
+// import { useSharedValue } from "react-native-reanimated";
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 import Slide1 from '@/components/ui/Slide1';
 import Slide2 from '@/components/ui/Slide2';
@@ -201,7 +201,8 @@ const SplashCarousel: React.FC<SplashInterface> = ({
 					parallaxScrollingScale: 0.99,
 					parallaxScrollingOffset: 5,
 				}}
-        onProgressChange={ () => ref.current && setDots(ref.current.getCurrentIndex)}
+        //onProgressChange={ () => ref.current && setDots(ref.current.getCurrentIndex)}
+        onSnapToItem={ (index) => setDots(index) }
         loop={false}
         pagingEnabled
         width={myWidth}

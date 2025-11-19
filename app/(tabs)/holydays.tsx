@@ -13,7 +13,8 @@ import {
   Platform,
   // Pressable,
   Share,
-  Easing
+  Easing,
+  Dimensions
 } from 'react-native';
 import { useRoute } from '@react-navigation/native';      // SERVE PER LEGGERE I PARAMETRI
 import { useNavigation } from '@react-navigation/native'; // SERVE PER GESTIRE LA NAVIGAZIONE
@@ -33,6 +34,7 @@ import Privacy from '@/components/Privacy';
 
 // GOOGLE ADMOB ///////////////////////////////////
 import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
+import { useSharedValue } from 'react-native-reanimated';
 // init ADMOB
 mobileAds()
   .initialize()
@@ -90,6 +92,13 @@ const saveData = async (data: any, key: string) => {
                                       
 ########################################################################################################### */
 export default function HolydaysScreen() {
+
+  const [service, setService] = useState('');
+  useEffect( () => {
+    setService(`\n${Platform.OS} - ${Dimensions.get('window').width}x${Dimensions.get('window').height}`)
+    }, []);
+
+
 
   const colors = useThemeColors();
   const navigation = useNavigation();
@@ -1165,6 +1174,12 @@ export default function HolydaysScreen() {
         <Suspense>
           <Privacy />
         </Suspense>
+
+        {/* <View>
+          <Text style={{alignSelf:'center', color: colors.text}}>
+            {service}
+          </Text>
+        </View> */}
 
         {/* SPACER ################################################################################### */}
         <View style={{height:480}}></View>
