@@ -57,12 +57,13 @@
     "@babel/core": "^7.25.2",
     "@react-native-community/cli": "latest",
     "@rnx-kit/align-deps": "^3.3.2",
+    "@testing-library/react-native": "^13.3.3",
     "babel-plugin-module-resolver": "^5.0.2",
     "jest": "~29.7.0",
-    "jest-expo": "^54.0.13",
+    "jest-expo": "53.0.10",
     "typescript": "~5.8.3"
   },
-    "overrides": {
+  "overrides": {
     "@types/react": {
       ".": "^19",
       "react-test-renderer": "$@react"
