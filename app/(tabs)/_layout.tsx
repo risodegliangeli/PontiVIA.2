@@ -72,27 +72,14 @@ export default function TabLayout() {
           tabBar={ props => (isCarouselVisible ? null : <SplittedBar {...props}/>)}
           screenOptions={{
             headerShown: false,
-            animation: 'shift', // fade | shift | none
-            transitionSpec: {
-              animation: 'timing',
-              config: {
-                duration: 250,
-              },
-            },
+            animation: 'none', // fade | shift | none
+            // transitionSpec: {
+            //   animation: 'timing',
+            //   config: {
+            //     duration: 250,
+            //   },
+            // },
           }}>
-
-          {/* ================================== INDEX ================================== */}
-          <Tabs.Screen
-            name="index"
-            options={{
-              title: '',
-              headerTitleAlign: 'center',
-              headerShown: true,
-              headerTransparent: true,
-              headerBackground: () => (
-                <BlurPad/>
-              ),
-            }} />
             
           {/* ================================== HOLYDAYS LIST  ================================== */}
           <Tabs.Screen
@@ -120,6 +107,20 @@ export default function TabLayout() {
               ),
             }}
           />
+
+          {/* ================================== INDEX ================================== */}
+          <Tabs.Screen
+            name="index"
+            options={{
+              title: '',
+              headerTitleAlign: 'center',
+              headerShown: true,
+              headerTransparent: true,
+              headerBackground: () => (
+                <BlurPad/>
+              ),
+            }} />
+
         </Tabs>          
       </ThemeProvider>
     </MenuProvider>

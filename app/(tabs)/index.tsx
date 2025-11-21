@@ -302,16 +302,18 @@ export default function HomeScreen() {
 
         {/* INFO */}
         <Suspense>
-          <SideLabel />
+          <SideLabel/>
         </Suspense>
 
       {/* SPLASH CAROUSEL SOLO AL PRIMO AVVIO */}
-      {splashChecked && isCarouselVisible && (
-        <SplashCarousel
+      {splashChecked && isCarouselVisible ? 
+        (<SplashCarousel
           visible={splashChecked && isCarouselVisible}
           splashClose={() => setIsCarouselVisible(false)}
-        />
-      )}
+        />)
+        :
+        null
+      }
 
         {/* STATUSBAR */}
         <StatusBar style={ useColorScheme() === 'dark' ? 'light' : 'dark' } />
