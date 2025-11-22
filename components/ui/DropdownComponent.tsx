@@ -32,7 +32,7 @@ const DropdownComponent: React.FC<DropDownComponentProps> = ({language, selected
   const [value, setValue] = useState(selectedValue);
   const [isFocus, setIsFocus] = useState(false);
   const colors = useThemeColors();
-  const styles = StyleSheet.create({
+  const styles:any = StyleSheet.create({
     container: {
       backgroundColor: 'transparent',
       padding: 0,

@@ -80,7 +80,20 @@ export default function TabLayout() {
             //   },
             // },
           }}>
-            
+
+          {/* ================================== HOLYDAYS LIST  ================================== */}
+          {/* <Tabs.Screen
+            name="carousel"
+            options={{
+              title: '',
+              headerTitleAlign: 'center',
+              headerShown: true,
+              headerTransparent: true,
+              headerBackground: () => (
+                <BlurPad/>
+              ),
+            }} /> */}
+
           {/* ================================== HOLYDAYS LIST  ================================== */}
           <Tabs.Screen
             name="holydays"

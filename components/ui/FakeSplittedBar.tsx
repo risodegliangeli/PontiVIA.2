@@ -20,28 +20,20 @@ const useThemeColors = () => {
   return Colors[colorScheme ?? 'light'];
 };
 
-interface FakeSplittedBarInterface {
-  index: number;
-  action: (x: number) => void;
-}
-
 /* ###########################################################################################################
 
                                                 MAIN
                                       
 ########################################################################################################### */
-//  const SimpleToast: React.FC<SimpleToastInterface> = ({
-const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
-  index,
-  action
-  }) => {
+export default function FakeSplittedBar(props: any) {
+  const { index, action } = props;
 
   const [splittedTotalWidth, setSplittedTotalWidth] = useState<number>(0);
   const windowWidth: number = Dimensions.get('window').width;
   const splittedBarHeigth: number = 80;
-  const doubleItemsSize: number = Math.trunc(splittedTotalWidth*.65);
-  const singleItemImageSize: string = '70%';
-  const doubleItemsImageSize: string = '50%';
+  const doubleItemsSize: number = Math.trunc(splittedTotalWidth * .65);
+  // const singleItemImageSize: string = '70%';
+  // const doubleItemsImageSize: string = '50%';
   //const splittedFromBottom: number = Platform.OS === 'ios' ? 28 : 44;
   const itemsInternalPadding: number = 3;
 
@@ -54,7 +46,8 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
   }, [windowWidth]);
   
   const colors = useThemeColors();  
-  const styles = StyleSheet.create({
+
+  const styles: any = StyleSheet.create({
     splittedBase: {
       width: splittedTotalWidth, // LARGHEZZA SPLITTED BAR
       height: splittedBarHeigth, // ALTEZZA 
@@ -77,9 +70,9 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
       alignItems: 'center', 
     },
     singleItemIcon: {
-      width: singleItemImageSize, 
-      height: singleItemImageSize, 
-      contentFit:'contain',
+      width: Math.trunc(splittedBarHeigth * .7), 
+      height: Math.trunc(splittedBarHeigth * .5), 
+      //contentFit:'contain',
     },
     iosBlurView: {
       width:'100%', 
@@ -119,14 +112,14 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
       justifyContent:'center', // VERT
     },
     doubleItemsIcon: {
-      width: doubleItemsImageSize, 
-      height: doubleItemsImageSize, 
-      contentFit:'contain',
+      width: Math.trunc(splittedBarHeigth * .5), 
+      height: Math.trunc(splittedBarHeigth * .5), 
+      //contentFit:'contain',
     },
     doubleItemsLabel: {
       fontSize:12, 
       fontWeight:600, 
-      color:'#0088ff'
+      color: colors.blueBar
     },
     labelNotSelected: {
       color: useColorScheme() === 'dark' ? colors.white : colors.black,
@@ -284,5 +277,5 @@ const FakeSplittedBar: React.FC<FakeSplittedBarInterface> = ({
   );
 }
 
-export default (FakeSplittedBar);
+//export default (FakeSplittedBar);
 

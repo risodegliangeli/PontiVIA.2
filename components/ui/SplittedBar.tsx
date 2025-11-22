@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 import { easeGradient } from 'react-native-easing-gradient';
 
-const w = Dimensions.get('window').width;
+//const w = Dimensions.get('window').width;
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -29,26 +29,30 @@ const useThemeColors = () => {
                                                 MAIN
                                       
 ########################################################################################################### */
-export default function CustomTabBar({ route, focused: isFocused, event, state, descriptors, navigation}) {
+export default function CustomTabBar(props: any) {
+  const { route, focused: isFocused, event, state, descriptors, navigation } = props;
 
   const myLanguage = (getLocales()[0].languageTag).slice(0,2);
+
   const [splittedTotalWidth, setSplittedTotalWidth] = useState<number>(0);
+
   const windowWidth: number = Dimensions.get('window').width;
   
   useEffect( () => {
     if (windowWidth >= 320 && windowWidth <= 360) {
-      setSplittedTotalWidth(windowWidth * 0.90);
+      setSplittedTotalWidth(Math.trunc(windowWidth * 0.90));
     } else {
       setSplittedTotalWidth(350);
     }
   }, [windowWidth]);
       
   const splittedBarHeigth: number = 80; // ALTEZZA & LARGHEZZA DELL'ITEM SINGOLO E DI TUTTA LA BAR
-  const doubleItemsSize: number = Math.trunc(splittedTotalWidth*.65); // LARGHEZZA DEL DOPPIO ITEM
+  const doubleItemsSize: number = Math.trunc(splittedTotalWidth * .65); // LARGHEZZA DEL DOPPIO ITEM
   //const doubleItemsHeigth: number = Math.trunc(splittedBarHeigth * .8)
-
-  const singleItemImageSize: string = '60%';
-  const doubleItemsImageSize: string = '35%';
+  // const singleItemImageSize: string = '60%';  // SOSTITUITO COL CALCOLO IN PIXEL PER EVITARE BLOCCHI
+  // const doubleItemsImageSize: string = '35%'; // SOSTITUITO "   "    "   "
+  const singleItemImageSize: number = Math.trunc(doubleItemsSize * .6);
+  const doubleItemsImageSize: number = Math.trunc(doubleItemsSize * .35);
   const splittedFromBottom: number = Platform.OS === 'ios' ? 28 : 64;
   const itemsInternalPadding: number = 3;
 
@@ -175,7 +179,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
     }
   };
 
-  const styles = StyleSheet.create({
+  const styles: any = StyleSheet.create({
     splittedBase: {
       position: 'absolute',
       width: splittedTotalWidth, // LARGHEZZA SPLITTED BAR
@@ -188,6 +192,7 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
     singleItemTransparent: {
       width: splittedBarHeigth,
       height: splittedBarHeigth,
+      //borderWidth: 1,
     },
     singleItemTouchable: {
       flex:1,
@@ -196,9 +201,9 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
       alignItems: 'center', 
     },
     singleItemIcon: {
-      width: singleItemImageSize, 
-      height: singleItemImageSize, 
-      contentFit:'contain',
+      width: singleItemImageSize * .4, 
+      height: singleItemImageSize * .4, 
+      //contentFit:'contain',
     },
     iosBlurView: {
       width:'100%', 
@@ -224,8 +229,9 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
     },
     doubleItemsTransparent: {
       width: doubleItemsSize,
-      height: splittedBarHeigth*.90,
+      height: Math.trunc(splittedBarHeigth * .9),
       flexDirection:'row',
+      //borderWidth:1,
     },
     doubleItemsTouchable: {
       flex:2, 
@@ -234,9 +240,9 @@ export default function CustomTabBar({ route, focused: isFocused, event, state, 
       justifyContent:'center', // VERT
     },
     doubleItemsIcon: {
-      width: doubleItemsImageSize, 
-      height: doubleItemsImageSize, 
-      contentFit:'contain',
+      width: Math.trunc(doubleItemsImageSize * .4), 
+      height: Math.trunc(doubleItemsImageSize * .4), 
+      //contentFit:'contain',
     },
     doubleItemsLabel: {
       fontSize:12, 

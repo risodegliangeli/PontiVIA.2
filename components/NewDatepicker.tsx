@@ -21,7 +21,7 @@ interface NewDatepickerInterface {
   isError: boolean;
   errorMsg: string | null;
   initialIndex: number | null; // USATO IN CASO DI EDIT PER CAMBIARE PULSANTE Aggiungi/Aggiorna
-  onCancel: () => null;
+  onCancel: () => void;
   onConfirm: (
     startDate: Date, 
     endDate: Date | null, 
@@ -152,7 +152,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
           style={{marginRight:4, transform: [{rotate: rotateArrow}]}}/>;
 
   // STILI
-  const styles = StyleSheet.create({
+  const styles:any = StyleSheet.create({
     modalContainer: { // CONTENUTO INTERNO ALLA MODAL
       width:'100%',
       flexDirection:'column',

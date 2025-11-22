@@ -32,7 +32,7 @@ export default function Slide1 () {
       transform: [{ translateY: moveAnimation.value }, {scaleX: scaleAnimation.value} ],
   }));
 
-  const styles = StyleSheet.create ({
+  const styles:any = StyleSheet.create ({
     imageBack: {
       position:'absolute',
       top:0, left:0,

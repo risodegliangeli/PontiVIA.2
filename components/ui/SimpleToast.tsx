@@ -31,7 +31,7 @@ const SimpleToast: React.FC<SimpleToastInterface> = ({
   onClose
   }) => {
 
-  const styles = StyleSheet.create({
+  const styles:any = StyleSheet.create({
     baseST: {
       minWidth: 314,  //'85%',
       maxWidth: 550,  //'90%',

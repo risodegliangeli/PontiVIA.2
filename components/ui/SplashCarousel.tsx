@@ -1,45 +1,54 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Dimensions, View, Text, TouchableOpacity, StyleSheet,  Platform, useColorScheme, Animated, Easing, } from 'react-native';
+import { 
+  Dimensions, 
+  View, 
+  Text, 
+  TouchableOpacity, 
+  StyleSheet, 
+  Platform, 
+  useColorScheme, 
+  Animated, 
+  Easing, } from 'react-native';
 import Carousel, { ICarouselInstance,  } from 'react-native-reanimated-carousel';
-// import { useSharedValue } from "react-native-reanimated";
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
+import { Colors } from '@/constants/Colors';
+import { splashCarousel as splashCarouselLabel } from '@/constants/dataLabel';
 import Slide1 from '@/components/ui/Slide1';
 import Slide2 from '@/components/ui/Slide2';
 import Slide3 from '@/components/ui/Slide3';
-import { Colors } from '@/constants/Colors';
-//import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { splashCarousel as splashCarouselLabel } from '@/constants/dataLabel';
-
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
   return Colors[colorScheme ?? 'light'];
 };
 
-interface SplashInterface {
-  visible: boolean;
-  splashClose: () => void;
-}
+// interface SplashInterface {
+//   visible: boolean;
+//   splashClose: () => void;
+// }
 
 /* ------------------------------------------------------------- 
 
 SplashCarousel
 
 ------------------------------------------------------------- */
-const SplashCarousel: React.FC<SplashInterface> = ({
-  visible,
-  splashClose,
-  }) => {
+// const SplashCarousel: React.FC<SplashInterface> = ({
+//   visible,
+//   splashClose,
+//   }) => {
+export default function SplashCarousel(props: any) {
+  const { splashClose } = props;
 
   let {height, width} = Dimensions.get('window');
 
+  // CALCOLA LARGH./ALT. E 1/4 DEI VALORI PER LA CENTRATURA
   const [myHeight, setMyHeight] = useState<number>(height);
   const [myWidth, setMyWidth] = useState<number>(width);
 
   // GESTISCE RIDIMENSIONAMENTO DELLA FINESTRA SU TABLET
   useEffect( () => {
     setMyHeight(Dimensions.get('window').height);
-    setMyWidth(Dimensions.get('window').width)
+    setMyWidth(Dimensions.get('window').width);
     }, [Dimensions.get('window')]);
 
   // RICEVE VARIABILI DAL CONTEXT
@@ -51,9 +60,8 @@ const SplashCarousel: React.FC<SplashInterface> = ({
   const colors = useThemeColors();
 
   const scaleValue  = useRef(new Animated.Value(2)).current;
-  
   useEffect(() => {
-      Animated.timing(scaleValue, { // RIDUCI/ESPANDI
+    Animated.timing(scaleValue, { // RIDUCI/ESPANDI
       toValue: 1,
       duration: 750,
       easing: Easing.elastic(1.5),
@@ -64,7 +72,7 @@ const SplashCarousel: React.FC<SplashInterface> = ({
   const ref = useRef<ICarouselInstance>(null);
   const [dots, setDots] = useState<number>(1);
 
-  const styles = StyleSheet.create ({
+  const styles:any = StyleSheet.create ({
     text: {
       fontSize: 26,
       fontWeight:800,
@@ -99,15 +107,18 @@ const SplashCarousel: React.FC<SplashInterface> = ({
       position:'absolute',
       top:0,
       left:0,
-      backgroundColor: '#E35527', 
-      //maxWidth:600,
+      backgroundColor: '#E35527',
+      height:'100%',
+      flexDirection:'column',
+      justifyContent:'center',
+      alignContent:'center',
+      alignItems:'center'
+
     },
     innerContent: {
+      flex:1,
       justifyContent:'center',
-      alignItems: 'center', 
-      position:'absolute', 
-      top: '50%',
-      left: '50%', 
+      //borderWidth:1,
     }
   })
 
@@ -146,6 +157,7 @@ const SplashCarousel: React.FC<SplashInterface> = ({
                   { 
                     borderWidth:2, 
                     borderColor: colors.white,
+                    marginHorizontal:96,
                     elevation:18,
                     shadowColor: colors.black, // iOS shadow
                     shadowOffset: {
@@ -179,13 +191,13 @@ const SplashCarousel: React.FC<SplashInterface> = ({
         }}>
         <View 
             style={{width:8, height:8, borderRadius:12,
-            backgroundColor: dots === 0 ? colors.white : 'rgba(255, 255, 255, .35)' }}/>
+            backgroundColor: dots === 0 ? colors.white : 'rgba(255, 255, 255, .5)' }}/>
         <View 
             style={{width:8, height:8, borderRadius:12,
-            backgroundColor: dots === 1 ? colors.white : 'rgba(255, 255, 255, .35)' }}/>
+            backgroundColor: dots === 1 ? colors.white : 'rgba(255, 255, 255, .5)' }}/>
         <View 
             style={{width:8, height:8, borderRadius:12,
-            backgroundColor: dots === 2 ? colors.white : 'rgba(255, 255, 255, .35)' }}/>
+            backgroundColor: dots === 2 ? colors.white : 'rgba(255, 255, 255, .5)' }}/>
       </View> 
     )
   }
@@ -195,7 +207,7 @@ const SplashCarousel: React.FC<SplashInterface> = ({
       <Carousel
         ref={ref}
         autoPlay={false}
-        autoPlayInterval={5000}
+        //autoPlayInterval={5000}
 				mode="parallax"
 				modeConfig={{
 					parallaxScrollingScale: 0.99,
@@ -210,11 +222,13 @@ const SplashCarousel: React.FC<SplashInterface> = ({
         data={frame}
         renderItem={({ index }) => (
           Platform.OS === 'ios' ?
-            <Animated.View style={[
-              styles.innerContent, 
-              { 
-                transform: [{translateY:'-50%'}, {translateX: '-50%'}, {scale: scaleValue}], 
-              }]}>
+              <Animated.View style={[
+                styles.innerContent, 
+                { transform: [
+                  { scale: scaleValue }, 
+                  // {translateX: (myWidth * .5) * 0}, 
+                  // {translateY: (myHeight * .5) * 0}
+                  ] }]}>
               {frame[index].image}
               <View style={{ height: 32 }} />
               {frame[index].text}
@@ -224,9 +238,11 @@ const SplashCarousel: React.FC<SplashInterface> = ({
           :
             <View style={[
               styles.innerContent,
-              { 
-                transform: [{translateY:'-50%'}, {translateX: '-50%'}, {scale: 1}], 
-              }]}>
+              { transform: [
+                { scale: 1 }, 
+                // {translateX: myWidth * 0}, 
+                // {translateY: myHeight * 0}
+                ] }]}>
               {frame[index].image}
               <View style={{ height: 32 }} />
               {frame[index].text}
@@ -238,14 +254,29 @@ const SplashCarousel: React.FC<SplashInterface> = ({
 
       {dots < 2 && <ThreeDots/>}
 
+      {/* Chiudi automaticamente dopo la terza slide (index 2) */}
+      {
+        // Quando l'utente arriva all'ultima slide, richiamiamo splashClose dopo una breve pausa
+      }
+      {/*dots === 2 && (
+        (() => {
+          // effettuiamo la chiusura con un piccolo timeout per lasciare il tempo all'utente
+          setTimeout(() => {
+            splashClose();
+          }, 2000);
+          return null;
+        })()
+      )*/}
+
+      {/* TASTO SKIP */}
       <TouchableOpacity
         style={{ position: 'absolute', top: 96, right: 20, zIndex: 99 }}
         onPress={splashClose}
-      >
+        >
         <Text style={styles.textItalic}>Skip</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
-export default SplashCarousel;
+// export default SplashCarousel;

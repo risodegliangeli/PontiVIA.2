@@ -28,7 +28,7 @@ const DropdownMonths: React.FC<DropdownMonthsProps> = ({ selectedValue, onChange
   const [value, setValue] = useState( parseInt(selectedValue) || 0 ); // DEFAULT: O IL VAL. INTERO DI selectedValue OPPURE 0
   const [isFocus, setIsFocus] = useState(false);
   const colors = useThemeColors();
-  const styles = StyleSheet.create({
+  const styles:any = StyleSheet.create({
     container: {
       backgroundColor: 'transparent',
       padding: 0,

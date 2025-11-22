@@ -39,14 +39,14 @@ mobileAds()
 const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
 // FLAG ADV PER TEST
-const isAdvertising: boolean = false; // SE ATTIVA CAMPAGNA AdMob
+const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
 
 // NOMI MESI E GIORNI
 const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
 const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
 
-// INTERFACCIA DI NewHolyday 
-interface NewHolyday {
+// INTERFACCIA DI NewHolyday (local copy, renamed to avoid type collision with external types)
+interface LocalNewHolyday {
   startDate: Date;
   endDate: Date | null;
   description: string | null;
@@ -92,7 +92,8 @@ const CalendarScreen = ({callerPreferences}: any) => {
     nationalExcluded,
     myPreferences, 
     myCountry, 
-    myLanguage
+    myLanguage,
+    goBack, setGoBack
   } = useHolydays();
 
   /* ---------------------------------------------------------------┐ 
@@ -377,7 +378,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
   const [toastBody, setToastBody] = useState<React.ReactNode>('');
   const [toastAnimation, setToastAnimation] = useState<'none' | 'slide' | 'fade'>('slide');
   const [toastOnClose, setToastOnClose] = useState();
-  const [calendarData, setCalendarData] = useState([]);
+  const [calendarData, setCalendarData] = useState<any[]>([]);
   
   // SEGNA LA DATA DI PARTENZA PER IL PROSSIMO BLOCCO DI MESI DA CALCOLARE  
   const [currentLoadDate, setCurrentLoadDate] = useState(() => createUTCDate(new Date().getFullYear(), new Date().getMonth() , 1));
@@ -392,10 +393,10 @@ const CalendarScreen = ({callerPreferences}: any) => {
   const [hasMore, setHasMore] = useState(true); 
   
   // BACKGROUNDCOLOR (MESSO QUI = DIVENTA GLOBALE)
-  const backgroundColor = useThemeColor({}, 'background');
+  const backgroundColor = useThemeColor({}, 'black' ); //'background');
 
   // STYLESHEET
-  const styles = StyleSheet.create({
+  const styles:any = StyleSheet.create({
     fltList:{
       flex:1,
       backgroundColor: 'transparent', 
@@ -407,7 +408,6 @@ const CalendarScreen = ({callerPreferences}: any) => {
       paddingBottom: 16,
       paddingLeft:16,
       paddingRight:16,
-      //marginTop: 16,
       marginBottom:16,
       marginLeft:12,
       marginRight:12,
@@ -416,12 +416,12 @@ const CalendarScreen = ({callerPreferences}: any) => {
       borderWidth: 0,
     },
     advContainer:{
-      paddingTop: 12,
-      paddingBottom: 12,
+      paddingTop: 24,
+      paddingBottom: 24,
       paddingLeft:0,
       paddingRight:0,
-      marginBottom:32,
-      marginTop:12,
+      marginBottom:48,
+      marginTop:24,
       backgroundColor: 'rgba(0, 0, 0, .08)',
       borderRadius: 0,
       borderWidth: 0,
@@ -429,7 +429,6 @@ const CalendarScreen = ({callerPreferences}: any) => {
     monthTitle: {
       fontSize: 16,
       fontWeight: 600,
-      //paddingLeft:24,
       color: colors.headerText,
       marginBottom: 4,
       textAlign: 'left',
@@ -490,27 +489,27 @@ const CalendarScreen = ({callerPreferences}: any) => {
       textAlign: 'center',
       position: 'relative', // Importante per il positioning dei connettori
     },
-    dayCellOutsideMonth: {
-      backgroundColor: colors.outsideMonth,
-      opacity: 0.25,
-    },
-    dayCellBridge: {
-      backgroundColor: 'green',
-      borderRadius: 0,
-      borderWidth: 0,
-      borderColor: colors.bridgeBackground,
-    },
+    // dayCellOutsideMonth: {
+    //   backgroundColor: colors.outsideMonth,
+    //   opacity: 0.25,
+    // },
+    // dayCellBridge: {
+    //   backgroundColor: 'green',
+    //   borderRadius: 0,
+    //   borderWidth: 0,
+    //   borderColor: colors.bridgeBackground,
+    // },
     dayNumber: {
       fontSize: 16,
       color: colors.text,
       textAlign: 'left',
     },
-    dayNumberSunday: {
-      color: colors.textRed,
-    },
-    dayNumberSaturday: {
-      color: colors.textRed,
-    },
+    // dayNumberSunday: {
+    //   color: colors.textRed,
+    // },
+    // dayNumberSaturday: {
+    //   color: colors.textRed,
+    // },
     dayNumberHoliday: {
       color: colors.textRed,
     },
@@ -522,15 +521,6 @@ const CalendarScreen = ({callerPreferences}: any) => {
     },
     dayNumberBold: {
       fontWeight: 800,
-    },
-    adBanner: {
-      width: '100%',
-      alignItems: 'center',
-      justifyContent: 'center',
-      color: colors.text,
-      minHeight: 48,
-      //marginTop: 48, marginBottom:36,
-      //padding: 15,
     },
     loadingContainer: {
       flex: 1,
@@ -594,15 +584,15 @@ const CalendarScreen = ({callerPreferences}: any) => {
       shadowOpacity: 0.25,
       shadowRadius: 4 // Match elevation for iOS
       },
-    yellowBadge: {
-      position:'absolute',
-      top:'20%', 
-      right:'20%',
-      height:6, 
-      width:6,
-      borderRadius:'100%',
-      backgroundColor: '#ffffff66',
-    },
+    // yellowBadge: {
+    //   position:'absolute',
+    //   top:'20%', 
+    //   right:'20%',
+    //   height:6, 
+    //   width:6,
+    //   borderRadius:'100%',
+    //   backgroundColor: '#ffffff66',
+    // },
     squaredTouchable: {
       position: 'absolute',
       width:'99%', height:'100%', 
@@ -611,22 +601,22 @@ const CalendarScreen = ({callerPreferences}: any) => {
       alignItems: 'center',
       justifyContent: 'center',
     },
-    yellowToast: {
-      marginTop: spaceAbove,
-      width:'90%',
-      minHeight: 180,
-      backgroundColor: colors.white, 
-      padding: 24, 
-      borderRadius: 12,
-      elevation:12, 
-      shadowColor: colors.black, // iOS shadow
-      shadowOffset: {
-        width: 0,
-        height: 12, // Match elevation for iOS
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 12 // Match elevation for iOS
-    },
+    // yellowToast: {
+    //   marginTop: spaceAbove,
+    //   width:'90%',
+    //   minHeight: 180,
+    //   backgroundColor: colors.white, 
+    //   padding: 24, 
+    //   borderRadius: 12,
+    //   elevation:12, 
+    //   shadowColor: colors.black, // iOS shadow
+    //   shadowOffset: {
+    //     width: 0,
+    //     height: 12, // Match elevation for iOS
+    //   },
+    //   shadowOpacity: 0.25,
+    //   shadowRadius: 12 // Match elevation for iOS
+    // },
     modalButtons: {
       minWidth:'100%',
       flexDirection: 'column',
@@ -642,7 +632,6 @@ const CalendarScreen = ({callerPreferences}: any) => {
       alignItems: 'center',
       justifyContent:'center',
       width:'100%',
-      //marginRight: 4,
     },
     cancelButtonText: {
       color: colors.text,
@@ -659,8 +648,6 @@ const CalendarScreen = ({callerPreferences}: any) => {
       alignItems: 'center',
       justifyContent:'center',
       alignContent:'center',
-      //marginLeft: 4,
-
     },
     addButtonText: {
       color: colors.white,
@@ -669,14 +656,12 @@ const CalendarScreen = ({callerPreferences}: any) => {
     },
   });
 
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   // LONG PRESS: CHIAMA LA PAGINA holydays COL DATEPICKER APERTO SULLA DATA DA INSERIRE ///////////////////
   const handleGoToHolydays = (date: Date, action: string | undefined) => {
     const dateString = date.toISOString(); 
-    navigation.navigate(
-      'holydays' as never, {date: dateString, action: action} as never, 
-      );
+    navigation.navigate( 'holydays', {date: dateString, action: action} );
   };
 
   /* ---------------------------------------------------------------┐ 
@@ -687,7 +672,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
   └---------------------------------------------------------------- */
   const loadMoreCalendarData = useCallback( async (
     myCountry: string,
-    newPersonalHolydays: NewHolyday[],
+    newPersonalHolydays: any[],
     ) => {
 
     // EXIT SE isLoading = true OPPURE hasMore = false
@@ -704,7 +689,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
             1),
           monthsToLoad, 
           callerPreferences.bridgeDuration, 
-          newPersonalHolydays,
+          newPersonalHolydays as any,
           myCountry,
           myPreferences, 
           nationalExcluded,
@@ -745,7 +730,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
           startDate, 
           monthsToLoad,
           callerPreferences.bridgeDuration,
-          newPersonalHolydays,
+          newPersonalHolydays as any,
           myCountry,
           myPreferences,
           nationalExcluded,
@@ -851,29 +836,30 @@ const CalendarScreen = ({callerPreferences}: any) => {
                               setToastOnClose(undefined); 
                               setVisibleToast(true); 
                             } else {
-                              /* MODAL/SimpleToast --> POSSIBILE PONTE */
-                              let bridgeDescription: string = '';
-                              let bridgeStartAt: Date;
-                              let bridgeEndsAt: Date;
-                              month.bridges.forEach( (interval: any, index: number) => {
-                                if (isWithinInterval(day[0], {start: interval.da, end: interval.a})) {
-                                  if (interval.length > 1) {
-                                    bridgeDescription += dataLabel(myLanguage, 4); // Dal
-                                    bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                                    bridgeDescription += dataLabel(myLanguage, 5); // fino al
-                                    bridgeDescription += interval.a.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                                    bridgeDescription += ' (' + interval.length + dataLabel(myLanguage, 6); // giorni
-                                    // PRIMO E ULTIMO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
-                                    bridgeStartAt = month.bridges[index].da;
-                                    bridgeEndsAt = month.bridges[index].a;
-                                  } else {
-                                    bridgeDescription += dataLabel(myLanguage, 7); // Il
-                                    bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
-                                    bridgeDescription += dataLabel(myLanguage, 8); // (1 giorno)
-                                    // UNICO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
-                                    bridgeStartAt = bridgeEndsAt = interval.da;
-                                  }
-                            } 
+                            /* MODAL/SimpleToast --> POSSIBILE PONTE */
+                            let bridgeDescription: string = '';
+                            // initialize with a safe default (the tapped day) so variables are always assigned
+                            let bridgeStartAt: Date = day[0];
+                            let bridgeEndsAt: Date = day[0];
+                            month.bridges.forEach( (interval: any, index: number) => {
+                              if (isWithinInterval(day[0], {start: interval.da, end: interval.a})) {
+                                if (interval.length > 1) {
+                                  bridgeDescription += dataLabel(myLanguage, 4); // Dal
+                                  bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                  bridgeDescription += dataLabel(myLanguage, 5); // fino al
+                                  bridgeDescription += interval.a.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                  bridgeDescription += ' (' + interval.length + dataLabel(myLanguage, 6); // giorni
+                                  // PRIMO E ULTIMO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
+                                  bridgeStartAt = month.bridges[index].da;
+                                  bridgeEndsAt = month.bridges[index].a;
+                                } else {
+                                  bridgeDescription += dataLabel(myLanguage, 7); // Il
+                                  bridgeDescription += interval.da.toLocaleDateString(myLanguage, {day: "numeric", month: 'long', year: "numeric"})
+                                  bridgeDescription += dataLabel(myLanguage, 8); // (1 giorno)
+                                  // UNICO GIORNO DEL PONTE (DA PASSARE AL CALENDARIO)
+                                  bridgeStartAt = bridgeEndsAt = interval.da;
+                                }
+                              } 
                             });
                             setVisibleToast(true); 
                             setToastPosition('center');
@@ -883,13 +869,13 @@ const CalendarScreen = ({callerPreferences}: any) => {
                             setPaddingFromTop(48); // MARGINE TOP
                             setPaddingFromBottom(48); // MARGINE BOTTTOM
                             setToastBody( 
-                            <BridgeToast 
-                              id={day}
-                              title={day[2]}
-                              description={bridgeDescription}
-                              bridgeStart={bridgeStartAt}
-                              bridgeEnds={bridgeEndsAt}
-                            />);
+                              <BridgeToast 
+                                id={day}
+                                title={day[2]}
+                                description={bridgeDescription}
+                                bridgeStart={bridgeStartAt}
+                                bridgeEnds={bridgeEndsAt}
+                              />);
                             setToastAnimation('fade');
                             setToastOnClose(undefined); 
                           }
@@ -900,13 +886,13 @@ const CalendarScreen = ({callerPreferences}: any) => {
                         // ON LONG-PRESS
                         delayLongPress={500}
                         onLongPress={ () => {
-                          // console.log(`longPress=> day[1]: ${day[1]} day[2]: ${day[2]} day[3]: ${day[3]}`);
                           // LA CHIAMATA ALLA DROPDOWN VIENE FATTA SOLO SE:
                           // -> NON PONTE (day[1] = -1) E NON FESTIVO (day[2] vuoto) 
                           // NON PARTE LA CHIAMATA SE:
                           //  1) FESTIVO CON DESCRIZIONE (es. festivita nazionale o inserito da utente)
                           //  2) PONTE                          
                           if (day[1] !== -1 && day[2] === undefined) { 
+                            setGoBack('index'); // goBack == 'index': CHIAMATA PROVIENE DA CALENDAR
                             handleGoToHolydays(day[0], 'newItem');
                           } 
                         }}
@@ -962,7 +948,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
             E BANNER PICCOLI (BANNER)
         */}
         {isAdvertising && 
-          (index % monthsToLoad === 0 && 
+          ((index + 1) % monthsToLoad === 0 && 
             <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
               <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
               <BannerAd ref={bannerRef} unitId={adUnitId} size={BannerAdSize.MEDIUM_RECTANGLE}/>

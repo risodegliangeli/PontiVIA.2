@@ -5,7 +5,8 @@ import {
   StyleSheet, 
   useColorScheme, 
   Text, 
-  TouchableOpacity, 
+  TouchableOpacity,
+  Modal, 
   } from 'react-native';
 import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT
@@ -19,6 +20,7 @@ import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import SideLabel from '@/components/ui/SideLabel';
 import SplashCarousel from '@/components/ui/SplashCarousel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+//import PagerCarousel from '@/components/ui/PagerCarousel';
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -115,7 +117,7 @@ export default function HomeScreen() {
   const logoMarginTop = useRef(new Animated.Value(0)).current; // logo starts at marginTop 92
   const logoSize = new Animated.Value(1); // TESTO E MANINA INIZIALM. VISIBILI
   const cardMarginTop = useRef(new Animated.Value(180)).current; // LE CARD PARTONO SPOSTATE VERSO IL BASSO
-  const animationTimeout = useRef<NodeJS.Timeout | null>(null);
+  const animationTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cloud01Anim = new Animated.Value(0); // NUVOLETTA 1
   const cloud02Anim = new Animated.Value(0); // NUVOLETTA 2
 
@@ -181,7 +183,7 @@ export default function HomeScreen() {
   };
 
   // FOGLI DI STILE
-  const styles = StyleSheet.create({
+  const styles:any = StyleSheet.create({
     // CONTAINER CARDS CALENDARIO
     container: {
       transform: [
@@ -306,14 +308,12 @@ export default function HomeScreen() {
         </Suspense>
 
       {/* SPLASH CAROUSEL SOLO AL PRIMO AVVIO */}
-      {splashChecked && isCarouselVisible ? 
-        (<SplashCarousel
-          visible={splashChecked && isCarouselVisible}
+      {splashChecked && isCarouselVisible ? (
+        <SplashCarousel
+          //visible={splashChecked && isCarouselVisible}
           splashClose={() => setIsCarouselVisible(false)}
-        />)
-        :
-        null
-      }
+        />
+      ) : null}
 
         {/* STATUSBAR */}
         <StatusBar style={ useColorScheme() === 'dark' ? 'light' : 'dark' } />

@@ -20,9 +20,9 @@ interface NewHolyday {
   repeatOnDay: boolean;   // RIPETE OGNI ANNO, il primo martedì di settembre
 }
 
-/* ============================================================================= 
-FUNZIONE LETTURA STORAGE DATI
-============================================================================= */
+  /* ---------------------------------------------------------------┐ 
+  FUNZ. GENERICA LETTURA STORAGE DATI
+└---------------------------------------------------------------- */
 const loadData = async (key: string) => {
   try {
     const jsonValue = await AsyncStorage.getItem(key);
@@ -53,6 +53,9 @@ interface HolydaysContextType {
 // GESTISCE LA LINGUA DELL'APP
   myLanguage: string;
     setMyLanguage: React.Dispatch<React.SetStateAction<string>>;
+  // FLAG PER GESTIRE NAVIGAZIONE INDIETRO
+  goBack: string | undefined;
+    setGoBack: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 // CREAZIONE DEL CONTEXT VERO E PROPRIO PER PASSARE I DATI IN TUTTA L'APP ======================
@@ -109,8 +112,8 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
   };
 
   const [myPreferences, setMyPreferences] = useState<any>(createDefaultPreferences(systemLanguage));  // <--- NUOVO
+  const [goBack, setGoBack] = useState<string | undefined>(undefined);
 
-  
   // CONVERTE I VALORI DI TIPO string DEI JSON IN VALORI TIPO Data PER startDate E endDate
   const convertDates = (holydaysArray: any) => {
   if (!holydaysArray || !Array.isArray(holydaysArray)) return holydaysArray;
@@ -150,6 +153,7 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
       nationalExcluded,     setNationalExcluded,    // FEST. NAZ. DA IGNORARE
       myCountry,            setMyCountry,           // DROPDOWN FESTIVITA PER PAESE
       myPreferences,        setMyPreferences,       // preferences 'nuovo' (distribuito da Context)
+      goBack,               setGoBack,
       myLanguage,           setMyLanguage
     }}>
       {children}

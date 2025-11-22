@@ -67,8 +67,8 @@ const getCountryNationalHolidays = (
     myCountry: string,
     year: number,
     newPersonalHolydays: NewHolyday[],
-    myPreferences,
-    nationalExcluded 
+    myPreferences: any,
+    nationalExcluded: any 
     ) => {   
 
     // console.log('\t\t[GETCOUNTRYNATIONALHOLYDAYS]');

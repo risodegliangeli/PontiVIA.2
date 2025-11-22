@@ -21,6 +21,10 @@ const SideLabel = () => {
     // GESTIONE COLORE
     const colors = useThemeColors();
 
+    const viewBox="0 0 360 557";
+    const fill = useColorScheme() === 'light' ? 'rgba(255, 255, 255, .85)' : 'rgba(255, 255, 255, .15)'
+    const {width, height} = Dimensions.get("window");
+
     // VARIABILI DA CONTEXT
     const { 
         myLanguage
@@ -31,7 +35,7 @@ const SideLabel = () => {
     const [infoStep, setInfoStep] = useState<number>(1);
 
     // STYLES
-    const styles = StyleSheet.create ({
+    const styles:any = StyleSheet.create ({
     // INFOPOINT
     label: {
       position:'absolute',
@@ -107,9 +111,6 @@ const SideLabel = () => {
     }
     })
 
-    const viewBox="0 0 360 557";
-    const fill = useColorScheme() === 'light' ? 'rgba(255, 255, 255, .85)' : 'rgba(255, 255, 255, .15)'
-    const width = Dimensions.get("window").width;
 
     return (
         <>
@@ -146,8 +147,8 @@ const SideLabel = () => {
                         width: '100%', 
                         alignSelf: 'center',
                         position:'absolute',
-                        top:'50%', 
-                        transform: [{translateY: '-50%'}],
+                        top: Math.trunc(height * .5), 
+                        transform: [{translateY: Math.trunc(height * .35) * -1}],
                         }}>
 
                         <Svg
@@ -209,15 +210,15 @@ const SideLabel = () => {
                                     <Pressable 
                                         onPress={ () => setInfoStep(1) }
                                         style={{width:12, height:12, borderRadius:12,
-                                        backgroundColor: infoStep === 1 ? colors.blueBar : colors.cancelButton }}/>
+                                        backgroundColor: infoStep === 1 ? colors.blueBar : colors.disabled }}/>
                                     <Pressable 
                                         onPress={ () => setInfoStep(2) }
                                         style={{width:12, height:12, borderRadius:12,
-                                        backgroundColor: infoStep === 2 ? colors.blueBar : colors.cancelButton }}/>
+                                        backgroundColor: infoStep === 2 ? colors.blueBar : colors.disabled }}/>
                                     <Pressable 
                                         onPress={ () => setInfoStep(3) }
                                         style={{width:12, height:12, borderRadius:12,
-                                        backgroundColor: infoStep === 3 ? colors.blueBar : colors.cancelButton }}/>
+                                        backgroundColor: infoStep === 3 ? colors.blueBar : colors.disabled }}/>
                                     <TouchableOpacity
                                         onPress={ () => {
                                             if (infoStep < 3) setInfoStep( infoStep + 1 )

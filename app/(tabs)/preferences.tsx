@@ -41,7 +41,7 @@ import Privacy from '@/components/Privacy';
   const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
   // SWITCH ADV PER TEST
-  const isAdvertising: boolean = false; // SE ATTIVA CAMPAGNA AdMob
+  const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
 
 // NOMI GIORNI LOCALIZZATI
 const { localizedDays } = useLocalizationData();
@@ -411,6 +411,13 @@ export default function Preferences() {
           <Suspense>
             <Privacy />
           </Suspense>
+
+            {/* <View>
+              <TouchableOpacity
+                onPress={ () => { navigation.navigate('carousel' as never) } }>
+                <Text style={{alignSelf:'center'}}>CAROUSEL</Text>
+              </TouchableOpacity>
+            </View> */}
 
           {/* SPACER  ############################################################################# */}
           <View style={{ height: 480 }} />

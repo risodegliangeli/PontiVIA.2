@@ -11,30 +11,29 @@ import {
   View,
   useColorScheme,
   Platform,
-  // Pressable,
   Share,
   Easing,
   Dimensions
 } from 'react-native';
-import { useRoute } from '@react-navigation/native';      // SERVE PER LEGGERE I PARAMETRI
-import { useNavigation } from '@react-navigation/native'; // SERVE PER GESTIRE LA NAVIGAZIONE
+import { useRoute } from '@react-navigation/native';            // SERVE PER LEGGERE I PARAMETRI
+import { useNavigation } from '@react-navigation/native';       // SERVE PER GESTIRE LA NAVIGAZIONE
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
-import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
+import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT VARIABILI
 import { getLocales,  } from 'expo-localization';
 import { holydayLabels as dataLabel } from '@/constants/dataLabel';
 import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
 import DropdownCountry from '@/components/ui/DropdownCountry';  // COUNTRY PICKER 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewDatepicker from '@/components/NewDatepicker';         // MIO DATEPICKER ✌🏻
-//import * as Linking from 'expo-linking';
 import SideLabel from '@/components/ui/SideLabel';
 import Privacy from '@/components/Privacy';
-
+//import { useSplashCarousel } from '@/context/SplashCarouselContext'; // CONTEXT VISIBILITA BOTTOMBAR
+//import * as Linking from 'expo-linking';
+//import { useSharedValue } from 'react-native-reanimated';
 
 // GOOGLE ADMOB ///////////////////////////////////
 import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
-import { useSharedValue } from 'react-native-reanimated';
 // init ADMOB
 mobileAds()
   .initialize()
@@ -47,7 +46,7 @@ mobileAds()
 const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
 // SWITCH ADV PER TEST
-const isAdvertising: boolean = false; // SE ATTIVA CAMPAGNA AdMob
+const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
 
 // TYPE Holiday
 type Holiday = {          // DEFINIZIONE DI holiday
@@ -60,7 +59,7 @@ type Holiday = {          // DEFINIZIONE DI holiday
 type NewHolyday = {
   startDate: Date;
   endDate: Date | null;
-  description: string;
+  description: string | null;
   repeatOnDate: boolean;
   repeatOnDay: boolean;
 };
@@ -93,14 +92,15 @@ const saveData = async (data: any, key: string) => {
 ########################################################################################################### */
 export default function HolydaysScreen() {
 
+  // MESSAGGIO DI SERVIZIO
   const [service, setService] = useState('');
   useEffect( () => {
     setService(`\n${Platform.OS} - ${Dimensions.get('window').width}x${Dimensions.get('window').height}`)
     }, []);
-
-
+  // ///
 
   const colors = useThemeColors();
+
   const navigation = useNavigation();
 
   // puntatatore ADMOB
@@ -110,10 +110,20 @@ export default function HolydaysScreen() {
     Platform.OS === 'ios' && bannerRef.current?.load();
   }); 
 
+  // RICEVE VARIABILI DAL CONTEXT
+  const { 
+    newPersonalHolydays, setNewPersonalHolydays, // NUOVO
+    nationalHolydays, setNationalHolydays,
+    nationalExcluded, setNationalExcluded,
+    myCountry, setMyCountry,
+    goBack, setGoBack,
+    myLanguage
+    } = useHolydays();
+
   /* ---------------------------------------------------------------┐ 
   STYLESHEET
   └---------------------------------------------------------------- */
-  const styles =StyleSheet.create({
+  const styles:any =StyleSheet.create({
     // SFONDO
     image: {      
       flex: 1,
@@ -369,14 +379,11 @@ export default function HolydaysScreen() {
 
   });
 
-  // RICEVE VARIABILI DAL CONTEXT
-  const { 
-    newPersonalHolydays, setNewPersonalHolydays, // NUOVO
-    nationalHolydays, setNationalHolydays,
-    nationalExcluded, setNationalExcluded,
-    myCountry, setMyCountry,
-    myLanguage
-    } = useHolydays();
+
+  // RICEVE VISIBILITA BOTTOMBAR DAL SUPERCONTEXT
+  // const {
+  //   isCarouselVisible, setIsCarouselVisible,
+  //   } = useSplashCarousel();
     
   /* ---------------------------------------------------------------┐ 
   // GESTISCE LE CHIAMATE 'newItem' DA UNA LONG PRESS SUL CALENDARIO 
@@ -389,7 +396,6 @@ export default function HolydaysScreen() {
     setDpickerDescription('');              // DESCR
     setDpickerRepeatOnDate(false);          // REP ON DATE
     setDpickerRepeatOnDay(false);           // REP ON DAY
-    setGoBack(true);                        // IMPOSTA goBack PER IL RITORNO ALLA PAG CHIAMANTE
     showModalSingleDate();                  // APRE MODAL
   }
 
@@ -397,27 +403,32 @@ export default function HolydaysScreen() {
   // GESTISCE LE CHIAMATE 'newItemFromExternal' DA DEEP LINK E APRE LA DATEPICKER
   └---------------------------------------------------------------- */
   function handleDeepLinkAddDate(
-    pStartDate: string,
-    pEndDate?: string | undefined,
-    pDescription?: string | undefined,
-    pRODate?: string,
-    pRODay?: string
-    ) {
-      setInitialIndex(null);                          // INDEX, SERVE PER L'EDIT
-      setDpickerStartDate(new Date(pStartDate));      // START
-      pEndDate ? setDpickerEndDate(new Date(pEndDate)) : setDpickerEndDate(null);         // END
-      pDescription ? setDpickerDescription(pDescription) : setDpickerDescription('');     // DESCR
-      pRODate === 'true' ? setDpickerRepeatOnDate(true) : setDpickerRepeatOnDate(false);  // REP ON DATE
-      pRODay === 'true' ? setDpickerRepeatOnDay(true) : setDpickerRepeatOnDay(false);     // REP ON DAY
-      setGoBack(false);                       // IMPOSTA goBack PER IL RITORNO ALLA PAG CHIAMANTE
-      showModalSingleDate();                  // APRE MODAL
-  }
+      pStartDate?: string,
+      pEndDate?: string | undefined,
+      pDescription?: string | undefined,
+      pRODate?: string,
+      pRODay?: string
+      ) {
+        // If no start date is provided, bail out to avoid constructing an invalid Date
+        if (!pStartDate) {
+          console.warn('Missing pStartDate for deep link');
+          return;
+        }
+  
+        setInitialIndex(null);                          // INDEX, SERVE PER L'EDIT
+        setDpickerStartDate(new Date(pStartDate));      // START
+        pEndDate ? setDpickerEndDate(new Date(pEndDate)) : setDpickerEndDate(null);         // END
+        pDescription ? setDpickerDescription(pDescription) : setDpickerDescription('');     // DESCR
+        pRODate === 'true' ? setDpickerRepeatOnDate(true) : setDpickerRepeatOnDate(false);  // REP ON DATE
+        pRODay === 'true' ? setDpickerRepeatOnDay(true) : setDpickerRepeatOnDay(false);     // REP ON DAY
+        setGoBack('index');                             // IMPOSTA goBack = index PERCHE NON ESISTE PAGINA CHIAMANTE
+        showModalSingleDate();                          // APRE MODAL
+    }
 
   /* ---------------------------------------------------------------┐ 
    GESTIONE MODAL NEWDATEPICKER
   └---------------------------------------------------------------- */
   const [isModalSingleDateVisible, setIsModalSingleDateVisible] = useState<boolean>(false);
-  //const [modalIsOpen, setModalIsOpen] = useState<boolean>(false); // FLAG DUPLICATO, SERVE PER L'EFFETTO GENIUS
 
   /* VALORI NUOVA MODAL DATEPICKER */
   const [dpickerStartDate, setDpickerStartDate] = useState<Date>();
@@ -438,12 +449,10 @@ export default function HolydaysScreen() {
 
   /* GESTIONE SHOW/HIDE MODAL */
   const showModalSingleDate = () => {
-    ///setModalIsOpen(true);
     setIsModalSingleDateVisible(true);
   };
 
   const hideModalSingleDate = () => {
-    ///setModalIsOpen(false);
     setIsModalSingleDateVisible(false);
   };
 
@@ -463,29 +472,33 @@ export default function HolydaysScreen() {
   }
 
   const route = useRoute(); // PUNTA AL ROUTE
+
   const params = route.params as { 
     date?: string, 
     action?: string | undefined,
-    pStartDate?: Date,
-    pEndDate?: Date,
+    pStartDate?: string,
+    pEndDate?: string,
     pDescription?: string,
-    pRODate?: boolean,
-    pRODay?: boolean
+    pRODate?: string,
+    pRODay?: string
   }; 
       
   // LEGGE PARAMETRI
-  //const [params, setParams] = useState<RouteParams>(useRoute());
-  const [goBack, setGoBack] = useState<boolean>(false); // FLAG 'goBack' PER TORNARE ALLA PAGINA CHIAMANTE
 
   useEffect(() => {
     if (params === undefined) {
         return;
     }
     if (params.action === 'newItem') {
+      if (!params.date) {
+        console.warn('Missing date parameter for newItem action');
+        return;
+      }
       const receivedDate = new Date(params.date);
-      const action = params?.action;
+      const action = params.action;
       handleExternalAddDate(receivedDate, action); // GESTISCE GIORNO SINGOLO (DA LONG PRESS)
     }
+
     // se la chiamata (newItemFromExternal) arriva da un deep link esterno
     /* es.: 
       pontivia://holydays?action=newItemFromExternal&pStartDate=2025-11-18&pDescription=XXBeaujolais%20demand%20in%20Paris&pEndDate=2025-11-22&pRODate=true
@@ -717,9 +730,13 @@ export default function HolydaysScreen() {
   setDpickerToastIsError(false);
   //setIsModalSingleDateVisible(false);
   hideModalSingleDate();
-  if (goBack === true) {                // SE IL DATEPICKER E STATO CHIAMATO DA FUORI
-    setGoBack(false);
-    navigation.goBack();
+
+  // CASO: OK LA DATA E STATA INSERITA
+  if (goBack !== undefined) { // SE IL goBack != undefined SI TORNA ALLA PAGINA CHIAMANTE
+    let tempGoBack: string = goBack;
+    setGoBack(undefined);
+    //navigation.goBack();
+    navigation.navigate(tempGoBack as never);
   } 
   };
 
@@ -740,8 +757,7 @@ export default function HolydaysScreen() {
     setDpickerDescription(itemToEdit.description);  // DESCR
     setDpickerRepeatOnDate(itemToEdit.repeatOnDate);// REP ON DATE
     setDpickerRepeatOnDay(itemToEdit.repeatOnDay);  // REP ON DAY
-    setGoBack(false);
-    //setIsModalSingleDateVisible(true);              // APRE MODAL
+    setGoBack('holydays'); 
     showModalSingleDate();
   };
 
@@ -752,13 +768,13 @@ export default function HolydaysScreen() {
     const itemToShare: any = newPersonalHolydays[index];
       try {
         // Vorrei condividere questo evento ecc
-        let msg = `${dataLabel(myLanguage, 28)}\n\n*${itemToShare.description}*\n${ (itemToShare.startDate).toLocaleDateString(myLanguage, {day: 'numeric', month: 'long', year: 'numeric'}) }\n\n---\n\n`;
+        let msg = `${dataLabel(myLanguage, 28)}\n\n*${itemToShare.description ?? ''}*\n${ (itemToShare.startDate).toLocaleDateString(myLanguage, {day: 'numeric', month: 'long', year: 'numeric'}) }\n\n---\n\n`;
         
         // gestione link pontivia://
         msg += `📲\n`
         msg += `https://pontivia-2025.web.app/detect.html?action=newItemFromExternal`;
         if (itemToShare.startDate) {msg += `&pStartDate=${(itemToShare.startDate).getFullYear()}-${(itemToShare.startDate).getMonth() + 1}-${(itemToShare.startDate).getDate()}`};
-        if (itemToShare.description !== '') {msg += `&pDescription=${(itemToShare.description).replace(/ /g, "%20")}`;}
+        if (itemToShare.description) {msg += `&pDescription=${(itemToShare.description).replace(/ /g, "%20")}`;}
         if (itemToShare.endDate) {msg += `&pEndDate=${(itemToShare.endDate).getFullYear()}-${(itemToShare.endDate).getMonth() + 1}-${(itemToShare.endDate).getDate()}`}
         if (itemToShare.repeatOnDate) {msg += `&pRODate=true`}
         if (itemToShare.repeatOnDay) {msg += `&pRODay=true`}
@@ -890,6 +906,7 @@ export default function HolydaysScreen() {
             setDpickerRepeatOnDay(false);
             setDpickerToastMessage('');
             setDpickerToastIsError(false);
+            setGoBack('holydays');          // RIENTRO IN CASO DI OK/CANCEL
             showModalSingleDate(); // --> APRE MODAL CON DATEPICKER
           }}
         >
@@ -1206,25 +1223,27 @@ export default function HolydaysScreen() {
                 ]}>
                   <NewDatepicker
                     language={myLanguage}                   // LINGUA
-                    startDate={dpickerStartDate}            // DATA INIZIO
+                    startDate={dpickerStartDate ? dpickerStartDate : new Date(0)}            // DATA INIZIO
                     endDate={dpickerEndDate}                // DATA FINE O null
                     description={dpickerDescription}        // DESCRIZIONE
                     isError={dpickerToastIsError}           // PASSA AL COMPONENT FLAG DI ERRORE
                     errorMsg={dpickerToastMessage}          // PASSA AL COMPONENT MSG DI ERRORE
-                    repeatOnDate={dpickerRepeatOnDate}      // RIPETE IN QUELLA DATA
-                    repeatOnDay={dpickerRepeatOnDay}        // RIPETE QUEL GIORNO DELL'ANNO
+                    repeatOnDate={dpickerRepeatOnDate ? dpickerRepeatOnDate : null}      // RIPETE IN QUELLA DATA
+                    repeatOnDay={dpickerRepeatOnDay ? dpickerRepeatOnDay : null}        // RIPETE QUEL GIORNO DELL'ANNO
                     initialIndex={initialIndex}             // VALORIZZATO SE EDIT
                     onCancel={ () => {
                       setInitialIndex(null);                // SE ERA UN EDIT AZZERA IL FLAG
                       setDpickerToastMessage('');           // AZZERA MSG ERRORE
                       setDpickerToastIsError(false);        // AZZERA FLAG ERRORE
-                      //setIsModalSingleDateVisible(false);   // CHIUDE MODAL
                       hideModalSingleDate();
-                      if (goBack === true) {                // SE IL DATEPICKER E STATO CHIAMATO DA FUORI
-                        setGoBack(false);
-                        navigation.goBack();
-                      } 
-                     }} 
+                      if (goBack !== undefined) { 
+                        // CASO CANCEL: DATA NON INSERITA
+                        let tempGoBack: string = goBack;
+                        setGoBack(undefined);       // AZZERA goBack
+                        //navigation.goBack();    // TORNA INDIETRO
+                        navigation.navigate(tempGoBack as never);
+                      }} 
+                    }
                     onConfirm={(
                       myStartDate, 
                       myEndDate, 
