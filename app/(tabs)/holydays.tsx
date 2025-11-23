@@ -174,7 +174,6 @@ export default function HolydaysScreen() {
       marginRight:12,
     },
     holidayRow: { 
-      //flex:1,
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -191,7 +190,6 @@ export default function HolydaysScreen() {
       fontSize: 16,
       paddingLeft: 8,
       color: colors.text,
-      //borderWidth:1,
     },
     itemActions: {
       flexDirection: 'row',
@@ -237,7 +235,6 @@ export default function HolydaysScreen() {
       alignItems: 'center',
     },
     modalContainer: {
-      //width:'100%',
       maxWidth: 550,
       marginLeft:32,
       marginRight:32,
@@ -265,7 +262,6 @@ export default function HolydaysScreen() {
       marginTop: 24,
     },
       addButton: {
-        //backgroundColor: colors.white,
         padding: 16,
         borderRadius: 8,
         borderWidth: 1,
@@ -280,7 +276,6 @@ export default function HolydaysScreen() {
         fontWeight: 'bold',
       },
       cancelButton: {
-        //backgroundColor: colors.cancelButton,
         padding: 16,
         borderRadius: 8,
         borderWidth:1,
@@ -315,23 +310,23 @@ export default function HolydaysScreen() {
     },
     // PULSANTONE AGGIUNGI GIORNI SPECIALI
     specialDays: {
-      flex:1,
+      //flex:1,
       minHeight:68,
-      borderRadius: 99,
+      borderRadius: 999,
       backgroundColor: colors.blueBar,
       marginBottom:24,
-      marginHorizontal:32,
-      flexDirection: 'row',
-      alignItems: 'center',
-      paddingLeft:16,
-      elevation:8,
+      marginHorizontal:24,
+      // flexDirection: 'row',
+      //flexWrap:'wrap',
+      // alignItems: 'center',
+      // alignContent:'center',
+      // justifyContent:'flex-start',
+      padding:20,
+      elevation:18,
       shadowColor: colors.black, // iOS shadow
-      shadowOffset: {
-        width: 4,
-        height: 4, // Match elevation for iOS
-      },
-      shadowOpacity: 0.45,
-      shadowRadius: 8 // Match elevation for iOS
+      shadowOffset: { width: 2, height: 8,},
+      shadowOpacity: 0.65,
+      shadowRadius: 18 // Match elevation for iOS
     },
     specialDaysLabel: {
       fontSize:20,
@@ -370,7 +365,6 @@ export default function HolydaysScreen() {
       alignItems:'center',
       padding:20,
       marginHorizontal:12,
-      //marginTop:12,
       gap:8,
       borderWidth:2,
       borderStyle: 'dotted',
@@ -378,15 +372,8 @@ export default function HolydaysScreen() {
       borderRadius:24,
       backgroundColor: 'rgba(255, 255, 255, .5)'
     }
-
   });
 
-
-  // RICEVE VISIBILITA BOTTOMBAR DAL SUPERCONTEXT
-  // const {
-  //   isCarouselVisible, setIsCarouselVisible,
-  //   } = useSplashCarousel();
-    
   /* ---------------------------------------------------------------┐ 
   // GESTISCE LE CHIAMATE 'newItem' DA UNA LONG PRESS SUL CALENDARIO 
   // E APRE LA DATEPICKER
@@ -486,7 +473,6 @@ export default function HolydaysScreen() {
   }; 
       
   // LEGGE PARAMETRI
-
   useEffect(() => {
     if (params === undefined) {
         return;
@@ -634,7 +620,6 @@ export default function HolydaysScreen() {
         // Non fa 'return', procede all'aggiunta dopo la segnalazione
       }
     }
-
 
     /* ============================================================================= 
       B) CONTROLLO SOVRAPPOSIZIONE con newPersonalHolydays
@@ -881,7 +866,10 @@ export default function HolydaysScreen() {
 
   return (
     <ImageBackground 
-      source= {isLight && require('@/assets/images/background-image_minified.jpg')}
+      source={isLight 
+        ? require('@/assets/images/background-image_minified.jpg')
+        : require('@/assets/images/background-image_minified-dark.jpg') // o stessa immagine
+        } 
       resizeMode="cover" 
       style={[styles.image, {alignItems:'center'}]}> 
       <ScrollView 
@@ -912,11 +900,13 @@ export default function HolydaysScreen() {
             showModalSingleDate(); // --> APRE MODAL CON DATEPICKER
           }}
         >
-          <IconSymbol 
-            name="plus" size={36} 
-            color={colors.textNegative} 
-            style={{marginRight: 12}}/>
-          <Text style={styles.specialDaysLabel}>{dataLabel(myLanguage, 1)}</Text>
+          <View style={{width:'100%', flexDirection:'row', justifyContent:'flex-start', alignItems:'center', gap:4}}>
+            <IconSymbol 
+              name="plus" size={36} 
+              color={colors.textNegative} 
+              />
+            <View style={{ flex:1, }}><Text style={styles.specialDaysLabel}>{dataLabel(myLanguage, 1)}</Text></View>
+          </View>
         </TouchableOpacity>
 
         {/* GOOGLE ADMOB ############################################################################# */}

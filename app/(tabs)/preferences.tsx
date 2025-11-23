@@ -282,11 +282,10 @@ export default function Preferences() {
 
   return (
     <ImageBackground 
-      source= {isLight ? 
-        require('@/assets/images/background-image_minified.jpg') 
-        : 
-        null // SFONDO NERO
-        }
+      source={isLight 
+        ? require('@/assets/images/background-image_minified.jpg')
+        : require('@/assets/images/background-image_minified-dark.jpg') // o stessa immagine
+        } 
       resizeMode="cover" 
       style={[styles.image, {alignItems:'center'}]}>
 

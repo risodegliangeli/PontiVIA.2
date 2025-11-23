@@ -255,7 +255,10 @@ export default function HomeScreen() {
 
   return ( 
     <ImageBackground 
-      source={require('@/assets/images/background-image_minified.jpg')}
+      source={isLight 
+        ? require('@/assets/images/background-image_minified.jpg')
+        : require('@/assets/images/background-image_minified-dark.jpg') // o stessa immagine
+        }      
       resizeMode="cover" 
       style={styles.image} >
 

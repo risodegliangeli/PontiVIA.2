@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Colors } from '@/constants/Colors';
 import { BlurView } from 'expo-blur';
 import { Image } from 'expo-image';
-import { getLocales,  } from 'expo-localization';
 import { splittedBarLabel as splittedLabels } from '@/constants/dataLabel';
 import {
   Animated,
@@ -15,8 +14,9 @@ import {
   useColorScheme,
   View
 } from 'react-native';
-import { easeGradient } from 'react-native-easing-gradient';
 import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT VARIABILI
+// import { easeGradient } from 'react-native-easing-gradient';
+//import { getLocales,  } from 'expo-localization';
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -201,21 +201,23 @@ export default function CustomTabBar(props: any) {
     iosBlurView: {
       width:'100%', 
       height:'100%', 
-      borderRadius: splittedBarHeigth,
+      borderRadius: 999, //splittedBarHeigth,
       overflow:'hidden',
+      borderWidth: 1,
+      borderColor: 'rgba(210, 210, 210, .5)',
       backgroundColor: colors.tabBarBackgroundIos,
       shadowColor: colors.black, 
-      shadowOffset: {width: 0,height: 8, }, 
+      shadowOffset: {width: 0, height: 8, }, 
       shadowOpacity: 0.35,
       shadowRadius: 8,             
     },
     androidBlurView: {
       width:'100%', 
       height:'100%', 
-      borderRadius: splittedBarHeigth,
+      borderRadius: 999, //splittedBarHeigth,
       overflow:'hidden',
       backgroundColor: colors.tabBarBackgroundAndroid,
-      elevation:12,         
+      elevation:18,         
     },
     doubleItemsTransparent: {
       width: doubleItemsSize,
@@ -358,13 +360,13 @@ export default function CustomTabBar(props: any) {
     );
   };
 
-  const gradient = easeGradient({
-    colorStops: {
-      0: {color: 'rgba(0,0,0, .01)'},
-      0.5: {color: 'rgba(0,0,0, .5)'},
-      1: {color: 'rgba(0,0,0, 1)'}
-    },
-  });
+  // const gradient = easeGradient({
+  //   colorStops: {
+  //     0: {color: 'rgba(0,0,0, .01)'},
+  //     0.5: {color: 'rgba(0,0,0, .5)'},
+  //     1: {color: 'rgba(0,0,0, 1)'}
+  //   },
+  // });
   // const gradientColors = gradient.colors;
   // const locations = gradient.locations;
 
@@ -398,21 +400,13 @@ export default function CustomTabBar(props: any) {
                 se iOS = blur
                 se Android & light Theme = blur
                 altrimenti no blur */}
-            {/* {Platform.OS === 'ios' ? 
-              <BlurView style={styles.iosBlurView} intensity={24} /> 
-            :
-              isLight ?
-                <BlurView style={styles.iosBlurView} intensity={14} experimentalBlurMethod="dimezisBlurView" />
-                :
-                <View style={styles.androidBlurView} />
-            } */}
             {Platform.OS === 'ios' ? 
-              <BlurView style={styles.iosBlurView} intensity={16} />               
+              <BlurView style={styles.iosBlurView} intensity={24} />               
             :
               isLight ?
-                <View style={[styles.iosBlurView, { backgroundColor: 'rgba(255,255,255,0.75)' }]} />
+                <View style={[styles.androidBlurView, { backgroundColor: 'rgba(255,255,255,0.65)' }]} />
                 :
-                <View style={[styles.iosBlurView, { backgroundColor: 'rgba(0,0,0,0.7)' }]} /> 
+                <View style={[styles.androidBlurView, { backgroundColor: 'rgba(0,0,0,0.8)' }]} /> 
             }
         </View>
 
@@ -431,12 +425,12 @@ export default function CustomTabBar(props: any) {
 
             {/* BLUR SINGOLO */}
             {Platform.OS === 'ios' ? 
-              <BlurView style={styles.iosBlurView} intensity={16} />               
+              <BlurView style={styles.iosBlurView} intensity={24} />               
             :
               isLight ?
-                <BlurView style={styles.iosBlurView} intensity={14} experimentalBlurMethod="dimezisBlurView" />
+                <View style={[styles.androidBlurView, { backgroundColor: 'rgba(255,255,255,0.65)' }]} />
                 :
-                <View style={styles.androidBlurView} /> 
+                <View style={[styles.androidBlurView, { backgroundColor: 'rgba(0,0,0,0.8)' }]} /> 
             }
         </View>        
 

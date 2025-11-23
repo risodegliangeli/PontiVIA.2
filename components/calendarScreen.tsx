@@ -320,7 +320,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
             style={{width:48, height:48, resizeMode:'contain', marginRight: 16}}
           />
           <View style={{ flex:1, }}>
-            <Text style={[styles.monthTitle, {color: colors.text, paddingLeft:0}]}>{dataLabel(myLanguage, 9)}</Text> 
+            <Text style={[styles.monthTitle, {color: colors.text}]}>{dataLabel(myLanguage, 9)}</Text> 
             { title && <Text style={[styles.dayNumber, { color: colors.text, lineHeight: 22, textAlign:'left'}]}>
               {description}
               </Text> }
@@ -953,7 +953,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
         {/* GOOGLE ADMOB SOLO SE isAdvertising = true
             -----------------------------------------------------------
             OGNI 3 MESI SI ALTERNANO BANNER QUADRATI (MEDIUM_RECTANGLE)
-            E BANNER PICCOLI (BANNER)
+            
         */}
         {isAdvertising && 
           ((index + 1) % monthsToLoad === 0 && 
