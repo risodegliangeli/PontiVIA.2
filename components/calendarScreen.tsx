@@ -27,12 +27,12 @@ import { useNavigation } from '@react-navigation/native';
 // GOOGLE ADMOB ///////////////////////////////////
 import mobileAds, { BannerAd, BannerAdSize, useForeground, } from 'react-native-google-mobile-ads';
 
-// INIZIALIZZA ADMOB
-mobileAds()
-  .initialize()
-  .then(adapterStatuses => {
-    console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
-  });
+// // INIZIALIZZA ADMOB
+// mobileAds()
+//   .initialize()
+//   .then(adapterStatuses => {
+//     console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
+//   });
 
 // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
 // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
@@ -74,6 +74,16 @@ const normalizeDate = (date: Date | null): Date | null => {
 ============================================================================= */
 const CalendarScreen = ({callerPreferences}: any) => {
 
+  const colors = useThemeColors();
+
+  useEffect(() => {
+    mobileAds()
+      .initialize()
+      .then(adapterStatuses => {
+        console.log('AdMob Initialized @ calendarScreen.tsx');
+      });
+  }, []);
+
   // ADMOB
   const bannerRef = useRef<BannerAd>(null);
   // (iOS) WKWebView can terminate if app is in a "suspended state", resulting in an empty banner when app returns to foreground.
@@ -82,8 +92,6 @@ const CalendarScreen = ({callerPreferences}: any) => {
     Platform.OS === 'ios' && bannerRef.current?.load();
   }); 
 
-
-  const colors = useThemeColors();
   const monthsToLoad = 3; // ADV OGNI x CARDS
 
   // VALORI PASSATI DAL CONTEXT

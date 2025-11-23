@@ -20,9 +20,11 @@ const SideLabel = () => {
 
     // GESTIONE COLORE
     const colors = useThemeColors();
+    const colorScheme = useColorScheme();
+    const isLight = colorScheme === 'light';
 
     const viewBox="0 0 360 557";
-    const fill = useColorScheme() === 'light' ? 'rgba(255, 255, 255, .85)' : 'rgba(255, 255, 255, .15)'
+    const fill = isLight ? 'rgba(255, 255, 255, .85)' : 'rgba(255, 255, 255, .15)'
     const {width, height} = Dimensions.get("window");
 
     // VARIABILI DA CONTEXT
@@ -128,7 +130,7 @@ const SideLabel = () => {
                 hardwareAccelerated={true}
                 >
                 <ImageBackground 
-                source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg') }
+                source= {isLight && require('@/assets/images/background-image_minified.jpg') }
                 resizeMode="cover" 
                 style={styles.image} >
 
@@ -136,7 +138,7 @@ const SideLabel = () => {
                     <View style={
                         [StyleSheet.absoluteFill,
                         {
-                            backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, .5)' : colors.cardBackground,
+                            backgroundColor: isLight ? 'rgba(0, 0, 0, .5)' : colors.cardBackground,
                             flexDirection:'column',
                             justifyContent:'center',
                             alignItems:'center',
@@ -243,7 +245,7 @@ const SideLabel = () => {
                             padding:6,
                             marginTop:24,
                             marginRight:24,
-                            backgroundColor: useColorScheme() === 'light' ? colors.cancelButton : 'rgba(255, 255, 255, .15)',
+                            backgroundColor: isLight ? colors.cancelButton : 'rgba(255, 255, 255, .15)',
                             borderRadius: 99,
                             }}
                             onPress={ () => {
@@ -251,7 +253,7 @@ const SideLabel = () => {
                                 setInfoStep(1)}}>
                             <IconSymbol name='xmark' 
                                 size={Platform.OS === 'ios' ? 24 : 32} 
-                                color={useColorScheme() === 'light' ? colors.black : colors.disabled} />
+                                color={isLight ? colors.black : colors.disabled} />
                         </TouchableOpacity>
                     </View>  
                 </ImageBackground>

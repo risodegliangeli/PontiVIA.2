@@ -29,7 +29,6 @@
         "foregroundImage": "./assets/images/adaptive-icon-foreground.png",
         "backgroundColor": "#E35527"
       },
-      "edgeToEdgeEnabled": false,
       "package": "com.angelieassociati.pontivia",
       "versionCode": 14,
       "permissions": [

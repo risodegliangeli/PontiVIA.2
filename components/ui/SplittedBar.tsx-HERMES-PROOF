@@ -18,6 +18,7 @@ import {
 import { easeGradient } from 'react-native-easing-gradient';
 import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT VARIABILI
 
+
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
   return Colors[colorScheme ?? 'light'];
@@ -31,16 +32,18 @@ const useThemeColors = () => {
 export default function CustomTabBar(props: any) {
   const { route, focused: isFocused, event, state, descriptors, navigation } = props;
 
+  //const myLanguage = (getLocales()[0].languageTag).slice(0,2);
+
   // RICEVE VARIABILI DAL CONTEXT
   const { 
     myLanguage
-  } = useHolydays();
+    } = useHolydays();
 
   // AGGIORNA QND CAMBIA LINGUA
   useEffect( () => {
     setLabel([splittedLabels(myLanguage,0), splittedLabels(myLanguage,1)]);
   }, [myLanguage]);
-    
+
   // GESTIONE DIMENSIONI PAGINA + TABBAR
   const [splittedTotalWidth, setSplittedTotalWidth] = useState<number>(350);
   useEffect(() => {
@@ -55,33 +58,19 @@ export default function CustomTabBar(props: any) {
   updateWidth(); // chiama subito
   const subscription = Dimensions.addEventListener('change', updateWidth);
   return () => subscription?.remove();
-  }, []); 
-
-  // const windowWidth: number = Dimensions.get('window').width;
-  // useEffect( () => {
-  //   if (windowWidth >= 320 && windowWidth <= 360) {
-  //     setSplittedTotalWidth(windowWidth * 0.90);
-  //   } else {
-  //     setSplittedTotalWidth(350);
-  //   }
-  // }, [windowWidth]);
+  }, []);
       
-  const splittedBarHeigth: number = 80; // ALTEZZA DI TUTTA LA BAR (E LARGHEZZA DELL'ITEM SINGOLO)
-  const doubleItemsSize: number = Math.trunc(splittedTotalWidth * .65);   // LARGHEZZA DEL DOPPIO ITEM
-  
-  const singleItemImageSize: number = Math.trunc(splittedBarHeigth * .6);   // IMMAGINE SINGOLO ITEM
-  const doubleItemsImageSize: number = Math.trunc(splittedBarHeigth * .35); // IMMAGINE DOPPIO ITEM
-  
+  const splittedBarHeigth: number = 80; // ALTEZZA & LARGHEZZA DELL'ITEM SINGOLO E DI TUTTA LA BAR
+  const doubleItemsSize: number = Math.trunc(splittedTotalWidth * .65); // LARGHEZZA DEL DOPPIO ITEM
+  //const doubleItemsHeigth: number = Math.trunc(splittedBarHeigth * .8)
+  // const singleItemImageSize: string = '60%';  // SOSTITUITO COL CALCOLO IN PIXEL PER EVITARE BLOCCHI
+  // const doubleItemsImageSize: string = '35%'; // SOSTITUITO "   "    "   "
+  const singleItemImageSize: number = Math.trunc(doubleItemsSize * .6);
+  const doubleItemsImageSize: number = Math.trunc(doubleItemsSize * .35);
   const splittedFromBottom: number = Platform.OS === 'ios' ? 28 : 64;
   const itemsInternalPadding: number = 3;
 
-  // LABEL PULSANTI
   const [label, setLabel] = useState([splittedLabels(myLanguage,0), splittedLabels(myLanguage,1)]);
-
-  // AGGIORNA QND CAMBIA LINGUA
-  useEffect( () => {
-    setLabel([splittedLabels(myLanguage,0), splittedLabels(myLanguage,1)]);
-  }, [myLanguage]);
 
   // GESTIONE COLORI
   const colors = useThemeColors();  
@@ -174,7 +163,7 @@ export default function CustomTabBar(props: any) {
     }
   };
 
-  const styles = StyleSheet.create({
+  const styles: any = StyleSheet.create({
     splittedBase: {
       position: 'absolute',
       width: splittedTotalWidth, // LARGHEZZA SPLITTED BAR
@@ -187,6 +176,7 @@ export default function CustomTabBar(props: any) {
     singleItemTransparent: {
       width: splittedBarHeigth,
       height: splittedBarHeigth,
+      //borderWidth: 1,
     },
     singleItemTouchable: {
       flex:1,
@@ -195,8 +185,9 @@ export default function CustomTabBar(props: any) {
       alignItems: 'center', 
     },
     singleItemIcon: {
-      width: singleItemImageSize, 
-      height: singleItemImageSize, 
+      width: singleItemImageSize * .4, 
+      height: singleItemImageSize * .4, 
+      //contentFit:'contain',
     },
     iosBlurView: {
       width:'100%', 
@@ -204,10 +195,13 @@ export default function CustomTabBar(props: any) {
       borderRadius: splittedBarHeigth,
       overflow:'hidden',
       backgroundColor: colors.tabBarBackgroundIos,
-      shadowColor: colors.black, 
-      shadowOffset: {width: 0,height: 8, }, 
-      shadowOpacity: 0.35,
-      shadowRadius: 8,             
+      shadowColor: colors.black, // iOS shadow
+      shadowOffset: {
+        width: 6,
+        height: 16, // Match elevation for iOS
+      },
+      shadowOpacity: 0.75,
+      shadowRadius: 16// Match elevation for iOS             
     },
     androidBlurView: {
       width:'100%', 
@@ -219,18 +213,20 @@ export default function CustomTabBar(props: any) {
     },
     doubleItemsTransparent: {
       width: doubleItemsSize,
-      height: splittedBarHeigth*.90,
+      height: Math.trunc(splittedBarHeigth * .9),
       flexDirection:'row',
+      //borderWidth:1,
     },
     doubleItemsTouchable: {
       flex:2, 
       flexDirection:'column',
-      alignItems:'center',      // HOR
-      justifyContent:'center',  // VERT
+      alignItems:'center', // HOR
+      justifyContent:'center', // VERT
     },
     doubleItemsIcon: {
-      width: doubleItemsImageSize, 
-      height: doubleItemsImageSize, 
+      width: Math.trunc(doubleItemsImageSize * .4), 
+      height: Math.trunc(doubleItemsImageSize * .4), 
+      //contentFit:'contain',
     },
     doubleItemsLabel: {
       fontSize:12, 
@@ -238,7 +234,7 @@ export default function CustomTabBar(props: any) {
       color:'#0088ff'
     },
     labelNotSelected: {
-      color: !isLight ? colors.white : colors.black,
+      color: isLight ? colors.black : colors.white,
       fontSize:14,
       fontWeight:600,
     },
@@ -280,7 +276,10 @@ export default function CustomTabBar(props: any) {
       borderRadius: 999, 
       backgroundColor: colors.tabBarFocusDotIos,
       shadowColor: colors.black, 
-      shadowOffset: { width: 0, height: 8, },
+      shadowOffset: {
+        width: 0,
+        height: 2, 
+      },
       shadowOpacity: 0.55,
       shadowRadius: 4,
       borderWidth:1,
@@ -290,73 +289,115 @@ export default function CustomTabBar(props: any) {
   });
 
   // BINARIO SCORRIMENTO DEL FOCUSED DOT
-  const RailBeyond = () => {
-    const animatedValue = useRef(new Animated.Value(0)).current;
+  // const RailBeyond = () => {
+  //   const animatedValue = useRef(new Animated.Value(0)).current;
 
-    useEffect(() => { 
-      let targetValue = 0;
+  //   useEffect(() => { 
+  //     let targetValue = 0;
       
-      if (isHolydaysFocused) {              // posizione sinistra
-        targetValue = -1; 
-        } else if (isPreferencesFocused) {  // posizione centro
-          targetValue = 0;  
-        } else if (isIndexFocused) {        // posizione destra
-          targetValue = 1;  
-      }
+  //     if (isHolydaysFocused) { // posizione sinistra
+  //       targetValue = -1; 
+  //       } else if (isPreferencesFocused) { // posizione centro
+  //         targetValue = 0;  
+  //       } else if (isIndexFocused) { // posizione destra
+  //         targetValue = 1;  
+  //     }
 
-      Animated.timing(animatedValue, {
-        toValue: targetValue,
-        duration: 750,
-        easing: Easing.elastic(1.2),        // effetto elastico
-        useNativeDriver: false,
-      }).start();
+  //     Animated.timing(animatedValue, {
+  //       toValue: targetValue,
+  //       duration: 750,
+  //       easing: Easing.elastic(1.2), // effetto elastico
+  //       useNativeDriver: false,
+  //     }).start();
 
-    }, [isIndexFocused, isHolydaysFocused, isPreferencesFocused]);
+  //   }, [isIndexFocused, isHolydaysFocused, isPreferencesFocused]);
 
-    // POSIZIONE FOCUSED DOT
-    const translateX = animatedValue.interpolate({ // POSIZIONE IN BASE AI TAB
-      inputRange: [-1, 0, 1],
-      outputRange: [
-        (splittedBarHeigth/8) * -1,                     // INDEX        
-        splittedTotalWidth/4 + itemsInternalPadding*2,  // HOLYDAYS
-        splittedTotalWidth - splittedBarHeigth + 4      // PREFERENCES
-      ], 
-    });
-    // PARAMETRI ALLUNGAMENTO ORIZZONTALE
-    const scaleX = animatedValue.interpolate({ // VALORE ORIZZONTALE
-      inputRange: [-1, -0.5, 0, 0.5, 1],
-      outputRange: [.8, 1.3, .8, 1.3, 1], // si allunga durante il movimento
-    });
-    // PARAMETRI ALLUNGAMENTO VERTICALE
-    const scaleY = animatedValue.interpolate({ // VALORE VERTICALE
-      inputRange: [-1, -0.5, 0, 0.5,  1],
-      outputRange: [.8, 1.2, .8, 1.2, 1], // si schiaccia durante il movimento
-    });
+  //   // POSIZIONE FOCUSED DOT
+  //   const translateX = animatedValue.interpolate({ // POSIZIONE IN BASE AI TAB
+  //     inputRange: [-1, 0, 1],
+  //     outputRange: [
+  //       (splittedBarHeigth/8) * -1,                 // INDEX        
+  //       splittedTotalWidth/4 + itemsInternalPadding*2,       // HOLYDAYS
+  //       splittedTotalWidth - splittedBarHeigth + 4  // PREFERENCES
+  //     ], 
+  //   });
+  //   // PARAMETRI ALLUNGAMENTO ORIZZONTALE
+  //   const scaleX = animatedValue.interpolate({ // VALORE ORIZZONTALE
+  //     inputRange: [-1, -0.5, 0, 0.5, 1],
+  //     outputRange: [.8, 1.3, .8, 1.3, 1], // si allunga durante il movimento
+  //   });
+  //   // PARAMETRI ALLUNGAMENTO VERTICALE
+  //   const scaleY = animatedValue.interpolate({ // VALORE VERTICALE
+  //     inputRange: [-1, -0.5, 0, 0.5,  1],
+  //     outputRange: [.8, 1.2, .8, 1.2, 1], // si schiaccia durante il movimento
+  //   });
 
-    // EFFETTO ALLUNGAMENTO IN BASE AI PARAMETRI SOPRA
-    const animatedWidth = animatedValue.interpolate({
-      inputRange: [-1, -0.25, 0, 0.75, 1],
-      outputRange: [
-        doubleItemsSize*.64,
-        doubleItemsSize*.5,
-        doubleItemsSize*.64, 
-        doubleItemsSize*.5,
-        splittedBarHeigth - itemsInternalPadding * 2 - 2
-      ],
-    });
+  //   // EFFETTO ALLUNGAMENTO IN BASE AI PARAMETRI SOPRA
+  //   const animatedWidth = animatedValue.interpolate({
+  //     inputRange: [-1, -0.25, 0, 0.75, 1],
+  //     outputRange: [
+  //       doubleItemsSize*.64,
+  //       doubleItemsSize*.5,
+  //       doubleItemsSize*.64, // - itemsInternalPadding,
+  //       doubleItemsSize*.5,
+  //       splittedBarHeigth - itemsInternalPadding * 2 - 2
+  //     ],
+  //   });
 
-    return (
-      <View style={styles.railBeyond}>
-        {Platform.OS === 'ios' ?
-          <Animated.View
-            style={[ styles.backgroundDotLiquid, {transform: [{translateX}, {scaleX}, {scaleY}], width: animatedWidth}, ]} />   
-          :
-          <Animated.View 
-            style={[ styles.backgroundDotPlain, { transform: [{translateX}, {scaleX}, {scaleY}], width: animatedWidth }, ]} /> 
-        }
-      </View>  
-    );
-  };
+  //   return (
+  //     <View style={styles.railBeyond}>
+  //       {Platform.OS === 'ios' ?
+  //         <Animated.View
+  //           style={[ styles.backgroundDotLiquid, {transform: [{translateX}, {scaleX}, {scaleY}], width: animatedWidth}, ]} />   
+  //         :
+  //         <Animated.View 
+  //           style={[ styles.backgroundDotPlain, { transform: [{translateX}, {scaleX}, {scaleY}], width: animatedWidth }, ]} /> 
+  //       }
+  //     </View>  
+  //   );
+  // };
+  // VERSIONE IA
+  const focusedIndex = state.index; // 0 = holydays, 1 = index, 2 = preferences
+  const targetValue = focusedIndex === 1 ? 0 : focusedIndex === 0 ? -1 : 1;
+
+  const animatedValue = useRef(new Animated.Value(targetValue)).current;
+
+  useEffect(() => {
+    // Forza sempre l'animazione, anche se il valore è lo stesso
+    Animated.spring(animatedValue, {
+      toValue: targetValue,
+      useNativeDriver: true,
+      speed: 14,
+      bounciness: 4,
+    }).start();
+  }, [targetValue]);
+
+  // Calcoli sicuri (con fallback!)
+  const safeWidth = splittedTotalWidth || 350;
+  const safeDoubleSize = Math.trunc(safeWidth * 0.65);
+  const centerOffset = safeWidth / 4 + itemsInternalPadding * 2;
+
+  const translateX = animatedValue.interpolate({
+    inputRange: [-1, 0, 1],
+    outputRange: [
+      0, //(splittedBarHeigth / 6) * -1,
+      safeDoubleSize - (safeDoubleSize / 2), //centerOffset,
+      safeWidth - splittedBarHeigth,
+    ],
+    extrapolate: 'clamp', // QUESTO È IL SALVATAGGIO
+  });
+
+  const animatedWidth = animatedValue.interpolate({
+    inputRange: [-1, 0, 1],
+    outputRange: [
+      safeDoubleSize ,
+      safeDoubleSize , //splittedBarHeigth - itemsInternalPadding * 2 - 2,
+      safeDoubleSize * 0.64,
+    ],
+    extrapolate: 'clamp',
+    //easing: Easing.elastic(1.2),
+  });
+
 
   const gradient = easeGradient({
     colorStops: {
@@ -388,7 +429,7 @@ export default function CustomTabBar(props: any) {
           elevation:18,
           shadowColor: colors.black, 
           shadowOffset: { width: 0, height: 8, },
-          shadowOpacity: 0.45,
+          shadowOpacity: 0.65,
           shadowRadius: 12,   
           marginVertical:8, 
           borderWidth: 1, 
@@ -397,51 +438,82 @@ export default function CustomTabBar(props: any) {
             {/* BLUR DOPPIO 
                 se iOS = blur
                 se Android & light Theme = blur
-                altrimenti no blur */}
-            {/* {Platform.OS === 'ios' ? 
-              <BlurView style={styles.iosBlurView} intensity={24} /> 
-            :
-              isLight ?
-                <BlurView style={styles.iosBlurView} intensity={14} experimentalBlurMethod="dimezisBlurView" />
-                :
-                <View style={styles.androidBlurView} />
-            } */}
+                   altrimenti no blur */}
             {Platform.OS === 'ios' ? 
-              <BlurView style={styles.iosBlurView} intensity={16} />               
+              <BlurView style={styles.iosBlurView} intensity={16} /> 
             :
               isLight ?
                 <View style={[styles.iosBlurView, { backgroundColor: 'rgba(255,255,255,0.75)' }]} />
-                :
-                <View style={[styles.iosBlurView, { backgroundColor: 'rgba(0,0,0,0.7)' }]} /> 
-            }
+                  :
+                <View style={[styles.iosBlurView, { backgroundColor: 'rgba(0,0,0,0.7)' }]} />            }
         </View>
 
         {/* BASE PULSANTE SINGOLO (CON BLUR SOVRAPPOSTO) */}
         <View style={{
-          width:splittedBarHeigth,
+          width: splittedBarHeigth,
           borderRadius: splittedBarHeigth,
-          elevation:18,
-          shadowColor: colors.black, 
-          shadowOffset: { width: 0, height: 8, },
-          shadowOpacity: 0.45,
+          elevation: 18,
+          shadowColor: colors.black,
+          shadowOffset: { width: 0, height: 8 },   // ← STESSO del doppio
+          shadowOpacity: 0.65,
           shadowRadius: 12,
-          borderWidth: 1, 
+          borderWidth: 1,
           borderColor: Platform.OS === 'ios' ? colors.tabBarBorderIos : colors.tabBarBorderAndroid,
           }}>
-
             {/* BLUR SINGOLO */}
             {Platform.OS === 'ios' ? 
               <BlurView style={styles.iosBlurView} intensity={16} />               
             :
               isLight ?
-                <BlurView style={styles.iosBlurView} intensity={14} experimentalBlurMethod="dimezisBlurView" />
-                :
-                <View style={styles.androidBlurView} /> 
-            }
+                <View style={[styles.iosBlurView, { backgroundColor: 'rgba(255,255,255,0.75)' }]} />
+                  :
+                <View style={[styles.iosBlurView, { backgroundColor: 'rgba(0,0,0,0.7)' }]} />            
+                }
         </View>        
 
-        {/* 2) LIVELLO CON FOCUSED DOT ANIMATO */}
-        <RailBeyond />  
+        {/* RAILBEYOND LIVELLO CON FOCUSED DOT ANIMATO – VERSIONE HERMES-SAFE 2025 */}
+        <Animated.View
+          style={{
+            position: 'absolute',
+            bottom: 8,
+            left: 0,
+            height: 64,
+            //zIndex: 0,
+            transform: [{ translateX }],
+            // Usiamo scaleX invece di width → supportato nativamente!
+            // Larghezza fissa del contenitore + overflow hidden
+          }}>
+          <Animated.View
+            style={{
+              width: splittedTotalWidth * 1.5, // abbastanza largo da coprire tutti i casi
+              height: '100%',
+              transform: [{ scaleX: animatedWidth.interpolate({
+                inputRange: [0, 1000], // valori reali non importano
+                outputRange: [0, 1],
+                extrapolate: 'clamp',
+              })}],
+              transformOrigin: 'left center', // fondamentale!
+            }}>
+            <View style={{
+              flex: 1,
+              //backgroundColor: '#ffcc00',
+              //borderRadius: 999,
+              //opacity: 0.25,
+              borderRadius: 99, 
+              backgroundColor: colors.tabBarFocusDotIos,
+              shadowColor: colors.black, 
+              shadowOffset: {
+                width: 0,
+                height: 2, 
+              },
+              shadowOpacity: 0.55,
+              shadowRadius: 4,
+              borderWidth:1,
+              borderColor: 'rgba(0, 0, 0, .06)'
+
+            }} />
+          </Animated.View>
+        </Animated.View>
 
       </View>
       

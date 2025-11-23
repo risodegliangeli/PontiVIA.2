@@ -9,6 +9,10 @@ import Animated, {
 import { Image } from 'react-native';
 
 export function PulseWand() {
+
+  const colorScheme = useColorScheme();
+  const isLight = colorScheme === 'light';
+
   const scale = useSharedValue(0.6);
 
   useEffect(() => {
@@ -25,7 +29,7 @@ export function PulseWand() {
 
   return (
     <Animated.View style={animatedStyle}>
-      <Image source={useColorScheme() === 'light' ?
+      <Image source={isLight ?
         require('@/assets/images/icon_wand-on.png')
         :
         require('@/assets/images/icon_wand-on-dark.png')

@@ -22,22 +22,16 @@ const useThemeColors = () => {
   return Colors[colorScheme ?? 'light'];
 };
 
-// interface SplashInterface {
-//   visible: boolean;
-//   splashClose: () => void;
-// }
-
 /* ------------------------------------------------------------- 
 
 SplashCarousel
 
 ------------------------------------------------------------- */
-// const SplashCarousel: React.FC<SplashInterface> = ({
-//   visible,
-//   splashClose,
-//   }) => {
 export default function SplashCarousel(props: any) {
   const { splashClose } = props;
+
+  // GESTIONE COLORE
+  const colors = useThemeColors();
 
   let {height, width} = Dimensions.get('window');
 
@@ -46,18 +40,18 @@ export default function SplashCarousel(props: any) {
   const [myWidth, setMyWidth] = useState<number>(width);
 
   // GESTISCE RIDIMENSIONAMENTO DELLA FINESTRA SU TABLET
-  useEffect( () => {
-    setMyHeight(Dimensions.get('window').height);
-    setMyWidth(Dimensions.get('window').width);
-    }, [Dimensions.get('window')]);
+useEffect(() => {
+  const subscription = Dimensions.addEventListener('change', ({ window }) => {
+    setMyHeight(window.height);
+    setMyWidth(window.width);
+  });
+  return () => subscription?.remove();
+}, []);
 
   // RICEVE VARIABILI DAL CONTEXT
   const { 
     myLanguage
     } = useHolydays();
-
-  // GESTIONE COLORE
-  const colors = useThemeColors();
 
   const scaleValue  = useRef(new Animated.Value(2)).current;
   useEffect(() => {
@@ -125,12 +119,7 @@ export default function SplashCarousel(props: any) {
   const frame = [
     {
       id:1, 
-      // action: <TouchableOpacity
-      //           style={styles.button} 
-      //           onPress={() => ref.current?.next({ animated: true })} >
-      //           <Text style={styles.textItalic}>Next</Text>
-      //         </TouchableOpacity>, 
-      action: <></>,
+      action: null,
       image:<Slide2/>,
       text: <><Text style={styles.text}>{splashCarouselLabel(myLanguage, 0)}</Text>
             {splashCarouselLabel(myLanguage, 1) && <Text style={styles.text}>{splashCarouselLabel(myLanguage, 1)}</Text>}
@@ -138,12 +127,7 @@ export default function SplashCarousel(props: any) {
     },
     {
       id:2, 
-      // action: <TouchableOpacity
-      //           style={styles.button} 
-      //           onPress={() => ref.current?.next({ animated: true })} >
-      //           <Text style={styles.textItalic}>Next</Text>
-      //         </TouchableOpacity>, 
-      action: <></>,
+      action: null,
       image: <Slide1/>,
       text: <><Text style={styles.text}>{splashCarouselLabel(myLanguage, 3)}</Text>
             {splashCarouselLabel(myLanguage, 4) && <Text style={styles.text}>{splashCarouselLabel(myLanguage, 4)}</Text>}
@@ -224,11 +208,8 @@ export default function SplashCarousel(props: any) {
           Platform.OS === 'ios' ?
               <Animated.View style={[
                 styles.innerContent, 
-                { transform: [
-                  { scale: scaleValue }, 
-                  // {translateX: (myWidth * .5) * 0}, 
-                  // {translateY: (myHeight * .5) * 0}
-                  ] }]}>
+                { transform: [{ scale: scaleValue }]}
+              ]}>
               {frame[index].image}
               <View style={{ height: 32 }} />
               {frame[index].text}
@@ -238,11 +219,8 @@ export default function SplashCarousel(props: any) {
           :
             <View style={[
               styles.innerContent,
-              { transform: [
-                { scale: 1 }, 
-                // {translateX: myWidth * 0}, 
-                // {translateY: myHeight * 0}
-                ] }]}>
+              { transform: [{ scale: 1 }]}
+              ]}>
               {frame[index].image}
               <View style={{ height: 32 }} />
               {frame[index].text}
@@ -278,5 +256,3 @@ export default function SplashCarousel(props: any) {
     </View>
   );
 }
-
-// export default SplashCarousel;

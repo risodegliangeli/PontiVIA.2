@@ -8,7 +8,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Image } from 'react-native';
 
+/* ------------------------------------------------ */
 export function PulseCalendar() {
+
+  const colorScheme = useColorScheme();
+  const isLight = colorScheme === 'light';
+
   const scale = useSharedValue(0.6);
 
   useEffect(() => {
@@ -27,7 +32,7 @@ export function PulseCalendar() {
   return (
     <Animated.View style={animatedStyle}>
       <Image
-        source={useColorScheme() === 'light' ?
+        source={isLight ?
           require('@/assets/images/icon_calendar-on.png')
           :
           require('@/assets/images/icon_calendar-on-dark.png')

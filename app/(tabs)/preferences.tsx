@@ -29,13 +29,6 @@ import Privacy from '@/components/Privacy';
 // GOOGLE ADMOB ///////////////////////////////////
   import mobileAds, { BannerAd, BannerAdSize, useForeground } from 'react-native-google-mobile-ads';
 
-  // INIZIALIZZA ADMOB
-  mobileAds()
-    .initialize()
-    .then(adapterStatuses => {
-      console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
-    });
-
   // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
   // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
   const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
@@ -47,7 +40,7 @@ import Privacy from '@/components/Privacy';
 const { localizedDays } = useLocalizationData();
 
 // LINGUA PER LE LABEL
-const myLanguage = (getLocales()[0].languageTag).slice(0,2);
+//const myLanguage = (getLocales()[0].languageTag).slice(0,2);
 
 // COLORI
 const useThemeColors = () => {
@@ -55,8 +48,6 @@ const useThemeColors = () => {
   return Colors[colorScheme ?? 'light'];
 };
 
-// VISIBILITA MODAL PRIVACY
-const [isPrivacyVisible, setIsPrivacyVisible] = useState<boolean>(true);
 
 /* ============================================================================= 
 
@@ -65,6 +56,20 @@ const [isPrivacyVisible, setIsPrivacyVisible] = useState<boolean>(true);
 ============================================================================= */
 export default function Preferences() {
   const colors = useThemeColors();
+  const colorScheme = useColorScheme();
+  const isLight = colorScheme === 'light';
+
+  // VISIBILITA MODAL PRIVACY
+  const [isPrivacyVisible, setIsPrivacyVisible] = useState<boolean>(true);
+
+  useEffect(() => {
+    mobileAds()
+      .initialize()
+      .then(adapterStatuses => {
+        console.log('AdMob Initialized @ preferences.tsx');
+      });
+  }, []); 
+
   const navigation = useNavigation();
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
@@ -79,6 +84,7 @@ export default function Preferences() {
   // AGGANCIA LE VARIABILI myPreferences E preferences DAL CONTEXT
   const { 
     myPreferences, setMyPreferences,
+    myLanguage
     } = useHolydays();
 
   // Nota: la inizializzazione/caricamento da storage viene gestita dal Provider
@@ -276,7 +282,7 @@ export default function Preferences() {
 
   return (
     <ImageBackground 
-      source= {useColorScheme() === 'light' ? 
+      source= {isLight ? 
         require('@/assets/images/background-image_minified.jpg') 
         : 
         null // SFONDO NERO

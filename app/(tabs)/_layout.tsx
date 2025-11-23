@@ -1,7 +1,7 @@
 import SplittedBar from '@/components/ui/SplittedBar';// MY CUSTOM SPLITTED BAR
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Tabs } from 'expo-router';
-import { StyleSheet, useColorScheme,   } from 'react-native';
+import { StyleSheet, useColorScheme, View,   } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu';
 import MaskedView from "@react-native-masked-view/masked-view";
 import { BlurView } from 'expo-blur';
@@ -19,13 +19,14 @@ import { opacity } from 'react-native-reanimated/lib/typescript/Colors';
                                       
 ########################################################################################################### */
 export default function TabLayout() {
+  const colorScheme = useColorScheme();
+  const isLight = colorScheme === 'light';
 
   SplashScreen.setOptions({
     duration: 1500, // Esempio: 1000 millisecondi (1 secondo)
     fade: true,
   });
 
-  const colorScheme = useColorScheme();
   const gradient = easeGradient({
     colorStops: {
       0: {color: 'rgba(0,0,0, 1)'},
@@ -50,7 +51,7 @@ export default function TabLayout() {
         <BlurView 
           experimentalBlurMethod="dimezisBlurView"
           intensity={60}
-          tint={colorScheme === 'light' ? 'light' : 'dark'}
+          tint={isLight ? 'light' : 'dark'}
           style={{
             position:'absolute', 
             top:0, 
@@ -66,33 +67,27 @@ export default function TabLayout() {
 
   return (
     <MenuProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}> 
+      <ThemeProvider value={!isLight ? DarkTheme : DefaultTheme}> 
         <Tabs
           initialRouteName="index"
-          tabBar={ props => (isCarouselVisible ? null : <SplittedBar {...props}/>)}
+          //tabBar={ props => (isCarouselVisible ? null : <SplittedBar {...props}/>)}
+          tabBar={props =>
+                  isCarouselVisible ? (
+                  <View style={{ height: 0 }} />
+                  ) : (
+                  <SplittedBar {...props} />
+                  )
+                  }
           screenOptions={{
             headerShown: false,
-            animation: 'none', // fade | shift | none
-            // transitionSpec: {
-            //   animation: 'timing',
-            //   config: {
-            //     duration: 250,
-            //   },
-            // },
+            animation: 'shift', // fade | shift | none
+            transitionSpec: {
+              animation: 'timing',
+              config: {
+                duration: 250,
+              },
+            },
           }}>
-
-          {/* ================================== HOLYDAYS LIST  ================================== */}
-          {/* <Tabs.Screen
-            name="carousel"
-            options={{
-              title: '',
-              headerTitleAlign: 'center',
-              headerShown: true,
-              headerTransparent: true,
-              headerBackground: () => (
-                <BlurPad/>
-              ),
-            }} /> */}
 
           {/* ================================== HOLYDAYS LIST  ================================== */}
           <Tabs.Screen

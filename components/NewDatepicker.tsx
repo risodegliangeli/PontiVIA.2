@@ -53,6 +53,10 @@ function getWeekdayRecurrence(targetDate: Date) {
     return recurrenceNumber;
 }
 
+
+
+
+
 /* ==========================================================================================
 
                                           MAIN
@@ -85,6 +89,9 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   };
 
   const colors = useThemeColors();            // COLORI
+  const colorScheme = useColorScheme();
+  const isLight = colorScheme === 'light';
+  
   const defaultStyles = useDefaultStyles();   // STILI DEL DATEPICKER
 
   // COPIA DEI PROPS IN INGRESSO PER USO INTERNO
@@ -178,7 +185,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       paddingBottom:8,
       borderBottomWidth: 1,
       borderBottomColor: '#FF778F',
-      color: useColorScheme() === 'light' ? colors.black : colors.white,
+      color: isLight ? colors.black : colors.white,
     },
     dateContainer: {
       width:'100%',

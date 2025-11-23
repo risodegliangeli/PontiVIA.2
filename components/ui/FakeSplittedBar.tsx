@@ -28,6 +28,10 @@ const useThemeColors = () => {
 export default function FakeSplittedBar(props: any) {
   const { index, action } = props;
 
+  const colors = useThemeColors();  
+  const colorScheme = useColorScheme();
+  const isLight = colorScheme === 'light';  
+  
   const [splittedTotalWidth, setSplittedTotalWidth] = useState<number>(0);
   const windowWidth: number = Dimensions.get('window').width;
   const splittedBarHeigth: number = 80;
@@ -45,7 +49,7 @@ export default function FakeSplittedBar(props: any) {
     }
   }, [windowWidth]);
   
-  const colors = useThemeColors();  
+
 
   const styles: any = StyleSheet.create({
     splittedBase: {
@@ -122,7 +126,7 @@ export default function FakeSplittedBar(props: any) {
       color: colors.blueBar
     },
     labelNotSelected: {
-      color: useColorScheme() === 'dark' ? colors.white : colors.black,
+      color: !isLight ? colors.white : colors.black,
       fontSize:14,
       fontWeight:600,
     },

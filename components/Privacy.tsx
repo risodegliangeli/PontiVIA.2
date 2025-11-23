@@ -5,9 +5,6 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useState } from 'react';
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 
-
-
-
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
   return Colors[colorScheme ?? 'light'];
@@ -25,7 +22,7 @@ function Privacy(){
     const [isPrivacyVisible, setIsPrivacyVisible] = useState<boolean>(false);
     const { 
         myLanguage
-        } = useHolydays();
+    } = useHolydays();
 
     return(
         <>
@@ -36,7 +33,6 @@ function Privacy(){
             fontWeight:'400',
             textAlign: 'center',
             color: colors.text,
-            //marginBottom:32,
             }}>
             {dataLabel(myLanguage, 17)}
             </Text>

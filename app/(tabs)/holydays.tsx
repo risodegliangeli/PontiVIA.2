@@ -13,8 +13,7 @@ import {
   Platform,
   Share,
   Easing,
-  Dimensions
-} from 'react-native';
+  } from 'react-native';
 import { useRoute } from '@react-navigation/native';            // SERVE PER LEGGERE I PARAMETRI
 import { useNavigation } from '@react-navigation/native';       // SERVE PER GESTIRE LA NAVIGAZIONE
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -35,18 +34,12 @@ import Privacy from '@/components/Privacy';
 // GOOGLE ADMOB ///////////////////////////////////
 import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
 // init ADMOB
-mobileAds()
-  .initialize()
-  .then(adapterStatuses => {
-    console.log('AdMob Initialized @ holydays.tsx'); // Initialization complete!
-  });
+// mobileAds()
+//   .initialize()
+//   .then(adapterStatuses => {
+//     console.log('AdMob Initialized @ holydays.tsx'); // Initialization complete!
+//   });
 
-// ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
-// DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
-const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
-
-// SWITCH ADV PER TEST
-const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
 
 // TYPE Holiday
 type Holiday = {          // DEFINIZIONE DI holiday
@@ -91,15 +84,24 @@ const saveData = async (data: any, key: string) => {
                                       
 ########################################################################################################### */
 export default function HolydaysScreen() {
-
-  // MESSAGGIO DI SERVIZIO
-  const [service, setService] = useState('');
-  useEffect( () => {
-    setService(`\n${Platform.OS} - ${Dimensions.get('window').width}x${Dimensions.get('window').height}`)
-    }, []);
-  // ///
-
   const colors = useThemeColors();
+  const colorScheme = useColorScheme();
+  const isLight = colorScheme === 'light';
+
+  // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
+  // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
+  const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
+
+  // SWITCH ADV PER TEST
+  const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
+
+  useEffect(() => {
+    mobileAds()
+      .initialize()
+      .then(adapterStatuses => {
+        console.log('AdMob Initialized @ holydays.tsx');
+      });
+  }, []); 
 
   const navigation = useNavigation();
 
@@ -217,7 +219,7 @@ export default function HolydaysScreen() {
     dot32text:{
       height:'100%',
       fontSize:24,
-      fontWeight: useColorScheme() === 'dark' ? 200 : 300,
+      fontWeight: !isLight ? 200 : 300,
       color: colors.textNegative,
       textAlign:'center',
       justifyContent:'center',
@@ -348,7 +350,7 @@ export default function HolydaysScreen() {
       flexDirection:'column',
       justifyContent:'center',
       alignItems:'center',
-      backgroundColor: useColorScheme() === 'light' ? 'rgba(0, 0, 0, 0.75)' : colors.black
+      backgroundColor: isLight ? 'rgba(0, 0, 0, 0.75)' : colors.black
     },     
     advContainer:{
       paddingTop: 12,
@@ -879,7 +881,7 @@ export default function HolydaysScreen() {
 
   return (
     <ImageBackground 
-      source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg')}
+      source= {isLight && require('@/assets/images/background-image_minified.jpg')}
       resizeMode="cover" 
       style={[styles.image, {alignItems:'center'}]}> 
       <ScrollView 

@@ -6,7 +6,7 @@ import {
   useColorScheme, 
   Text, 
   TouchableOpacity,
-  Modal, 
+  View,
   } from 'react-native';
 import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT
@@ -34,6 +34,11 @@ const useThemeColors = () => {
 ########################################################################################################### */
 export default function HomeScreen() {
 
+  // GESTIONE COLORE
+  const colors = useThemeColors();
+  const colorScheme = useColorScheme();
+  const isLight = colorScheme === 'light';
+
   // RICHIESTA PERMESSO PER TRACKING DI AdMob
   useEffect(() => {
   (async () => {
@@ -43,9 +48,6 @@ export default function HomeScreen() {
     }
   })();
   }, []);
-
-  // GESTIONE COLORE
-  const colors = useThemeColors();
  
   // VARIABILI DA CONTEXT
   const { 
@@ -253,7 +255,7 @@ export default function HomeScreen() {
 
   return ( 
     <ImageBackground 
-      source= {useColorScheme() === 'light' && require('@/assets/images/background-image_minified.jpg') }
+      source={require('@/assets/images/background-image_minified.jpg')}
       resizeMode="cover" 
       style={styles.image} >
 
@@ -308,15 +310,20 @@ export default function HomeScreen() {
         </Suspense>
 
       {/* SPLASH CAROUSEL SOLO AL PRIMO AVVIO */}
-      {splashChecked && isCarouselVisible ? (
-        <SplashCarousel
-          //visible={splashChecked && isCarouselVisible}
-          splashClose={() => setIsCarouselVisible(false)}
-        />
-      ) : null}
+      <View style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        pointerEvents: splashChecked && isCarouselVisible ? 'auto' : 'none',
+        opacity: splashChecked && isCarouselVisible ? 1 : 0,
+      }}>
+        {splashChecked && <SplashCarousel splashClose={() => setIsCarouselVisible(false)} />}
+      </View>
 
         {/* STATUSBAR */}
-        <StatusBar style={ useColorScheme() === 'dark' ? 'light' : 'dark' } />
+        <StatusBar style={!isLight ? 'light' : 'dark'} />
 
     </ImageBackground> 
   );

@@ -8,7 +8,12 @@ import Animated, {
 } from 'react-native-reanimated';
 import { Image } from 'react-native';
 
+/* -------------------- */
 export function PulseGirl() {
+
+const colorScheme = useColorScheme();
+const isLight = colorScheme === 'light';
+
   const scale = useSharedValue(0.75);
 
   useEffect(() => {
@@ -25,7 +30,7 @@ export function PulseGirl() {
 
   return (
     <Animated.View style={animatedStyle}>
-      <Image source={useColorScheme() === 'light' ?
+      <Image source={isLight ?
         require('@/assets/images/icon_girl-on.png')
         :
         require('@/assets/images/icon_girl-on-dark.png')
