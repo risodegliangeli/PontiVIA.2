@@ -17,12 +17,12 @@
     },
     "preview": {
       "android": {
-        "buildType": "apk"
+        "buildType": "app-bundle"
       },
       "channel": "preview"
     },
     "production": {
-      "autoIncrement": false,
+      "autoIncrement": true,
       "channel": "production"
     }
   },
