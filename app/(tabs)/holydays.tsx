@@ -13,6 +13,7 @@ import {
   Platform,
   Share,
   Easing,
+  Dimensions,
   } from 'react-native';
 import { useRoute } from '@react-navigation/native';            // SERVE PER LEGGERE I PARAMETRI
 import { useNavigation } from '@react-navigation/native';       // SERVE PER GESTIRE LA NAVIGAZIONE
@@ -90,6 +91,10 @@ export default function HolydaysScreen() {
 
   // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
   // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
+  // - iOS id: 
+  // ca-app-pub-3704551485094904/6380057197
+  // - Android id:
+  // ca-app-pub-3704551485094904/1638672883
   const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
   // SWITCH ADV PER TEST
@@ -121,6 +126,10 @@ export default function HolydaysScreen() {
     goBack, setGoBack,
     myLanguage
     } = useHolydays();
+
+  // CALCOLO DINAMICO MARGINE ESTERNO DELLE CARD
+  const width = Dimensions.get("window").width;
+  const sideMargin = Math.trunc(width * .025); // MARGINE LATERALE
 
   /* ---------------------------------------------------------------┐ 
   STYLESHEET
@@ -170,8 +179,9 @@ export default function HolydaysScreen() {
       paddingRight:16,
       borderRadius: 24,
       marginBottom: 24,
-      marginLeft:12,
-      marginRight:12,
+      // marginLeft:12,
+      // marginRight:12,
+      marginHorizontal: sideMargin,
     },
     holidayRow: { 
       flexDirection: 'row',
@@ -236,8 +246,9 @@ export default function HolydaysScreen() {
     },
     modalContainer: {
       maxWidth: 550,
-      marginLeft:32,
-      marginRight:32,
+      // marginLeft:32,
+      // marginRight:32,
+      marginHorizontal: sideMargin,
       backgroundColor: colors.cardBackground, //'rgba(255, 255, 255, .9)',
       borderRadius:32,
       flexDirection:'column',
@@ -315,7 +326,7 @@ export default function HolydaysScreen() {
       borderRadius: 999,
       backgroundColor: colors.blueBar,
       marginBottom:24,
-      marginHorizontal:24,
+      marginHorizontal: sideMargin * 2, //24,
       // flexDirection: 'row',
       //flexWrap:'wrap',
       // alignItems: 'center',
@@ -909,17 +920,6 @@ export default function HolydaysScreen() {
           </View>
         </TouchableOpacity>
 
-        {/* GOOGLE ADMOB ############################################################################# */}
-
-        {isAdvertising && 
-        <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
-          <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
-            <BannerAd 
-              ref={bannerRef} 
-              unitId={adUnitId} 
-              size={BannerAdSize.MEDIUM_RECTANGLE}/>
-        </View>
-        }
 
         {/* CARD GIORNI SPECIALI ##################################################################### */}
         {newPersonalHolydays.length > 0 && (
@@ -1075,6 +1075,22 @@ export default function HolydaysScreen() {
           </Suspense>
         )}
        
+
+
+        {/* GOOGLE ADMOB ############################################################################# */}
+        {isAdvertising && 
+        <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
+          <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
+            <BannerAd 
+              ref={bannerRef} 
+              unitId={adUnitId} 
+              size={BannerAdSize.MEDIUM_RECTANGLE}/>
+        </View>
+        }
+
+
+
+
         {/* FESTIVITA NAZIONALI ###################################################################### */}
         <View style={styles.listItem}>
           {/* TITOLO */}
@@ -1180,15 +1196,13 @@ export default function HolydaysScreen() {
         }
 
         {/* PRIVACY */}
+        {/* INFO  ##################################################################### */}
+        <View style={{width:'100%'}}>
+          <Text style={{fontSize:11, alignSelf:'center', color: colors.text}}>Angeli & Associati - PontiVIA! Rel. 1.0.0 (16)</Text>
+        </View>
         <Suspense>
           <Privacy />
         </Suspense>
-
-        {/* <View>
-          <Text style={{alignSelf:'center', color: colors.text}}>
-            {service}
-          </Text>
-        </View> */}
 
         {/* SPACER ################################################################################### */}
         <View style={{height:480}}></View>

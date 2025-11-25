@@ -1,9 +1,9 @@
 /* ===============================
    SIMPLE TOAST
-   G. Angeli 2025 - MIT License
+   G. Angeli 2025 - MIT License ;)
    =============================*/
 import React, { useEffect } from 'react';
-import { Animated, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Animated, Dimensions, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface SimpleToastInterface {
   isSTVisible: boolean;
@@ -31,12 +31,16 @@ const SimpleToast: React.FC<SimpleToastInterface> = ({
   onClose
   }) => {
 
+  // CALCOLO DINAMICO MARGINE ESTERNO DELLE CARD
+  const width = Dimensions.get("window").width;
+  const sideMargin = Math.trunc(width * .025); // MARGINE LATERALE
+
   const styles:any = StyleSheet.create({
     baseST: {
       minWidth: 314,  //'85%',
       maxWidth: 550,  //'90%',
-      padding:24, 
-      marginHorizontal:32,
+      padding: sideMargin * 2, //24, 
+      marginHorizontal:sideMargin * 1.5 , //32,
       backgroundColor: isSTBackground,
       borderTopLeftRadius: Array.isArray(isSTRadius) ? isSTRadius[0] || 0 : isSTRadius || 0, // checks if the value is an array
       borderTopRightRadius: Array.isArray(isSTRadius) ? isSTRadius[1] || 0 : isSTRadius || 0,

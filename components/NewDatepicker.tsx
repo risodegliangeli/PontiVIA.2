@@ -1,5 +1,5 @@
 import {useState, useEffect, } from 'react';
-import {  View, Text, TextInput, TouchableOpacity, StyleSheet, useColorScheme  } from 'react-native';
+import {  View, Text, TextInput, TouchableOpacity, StyleSheet, useColorScheme, Dimensions  } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { addDays, subDays, compareAsc, getDay, differenceInDays, startOfMonth } from 'date-fns';
 import { getLocales, } from 'expo-localization';
@@ -94,6 +94,10 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   
   const defaultStyles = useDefaultStyles();   // STILI DEL DATEPICKER
 
+  // CALCOLO DINAMICO MARGINE ESTERNO DELLE CARD
+  const width = Dimensions.get("window").width;
+  const sideMargin = Math.trunc(width * .025); // MARGINE LATERALE
+  
   // COPIA DEI PROPS IN INGRESSO PER USO INTERNO
   const [myStartDate, setMyStartDate] = useState<Date>(createUTCDate(startDate));     // DATA INIZIO
   const [myEndDate, setMyEndDate] = useState<Date | null>(endDate);                   // DATA FINE | null
@@ -160,15 +164,15 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
 
   // STILI
   const styles:any = StyleSheet.create({
-    modalContainer: { // CONTENUTO INTERNO ALLA MODAL
-      width:'100%',
-      flexDirection:'column',
-      gap:24,
-      alignItems:'center', // HOR
-      //justifyContent:'center',
-      //alignContent:'center',
-      borderWidth:1
-    },    
+    // modalContainer: { // CONTENUTO INTERNO ALLA MODAL
+    //   width:'100%',
+    //   flexDirection:'column',
+    //   gap:24,
+    //   alignItems:'center', // HOR
+    //   //justifyContent:'center',
+    //   //alignContent:'center',
+    //   borderWidth:1
+    // },    
     listTitle: {
       //flex:1,
       minWidth:'100%',
@@ -334,14 +338,15 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
     },
     datepickerContainer: {
       position:'absolute',
-      top:12,
-      marginHorizontal:12,
-      paddingHorizontal:24,
-      paddingVertical:24,
+      top: sideMargin, 
+      left: 0,
+      //marginHorizontal: 0, //sideMargin, //12,
+      paddingHorizontal: sideMargin, //24,
+      paddingVertical: 24,
       flexDirection:'column',
       //gap:20,
       justifyContent:'space-between',
-      width:'100%',
+      minWidth: width -(sideMargin * 2), // LARGO QUANTO LA MODAL SOTTOSTANTE
       //flex:1,
       borderRadius:32,
       backgroundColor: colors.textNegative, //'rgba(255, 255, 255, .95)',
@@ -622,6 +627,8 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
             //timeZone={'UTC'}
             locale={language}
             style={{
+              // padding:0, 
+              // margin:0, 
               //backgroundColor: colors.textNegative,
               // borderWidth:1,
               // paddingTop: 24

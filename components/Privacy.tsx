@@ -29,10 +29,11 @@ function Privacy(){
         <Pressable
             onPress={ () => setIsPrivacyVisible(true) }>
             <Text style={{
-            fontSize:16,
+            fontSize:11,
             fontWeight:'400',
             textAlign: 'center',
             color: colors.text,
+            marginTop: 12,
             }}>
             {dataLabel(myLanguage, 17)}
             </Text>

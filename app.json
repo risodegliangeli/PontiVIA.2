@@ -16,7 +16,7 @@
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "com.angelieassociati.pontivia",
-      "buildNumber": "15",
+      "buildNumber": "16",
       "icon": "./assets/images/icon.png",
       "userInterfaceStyle": "automatic",
       "supportsTablet": true,
@@ -30,7 +30,7 @@
         "backgroundColor": "#E35527"
       },
       "package": "com.angelieassociati.pontivia",
-      "versionCode": 15,
+      "versionCode": 16,
       "permissions": [
         "android.permission.READ_CALENDAR",
         "android.permission.WRITE_CALENDAR"

@@ -23,6 +23,7 @@ import {
   View,
   ViewStyle,
   Pressable,
+  Dimensions,
   } from 'react-native';
 import Privacy from '@/components/Privacy';
 
@@ -31,6 +32,10 @@ import Privacy from '@/components/Privacy';
 
   // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
   // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
+  // - iOS id: 
+  // ca-app-pub-3704551485094904/6380057197
+  // - Android id:
+  // ca-app-pub-3704551485094904/1638672883
   const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
   // SWITCH ADV PER TEST
@@ -86,6 +91,10 @@ export default function Preferences() {
     myPreferences, setMyPreferences,
     myLanguage
     } = useHolydays();
+
+  // CALCOLO DINAMICO MARGINE ESTERNO DELLE CARD
+  const width = Dimensions.get("window").width;
+  const sideMargin = Math.trunc(width * .025); // MARGINE LATERALE
 
   // Nota: la inizializzazione/caricamento da storage viene gestita dal Provider
   // qui ci limitiamo a marcare 'preferencesLoaded' true quando il context è pronto
@@ -151,8 +160,9 @@ export default function Preferences() {
       borderRadius: 24,
       paddingVertical: 24,
       paddingHorizontal:18,
-      marginLeft:12,
-      marginRight:12,
+      // marginLeft:12,
+      // marginRight:12,
+      marginHorizontal: sideMargin,
       marginBottom: 24,
       //width: '100%',
     },
@@ -212,7 +222,7 @@ export default function Preferences() {
       justifyContent:'center',
       alignItems:'center',
       padding:20,
-      marginHorizontal:12,
+      marginHorizontal: sideMargin, //12,
       marginTop:12,
       gap:8,
       borderWidth:2,
@@ -412,17 +422,13 @@ export default function Preferences() {
           </View>
           }
 
-          {/* INFO / PRIVACY  ##################################################################### */}
+          {/* INFO  ##################################################################### */}
+          <View style={{width:'100%'}}>
+            <Text style={{fontSize:11, alignSelf:'center', color: colors.text}}>Angeli & Associati - PontiVIA! Rel. 1.0.0 (16)</Text>
+          </View>
           <Suspense>
             <Privacy />
           </Suspense>
-
-            {/* <View>
-              <TouchableOpacity
-                onPress={ () => { navigation.navigate('carousel' as never) } }>
-                <Text style={{alignSelf:'center'}}>CAROUSEL</Text>
-              </TouchableOpacity>
-            </View> */}
 
           {/* SPACER  ############################################################################# */}
           <View style={{ height: 480 }} />

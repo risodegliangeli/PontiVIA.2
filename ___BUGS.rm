@@ -2,6 +2,26 @@
 #############################################################################
 
 
+- ### MARGINHORIZONTAL
+  -- calcolare sideMargin = Math.trunc(width * .05)
+        * holydays
+        * preferences
+        * calendarScreen
+        * SimpleToast
+        NewDatepicker
+
+---
+
+- ### LINK FAQ
+  -- nella pagina SideLabel
+
+---
+
+- ### RELEASE
+  -- bottom pagina preferences
+
+---
+
 - ### CONDIVISIONE FESTIVITA NAZIONALI
   -- solo se il Paese è diverso da quello locale?
 

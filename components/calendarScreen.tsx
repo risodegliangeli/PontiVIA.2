@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState, Suspense } from 'react';
 import {
   ActivityIndicator,
+  Dimensions,
   FlatList,
   Image,
   Platform,
@@ -36,6 +37,10 @@ import mobileAds, { BannerAd, BannerAdSize, useForeground, } from 'react-native-
 
 // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
 // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
+// - iOS id: 
+// ca-app-pub-3704551485094904/6380057197
+// - Android id:
+// ca-app-pub-3704551485094904/1638672883
 const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
 // FLAG ADV PER TEST
@@ -61,7 +66,9 @@ const useThemeColors = () => {
 
 const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
-// FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
+/* ---------------------------------------------------------------┐ 
+  FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
+└---------------------------------------------------------------- */
 const normalizeDate = (date: Date | null): Date | null => {
   if (!date) return null;
   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0));
@@ -103,6 +110,10 @@ const CalendarScreen = ({callerPreferences}: any) => {
     myLanguage,
     goBack, setGoBack
   } = useHolydays();
+
+  // CALCOLO DINAMICO MARGINE ESTERNO DELLE CARD
+  const width = Dimensions.get("window").width;
+  const sideMargin = Math.trunc(width * .025); // MARGINE LATERALE
 
   /* ---------------------------------------------------------------┐ 
   SHARE
@@ -417,8 +428,9 @@ const CalendarScreen = ({callerPreferences}: any) => {
       paddingLeft:16,
       paddingRight:16,
       marginBottom:16,
-      marginLeft:12,
-      marginRight:12,
+      // marginLeft:12,
+      // marginRight:12,
+      marginHorizontal: sideMargin,
       backgroundColor: colors.cardBackground,
       borderRadius: 24,
       borderWidth: 0,
@@ -548,7 +560,7 @@ const CalendarScreen = ({callerPreferences}: any) => {
       justifyContent: 'center',
       paddingVertical: 20,
       backgroundColor: colors.disabled,
-      marginHorizontal: 10,
+      marginHorizontal: sideMargin, //10,
       borderRadius: 8,
       marginBottom: 0,
     },
