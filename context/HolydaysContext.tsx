@@ -3,6 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales, } from 'expo-localization';
 import { getLocalizedWeekdays } from '@/app/data/data';
 import { dataLabel } from '@/constants/dataLabel';
+import { Platform } from 'react-native';
 
 // INTERFACCIA DI Holiday
 interface Holiday {
@@ -20,8 +21,8 @@ interface NewHolyday {
   repeatOnDay: boolean;   // RIPETE OGNI ANNO, il primo martedì di settembre
 }
 
-  /* ---------------------------------------------------------------┐ 
-  FUNZ. GENERICA LETTURA STORAGE DATI
+/* ---------------------------------------------------------------┐ 
+FUNZ. GENERICA LETTURA STORAGE DATI
 └---------------------------------------------------------------- */
 const loadData = async (key: string) => {
   try {
@@ -35,27 +36,41 @@ const loadData = async (key: string) => {
 
 interface HolydaysContextType {
   // NUOVE FESTIVITA PERSONALI
-  newPersonalHolydays: NewHolyday[]; 
-    setNewPersonalHolydays: React.Dispatch< React.SetStateAction<NewHolyday[]> >; 
+  newPersonalHolydays: NewHolyday[];
+  setNewPersonalHolydays: React.Dispatch<React.SetStateAction<NewHolyday[]>>;
+
   // FESTIVITA NAZIONALI
-  nationalHolydays: Holiday[]; 
-    setNationalHolydays: React.Dispatch<React.SetStateAction<Holiday[]>>; 
+  nationalHolydays: Holiday[];
+  setNationalHolydays: React.Dispatch<React.SetStateAction<Holiday[]>>;
+
   // FESTIVITA NAZIONALI DA NON CONTEGGIARE 
   // nb. va azzerato ogni volta che si modifica la dorpdown ES: [1, 3, ...]
   nationalExcluded: number[];
-    setNationalExcluded: React.Dispatch<React.SetStateAction<number[]>>;
+  setNationalExcluded: React.Dispatch<React.SetStateAction<number[]>>;
+  
   // NUOVE PREREFENCES
-  myPreferences: any;  
-    setMyPreferences: React.Dispatch<React.SetStateAction<any>>; 
-// GESTISCE LA DROPDOWN FESTIVITA PER PAESE
-  myCountry: string; 
-    setMyCountry: React.Dispatch<React.SetStateAction<string>>; 
-// GESTISCE LA LINGUA DELL'APP
+  myPreferences: any;
+  setMyPreferences: React.Dispatch<React.SetStateAction<any>>;
+  
+  // GESTISCE LA DROPDOWN FESTIVITA PER PAESE
+  myCountry: string;
+  setMyCountry: React.Dispatch<React.SetStateAction<string>>;
+  
+  // GESTISCE LA LINGUA DELL'APP
   myLanguage: string;
-    setMyLanguage: React.Dispatch<React.SetStateAction<string>>;
+  setMyLanguage: React.Dispatch<React.SetStateAction<string>>;
+  
   // FLAG PER GESTIRE NAVIGAZIONE INDIETRO
   goBack: string | undefined;
-    setGoBack: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setGoBack: React.Dispatch<React.SetStateAction<string | undefined>>;
+  
+  // URL ESTERNA PER IL DETECT (firebase/blogspot)
+  sniffer: string | undefined;
+  setSniffer: React.Dispatch<React.SetStateAction<string | undefined>>;
+
+  adUnitId: string;
+  setAdUnitId: React.Dispatch<React.SetStateAction<string>>;
+
 }
 
 // CREAZIONE DEL CONTEXT VERO E PROPRIO PER PASSARE I DATI IN TUTTA L'APP ======================
@@ -74,87 +89,113 @@ interface HolydaysProviderProps {
 ########################################################################################################### */
 export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) => {
 
-  // LINGUA
+  /* ---------------------------------------------------------------┐ 
+  SCRIPT CHE GENERA LE PREFERENCES DI DEFAULT
+  └---------------------------------------------------------------- */
+  const createDefaultPreferences = (languageTag: string) => {
+    const localizedDays = getLocalizedWeekdays(languageTag);
+    const myLanguageShort = languageTag.slice(0, 2);
+    return {
+      domenica: { status: true, label: localizedDays[6].charAt(0).toUpperCase() + localizedDays[6].slice(1) },
+      sabato: { status: true, label: localizedDays[5].charAt(0).toUpperCase() + localizedDays[5].slice(1) },
+      venerdi: { status: false, label: localizedDays[4].charAt(0).toUpperCase() + localizedDays[4].slice(1) },
+      giovedi: { status: false, label: localizedDays[3].charAt(0).toUpperCase() + localizedDays[3].slice(1) },
+      mercoledi: { status: false, label: localizedDays[2].charAt(0).toUpperCase() + localizedDays[2].slice(1) },
+      martedi: { status: false, label: localizedDays[1].charAt(0).toUpperCase() + localizedDays[1].slice(1) },
+      lunedi: { status: false, label: localizedDays[0].charAt(0).toUpperCase() + localizedDays[0].slice(1) },
+      pasqua: { status: true, label: dataLabel(myLanguageShort, 0) },
+      lunediDellAngelo: { status: true, label: dataLabel(myLanguageShort, 1) },
+      ascensione: { status: false, label: dataLabel(myLanguageShort, 2) },
+      pentecoste: { status: false, label: dataLabel(myLanguageShort, 3) },
+      lunediPentecoste: { status: false, label: dataLabel(myLanguageShort, 4) },
+      corpusDomini: { status: false, label: dataLabel(myLanguageShort, 5) },
+      festivitaNazionali: { status: true, label: dataLabel(myLanguageShort, 7) },
+      festivitaLocali: { status: true, label: dataLabel(myLanguageShort, 8) },
+      festivitaPersonali: { status: true, label: dataLabel(myLanguageShort, 9) },
+      feriePersonali: { status: true, label: dataLabel(myLanguageShort, 10) },
+      bridgeDuration: 3,
+      firstDayOfWeek: 1,
+    };
+  };
+
+  /* ---------------------------------------------------------------┐ 
+  SCRIPT CHE CONVERTE I VALORI DI TIPO string DEI JSON 
+  IN VALORI TIPO Data PER startDate E endDate
+  └---------------------------------------------------------------- */
+  const convertDates = (holydaysArray: any) => {
+    if (!holydaysArray || !Array.isArray(holydaysArray)) return holydaysArray;
+    return holydaysArray.map(holiday => ({
+      ...holiday,
+      startDate: new Date(holiday.startDate),
+      endDate: holiday.endDate && new Date(holiday.endDate), // SOLO SE != null
+    }));
+  };  
+  
+
+  // LGGE LINGUA DISPOSITIVO
   const systemLanguage = getLocales()[0].languageTag;
 
-  // VARIABILI GLOBALI
+  // SETTAGGIO VARIABILI GLOBALI
   const [newPersonalHolydays, setNewPersonalHolydays] = useState<NewHolyday[]>([]);   // NEW --> newPersonalHolydays
   const [nationalHolydays, setNationalHolydays] = useState<Holiday[]>([]); // NON LO INIZILIZZO ADESSO, LO FA holydays.tsx ALLA CHIAMATA
   const [nationalExcluded, setNationalExcluded] = useState<number[]>([]); // FEST. NAZ. DA IGNORARE
   const [myCountry, setMyCountry] = useState(systemLanguage); // es: 'it-IT' --> DROPDOWN
-  const [myLanguage, setMyLanguage] = useState(systemLanguage.slice(0,2)); // es 'it' --> LINGUA SISTEMA
-  
-  // CREA LE PREFERENCES DI DEFAULT (stesse chiavi che c'erano in app/(tabs)/preferences.tsx)
-  const createDefaultPreferences = (languageTag: string) => {
-    const localizedDays = getLocalizedWeekdays(languageTag);
-    const myLanguageShort = languageTag.slice(0,2);
-    return {
-      domenica:           { status: true, label: localizedDays[6].charAt(0).toUpperCase() + localizedDays[6].slice(1) },
-      sabato:             { status: true, label: localizedDays[5].charAt(0).toUpperCase() + localizedDays[5].slice(1) },
-      venerdi:            { status: false, label: localizedDays[4].charAt(0).toUpperCase() + localizedDays[4].slice(1) },
-      giovedi:            { status: false, label: localizedDays[3].charAt(0).toUpperCase() + localizedDays[3].slice(1) },
-      mercoledi:          { status: false, label: localizedDays[2].charAt(0).toUpperCase() + localizedDays[2].slice(1) },
-      martedi:            { status: false, label: localizedDays[1].charAt(0).toUpperCase() + localizedDays[1].slice(1) },
-      lunedi:             { status: false, label: localizedDays[0].charAt(0).toUpperCase() + localizedDays[0].slice(1) },
-      pasqua:             { status: true, label: dataLabel(myLanguageShort,0) },
-      lunediDellAngelo:   { status: true, label: dataLabel(myLanguageShort,1) },
-      ascensione:         { status: false, label: dataLabel(myLanguageShort,2) },
-      pentecoste:         { status: false, label: dataLabel(myLanguageShort,3) },
-      lunediPentecoste:   { status: false, label: dataLabel(myLanguageShort,4) },
-      corpusDomini:       {status: false, label: dataLabel(myLanguageShort,5)}, 
-      festivitaNazionali: { status: true, label: dataLabel(myLanguageShort,7)}, 
-      festivitaLocali:    { status: true, label: dataLabel(myLanguageShort,8)}, 
-      festivitaPersonali: { status: true, label: dataLabel(myLanguageShort,9)}, 
-      feriePersonali:     { status: true, label: dataLabel(myLanguageShort,10)}, 
-      bridgeDuration:     3, 
-      firstDayOfWeek:     1,
-    };
-  };
-
-  const [myPreferences, setMyPreferences] = useState<any>(createDefaultPreferences(systemLanguage));  // <--- NUOVO
+  const [myLanguage, setMyLanguage] = useState(systemLanguage.slice(0, 2)); // es 'it' --> LINGUA SISTEMA
+  const [sniffer, setSniffer] = useState<string | undefined>(undefined);
   const [goBack, setGoBack] = useState<string | undefined>(undefined);
+  const [myPreferences, setMyPreferences] = useState<any>(createDefaultPreferences(systemLanguage));  // <--- NUOVO
+  const [adUnitId, setAdUnitId] = useState<string>();
 
-  // CONVERTE I VALORI DI TIPO string DEI JSON IN VALORI TIPO Data PER startDate E endDate
-  const convertDates = (holydaysArray: any) => {
-  if (!holydaysArray || !Array.isArray(holydaysArray)) return holydaysArray;
-    return holydaysArray.map(holiday => ({
-      ...holiday,
-      startDate: new Date(holiday.startDate), 
-      endDate: holiday.endDate && new Date(holiday.endDate), // SOLO SE != null
-    }));
-  };
-
-  // INIZIALIZZAZIONE DATI DA LOCAL STORAGE ///////////////////////////
+  // INIZIALIZZAZIONE UNA TANTUM DATI INTERNI E DA LOCAL STORAGE ///////////////////////////
   useEffect(() => {
     const initializeData = async () => {
 
-      const newStoredPersonalHolydays = await loadData('newPersonalHolydays');        
-        if (newStoredPersonalHolydays) { 
-          const holydaysWithDates = convertDates(newStoredPersonalHolydays);
-          setNewPersonalHolydays(holydaysWithDates); }
+      const newStoredPersonalHolydays = await loadData('newPersonalHolydays');
+      if (newStoredPersonalHolydays) {
+        const holydaysWithDates = convertDates(newStoredPersonalHolydays);
+        setNewPersonalHolydays(holydaysWithDates);
+      }
 
       const storedNationalExcluded = await loadData('nationalExcluded');
-        if (storedNationalExcluded) { setNationalExcluded(storedNationalExcluded); }
+      if (storedNationalExcluded) { setNationalExcluded(storedNationalExcluded); }
 
       const storedMyCountry = await loadData('myCountry');
-        if (storedMyCountry) { setMyCountry(storedMyCountry); } 
+      if (storedMyCountry) { setMyCountry(storedMyCountry); }
 
       const myStoredPreferences = await loadData('PREFERENCES_KEY');
-        if (myStoredPreferences) setMyPreferences(myStoredPreferences);
-    };  
+      if (myStoredPreferences) setMyPreferences(myStoredPreferences);
 
+      //setSniffer('https://pontivia-2025.web.app/detect.html?action=newItemFromExternal');       // LINK ESTERNO PER IL DETECT: firebase
+      setSniffer('https://pontivia.blogspot.com/p/redirect.html?action=newItemFromExternal'); // "  "   "   blogspot
+
+      // ADV ID 
+      // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
+      //
+      // - iOS id: ca-app-pub-3704551485094904/6380057197
+      // 
+      // - Android id:ca-app-pub-3704551485094904/1638672883
+      // 
+      if (Platform.OS === 'ios') {
+        setAdUnitId("ca-app-pub-3940256099942544/2934735716") 
+      } else {
+        setAdUnitId("ca-app-pub-3940256099942544/6300978111");
+      }
+      
+    };
     initializeData(); // CHIAMA SE STESSA
   }, []);
 
   return (
     <HolydaysContext.Provider value={{
-      newPersonalHolydays,  setNewPersonalHolydays, // NUOVO GIORNI PERSONALI
-      nationalHolydays,     setNationalHolydays,    // FESTIVITA NAZIONALI
-      nationalExcluded,     setNationalExcluded,    // FEST. NAZ. DA IGNORARE
-      myCountry,            setMyCountry,           // DROPDOWN FESTIVITA PER PAESE
-      myPreferences,        setMyPreferences,       // preferences 'nuovo' (distribuito da Context)
-      goBack,               setGoBack,
-      myLanguage,           setMyLanguage
+      newPersonalHolydays, setNewPersonalHolydays, // NUOVO GIORNI PERSONALI
+      nationalHolydays, setNationalHolydays,    // FESTIVITA NAZIONALI
+      nationalExcluded, setNationalExcluded,    // FEST. NAZ. DA IGNORARE
+      myCountry, setMyCountry,           // DROPDOWN FESTIVITA PER PAESE
+      myPreferences, setMyPreferences,       // preferences 'nuovo' (distribuito da Context)
+      goBack, setGoBack,
+      myLanguage, setMyLanguage,
+      sniffer, 
+      adUnitId
     }}>
       {children}
     </HolydaysContext.Provider>

@@ -198,7 +198,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       gap:20,
     },
     dateContainerRow: {
-      //flex:2,
+      minWidth:'100%',
       flexDirection: 'row',
       justifyContent: 'flex-start',
       gap:8,
@@ -232,6 +232,8 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       borderWidth: 0,
       borderRadius: 8,
       paddingHorizontal: 8,
+      // position:'relative',
+      // zIndex: 99999,
       },
       dropdownSelectedTextStyle: {
       fontSize: 16,
@@ -438,9 +440,9 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
             </TouchableOpacity>
 
             {/* DROPDOWN DURATA */}
-            <View style={{width:'48%'}}>
+            <View style={{width:'48%', borderWidth:1, borderColor:'white'}}>
               <Dropdown
-                style={styles.dropdownStyle}
+                style={[styles.dropdownStyle, {zIndex:9999}]}
                 placeholder={!isFocus ? 'Select' : '...'}
                 placeholderStyle={styles.dropdownPlaceholderStyle}
                 selectedTextStyle={styles.dropdownSelectedTextStyle}

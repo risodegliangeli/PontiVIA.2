@@ -3,7 +3,7 @@ import {
   Animated,
   Alert,
   ImageBackground,
-  Modal,
+  // Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -14,13 +14,13 @@ import {
   Share,
   Easing,
   Dimensions,
-  } from 'react-native';
+} from 'react-native';
 import { useRoute } from '@react-navigation/native';            // SERVE PER LEGGERE I PARAMETRI
 import { useNavigation } from '@react-navigation/native';       // SERVE PER GESTIRE LA NAVIGAZIONE
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
 import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT VARIABILI
-import { getLocales,  } from 'expo-localization';
+import { getLocales, } from 'expo-localization';
 import { holydayLabels as dataLabel } from '@/constants/dataLabel';
 import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
 import DropdownCountry from '@/components/ui/DropdownCountry';  // COUNTRY PICKER 
@@ -28,19 +28,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewDatepicker from '@/components/NewDatepicker';         // MIO DATEPICKER ✌🏻
 import SideLabel from '@/components/ui/SideLabel';
 import Privacy from '@/components/Privacy';
-//import { useSplashCarousel } from '@/context/SplashCarouselContext'; // CONTEXT VISIBILITA BOTTOMBAR
-//import * as Linking from 'expo-linking';
-//import { useSharedValue } from 'react-native-reanimated';
-
-// GOOGLE ADMOB ///////////////////////////////////
+import { PortalProvider, Portal } from '@gorhom/portal';
+import { FullWindowOverlay } from 'react-native-screens';
 import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
-// init ADMOB
-// mobileAds()
-//   .initialize()
-//   .then(adapterStatuses => {
-//     console.log('AdMob Initialized @ holydays.tsx'); // Initialization complete!
-//   });
-
 
 // TYPE Holiday
 type Holiday = {          // DEFINIZIONE DI holiday
@@ -89,13 +79,25 @@ export default function HolydaysScreen() {
   const colorScheme = useColorScheme();
   const isLight = colorScheme === 'light';
 
+  // RICEVE VARIABILI DAL CONTEXT
+  const {
+    newPersonalHolydays, setNewPersonalHolydays, // NUOVO
+    nationalHolydays, setNationalHolydays,
+    nationalExcluded, setNationalExcluded,
+    myCountry, setMyCountry,
+    goBack, setGoBack,
+    myLanguage,
+    sniffer, 
+    adUnitId
+  } = useHolydays();
+
   // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
   // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
   // - iOS id: 
   // ca-app-pub-3704551485094904/6380057197
   // - Android id:
   // ca-app-pub-3704551485094904/1638672883
-  const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
+  //const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
   // SWITCH ADV PER TEST
   const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
@@ -106,7 +108,7 @@ export default function HolydaysScreen() {
       .then(adapterStatuses => {
         console.log('AdMob Initialized @ holydays.tsx');
       });
-  }, []); 
+  }, []);
 
   const navigation = useNavigation();
 
@@ -115,17 +117,9 @@ export default function HolydaysScreen() {
   // (iOS) WKWebView can terminate if app is in a "suspended state", resulting in an empty banner when app returns to foreground. Therefore it's advised to "manually" request a new ad when the app is foregrounded (https://groups.google.com/g/google-admob-ads-sdk/c/rwBpqOUr8m8).
   useForeground(() => {
     Platform.OS === 'ios' && bannerRef.current?.load();
-  }); 
+  });
 
-  // RICEVE VARIABILI DAL CONTEXT
-  const { 
-    newPersonalHolydays, setNewPersonalHolydays, // NUOVO
-    nationalHolydays, setNationalHolydays,
-    nationalExcluded, setNationalExcluded,
-    myCountry, setMyCountry,
-    goBack, setGoBack,
-    myLanguage
-    } = useHolydays();
+
 
   // CALCOLO DINAMICO MARGINE ESTERNO DELLE CARD
   const width = Dimensions.get("window").width;
@@ -134,16 +128,16 @@ export default function HolydaysScreen() {
   /* ---------------------------------------------------------------┐ 
   STYLESHEET
   └---------------------------------------------------------------- */
-  const styles:any =StyleSheet.create({
+  const styles: any = StyleSheet.create({
     // SFONDO
-    image: {      
+    image: {
       flex: 1,
       justifyContent: 'center',
       width: '100%',
-      },
+    },
     // CONTENITORE PRINCIPALE
     container: {
-      width:'100%',
+      width: '100%',
       backgroundColor: 'transparent',
       paddingTop: 90,
       maxWidth: 550,
@@ -158,9 +152,9 @@ export default function HolydaysScreen() {
     // WRAPPER TITOLO PAGINA
     sectionContainer: {
       width: '100%',
-      justifyContent:'center',
-      alignItems:'center',
-      alignContent:'center',
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignContent: 'center',
     },
     // TITOLO CARD
     listTitle: {
@@ -171,19 +165,19 @@ export default function HolydaysScreen() {
       paddingBottom: 12,
     },
     // CARD
-    listItem: { 
+    listItem: {
       backgroundColor: colors.cardBackground,
       paddingTop: 24,
       paddingBottom: 24,
-      paddingLeft:16,
-      paddingRight:16,
+      paddingLeft: 16,
+      paddingRight: 16,
       borderRadius: 24,
       marginBottom: 24,
       // marginLeft:12,
       // marginRight:12,
       marginHorizontal: sideMargin,
     },
-    holidayRow: { 
+    holidayRow: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
@@ -204,37 +198,37 @@ export default function HolydaysScreen() {
     itemActions: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginRight:8,
+      marginRight: 8,
     },
     dot32: {
-      position:'absolute', 
-      top:0, 
-      width:44, 
-      height:44, 
-      borderRadius:24, 
-      backgroundColor: colors.dot32, 
-      borderWidth:1, 
+      position: 'absolute',
+      top: 0,
+      width: 44,
+      height: 44,
+      borderRadius: 24,
+      backgroundColor: colors.dot32,
+      borderWidth: 1,
       borderColor: colors.cardBackground,
     },
     dot32noshadow: {
-      borderWidth:1, 
+      borderWidth: 1,
       borderColor: colors.cardBackground,
-      width:44, 
-      height:44, 
-      borderRadius:24, 
+      width: 44,
+      height: 44,
+      borderRadius: 24,
       backgroundColor: colors.dot32
     },
-    dot32text:{
-      height:'100%',
-      fontSize:24,
+    dot32text: {
+      height: '100%',
+      fontSize: 24,
       fontWeight: !isLight ? 200 : 300,
       color: colors.textNegative,
-      textAlign:'center',
-      justifyContent:'center',
-      alignContent:'center',
-      alignItems:'center',
+      textAlign: 'center',
+      justifyContent: 'center',
+      alignContent: 'center',
+      alignItems: 'center',
       paddingTop: Platform.OS === 'ios' ? 7 : 5,
-      letterSpacing:-.5,
+      letterSpacing: -.5,
     },
     // MODAL
     modalOverlay: {
@@ -249,22 +243,22 @@ export default function HolydaysScreen() {
       // marginLeft:32,
       // marginRight:32,
       marginHorizontal: sideMargin,
-      backgroundColor: colors.cardBackground, //'rgba(255, 255, 255, .9)',
-      borderRadius:32,
-      flexDirection:'column',
-      gap:24,
-      alignItems:'center', // HOR
-      justifyContent:'center',
-      alignContent:'center',
-      paddingHorizontal:20,
-      paddingVertical:24,
-    }, 
+      backgroundColor: isLight ? 'rgba(255, 255, 255, 1)' : 'rgba(0,0,0, 1)',
+      borderRadius: 32,
+      flexDirection: 'column',
+      gap: 24,
+      alignItems: 'center', // HOR
+      justifyContent: 'center',
+      alignContent: 'center',
+      paddingHorizontal: 20,
+      paddingVertical: 24,
+    },
     datePickerWrapper: {
       borderWidth: 1,
       borderColor: colors.textRed,
       borderRadius: 8,
-      padding:8,
-      backgroundColor:'transparent',
+      padding: 8,
+      backgroundColor: 'transparent',
     },
     // PULSANTI ADD/CANCEL
     modalButtons: {
@@ -272,34 +266,34 @@ export default function HolydaysScreen() {
       justifyContent: 'space-between',
       marginTop: 24,
     },
-      addButton: {
-        padding: 16,
-        borderRadius: 8,
-        borderWidth: 1,
-        borderColor: colors.blueBar,
-        alignItems: 'center',
-        flex: 1,
-        marginLeft: 10,
-      },
-      addButtonText: {
-        color: colors.blueBar,
-        fontSize: 16,
-        fontWeight: 'bold',
-      },
-      cancelButton: {
-        padding: 16,
-        borderRadius: 8,
-        borderWidth:1,
-        borderColor: colors.disabled,
-        alignItems: 'center',
-        flex: 1,
-        marginRight: 10,
-      },
-      cancelButtonText: {
-        color: colors.disabled,
-        fontSize: 16,
-        fontWeight: 'bold',
-      },
+    addButton: {
+      padding: 16,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: colors.blueBar,
+      alignItems: 'center',
+      flex: 1,
+      marginLeft: 10,
+    },
+    addButtonText: {
+      color: colors.blueBar,
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
+    cancelButton: {
+      padding: 16,
+      borderRadius: 8,
+      borderWidth: 1,
+      borderColor: colors.disabled,
+      alignItems: 'center',
+      flex: 1,
+      marginRight: 10,
+    },
+    cancelButtonText: {
+      color: colors.disabled,
+      fontSize: 16,
+      fontWeight: 'bold',
+    },
     // DESCRIZIONE
     modalInput: {
       borderWidth: 1,
@@ -309,78 +303,78 @@ export default function HolydaysScreen() {
       paddingHorizontal: 12,
       fontSize: 16,
       marginBottom: 12,
-      height:50,
+      height: 50,
       color: colors.black,
     },
     errorText: {
       color: 'red',
       marginBottom: 16,
       textAlign: 'center',
-      fontSize:16,
-      fontWeight:600,
+      fontSize: 16,
+      fontWeight: 600,
     },
     // PULSANTONE AGGIUNGI GIORNI SPECIALI
     specialDays: {
       //flex:1,
-      minHeight:68,
+      minHeight: 68,
       borderRadius: 999,
       backgroundColor: colors.blueBar,
-      marginBottom:24,
+      marginBottom: 24,
       marginHorizontal: sideMargin * 2, //24,
       // flexDirection: 'row',
       //flexWrap:'wrap',
       // alignItems: 'center',
       // alignContent:'center',
       // justifyContent:'flex-start',
-      padding:20,
-      elevation:18,
+      padding: 20,
+      elevation: 18,
       shadowColor: colors.black, // iOS shadow
-      shadowOffset: { width: 2, height: 8,},
+      shadowOffset: { width: 2, height: 8, },
       shadowOpacity: 0.65,
       shadowRadius: 18 // Match elevation for iOS
     },
     specialDaysLabel: {
-      fontSize:20,
-      fontWeight:400,
+      fontSize: 20,
+      fontWeight: 400,
       color: colors.textNegative,
     },
     // DROPDOWN FESTIVITA PER PAESE
     dropDownCountry: {
-      flexDirection:'row',
-      justifyContent:'center',
-      alignItems:'center',
-      gap:8,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      gap: 8,
     },
     backgroundModal: {
-      flex:1,
-      flexDirection:'column',
-      justifyContent:'center',
-      alignItems:'center',
-      backgroundColor: isLight ? 'rgba(0, 0, 0, 0.75)' : colors.black
-    },     
-    advContainer:{
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: isLight ? 'rgba(0,0,0, 0.75)' : colors.black
+    },
+    advContainer: {
       paddingTop: 12,
       paddingBottom: 12,
-      paddingLeft:0,
-      paddingRight:0,
-      marginBottom:32,
-      marginTop:12,
+      paddingLeft: 0,
+      paddingRight: 0,
+      marginBottom: 32,
+      marginTop: 12,
       backgroundColor: 'rgba(0, 0, 0, .08)',
       borderRadius: 0,
       borderWidth: 0,
     },
     infoButton: {
-      flex:1,
-      flexDirection:'row',
-      justifyContent:'center',
-      alignItems:'center',
-      padding:20,
-      marginHorizontal:12,
-      gap:8,
-      borderWidth:2,
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
+      marginHorizontal: 12,
+      gap: 8,
+      borderWidth: 2,
       borderStyle: 'dotted',
       borderColor: colors.blueBar,
-      borderRadius:24,
+      borderRadius: 24,
       backgroundColor: 'rgba(255, 255, 255, .5)'
     }
   });
@@ -403,58 +397,58 @@ export default function HolydaysScreen() {
   // GESTISCE LE CHIAMATE 'newItemFromExternal' DA DEEP LINK E APRE LA DATEPICKER
   └---------------------------------------------------------------- */
   function handleDeepLinkAddDate(
-      pStartDate?: string,
-      pEndDate?: string | undefined,
-      pDescription?: string | undefined,
-      pRODate?: string,
-      pRODay?: string
-      ) {
-        // If no start date is provided, bail out to avoid constructing an invalid Date
-        if (!pStartDate) {
-          console.warn('Missing pStartDate for deep link');
-          return;
-        }
-  
-        setInitialIndex(null);                          // INDEX, SERVE PER L'EDIT
-        setDpickerStartDate(new Date(pStartDate));      // START
-        pEndDate ? setDpickerEndDate(new Date(pEndDate)) : setDpickerEndDate(null);         // END
-        pDescription ? setDpickerDescription(pDescription) : setDpickerDescription('');     // DESCR
-        pRODate === 'true' ? setDpickerRepeatOnDate(true) : setDpickerRepeatOnDate(false);  // REP ON DATE
-        pRODay === 'true' ? setDpickerRepeatOnDay(true) : setDpickerRepeatOnDay(false);     // REP ON DAY
-        setGoBack('index');                             // IMPOSTA goBack = index PERCHE NON ESISTE PAGINA CHIAMANTE
-        showModalSingleDate();                          // APRE MODAL
+    pStartDate?: string,
+    pEndDate?: string | undefined,
+    pDescription?: string | undefined,
+    pRODate?: string,
+    pRODay?: string
+  ) {
+    // If no start date is provided, bail out to avoid constructing an invalid Date
+    if (!pStartDate) {
+      console.warn('Missing pStartDate for deep link');
+      return;
     }
+
+    setInitialIndex(null);                          // INDEX, SERVE PER L'EDIT
+    setDpickerStartDate(new Date(pStartDate));      // START
+    pEndDate ? setDpickerEndDate(new Date(pEndDate)) : setDpickerEndDate(null);         // END
+    pDescription ? setDpickerDescription(pDescription) : setDpickerDescription('');     // DESCR
+    pRODate === 'true' ? setDpickerRepeatOnDate(true) : setDpickerRepeatOnDate(false);  // REP ON DATE
+    pRODay === 'true' ? setDpickerRepeatOnDay(true) : setDpickerRepeatOnDay(false);     // REP ON DAY
+    setGoBack('index');                             // IMPOSTA goBack = index PERCHE NON ESISTE PAGINA CHIAMANTE
+    showModalSingleDate();                          // APRE MODAL
+  }
 
   /* ---------------------------------------------------------------┐ 
    GESTIONE MODAL NEWDATEPICKER
   └---------------------------------------------------------------- */
-  const [isModalSingleDateVisible, setIsModalSingleDateVisible] = useState<boolean>(false);
+    const [isModalSingleDateVisible, setIsModalSingleDateVisible] = useState<boolean>(false);
 
-  /* VALORI NUOVA MODAL DATEPICKER */
-  const [dpickerStartDate, setDpickerStartDate] = useState<Date>();
-  const [dpickerEndDate, setDpickerEndDate] = useState<Date | null>(null);
-  const [dpickerDescription, setDpickerDescription] = useState<string>('');
-  const [dpickerRepeatOnDate, setDpickerRepeatOnDate] = useState<boolean | undefined>();
-  const [dpickerRepeatOnDay, setDpickerRepeatOnDay] = useState<boolean | undefined>();
-  
-  // // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD FESTIVITA' SINGOLA
-  const [initialIndex, setInitialIndex] = useState<number | null>(null);
+    /* VALORI NUOVA MODAL DATEPICKER */
+    const [dpickerStartDate, setDpickerStartDate] = useState<Date>();
+    const [dpickerEndDate, setDpickerEndDate] = useState<Date | null>(null);
+    const [dpickerDescription, setDpickerDescription] = useState<string>('');
+    const [dpickerRepeatOnDate, setDpickerRepeatOnDate] = useState<boolean | undefined>();
+    const [dpickerRepeatOnDay, setDpickerRepeatOnDay] = useState<boolean | undefined>();
 
-  // SERVE PER VISUALIZZARE IL TOAST DI ERRORE
-  const [errorVisible, setErrorVisible] = useState(false);
+    // // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD FESTIVITA' SINGOLA
+    const [initialIndex, setInitialIndex] = useState<number | null>(null);
 
-  // All'inizio del componente HolydaysScreen, aggiungi:
-  const [dpickerToastMessage, setDpickerToastMessage] = useState<string | null>(null);
-  const [dpickerToastIsError, setDpickerToastIsError] = useState<boolean>(false);
+    // SERVE PER VISUALIZZARE IL TOAST DI ERRORE
+    const [errorVisible, setErrorVisible] = useState(false);
 
-  /* GESTIONE SHOW/HIDE MODAL */
-  const showModalSingleDate = () => {
-    setIsModalSingleDateVisible(true);
-  };
+    // All'inizio del componente HolydaysScreen, aggiungi:
+    const [dpickerToastMessage, setDpickerToastMessage] = useState<string | null>(null);
+    const [dpickerToastIsError, setDpickerToastIsError] = useState<boolean>(false);
 
-  const hideModalSingleDate = () => {
-    setIsModalSingleDateVisible(false);
-  };
+    /* GESTIONE SHOW/HIDE MODAL */
+    const showModalSingleDate = () => {
+      setIsModalSingleDateVisible(true);
+    };
+
+    const hideModalSingleDate = () => {
+      setIsModalSingleDateVisible(false);
+    };
 
   /* ---------------------------------------------------------------┐ 
   // GESTISCE CHIAMATE ESTERNE 
@@ -473,20 +467,20 @@ export default function HolydaysScreen() {
 
   const route = useRoute(); // PUNTA AL ROUTE
 
-  const params = route.params as { 
-    date?: string, 
+  const params = route.params as {
+    date?: string,
     action?: string | undefined,
     pStartDate?: string,
     pEndDate?: string,
     pDescription?: string,
     pRODate?: string,
     pRODay?: string
-  }; 
-      
+  };
+
   // LEGGE PARAMETRI
   useEffect(() => {
     if (params === undefined) {
-        return;
+      return;
     }
     if (params.action === 'newItem') {
       if (!params.date) {
@@ -514,77 +508,75 @@ export default function HolydaysScreen() {
   }, [params]);
 
   /* ---------------------------------------------------------------┐ 
-
       BLOCCO DI SCRIPTING PER AGGIUNTA EVENTO 
-
   └---------------------------------------------------------------- */
-  // FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
-  const normalizeDate = (date: Date | null): Date | null => {
-    if (!date) return null;
-    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0));
-  };
+    // FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
+    const normalizeDate = (date: Date | null): Date | null => {
+      if (!date) return null;
+      return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0));
+    };
 
-  // MOSTRA MESSAGGIO ERRORE TEMPORIZZATO NEL DATEPICKER
-  const showToast = (message: string, isError: boolean) => {
-    setDpickerToastMessage(message);
-    setDpickerToastIsError(isError);
-    setErrorVisible(true);
-    // setTimeout(() => {  // Nasconde il toast dopo 4 secondi
-    //   setErrorVisible(false);
-    //   setDpickerToastMessage(null);
-    // }, 5000); 
-  };
+    // MOSTRA MESSAGGIO ERRORE TEMPORIZZATO NEL DATEPICKER
+    const showToast = (message: string, isError: boolean) => {
+      setDpickerToastMessage(message);
+      setDpickerToastIsError(isError);
+      setErrorVisible(true);
+      // setTimeout(() => {  // Nasconde il toast dopo 4 secondi
+      //   setErrorVisible(false);
+      //   setDpickerToastMessage(null);
+      // }, 5000); 
+    };
 
-  /* VERIFICA SE UNA DATA E' COMPRESA IN UN PERIODO
-   L'endDate è normalizzata e rappresenta il giorno successivo 
-   all'ultimo giorno del periodo (per come viene calcolata)
-   Per i periodi, il date picker imposta l'endDate al giorno successivo, 
-   quindi togliamo 1ms per includere l'ultimo giorno */
-  const isDateInRange = (date: Date, start: Date, end: Date): boolean => {
-    const normDate = normalizeDate(date)!.getTime();
-    const normStart = normalizeDate(start)!.getTime();
-    const normEnd = normalizeDate(end)!.getTime() - 1; 
-  return normDate >= normStart && normDate <= normEnd;
-  };
+    /* VERIFICA SE UNA DATA E' COMPRESA IN UN PERIODO
+    L'endDate è normalizzata e rappresenta il giorno successivo 
+    all'ultimo giorno del periodo (per come viene calcolata)
+    Per i periodi, il date picker imposta l'endDate al giorno successivo, 
+    quindi togliamo 1ms per includere l'ultimo giorno */
+    const isDateInRange = (date: Date, start: Date, end: Date): boolean => {
+      const normDate = normalizeDate(date)!.getTime();
+      const normStart = normalizeDate(start)!.getTime();
+      const normEnd = normalizeDate(end)!.getTime() - 1;
+      return normDate >= normStart && normDate <= normEnd;
+    };
 
   /* ---------------------------------------------------------------┐ 
             HANDLE ADD EVENT (nuovo)
   └---------------------------------------------------------------- */
   const handleAddEvent = async (
-    myStartDate: Date, 
-    myEndDate: Date | null, 
-    myDescription: string, 
+    myStartDate: Date,
+    myEndDate: Date | null,
+    myDescription: string,
     upperRadioButtonActive: boolean, // Corrisponde a repeatOnDate
     lowerRadioButtonActive: boolean // Corrisponde a repeatOnDay
   ) => {
 
-  // Normalizza le date
-  const startDate = normalizeDate(myStartDate)!;  // COSTANTE
-  let endDate = normalizeDate(myEndDate);         // VARIABILE
-  
-  // GIORNO SINGOLO O PERIODO?
-  const isSingleDay = !endDate || startDate.getTime() === endDate.getTime();
+    // Normalizza le date
+    const startDate = normalizeDate(myStartDate)!;  // COSTANTE
+    let endDate = normalizeDate(myEndDate);         // VARIABILE
 
-  // GIORNO SINGOLO endDate = null
-  if (isSingleDay) {
-    endDate = null;
-  }
+    // GIORNO SINGOLO O PERIODO?
+    const isSingleDay = !endDate || startDate.getTime() === endDate.getTime();
 
-  // Crea il nuovo oggetto NewHolyday
-  const newEvent: NewHolyday = {
-    startDate: startDate,
-    endDate: endDate,
-    description: myDescription.trim(),
-    repeatOnDate: upperRadioButtonActive, 
-    repeatOnDay: lowerRadioButtonActive,
-  };
+    // GIORNO SINGOLO endDate = null
+    if (isSingleDay) {
+      endDate = null;
+    }
 
-  // copia dell'array escludendo l'evento che stiamo modificando
-  const eventsToCheck = initialIndex !== null
+    // Crea il nuovo oggetto NewHolyday
+    const newEvent: NewHolyday = {
+      startDate: startDate,
+      endDate: endDate,
+      description: myDescription.trim(),
+      repeatOnDate: upperRadioButtonActive,
+      repeatOnDay: lowerRadioButtonActive,
+    };
+
+    // copia dell'array escludendo l'evento che stiamo modificando
+    const eventsToCheck = initialIndex !== null
       ? newPersonalHolydays.filter((_, i) => i !== initialIndex)
       : newPersonalHolydays;
 
-  // A) CONTROLLO SOVRAPPOSIZIONE con nationalHolydays 
+    // A) CONTROLLO SOVRAPPOSIZIONE con nationalHolydays 
 
     // A.1 e A.2.1) Controllo se la startDate coincide con una festività nazionale
     const nationalDay = startDate.getDate();
@@ -598,19 +590,19 @@ export default function HolydaysScreen() {
         // A.1) Giorno singolo e data coincide: ERRORE
         showToast(msg, true); // MESSAGGIO DI ERRORE
         return;
-        } else {
+      } else {
         // A.2.1) Periodo e startDate coincide: ERRORE
         showToast(dataLabel(myLanguage, 21), true); // Msg: Inizio periodo coincide con festività naz
         return;
       }
-    } 
-  
+    }
+
     // A.2.2) Se è un periodo, controllo se comprende altre date nazionali (solo SEGNALAZIONE)
     if (!isSingleDay && endDate) {
       // Genera un array di giorni compresi nel periodo
       const daysInPeriod: any[] = [];
       let currentDay = new Date(startDate);
-      
+
       // Si ferma al giorno prima dell'endDate (che è il giorno successivo all'ultimo)
       while (currentDay.getTime() < endDate.getTime()) {
         daysInPeriod.push({
@@ -620,7 +612,7 @@ export default function HolydaysScreen() {
         currentDay.setDate(currentDay.getDate() + 1); // Passa al giorno successivo
       }
 
-      const nationalOverlap = nationalHolydays.find(h => 
+      const nationalOverlap = nationalHolydays.find(h =>
         daysInPeriod.some(day => day.day === h.day && day.month === h.month)
       );
 
@@ -641,43 +633,43 @@ export default function HolydaysScreen() {
 
       // Se entrambi ripetono annualmente, controlla solo giorno e mese
       if (existingEvent.repeatOnDate && newEvent.repeatOnDate) {
-        return existingDate.getDate() === newDate.getDate() && 
-              existingDate.getMonth() === newDate.getMonth();
+        return existingDate.getDate() === newDate.getDate() &&
+          existingDate.getMonth() === newDate.getMonth();
       }
       // Altrimenti, controlla l'uguaglianza completa della data
       return existingDate.getTime() === newDate.getTime();
       //return isEqual(existingDate, newDate);
     };
 
-  // B.1) Se giorno singolo (endDate = null)
-  if (isSingleDay) {
-    // B.1.1) Controllo duplicato: la startDate è già la startDate di un evento esistente?
-    const startOverlap = eventsToCheck.find(h => isDateDuplicate(h, startDate));
-    if (startOverlap) {
-      // Msg: Questa data è già presente...
-      showToast(`${dataLabel(myLanguage, 25)} (${startOverlap.description})`, true);
-      return;
-    }
+    // B.1) Se giorno singolo (endDate = null)
+    if (isSingleDay) {
+      // B.1.1) Controllo duplicato: la startDate è già la startDate di un evento esistente?
+      const startOverlap = eventsToCheck.find(h => isDateDuplicate(h, startDate));
+      if (startOverlap) {
+        // Msg: Questa data è già presente...
+        showToast(`${dataLabel(myLanguage, 25)} (${startOverlap.description})`, true);
+        return;
+      }
 
-    // B.1.2) Controllo periodo: la startDate è compresa in un periodo esistente?
-    const periodOverlap = eventsToCheck.find(h => 
-      h.endDate !== null && isDateInRange(startDate, h.startDate, h.endDate)
-    );
-    if (periodOverlap) { // SE SI SOVRAPPONE MA NON E' UN EDIT ALLORA -> ERRORE
-      // Msg: Questa data fa parte di un periodo esistente:
-      showToast(`${dataLabel(myLanguage,22)} "${periodOverlap.description}"`, true);
-      return;
-    }
+      // B.1.2) Controllo periodo: la startDate è compresa in un periodo esistente?
+      const periodOverlap = eventsToCheck.find(h =>
+        h.endDate !== null && isDateInRange(startDate, h.startDate, h.endDate)
+      );
+      if (periodOverlap) { // SE SI SOVRAPPONE MA NON E' UN EDIT ALLORA -> ERRORE
+        // Msg: Questa data fa parte di un periodo esistente:
+        showToast(`${dataLabel(myLanguage, 22)} "${periodOverlap.description}"`, true);
+        return;
+      }
 
-  } else if (!isSingleDay && endDate) { 
-    
-    // B.2) Se periodo (endDate != null)
+    } else if (!isSingleDay && endDate) {
+
+      // B.2) Se periodo (endDate != null)
       // B.2.1) Controllo giorni singoli: 
       // un giorno del periodo corrisponde alla startDate di un evento singolo esistente?
       let currentDay = new Date(startDate);
       let singleOverlap: NewHolyday | undefined = undefined;
       while (currentDay.getTime() < endDate.getTime()) {
-        singleOverlap = eventsToCheck.find(h => 
+        singleOverlap = eventsToCheck.find(h =>
           h.endDate === null && isDateDuplicate(h, currentDay)
         );
         if (singleOverlap) break;
@@ -706,36 +698,36 @@ export default function HolydaysScreen() {
       });
       if (periodOverlap) {
         // MSG: Il periodo è in conflitto con... 
-        showToast(`${dataLabel(myLanguage,24)} "${periodOverlap.description}"`, true);
+        showToast(`${dataLabel(myLanguage, 24)} "${periodOverlap.description}"`, true);
         return;
       }
-  }
+    }
 
-  // NESSUN ERRORE: AGGIUNGI/SOSTITUISCI L'EVENTO
-  let tempNewPersonalHolydays: any[] = [];
-  if (initialIndex === null) {
-    tempNewPersonalHolydays = [...newPersonalHolydays, newEvent];
-    setNewPersonalHolydays(tempNewPersonalHolydays);
-  } else {
-    tempNewPersonalHolydays = newPersonalHolydays.map((h, i) => i === initialIndex ? newEvent : h);
-    setNewPersonalHolydays(tempNewPersonalHolydays);
-  }
-  await saveData(tempNewPersonalHolydays, 'newPersonalHolydays'); // SALVATAGGIO LOCAL STORAGE
+    // NESSUN ERRORE: AGGIUNGI/SOSTITUISCI L'EVENTO
+    let tempNewPersonalHolydays: any[] = [];
+    if (initialIndex === null) {
+      tempNewPersonalHolydays = [...newPersonalHolydays, newEvent];
+      setNewPersonalHolydays(tempNewPersonalHolydays);
+    } else {
+      tempNewPersonalHolydays = newPersonalHolydays.map((h, i) => i === initialIndex ? newEvent : h);
+      setNewPersonalHolydays(tempNewPersonalHolydays);
+    }
+    await saveData(tempNewPersonalHolydays, 'newPersonalHolydays'); // SALVATAGGIO LOCAL STORAGE
 
-  // AZZERA LE VARIABILI DI ERRORE E CHIUDE LA MODAL
-  setInitialIndex(null);
-  setDpickerToastMessage('');
-  setDpickerToastIsError(false);
-  //setIsModalSingleDateVisible(false);
-  hideModalSingleDate();
+    // AZZERA LE VARIABILI DI ERRORE E CHIUDE LA MODAL
+    setInitialIndex(null);
+    setDpickerToastMessage('');
+    setDpickerToastIsError(false);
+    //setIsModalSingleDateVisible(false);
+    hideModalSingleDate();
 
-  // CASO: OK LA DATA E STATA INSERITA
-  if (goBack !== undefined) { // SE IL goBack != undefined SI TORNA ALLA PAGINA CHIAMANTE
-    let tempGoBack: string = goBack;
-    setGoBack(undefined);
-    //navigation.goBack();
-    navigation.navigate(tempGoBack as never);
-  } 
+    // CASO: OK LA DATA E STATA INSERITA
+    if (goBack !== undefined) { // SE IL goBack != undefined SI TORNA ALLA PAGINA CHIAMANTE
+      let tempGoBack: string = goBack;
+      setGoBack(undefined);
+      //navigation.goBack();
+      navigation.navigate(tempGoBack as never);
+    }
   };
 
   /* ---------------------------------------------------------------┐ 
@@ -755,45 +747,45 @@ export default function HolydaysScreen() {
     setDpickerDescription(itemToEdit.description);  // DESCR
     setDpickerRepeatOnDate(itemToEdit.repeatOnDate);// REP ON DATE
     setDpickerRepeatOnDay(itemToEdit.repeatOnDay);  // REP ON DAY
-    setGoBack('holydays'); 
+    setGoBack('holydays');
     showModalSingleDate();
   };
 
   /* ---------------------------------------------------------------┐ 
   SHARE
   └---------------------------------------------------------------- */
-  async function handleShare (index: any) {
+  async function handleShare(index: any) {
     const itemToShare: any = newPersonalHolydays[index];
-      try {
-        // Vorrei condividere questo evento ecc
-        let msg = `${dataLabel(myLanguage, 28)}\n\n*${itemToShare.description ?? ''}*\n${ (itemToShare.startDate).toLocaleDateString(myLanguage, {day: 'numeric', month: 'long', year: 'numeric'}) }\n\n---\n\n`;
-        
-        // gestione link pontivia://
-        msg += `📲\n`
-        msg += `https://pontivia-2025.web.app/detect.html?action=newItemFromExternal`;
-        if (itemToShare.startDate) {msg += `&pStartDate=${(itemToShare.startDate).getFullYear()}-${(itemToShare.startDate).getMonth() + 1}-${(itemToShare.startDate).getDate()}`};
-        if (itemToShare.description) {msg += `&pDescription=${(itemToShare.description).replace(/ /g, "%20")}`;}
-        if (itemToShare.endDate) {msg += `&pEndDate=${(itemToShare.endDate).getFullYear()}-${(itemToShare.endDate).getMonth() + 1}-${(itemToShare.endDate).getDate()}`}
-        if (itemToShare.repeatOnDate) {msg += `&pRODate=true`}
-        if (itemToShare.repeatOnDay) {msg += `&pRODay=true`}
+    try {
+      // Vorrei condividere questo evento ecc
+      let msg = `${dataLabel(myLanguage, 28)}\n\n*${itemToShare.description ?? ''}*\n${(itemToShare.startDate).toLocaleDateString(myLanguage, { day: 'numeric', month: 'long', year: 'numeric' })}\n\n---\n\n`;
 
-        // link download
-        msg += `\n\n${dataLabel(myLanguage, 29)} \nhttp://pontivia-2025.web.app`;
-        const result = await Share.share({
-          message: msg,
-        });
-        if (result.action === Share.sharedAction) {
-          if (result.activityType) {
-            // OK -> shared with activity type of result.activityType
-          } else {
-            // shared
-          }
-        } else if (result.action === Share.dismissedAction) {
-          // CANCEL -> dismissed
+      // gestione link pontivia://
+      msg += `📲\n${sniffer}`
+      //msg += `https://pontivia-2025.web.app/detect.html?action=newItemFromExternal`;
+      if (itemToShare.startDate) { msg += `&pStartDate=${(itemToShare.startDate).getFullYear()}-${(itemToShare.startDate).getMonth() + 1}-${(itemToShare.startDate).getDate()}` };
+      if (itemToShare.description) { msg += `&pDescription=${(itemToShare.description).replace(/ /g, "%20")}`; }
+      if (itemToShare.endDate) { msg += `&pEndDate=${(itemToShare.endDate).getFullYear()}-${(itemToShare.endDate).getMonth() + 1}-${(itemToShare.endDate).getDate()}` }
+      if (itemToShare.repeatOnDate) { msg += `&pRODate=true` }
+      if (itemToShare.repeatOnDay) { msg += `&pRODay=true` }
+
+      // link download
+      msg += `\n\n${dataLabel(myLanguage, 29)} \nhttp://pontivia-2025.web.app`;
+      const result = await Share.share({
+        message: msg,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // OK -> shared with activity type of result.activityType
+        } else {
+          // shared
         }
-      } catch (error) {
-        console.error(error);
+      } else if (result.action === Share.dismissedAction) {
+        // CANCEL -> dismissed
       }
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   /* ---------------------------------------------------------------┐ 
@@ -801,33 +793,33 @@ export default function HolydaysScreen() {
   └---------------------------------------------------------------- */
   const handleDelete = async (index: number) => {
     let itemDescription = `${newPersonalHolydays[index].startDate.getDate()} ${months[newPersonalHolydays[index].startDate.getMonth()]?.label} (${newPersonalHolydays[index].description})`;
-    
-    {/* VUOI ELIMINARE? */}
+
+    {/* VUOI ELIMINARE? */ }
     Alert.alert(
-        dataLabel(myLanguage, 7),
-        `${dataLabel(myLanguage, 8)} ${itemDescription}?`,
-        [
-          {
-            text: dataLabel(myLanguage, 9),
-            style: "cancel"
-          },
-          { 
-            text: dataLabel(myLanguage, 10), 
-            onPress: async () => {
-              let tempPersonalHolydays = newPersonalHolydays.filter((_, i) => i !== index);
-                setNewPersonalHolydays(tempPersonalHolydays);
-                await saveData(tempPersonalHolydays, 'newPersonalHolydays');
-            }
+      dataLabel(myLanguage, 7),
+      `${dataLabel(myLanguage, 8)} ${itemDescription}?`,
+      [
+        {
+          text: dataLabel(myLanguage, 9),
+          style: "cancel"
+        },
+        {
+          text: dataLabel(myLanguage, 10),
+          onPress: async () => {
+            let tempPersonalHolydays = newPersonalHolydays.filter((_, i) => i !== index);
+            setNewPersonalHolydays(tempPersonalHolydays);
+            await saveData(tempPersonalHolydays, 'newPersonalHolydays');
           }
-        ]
-      );
-    };
+        }
+      ]
+    );
+  };
 
   // RESET DROPDOWN COUNTRY: RIPORTA LA SELEZIONE AL PAESE LOCALIZZATO
   const ResetCountryButton = () => {
-    return(
+    return (
       <TouchableOpacity
-        onPress={ 
+        onPress={
           async () => {
             setMyCountry(getLocales()[0].languageTag);
             await saveData(getLocales()[0].languageTag, 'myCountry');
@@ -835,7 +827,7 @@ export default function HolydaysScreen() {
             await saveData([], 'nationalExcluded');
           }
         }>
-        <IconSymbol size={20} name="gobackward" color={colors.blueBar} style={{marginBottom:10,}}/>
+        <IconSymbol size={20} name="gobackward" color={colors.blueBar} style={{ marginBottom: 10, }} />
       </TouchableOpacity>
     )
   }
@@ -844,23 +836,23 @@ export default function HolydaysScreen() {
   * useEffect * AL CAMBIO DI myCountry
   Viene richiamato ogni volta che myCountry cambia, per aggiornare le festività nazionali
   └---------------------------------------------------------------- */
-  useEffect( () => {
+  useEffect(() => {
     setNationalHolydays(getLocalHolydas(myCountry));    // RICHIAMO LA FUNZIONE getLocalHolydas (DA data.tsx)
     async () => await saveData(myCountry, 'myCountry');
   }, [myCountry]);
 
   // EFFETTO GENIUS PER LA MODAL 
   const modalSize = useRef(new Animated.Value(1.8)).current;
-  const modalOpacity = useRef(new Animated.Value(0)).current;  
+  const modalOpacity = useRef(new Animated.Value(0)).current;
   const startAnimation = () => {
     Animated.parallel([
-      Animated.timing(modalSize, { 
+      Animated.timing(modalSize, {
         toValue: 1,
         duration: 300,
         easing: Easing.elastic(1.2),
         useNativeDriver: true,
       }),
-      Animated.timing(modalOpacity, { 
+      Animated.timing(modalOpacity, {
         toValue: 1,
         duration: 300,
         useNativeDriver: true,
@@ -876,65 +868,66 @@ export default function HolydaysScreen() {
   }, [isModalSingleDateVisible]);
 
   return (
-    <ImageBackground 
-      source={isLight 
+    <ImageBackground
+      source={isLight
         ? require('@/assets/images/background-image_minified.jpg')
         : require('@/assets/images/background-image_minified-dark.jpg') // o stessa immagine
-        } 
-      resizeMode="cover" 
-      style={[styles.image, {alignItems:'center'}]}> 
-      <ScrollView 
-        style={styles.container} 
-        showsVerticalScrollIndicator={false} >
+      }
+      resizeMode="cover"
+      style={[styles.image, { alignItems: 'center' }]}>
+      <PortalProvider>
 
-        {/* TITOLO PAGINA - LE MIE DATE */}
-        <View style={{
-          flexDirection:'column',
-          alignItems:'center',
-          marginBottom: 32
+        <ScrollView
+          style={styles.container}
+          showsVerticalScrollIndicator={false} >
+
+          {/* TITOLO PAGINA - LE MIE DATE */}
+          <View style={{
+            flexDirection: 'column',
+            alignItems: 'center',
+            marginBottom: 32
           }}>
-          <Text style={[styles.sectionTitle, { flex:1, }]}>{dataLabel(myLanguage, 0)}</Text> 
-        </View>
-
-        {/* PULSANTONE + GIORNI SPECIALI ############################################################# */}
-        <TouchableOpacity 
-          style={styles.specialDays}
-          onPress={ () => { 
-            setDpickerStartDate(new Date());
-            setDpickerEndDate(null);
-            setDpickerDescription('');
-            setDpickerRepeatOnDate(false);
-            setDpickerRepeatOnDay(false);
-            setDpickerToastMessage('');
-            setDpickerToastIsError(false);
-            setGoBack('holydays');          // RIENTRO IN CASO DI OK/CANCEL
-            showModalSingleDate(); // --> APRE MODAL CON DATEPICKER
-          }}
-        >
-          <View style={{width:'100%', flexDirection:'row', justifyContent:'flex-start', alignItems:'center', gap:4}}>
-            <IconSymbol 
-              name="plus" size={36} 
-              color={colors.textNegative} 
-              />
-            <View style={{ flex:1, }}><Text style={styles.specialDaysLabel}>{dataLabel(myLanguage, 1)}</Text></View>
+            <Text style={[styles.sectionTitle, { flex: 1, }]}>{dataLabel(myLanguage, 0)}</Text>
           </View>
-        </TouchableOpacity>
 
+          {/* PULSANTONE + GIORNI SPECIALI ############################################################# */}
+          <TouchableOpacity
+            style={styles.specialDays}
+            onPress={() => {
+              setDpickerStartDate(new Date());
+              setDpickerEndDate(null);
+              setDpickerDescription('');
+              setDpickerRepeatOnDate(false);
+              setDpickerRepeatOnDay(false);
+              setDpickerToastMessage('');
+              setDpickerToastIsError(false);
+              setGoBack('holydays');          // RIENTRO IN CASO DI OK/CANCEL
+              showModalSingleDate(); // --> APRE MODAL CON DATEPICKER
+            }}
+          >
+            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', gap: 4 }}>
+              <IconSymbol
+                name="plus" size={36}
+                color={colors.textNegative}
+              />
+              <View style={{ flex: 1, }}><Text style={styles.specialDaysLabel}>{dataLabel(myLanguage, 1)}</Text></View>
+            </View>
+          </TouchableOpacity>
 
-        {/* CARD GIORNI SPECIALI ##################################################################### */}
-        {newPersonalHolydays.length > 0 && (
-          <Suspense>
-            {/* CARD */}
-            <View style={styles.listItem}>
+          {/* CARD GIORNI SPECIALI ##################################################################### */}
+          {newPersonalHolydays.length > 0 && (
+            <Suspense>
+              {/* CARD */}
+              <View style={styles.listItem}>
 
-              {/* LABEL SEZIONE CON PULSANTE CANCELLAZIONE */}
-              <View style={{width:'100%',flexDirection:'row',justifyContent:'space-between'}}>
-                <Text style={{opacity:0}}>*</Text>
-                <Text style={[styles.listTitle, { textAlign:'center' } ]}>{dataLabel(myLanguage, 4)}</Text>
-                {newPersonalHolydays ?                
-                  <TouchableOpacity
-                    onPress={ async () => {
-                      Alert.alert(
+                {/* LABEL SEZIONE CON PULSANTE CANCELLAZIONE */}
+                <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                  <Text style={{ opacity: 0 }}>*</Text>
+                  <Text style={[styles.listTitle, { textAlign: 'center' }]}>{dataLabel(myLanguage, 4)}</Text>
+                  {newPersonalHolydays ?
+                    <TouchableOpacity
+                      onPress={async () => {
+                        Alert.alert(
                           dataLabel(myLanguage, 7),  // Attenzione
                           dataLabel(myLanguage, 18),// Vuoi eliminare tutte le date ecc.?
                           [
@@ -942,7 +935,7 @@ export default function HolydaysScreen() {
                               text: dataLabel(myLanguage, 9), // Annulla
                               style: "cancel"
                             },
-                            { 
+                            {
                               text: dataLabel(myLanguage, 10), // Elimina
                               onPress: async () => {
                                 setNewPersonalHolydays([]);
@@ -951,180 +944,175 @@ export default function HolydaysScreen() {
                             }
                           ]
                         );
-                    }}>
-                    <IconSymbol size={Platform.OS === 'ios' ? 20 : 26}  name="plus" color={colors.blueBar} style={{marginRight:8, transform: [{rotate: '45deg'}]}}/>
-                  </TouchableOpacity>
-                :
-                  <Text style={{opacity:0}}>*</Text>
-                }
-              </View>
+                      }}>
+                      <IconSymbol size={Platform.OS === 'ios' ? 20 : 26} name="plus" color={colors.blueBar} style={{ marginRight: 8, transform: [{ rotate: '45deg' }] }} />
+                    </TouchableOpacity>
+                    :
+                    <Text style={{ opacity: 0 }}>*</Text>
+                  }
+                </View>
 
-              {/* LISTA RIGHE */}
-              {newPersonalHolydays.sort((a: any, b: any) => a.startDate - b.startDate).map((holiday, index) => (
-                <React.Fragment key={index}>
-                  <View style={{flexDirection:'column',}}>
+                {/* LISTA RIGHE */}
+                {newPersonalHolydays.sort((a: any, b: any) => a.startDate - b.startDate).map((holiday, index) => (
+                  <React.Fragment key={index}>
+                    <View style={{ flexDirection: 'column', }}>
 
-                    {/* RIGA */}
-                    <View style={{
-                      width:'100%',
-                      flexDirection:'row',
-                      alignItems:'flex-start',
+                      {/* RIGA */}
+                      <View style={{
+                        width: '100%',
+                        flexDirection: 'row',
+                        alignItems: 'flex-start',
                       }}>
 
-                      {/* DOT32 */}
-                      <View>
-                        {holiday.endDate ? 
-                          <View style={[styles.dot32noshadow, {marginLeft:6}]} />
+                        {/* DOT32 */}
+                        <View>
+                          {holiday.endDate ?
+                            <View style={[styles.dot32noshadow, { marginLeft: 6 }]} />
                             :
-                          <View style={styles.dot32noshadow} />
-                        }
-                        <View style={styles.dot32}>
-                          <Text style={styles.dot32text}>{holiday.startDate.getDate()}</Text>
+                            <View style={styles.dot32noshadow} />
+                          }
+                          <View style={styles.dot32}>
+                            <Text style={styles.dot32text}>{holiday.startDate.getDate()}</Text>
+                          </View>
                         </View>
-                      </View>
 
-                      {/* TESTO */}
-                      <View style={{flex:1, flexDirection:'column', paddingRight:12}}>
-                        {!holiday.endDate ? 
-                          <>
-                            <Text style={styles.itemDate}>{`${holiday.startDate.getDate()} ${months[holiday.startDate.getMonth()]?.label}`}</Text>
-                            {/*  SCRIVE ANNO (SOLO SE DIVERSO DALL' ANNO CORRENTE) */}
-                            {holiday.startDate.getFullYear() !== new Date().getFullYear() && <Text style={styles.itemDate}>{holiday.startDate.getFullYear()}</Text>}
-                          </>
-                          :
-                          <Text style={styles.itemDate}>
-                            {holiday.startDate.getDate()}
-                            {' '}
-                            {months[holiday.startDate.getMonth()]?.label.slice(0,3)}
-                            {' '}
-                            {holiday.repeatOnDate || holiday.repeatOnDay ? '' : holiday.startDate.getFullYear()} 
-                            {'-'}
-                            {holiday.endDate.getDate()}
-                            {' '}
-                            {months[holiday.endDate.getMonth()]?.label.slice(0,3)}
-                            {' '}
-                            {holiday.repeatOnDate || holiday.repeatOnDay ? null : holiday.endDate.getFullYear()}
-                          </Text>
-                        }
-
-                        {/* DESCRIZIONE */}
-                        <Text 
-                          style={[
-                            styles.itemDescription, 
-                            {
-                              flex:1,
-                              flexWrap:'wrap',
-                              marginTop:4,
-                            }]}> 
-                          {holiday.description}
-                        </Text>
-
-                        {/* REPEAT ON DATE/DAY */}
-                        {(holiday.repeatOnDate || holiday.repeatOnDay) && 
-                          <View style={{flexDirection:'row', alignItems:'flex-end'}}>
-                            <IconSymbol 
-                              size={16} 
-                              name="repeat" 
-                              color={colors.text} 
-                              style={{marginTop:8, marginLeft:10, marginRight:4, }}/>
-                            <Text style={[
-                              styles.itemDescription, 
-                              {
-                              paddingLeft: 0, 
-                              maxWidth:240, 
-                              fontStyle:'italic', 
-                              fontWeight:400
-                              }
-                            ]}>
-                              {(holiday.repeatOnDate || holiday.repeatOnDay) && dataLabel(myLanguage, 15)}
+                        {/* TESTO */}
+                        <View style={{ flex: 1, flexDirection: 'column', paddingRight: 12 }}>
+                          {!holiday.endDate ?
+                            <>
+                              <Text style={styles.itemDate}>{`${holiday.startDate.getDate()} ${months[holiday.startDate.getMonth()]?.label}`}</Text>
+                              {/*  SCRIVE ANNO (SOLO SE DIVERSO DALL' ANNO CORRENTE) */}
+                              {holiday.startDate.getFullYear() !== new Date().getFullYear() && <Text style={styles.itemDate}>{holiday.startDate.getFullYear()}</Text>}
+                            </>
+                            :
+                            <Text style={styles.itemDate}>
+                              {holiday.startDate.getDate()}
+                              {' '}
+                              {months[holiday.startDate.getMonth()]?.label.slice(0, 3)}
+                              {' '}
+                              {holiday.repeatOnDate || holiday.repeatOnDay ? '' : holiday.startDate.getFullYear()}
+                              {'-'}
+                              {holiday.endDate.getDate()}
+                              {' '}
+                              {months[holiday.endDate.getMonth()]?.label.slice(0, 3)}
+                              {' '}
+                              {holiday.repeatOnDate || holiday.repeatOnDay ? null : holiday.endDate.getFullYear()}
                             </Text>
-                          </View>
-                        }
-                      </View>
+                          }
 
-                      {/* ICONE CONDIVISIONE */}
-                      <View>
-                        <View style={{
-                          flexDirection:'row',
-                          justifyContent:'flex-end',
-                          //backgroundColor:'fuchsia', 
+                          {/* DESCRIZIONE */}
+                          <Text
+                            style={[
+                              styles.itemDescription,
+                              {
+                                flex: 1,
+                                flexWrap: 'wrap',
+                                marginTop: 4,
+                              }]}>
+                            {holiday.description}
+                          </Text>
+
+                          {/* REPEAT ON DATE/DAY */}
+                          {(holiday.repeatOnDate || holiday.repeatOnDay) &&
+                            <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+                              <IconSymbol
+                                size={16}
+                                name="repeat"
+                                color={colors.text}
+                                style={{ marginTop: 8, marginLeft: 10, marginRight: 4, }} />
+                              <Text style={[
+                                styles.itemDescription,
+                                {
+                                  paddingLeft: 0,
+                                  maxWidth: 240,
+                                  fontStyle: 'italic',
+                                  fontWeight: 400
+                                }
+                              ]}>
+                                {(holiday.repeatOnDate || holiday.repeatOnDay) && dataLabel(myLanguage, 15)}
+                              </Text>
+                            </View>
+                          }
+                        </View>
+
+                        {/* ICONE CONDIVISIONE */}
+                        <View>
+                          <View style={{
+                            flexDirection: 'row',
+                            justifyContent: 'flex-end',
+                            //backgroundColor:'fuchsia', 
                           }}>
-                          <View style={styles.itemActions}>
-                            <TouchableOpacity onPress={() => handleShare(index)}>
-                              <IconSymbol name="square.and.arrow.up" size={24} color={colors.blueBar} />
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => handleEdit(index)} style={{marginLeft:10}}>
-                              <IconSymbol name="pencil" size={20} color={colors.blueBar} />
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => handleDelete(index)} style={{ marginLeft: 10}}>
-                              <IconSymbol name="trash" size={20} color={colors.blueBar} />
-                            </TouchableOpacity>
+                            <View style={styles.itemActions}>
+                              <TouchableOpacity onPress={() => handleShare(index)}>
+                                <IconSymbol name="square.and.arrow.up" size={24} color={colors.blueBar} />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => handleEdit(index)} style={{ marginLeft: 10 }}>
+                                <IconSymbol name="pencil" size={20} color={colors.blueBar} />
+                              </TouchableOpacity>
+                              <TouchableOpacity onPress={() => handleDelete(index)} style={{ marginLeft: 10 }}>
+                                <IconSymbol name="trash" size={20} color={colors.blueBar} />
+                              </TouchableOpacity>
+                            </View>
                           </View>
                         </View>
+
                       </View>
 
                     </View>
+                    {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
+                    {index !== newPersonalHolydays.length - 1 && <View style={{ width: '100%', height: 1, backgroundColor: colors.border, marginVertical: 16 }}></View>}
+                  </React.Fragment>
+                ))}
 
-                  </View>
-                  {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
-                  {index !== newPersonalHolydays.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border, marginVertical:16}}></View>}
-                </React.Fragment>
-              ))}
+              </View>
+            </Suspense>
+          )}
 
+          {/* GOOGLE ADMOB ############################################################################# */}
+          {isAdvertising && adUnitId !== undefined &&
+            <View style={[styles.advContainer, { width: '100%', alignItems: 'center', }]}>
+              <Text style={{ fontSize: 10, color: colors.disabled, marginBottom: 8 }}>ADV</Text>
+              <BannerAd
+                ref={bannerRef}
+                unitId={adUnitId}
+                size={BannerAdSize.MEDIUM_RECTANGLE} />
             </View>
-          </Suspense>
-        )}
-       
+          }
 
+          {/* FESTIVITA NAZIONALI ###################################################################### */}
+          <View style={styles.listItem}>
+            {/* TITOLO */}
+            <Text style={[styles.listTitle, { textAlign: 'center' }]}>{dataLabel(myLanguage, 2)}</Text>
 
-        {/* GOOGLE ADMOB ############################################################################# */}
-        {isAdvertising && 
-        <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
-          <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
-            <BannerAd 
-              ref={bannerRef} 
-              unitId={adUnitId} 
-              size={BannerAdSize.MEDIUM_RECTANGLE}/>
-        </View>
-        }
+            {/* DROPDOWN PAESE */}
+            <View style={styles.dropDownCountry}>
+              <DropdownCountry
+                selectedValue={myCountry}
+                onChange={async (item) => {
+                  setMyCountry(item);
+                  await saveData(item, 'myCountry');
+                  setNationalExcluded([]);
+                  await saveData([], 'nationalExcluded');
+                }}
+              />
+              {myCountry.slice(0, 2) === myLanguage ? null : <ResetCountryButton />}
+            </View>
 
-
-
-
-        {/* FESTIVITA NAZIONALI ###################################################################### */}
-        <View style={styles.listItem}>
-          {/* TITOLO */}
-          <Text style={[ styles.listTitle, { textAlign:'center' } ]}>{dataLabel(myLanguage, 2)}</Text>
-
-          {/* DROPDOWN PAESE */}
-          <View style={styles.dropDownCountry}>
-            <DropdownCountry 
-              selectedValue={myCountry}
-              onChange={ async (item) => {
-                setMyCountry(item);
-                await saveData(item, 'myCountry');
-                setNationalExcluded([]);
-                await saveData([], 'nationalExcluded');
-              }}
-            />
-            { myCountry.slice(0,2) === myLanguage  ? null : <ResetCountryButton/> }
-          </View>
-
-          {nationalHolydays.map((holiday, index) => (
-            <React.Fragment key={index} >
-              <View 
-                key={index} 
-                style={[styles.holidayRow, {justifyContent:'space-between', alignItems:'center'}]}>
-                  <View style={[styles.holidayRow, {justifyContent:'flex-start', alignItems:'flex-start'}]}>
-                    <View style={{width:44, height:44, borderRadius:24, backgroundColor: colors.dot32}}>
+            {nationalHolydays.map((holiday, index) => (
+              <React.Fragment key={index} >
+                <View
+                  key={index}
+                  style={[styles.holidayRow, { justifyContent: 'space-between', alignItems: 'center' }]}>
+                  <View style={[styles.holidayRow, { justifyContent: 'flex-start', alignItems: 'flex-start' }]}>
+                    <View style={{ width: 44, height: 44, borderRadius: 24, backgroundColor: colors.dot32 }}>
                       <Text style={styles.dot32text}>{holiday.day}</Text>
                     </View>
-                    <View style={{flexDirection:'column'}}>
-                      <Text 
+                    <View style={{ flexDirection: 'column' }}>
+                      <Text
                         style={[
                           styles.itemDate,
                           {
-                            color: nationalExcluded.indexOf(index) !== -1 ? colors.disabled : colors.text 
+                            color: nationalExcluded.indexOf(index) !== -1 ? colors.disabled : colors.text
                           }
                         ]} >
                         {`${holiday.day} ${months[holiday.month]?.label}`}
@@ -1145,134 +1133,144 @@ export default function HolydaysScreen() {
                     </View>
                   </View>
                   <TouchableOpacity
-                    onPress={ async () => {                      
+                    onPress={async () => {
                       // RIGA DA NON CONTEGGIARE
                       // 1) SE NON ESISTE NELLA LISTA
-                      if (nationalExcluded.indexOf(index) === -1) {                        
+                      if (nationalExcluded.indexOf(index) === -1) {
                         // AGGIUNGE A nationalExcluded
                         let tempNationalExcluded: number[] = [...nationalExcluded, index];
-                          setNationalExcluded(tempNationalExcluded);
-                          await saveData(tempNationalExcluded, 'nationalExcluded');
-                      } else { 
+                        setNationalExcluded(tempNationalExcluded);
+                        await saveData(tempNationalExcluded, 'nationalExcluded');
+                      } else {
                         // ALTRIMENTI ELIMINA DA nationalExcluded
                         let tempNationalExcluded: number[] = nationalExcluded.filter(i => i !== index);
-                          setNationalExcluded(tempNationalExcluded);
-                          await saveData(tempNationalExcluded, 'nationalExcluded');
+                        setNationalExcluded(tempNationalExcluded);
+                        await saveData(tempNationalExcluded, 'nationalExcluded');
                       }
                     }}>
                     {nationalExcluded.indexOf(index) === -1 ?
-                      <IconSymbol 
-                        style={{paddingBottom:8,}}
-                        size={24} 
+                      <IconSymbol
+                        style={{ paddingBottom: 8, }}
+                        size={24}
                         name={"checkmark.circle.fill"}
-                        color={colors.blueBar} 
-                        />
+                        color={colors.blueBar}
+                      />
                       :
-                      <IconSymbol 
-                        style={{paddingBottom:8,}}
-                        size={24} 
+                      <IconSymbol
+                        style={{ paddingBottom: 8, }}
+                        size={24}
                         name={"xmark"}
-                        color={colors.disabled} 
-                        />
+                        color={colors.disabled}
+                      />
                     }
                   </TouchableOpacity>
-              </View> 
+                </View>
 
-              {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
-              {index !== nationalHolydays.length - 1 && <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>}
-            </React.Fragment>
-          ))}
-        </View>
+                {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
+                {index !== nationalHolydays.length - 1 && <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>}
+              </React.Fragment>
+            ))}
+          </View>
 
-        {/* GOOGLE ADMOB ############################################################################# */}
-        {isAdvertising &&
-        <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
-          <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
-            <BannerAd 
-              ref={bannerRef} 
-              unitId={adUnitId} 
-              size={BannerAdSize.MEDIUM_RECTANGLE}/>
-        </View>
-        }
+          {/* GOOGLE ADMOB ############################################################################# */}
+          {isAdvertising &&adUnitId !== undefined &&
+            <View style={[styles.advContainer, { width: '100%', alignItems: 'center', }]}>
+              <Text style={{ fontSize: 10, color: colors.disabled, marginBottom: 8 }}>ADV</Text>
+              <BannerAd
+                ref={bannerRef}
+                unitId={adUnitId}
+                size={BannerAdSize.MEDIUM_RECTANGLE} />
+            </View>
+          }
 
-        {/* PRIVACY */}
-        {/* INFO  ##################################################################### */}
-        <View style={{width:'100%'}}>
-          <Text style={{fontSize:11, alignSelf:'center', color: colors.text}}>Angeli & Associati - PontiVIA! Rel. 1.0.0 (16)</Text>
-        </View>
+          {/* INFO + PRIVACY ##################################################################### */}
+          <View style={{ width: '100%' }}>
+            <Text style={{ fontSize: 11, alignSelf: 'center', color: colors.text }}>Angeli & Associati - PontiVIA! Rel. 1.0.0 (16a)</Text>
+          </View>
+          <Suspense>
+            <Privacy />
+          </Suspense>
+
+          {/* SPACER ################################################################################### */}
+          <View style={{ height: 480 }}></View>
+        </ScrollView>
+
+        {/* nuovo MODAL DATEPICKR ###################################################################### */}
+        {/* <Suspense> */}
+          {/* <Modal
+            visible={isModalSingleDateVisible}
+            presentationStyle="fullScreen"
+            transparent={false}
+            // backdropColor={'rgba(0, 0, 0, .25)'} // NON FUNZIONA TRASPARENZA
+            animationType="none"
+            onRequestClose={hideModalSingleDate}
+            hardwareAccelerated={true}
+            > */}
+            {isModalSingleDateVisible &&
+            <Portal>
+              <FullWindowOverlay style={StyleSheet.absoluteFill}>
+
+                <View style={styles.backgroundModal}> 
+                  <Animated.View style={[
+                    styles.modalContainer,
+                    {
+                      transform: [{ scale: modalSize.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }) }],
+                      opacity: modalOpacity,
+                    }
+                  ]}>
+                    <NewDatepicker
+                      language={myLanguage}                   // LINGUA
+                      startDate={dpickerStartDate ? dpickerStartDate : new Date(0)}            // DATA INIZIO
+                      endDate={dpickerEndDate}                // DATA FINE O null
+                      description={dpickerDescription}        // DESCRIZIONE
+                      isError={dpickerToastIsError}           // PASSA AL COMPONENT FLAG DI ERRORE
+                      errorMsg={dpickerToastMessage}          // PASSA AL COMPONENT MSG DI ERRORE
+                      repeatOnDate={dpickerRepeatOnDate ? dpickerRepeatOnDate : null}      // RIPETE IN QUELLA DATA
+                      repeatOnDay={dpickerRepeatOnDay ? dpickerRepeatOnDay : null}        // RIPETE QUEL GIORNO DELL'ANNO
+                      initialIndex={initialIndex}             // VALORIZZATO SE EDIT
+                      onCancel={() => {
+                        setInitialIndex(null);                // SE ERA UN EDIT AZZERA IL FLAG
+                        setDpickerToastMessage('');           // AZZERA MSG ERRORE
+                        setDpickerToastIsError(false);        // AZZERA FLAG ERRORE
+                        hideModalSingleDate();
+                        if (goBack !== undefined) {
+                          // CASO CANCEL: DATA NON INSERITA
+                          let tempGoBack: string = goBack;
+                          setGoBack(undefined);       // AZZERA goBack
+                          //navigation.goBack();    // TORNA INDIETRO
+                          navigation.navigate(tempGoBack as never);
+                        }
+                      }
+                      }
+                      onConfirm={(
+                        myStartDate,
+                        myEndDate,
+                        myDescription,
+                        upperRadioButtonActive,
+                        lowerRadioButtonActive) =>
+                        handleAddEvent(
+                          myStartDate,
+                          myEndDate,
+                          myDescription,
+                          upperRadioButtonActive,
+                          lowerRadioButtonActive,
+                        )
+                      } />
+                  </Animated.View>
+                </View> 
+
+
+              </FullWindowOverlay>
+            </Portal>}
+          {/* </Modal> */}
+        {/* </Suspense> */}
+
+        {/* SIDELABEL ###################################################################### */}
         <Suspense>
-          <Privacy />
+          <SideLabel />
         </Suspense>
 
-        {/* SPACER ################################################################################### */}
-        <View style={{height:480}}></View>
-      </ScrollView>
-
-      {/* nuovo MODAL DATEPICKR ###################################################################### */}
-      <Suspense>
-        <Modal
-          visible={isModalSingleDateVisible}  
-          presentationStyle="fullScreen"
-          transparent={false}
-          // backdropColor={'rgba(0, 0, 0, .25)'} // NON FUNZIONA TRASPARENZA
-          animationType="none"
-          onRequestClose={hideModalSingleDate} 
-          hardwareAccelerated={true}
-          >
-            <View style={styles.backgroundModal}>
-              <Animated.View style={[
-                styles.modalContainer, 
-                {
-                  transform: [{scale: modalSize.interpolate({inputRange: [0, 1], outputRange: [0, 1]})}],
-                  opacity: modalOpacity,
-                }
-                ]}>
-                  <NewDatepicker
-                    language={myLanguage}                   // LINGUA
-                    startDate={dpickerStartDate ? dpickerStartDate : new Date(0)}            // DATA INIZIO
-                    endDate={dpickerEndDate}                // DATA FINE O null
-                    description={dpickerDescription}        // DESCRIZIONE
-                    isError={dpickerToastIsError}           // PASSA AL COMPONENT FLAG DI ERRORE
-                    errorMsg={dpickerToastMessage}          // PASSA AL COMPONENT MSG DI ERRORE
-                    repeatOnDate={dpickerRepeatOnDate ? dpickerRepeatOnDate : null}      // RIPETE IN QUELLA DATA
-                    repeatOnDay={dpickerRepeatOnDay ? dpickerRepeatOnDay : null}        // RIPETE QUEL GIORNO DELL'ANNO
-                    initialIndex={initialIndex}             // VALORIZZATO SE EDIT
-                    onCancel={ () => {
-                      setInitialIndex(null);                // SE ERA UN EDIT AZZERA IL FLAG
-                      setDpickerToastMessage('');           // AZZERA MSG ERRORE
-                      setDpickerToastIsError(false);        // AZZERA FLAG ERRORE
-                      hideModalSingleDate();
-                      if (goBack !== undefined) { 
-                        // CASO CANCEL: DATA NON INSERITA
-                        let tempGoBack: string = goBack;
-                        setGoBack(undefined);       // AZZERA goBack
-                        //navigation.goBack();    // TORNA INDIETRO
-                        navigation.navigate(tempGoBack as never);
-                      }} 
-                    }
-                    onConfirm={(
-                      myStartDate, 
-                      myEndDate, 
-                      myDescription, 
-                      upperRadioButtonActive, 
-                      lowerRadioButtonActive) => 
-                      handleAddEvent(
-                        myStartDate, 
-                        myEndDate, 
-                        myDescription, 
-                        upperRadioButtonActive, 
-                        lowerRadioButtonActive, 
-                      ) 
-                  }/>      
-              </Animated.View>
-            </View>
-        </Modal>
-      </Suspense>
-
-      {/* INFOPOINT */}
-      <Suspense>
-        <SideLabel />
-      </Suspense>
+    </PortalProvider>
     </ImageBackground>
   );
 }

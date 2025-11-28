@@ -281,12 +281,12 @@ export default function CustomTabBar(props: any) {
       height: splittedBarHeigth - itemsInternalPadding * 2,
       borderRadius: 999, 
       backgroundColor: colors.tabBarFocusDotIos,
-      shadowColor: colors.black, 
-      shadowOffset: { width: 0, height: 8, },
-      shadowOpacity: 0.55,
+      // shadowColor: colors.black, 
+      // shadowOffset: { width: 0, height: 8, },
+      // shadowOpacity: 0.55,
       shadowRadius: 4,
       borderWidth:1,
-      borderColor: 'rgba(0, 0, 0, .06)'
+      borderColor: 'rgba(255, 255, 255, .6)'
            
     },
   });

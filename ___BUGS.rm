@@ -2,15 +2,12 @@
 #############################################################################
 
 
-- ### MARGINHORIZONTAL
-  -- calcolare sideMargin = Math.trunc(width * .05)
-        * holydays
-        * preferences
-        * calendarScreen
-        * SimpleToast
-        NewDatepicker
+- ### ANDROID/iOS
+  -- NewDatepicker modalità DARK
+  -- NewDatepicker non funziona dropdown lunghezza ponte
 
----
+- ### Portal
+  -- sostituir con --> https://rnprimitives.com/portal/
 
 - ### LINK FAQ
   -- nella pagina SideLabel
@@ -48,6 +45,16 @@
 
 # TICKET RISOLTI:
 
+
+- ### MARGINHORIZONTAL
+  -- calcolare sideMargin = Math.trunc(width * .05)
+        * holydays
+        * preferences
+        * calendarScreen
+        * SimpleToast
+        NewDatepicker
+
+---
 
 - ### LUNGHEZZA PONTE
   -- a volte non legge correttamente la lunghezza ponte

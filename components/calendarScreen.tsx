@@ -24,31 +24,7 @@ import { addMonths, isWithinInterval } from "date-fns";
 import * as Calendar from 'expo-calendar'; // ACCESSO AL CALENDARIO DI SISTEMA
 import { calendarScrenLabels as dataLabel } from '@/constants/dataLabel'; // LABEL LOCALIZZATE
 import { useNavigation } from '@react-navigation/native';
-
-// GOOGLE ADMOB ///////////////////////////////////
 import mobileAds, { BannerAd, BannerAdSize, useForeground, } from 'react-native-google-mobile-ads';
-
-// // INIZIALIZZA ADMOB
-// mobileAds()
-//   .initialize()
-//   .then(adapterStatuses => {
-//     console.log('AdMob Initialized @ CalendarScreen'); // Initialization complete!
-//   });
-
-// ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
-// DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
-// - iOS id: 
-// ca-app-pub-3704551485094904/6380057197
-// - Android id:
-// ca-app-pub-3704551485094904/1638672883
-const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
-
-// FLAG ADV PER TEST
-const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
-
-// NOMI MESI E GIORNI
-const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
-const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
 
 // INTERFACCIA DI NewHolyday (local copy, renamed to avoid type collision with external types)
 interface LocalNewHolyday {
@@ -64,7 +40,6 @@ const useThemeColors = () => {
   return Colors[colorScheme ?? 'light'];
 };
 
-const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
 /* ---------------------------------------------------------------┐ 
   FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
@@ -80,6 +55,41 @@ const normalizeDate = (date: Date | null): Date | null => {
 
 ============================================================================= */
 const CalendarScreen = ({callerPreferences}: any) => {
+
+  // VALORI PASSATI DAL CONTEXT
+  const { 
+    newPersonalHolydays,
+    nationalExcluded,
+    myPreferences, 
+    myCountry, 
+    myLanguage,
+    goBack, setGoBack, 
+    sniffer, 
+    adUnitId,
+  } = useHolydays();
+
+
+
+
+// ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
+// DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
+// - iOS id: 
+// ca-app-pub-3704551485094904/6380057197
+// - Android id:
+// ca-app-pub-3704551485094904/1638672883
+// const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
+
+// FLAG ADV PER TEST
+const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
+
+// NOMI MESI E GIORNI
+const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
+const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
+
+
+const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
+
+
 
   const colors = useThemeColors();
 
@@ -101,15 +111,6 @@ const CalendarScreen = ({callerPreferences}: any) => {
 
   const monthsToLoad = 3; // ADV OGNI x CARDS
 
-  // VALORI PASSATI DAL CONTEXT
-  const { 
-    newPersonalHolydays,
-    nationalExcluded,
-    myPreferences, 
-    myCountry, 
-    myLanguage,
-    goBack, setGoBack
-  } = useHolydays();
 
   // CALCOLO DINAMICO MARGINE ESTERNO DELLE CARD
   const width = Dimensions.get("window").width;
@@ -134,7 +135,8 @@ const CalendarScreen = ({callerPreferences}: any) => {
   ) {
     try {
       let msg = '';
-      let link = `https://pontivia-2025.web.app/detect.html?action=newItemFromExternal`;
+      //let link = `https://pontivia-2025.web.app/detect.html?action=newItemFromExternal`;
+      let link = sniffer;
 
       if (type === 'holyday') {
         // ////////////////////////////
@@ -965,13 +967,15 @@ const CalendarScreen = ({callerPreferences}: any) => {
         {/* GOOGLE ADMOB SOLO SE isAdvertising = true
             -----------------------------------------------------------
             OGNI 3 MESI SI ALTERNANO BANNER QUADRATI (MEDIUM_RECTANGLE)
-            
         */}
-        {isAdvertising && 
+        {isAdvertising && adUnitId !== undefined &&
           ((index + 1) % monthsToLoad === 0 && 
             <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
               <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
-              <BannerAd ref={bannerRef} unitId={adUnitId} size={BannerAdSize.MEDIUM_RECTANGLE}/>
+              <BannerAd
+                ref={bannerRef}
+                unitId={adUnitId}
+                size={BannerAdSize.MEDIUM_RECTANGLE} />
             </View>
           )
         }

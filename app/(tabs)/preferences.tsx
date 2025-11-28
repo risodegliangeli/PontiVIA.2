@@ -5,7 +5,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Suspense, useState, useEffect, useRef } from 'react';
 import { Colors } from '@/constants/Colors';
 import { useNavigation } from '@react-navigation/native';
-import { getLocales,  } from 'expo-localization';
+import { getLocales, } from 'expo-localization';
 import { dataLabel as switchNames } from '@/constants/dataLabel'; // LABEL LOCALIZZATE
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 //import * as Linking from 'expo-linking';
@@ -24,28 +24,14 @@ import {
   ViewStyle,
   Pressable,
   Dimensions,
-  } from 'react-native';
+} from 'react-native';
 import Privacy from '@/components/Privacy';
 
 // GOOGLE ADMOB ///////////////////////////////////
-  import mobileAds, { BannerAd, BannerAdSize, useForeground } from 'react-native-google-mobile-ads';
+import mobileAds, { BannerAd, BannerAdSize, useForeground } from 'react-native-google-mobile-ads';
 
-  // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
-  // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
-  // - iOS id: 
-  // ca-app-pub-3704551485094904/6380057197
-  // - Android id:
-  // ca-app-pub-3704551485094904/1638672883
-  const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
-  // SWITCH ADV PER TEST
-  const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
 
-// NOMI GIORNI LOCALIZZATI
-const { localizedDays } = useLocalizationData();
-
-// LINGUA PER LE LABEL
-//const myLanguage = (getLocales()[0].languageTag).slice(0,2);
 
 // COLORI
 const useThemeColors = () => {
@@ -64,6 +50,27 @@ export default function Preferences() {
   const colorScheme = useColorScheme();
   const isLight = colorScheme === 'light';
 
+  // AGGANCIA LE VARIABILI myPreferences E preferences DAL CONTEXT
+  const {
+    myPreferences, setMyPreferences,
+    myLanguage,
+    adUnitId,
+  } = useHolydays();
+
+  // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
+  // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
+  // - iOS id: 
+  // ca-app-pub-3704551485094904/6380057197
+  // - Android id:
+  // ca-app-pub-3704551485094904/1638672883
+  //const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
+
+  // SWITCH ADV PER TEST
+  const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
+
+  // NOMI GIORNI LOCALIZZATI
+  const { localizedDays } = useLocalizationData();
+
   // VISIBILITA MODAL PRIVACY
   const [isPrivacyVisible, setIsPrivacyVisible] = useState<boolean>(true);
 
@@ -73,7 +80,7 @@ export default function Preferences() {
       .then(adapterStatuses => {
         console.log('AdMob Initialized @ preferences.tsx');
       });
-  }, []); 
+  }, []);
 
   const navigation = useNavigation();
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
@@ -84,13 +91,8 @@ export default function Preferences() {
   // Therefore it's advised to "manually" request a new ad when the app is foregrounded (https://groups.google.com/g/google-admob-ads-sdk/c/rwBpqOUr8m8).
   useForeground(() => {
     Platform.OS === 'ios' && bannerRef.current?.load();
-  }); 
-  
-  // AGGANCIA LE VARIABILI myPreferences E preferences DAL CONTEXT
-  const { 
-    myPreferences, setMyPreferences,
-    myLanguage
-    } = useHolydays();
+  });
+
 
   // CALCOLO DINAMICO MARGINE ESTERNO DELLE CARD
   const width = Dimensions.get("window").width;
@@ -102,7 +104,7 @@ export default function Preferences() {
     setPreferencesLoaded(true);
   }, []);
 
-  const [dropdownSelected, setDropdownSelected] = useState<number>(Math.trunc(myPreferences?.bridgeDuration ?? 3)); 
+  const [dropdownSelected, setDropdownSelected] = useState<number>(Math.trunc(myPreferences?.bridgeDuration ?? 3));
 
   // GESTISCE PULSANTE 'MODIFICA LISTA FESTIVITA'
   const handleEditHolydays = () => { navigation.navigate('holydays' as never) };
@@ -110,21 +112,21 @@ export default function Preferences() {
   // STILI PAGINA
   const styles = StyleSheet.create({
     scrollview: {
-      width:'100%',
+      width: '100%',
       backgroundColor: 'transparent',
       paddingTop: 90,
       maxWidth: 550,
     },
     pageTitle: {
-      flex:1,
-      width:'100%',
-      height:54,
-      flexDirection:'row',
-      justifyContent:'center',
-      alignItems:'flex-start',
+      flex: 1,
+      width: '100%',
+      height: 54,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'flex-start',
       // borderWidth: 1,
       pointerEvents: 'box-none',
-      
+
     },
     sectionTitle: {
       fontSize: 24,
@@ -135,11 +137,11 @@ export default function Preferences() {
     // CONTAINER TITOLO PAGINA
     sectionContainer: {
       width: '100%',
-      flex:1,
-      justifyContent:'center',
-      alignItems:'center',
-      alignContent:'center',
-      marginBottom:8,
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      alignContent: 'center',
+      marginBottom: 8,
     },
     // TITOLO ESTERNO BLOCCHETTI
     listTitle: {
@@ -159,7 +161,7 @@ export default function Preferences() {
       backgroundColor: colors.cardBackground,
       borderRadius: 24,
       paddingVertical: 24,
-      paddingHorizontal:18,
+      paddingHorizontal: 18,
       // marginLeft:12,
       // marginRight:12,
       marginHorizontal: sideMargin,
@@ -176,7 +178,7 @@ export default function Preferences() {
       width: '100%',
       alignItems: 'flex-end',
       paddingTop: 16,
-      paddingRight:12,
+      paddingRight: 12,
     },
     editButton: {
       flexDirection: 'row',
@@ -184,15 +186,15 @@ export default function Preferences() {
     },
     editText: {
       marginLeft: 8,
-      marginTop:12, 
-      marginBottom:12, 
+      marginTop: 12,
+      marginBottom: 12,
       color: colors.text,
       fontSize: 14,
       fontWeight: 400,
     },
     creditsView: {
-      flex:1,
-      width:'100%',
+      flex: 1,
+      width: '100%',
       justifyContent: 'center',
       alignItems: 'center',
       marginTop: 10,
@@ -205,30 +207,30 @@ export default function Preferences() {
       flex: 1,
       justifyContent: 'center',
     },
-    advContainer:{
+    advContainer: {
       paddingTop: 12,
       paddingBottom: 12,
-      paddingLeft:0,
-      paddingRight:0,
-      marginBottom:32,
-      marginTop:12,
+      paddingLeft: 0,
+      paddingRight: 0,
+      marginBottom: 32,
+      marginTop: 12,
       backgroundColor: 'rgba(0, 0, 0, .08)',
       borderRadius: 0,
       borderWidth: 0,
     },
     infoButton: {
-      flex:1,
-      flexDirection:'row',
-      justifyContent:'center',
-      alignItems:'center',
-      padding:20,
+      flex: 1,
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 20,
       marginHorizontal: sideMargin, //12,
-      marginTop:12,
-      gap:8,
-      borderWidth:2,
+      marginTop: 12,
+      gap: 8,
+      borderWidth: 2,
       borderStyle: 'dotted',
       borderColor: colors.blueBar,
-      borderRadius:24,
+      borderRadius: 24,
       backgroundColor: 'rgba(255, 255, 255, .5)'
     }
 
@@ -238,7 +240,7 @@ export default function Preferences() {
   /* ===================================================
     SWITCH DINAMICO: usa myPreferences dal context
   =================================================== */
-  function PreferenceSwitch ({ preferenceKey }: { preferenceKey: string }) {
+  function PreferenceSwitch({ preferenceKey }: { preferenceKey: string }) {
     const colors = useThemeColors();
     const [isEnabled, setIsEnabled] = useState<boolean>(myPreferences?.[preferenceKey]?.status ?? false);
 
@@ -258,7 +260,7 @@ export default function Preferences() {
 
     // STILI DELLO SWITCH
     const styles = StyleSheet.create({
-      image: {      
+      image: {
         flex: 1,
         justifyContent: 'center',
         width: '100%',
@@ -280,8 +282,8 @@ export default function Preferences() {
       <View style={styles.preferenceRow as ViewStyle}>
         <Text style={styles.text}>{(myPreferences?.[preferenceKey]?.label ?? preferenceKey)}</Text>
         <Switch
-          trackColor={{ false: '#767577', true: '#767577' }} 
-          thumbColor={isEnabled ? colors.textRed : '#f4f3f4'} 
+          trackColor={{ false: '#767577', true: '#767577' }}
+          thumbColor={isEnabled ? colors.textRed : '#f4f3f4'}
           ios_backgroundColor="#3e3e3e"
           onValueChange={toggleSwitch}
           value={isEnabled}
@@ -291,55 +293,56 @@ export default function Preferences() {
   };
 
   return (
-    <ImageBackground 
-      source={isLight 
+    <ImageBackground
+      source={isLight
         ? require('@/assets/images/background-image_minified.jpg')
         : require('@/assets/images/background-image_minified-dark.jpg') // o stessa immagine
-        } 
-      resizeMode="cover" 
-      style={[styles.image, {alignItems:'center'}]}>
+      }
+      resizeMode="cover"
+      style={[styles.image, { alignItems: 'center' }]}>
 
-        <ScrollView 
-          style={styles.scrollview} 
-          showsVerticalScrollIndicator={false} >
-          {/* ======================== TITOLO PAGINA  ======================== */}
-          <View style={{
-            flexDirection:'column',
-            alignItems:'center',
-            }}>            
-            <Text style={[styles.sectionTitle, {flex:1, marginBottom:6}]}>
-              {switchNames(myLanguage,12)}
-            </Text>
+      <ScrollView
+        style={styles.scrollview}
+        showsVerticalScrollIndicator={false} >
+
+        {/* ======================== TITOLO PAGINA  ======================== */}
+        <View style={{
+          flexDirection: 'column',
+          alignItems: 'center',
+        }}>
+          <Text style={[styles.sectionTitle, { flex: 1, marginBottom: 6 }]}>
+            {switchNames(myLanguage, 12)}
+          </Text>
+        </View>
+
+        {/* GOOGLE ADMOB ############################################################################# */}
+        {isAdvertising &&adUnitId !== undefined &&
+          <View style={[styles.advContainer, { width: '100%', alignItems: 'center', }]}>
+            <Text style={{ fontSize: 10, color: colors.disabled, marginBottom: 8 }}>ADV</Text>
+            <BannerAd
+              ref={bannerRef}
+              unitId={adUnitId}
+              size={BannerAdSize.MEDIUM_RECTANGLE} />
           </View>
+        }
 
-          {/* GOOGLE ADMOB ############################################################################# */}
-          {isAdvertising &&
-          <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
-            <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
-              <BannerAd 
-                ref={bannerRef} 
-                unitId={adUnitId} 
-                size={BannerAdSize.MEDIUM_RECTANGLE}/>
-          </View>
-          }
+        {/* ==================== DROPDOWN DURATA PONTI ==================== */}
+        <View style={styles.groupContainer}>
+          <Text style={[styles.listTitle, { textAlign: 'center' }]}>{switchNames(myLanguage, 11)}</Text>
+          <DropdownComponent
+            language={myLanguage}
+            selectedValue={dropdownSelected}
+            onChange={async (value) => {
+              setDropdownSelected(value);           // POSIZIONA LA VOCE DELLA DROPDOWN
+              const updated = { ...myPreferences, bridgeDuration: value };
+              setMyPreferences(updated);            // AGGIORNA LA VARIABILE myPreferences
+              try { await AsyncStorage.setItem('PREFERENCES_KEY', JSON.stringify(updated)); } catch (e) { console.error('Failed to save preferences:', e); }
+            }}
+          />
+        </View>
 
-          {/* ==================== DROPDOWN DURATA PONTI ==================== */}
-          <View style={styles.groupContainer}>
-            <Text style={[styles.listTitle, {textAlign:'center'}]}>{switchNames(myLanguage, 11)}</Text>
-            <DropdownComponent 
-              language={myLanguage}
-              selectedValue={dropdownSelected}
-              onChange={ async (value) => {
-                setDropdownSelected(value);           // POSIZIONA LA VOCE DELLA DROPDOWN
-                const updated = { ...myPreferences, bridgeDuration: value };
-                setMyPreferences(updated);            // AGGIORNA LA VARIABILE myPreferences
-                try { await AsyncStorage.setItem('PREFERENCES_KEY', JSON.stringify(updated)); } catch(e) { console.error('Failed to save preferences:', e); }
-              }}
-            />
-          </View>       
-
-          {/* ==================== DROPDOWN GIORNO SETTIMANA ==================== */}
-          {/* <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[2]}</Text>
+        {/* ==================== DROPDOWN GIORNO SETTIMANA ==================== */}
+        {/* <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[2]}</Text>
           <DropdownFDOW 
             selectedValue={PREFERENCES.firstDayOfWeek}
             onChange={async (value) => {
@@ -348,96 +351,96 @@ export default function Preferences() {
             }}
           /> */}
 
-          {/* ==================== SETTIMANA ==================== */}
-          <View style={styles.groupContainer}>
-            <View style={{width:'100%'}}>
-              <Text style={[styles.listTitle, {textAlign:'center'}]}>{switchNames(myLanguage, 13)}</Text>
-            </View>
-            <PreferenceSwitch preferenceKey="domenica"  />
-            <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-            <PreferenceSwitch preferenceKey="sabato"  />
-            <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-            <PreferenceSwitch preferenceKey="venerdi"  />
-            <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-            <PreferenceSwitch preferenceKey="giovedi"  />
-            <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-            <PreferenceSwitch preferenceKey="mercoledi"  />
-            <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-            <PreferenceSwitch preferenceKey="martedi"  />
-            <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-            <PreferenceSwitch preferenceKey="lunedi"  />
+        {/* ==================== SETTIMANA ==================== */}
+        <View style={styles.groupContainer}>
+          <View style={{ width: '100%' }}>
+            <Text style={[styles.listTitle, { textAlign: 'center' }]}>{switchNames(myLanguage, 13)}</Text>
           </View>
+          <PreferenceSwitch preferenceKey="domenica" />
+          <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>
+          <PreferenceSwitch preferenceKey="sabato" />
+          <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>
+          <PreferenceSwitch preferenceKey="venerdi" />
+          <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>
+          <PreferenceSwitch preferenceKey="giovedi" />
+          <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>
+          <PreferenceSwitch preferenceKey="mercoledi" />
+          <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>
+          <PreferenceSwitch preferenceKey="martedi" />
+          <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>
+          <PreferenceSwitch preferenceKey="lunedi" />
+        </View>
 
-          {/* ==================== FESTIVITA NAZIONALI ==================== */}   
-          <Suspense> 
-            <View style={styles.groupContainer}>
-              <View style={{width:'100%'}}>
-                <Text style={[styles.listTitle, {textAlign:'center'}]}>{switchNames(myLanguage, 10)}</Text>
-              </View>
-              <PreferenceSwitch preferenceKey="festivitaNazionali" />
-              <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-                  {/*<PreferenceSwitch preferenceKey="festivitaLocali" />
-                  <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>*/}
-              <PreferenceSwitch preferenceKey="festivitaPersonali" />
-              <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-                  {/* <PreferenceSwitch preferenceKey="feriePersonali" />
-                  <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View> */}
-              <View style={styles.editLinkContainer}>
-                <TouchableOpacity onPress={handleEditHolydays} style={styles.editButton}>
-                  <IconSymbol size={20} name="pencil" color={colors.text} />
-                  <Text style={styles.editText}>{switchNames(myLanguage, 15)}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Suspense>  
-
-          {/* ==================== RICORRENZE CATTOLICHE  ==================== */}
-          <Suspense>
-            <View style={styles.groupContainer}>
-              <View style={{width:'100%'}}>
-                <Text style={[styles.listTitle, {textAlign:'center'}]}>{switchNames(myLanguage, 14)}</Text>
-              </View>
-              <PreferenceSwitch preferenceKey="pasqua" />
-              <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-              <PreferenceSwitch preferenceKey="lunediDellAngelo" />
-              <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-              <PreferenceSwitch preferenceKey="ascensione"/>
-              <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-              <PreferenceSwitch preferenceKey="pentecoste" />
-              <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-              <PreferenceSwitch preferenceKey="lunediPentecoste" /> 
-              <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>
-              <PreferenceSwitch preferenceKey="corpusDomini" /> 
-            </View>
-          </Suspense>
-
-          {/* GOOGLE ADMOB ####################################################################### */}
-          {isAdvertising && 
-          <View style={[styles.advContainer, {width:'100%', alignItems:'center',}]}>
-            <Text style={{fontSize:10, color: colors.disabled, marginBottom:8}}>ADV</Text>
-              <BannerAd 
-                ref={bannerRef} 
-                unitId={adUnitId} 
-                size={BannerAdSize.MEDIUM_RECTANGLE}/>
-          </View>
-          }
-
-          {/* INFO  ##################################################################### */}
-          <View style={{width:'100%'}}>
-            <Text style={{fontSize:11, alignSelf:'center', color: colors.text}}>Angeli & Associati - PontiVIA! Rel. 1.0.0 (16)</Text>
-          </View>
-          <Suspense>
-            <Privacy />
-          </Suspense>
-
-          {/* SPACER  ############################################################################# */}
-          <View style={{ height: 480 }} />
-        </ScrollView>
-
-        {/* INFOPOINT  ############################################################################# */}          
+        {/* ==================== FESTIVITA NAZIONALI ==================== */}
         <Suspense>
-          <SideLabel />
+          <View style={styles.groupContainer}>
+            <View style={{ width: '100%' }}>
+              <Text style={[styles.listTitle, { textAlign: 'center' }]}>{switchNames(myLanguage, 10)}</Text>
+            </View>
+            <PreferenceSwitch preferenceKey="festivitaNazionali" />
+            <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>
+            {/*<PreferenceSwitch preferenceKey="festivitaLocali" />
+                  <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View>*/}
+            <PreferenceSwitch preferenceKey="festivitaPersonali" />
+            <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>
+            {/* <PreferenceSwitch preferenceKey="feriePersonali" />
+                  <View style={{width:'100%', height:1, backgroundColor: colors.border}}></View> */}
+            <View style={styles.editLinkContainer}>
+              <TouchableOpacity onPress={handleEditHolydays} style={styles.editButton}>
+                <IconSymbol size={20} name="pencil" color={colors.text} />
+                <Text style={styles.editText}>{switchNames(myLanguage, 15)}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </Suspense>
+
+        {/* ==================== RICORRENZE CATTOLICHE  ==================== */}
+        <Suspense>
+          <View style={styles.groupContainer}>
+            <View style={{ width: '100%' }}>
+              <Text style={[styles.listTitle, { textAlign: 'center' }]}>{switchNames(myLanguage, 14)}</Text>
+            </View>
+            <PreferenceSwitch preferenceKey="pasqua" />
+            <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>
+            <PreferenceSwitch preferenceKey="lunediDellAngelo" />
+            <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>
+            <PreferenceSwitch preferenceKey="ascensione" />
+            <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>
+            <PreferenceSwitch preferenceKey="pentecoste" />
+            <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>
+            <PreferenceSwitch preferenceKey="lunediPentecoste" />
+            <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>
+            <PreferenceSwitch preferenceKey="corpusDomini" />
+          </View>
+        </Suspense>
+
+        {/* GOOGLE ADMOB ####################################################################### */}
+        {isAdvertising &&adUnitId !== undefined &&
+          <View style={[styles.advContainer, { width: '100%', alignItems: 'center', }]}>
+            <Text style={{ fontSize: 10, color: colors.disabled, marginBottom: 8 }}>ADV</Text>
+            <BannerAd
+              ref={bannerRef}
+              unitId={adUnitId}
+              size={BannerAdSize.MEDIUM_RECTANGLE} />
+          </View>
+        }
+
+        {/* INFO  ##################################################################### */}
+        <View style={{ width: '100%' }}>
+          <Text style={{ fontSize: 11, alignSelf: 'center', color: colors.text }}>Angeli & Associati - PontiVIA! Rel. 1.0.0 (16a)</Text>
+        </View>
+        <Suspense>
+          <Privacy />
+        </Suspense>
+
+        {/* SPACER  ############################################################################# */}
+        <View style={{ height: 480 }} />
+      </ScrollView>
+
+      {/* INFOPOINT  ############################################################################# */}
+      <Suspense>
+        <SideLabel />
+      </Suspense>
 
 
 

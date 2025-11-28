@@ -14,7 +14,7 @@ export const Colors = {
     tabBarBorderIos: 'rgba(255, 255, 255, .65)',
     tabBarBorderAndroid: 'rgba(255, 255, 255, 0.65)',
     tabBarInactiveItem: 'rgba(99, 99, 99, 1)',
-    tabBarFocusDotIos: 'rgba(219, 219, 219, 0.55)',
+    tabBarFocusDotIos: 'rgba(0,0,0, 0.12)',
     tabBarFocusDotAndroid: 'rgba(184, 184, 184, 0.75)',
     tabBarActiveItem: 'rgba(0, 136, 255, 1)',
     text: 'rgba(51, 51, 51, 1)',            // TESTO NERO #333
