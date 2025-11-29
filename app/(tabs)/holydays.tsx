@@ -234,10 +234,8 @@ export default function HolydaysScreen() {
     },
     modalContainer: {
       maxWidth: 550,
-      // marginLeft:32,
-      // marginRight:32,
       marginHorizontal: sideMargin,
-      backgroundColor: isLight ? colors.white : 'black',
+      backgroundColor: isLight ? colors.white : colors.cardBackground,
       borderRadius: 32,
       flexDirection: 'column',
       gap: 32,

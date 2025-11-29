@@ -1,12 +1,12 @@
-import {useState, useEffect, } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  StyleSheet, 
-  useColorScheme, 
-  Dimensions, 
+import { useState, useEffect, } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  useColorScheme,
+  Dimensions,
 } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { addDays, subDays, compareAsc, getDay, differenceInDays, startOfMonth } from 'date-fns';
@@ -31,12 +31,12 @@ interface NewDatepickerInterface {
   initialIndex: number | null; // USATO IN CASO DI EDIT PER CAMBIARE PULSANTE Aggiungi/Aggiorna
   onCancel: () => void;
   onConfirm: (
-    startDate: Date, 
-    endDate: Date | null, 
-    description: string,  
-    upperRadioButtonActive: boolean, 
+    startDate: Date,
+    endDate: Date | null,
+    description: string,
+    upperRadioButtonActive: boolean,
     lowerRadioButtonActive: boolean
-    ) => void;
+  ) => void;
 }
 
 /* =========================================================
@@ -51,14 +51,14 @@ const createUTCDate = (inputDate: Date) => {
     CALCOLA LA RICORRENZA DI UNA DATA ALL'INTERNO DEL MESE
 ========================================================= */
 function getWeekdayRecurrence(targetDate: Date) {
-    const targetDayOfWeek = getDay(targetDate);
-    const firstDayOfMonth = startOfMonth(targetDate);
-    const startDayOfWeek = getDay(firstDayOfMonth);
-    const daysToAdd = (targetDayOfWeek - startDayOfWeek + 7) % 7;
-    const firstOccurrence = addDays(firstDayOfMonth, daysToAdd);
-    const daysDifference = differenceInDays(targetDate, firstOccurrence);
-    const recurrenceNumber = (daysDifference / 7) + 1;
-    return recurrenceNumber;
+  const targetDayOfWeek = getDay(targetDate);
+  const firstDayOfMonth = startOfMonth(targetDate);
+  const startDayOfWeek = getDay(firstDayOfMonth);
+  const daysToAdd = (targetDayOfWeek - startDayOfWeek + 7) % 7;
+  const firstOccurrence = addDays(firstDayOfMonth, daysToAdd);
+  const daysDifference = differenceInDays(targetDate, firstOccurrence);
+  const recurrenceNumber = (daysDifference / 7) + 1;
+  return recurrenceNumber;
 }
 
 /* ==========================================================================================
@@ -78,10 +78,10 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   initialIndex,
   onCancel,
   onConfirm
-  }) => {
+}) => {
 
   // LINGUA DI SISTEMA
-  language = (getLocales()[0].languageTag).slice(0,2);
+  language = (getLocales()[0].languageTag).slice(0, 2);
 
   // NOMI MESI E GIORNI DELLA SETTIMANA LETTI DAL data
   const { months, localizedDays } = useLocalizationData();
@@ -95,13 +95,13 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   const colors = useThemeColors();            // COLORI
   const colorScheme = useColorScheme();
   const isLight = colorScheme === 'light';
-  
+
   const defaultStyles = useDefaultStyles();   // STILI DEL DATEPICKER
 
   // CALCOLO DINAMICO MARGINE ESTERNO DELLE CARD
   const width = Dimensions.get("window").width;
   const sideMargin = Math.trunc(width * .025); // MARGINE LATERALE
-  
+
   // COPIA DEI PROPS IN INGRESSO PER USO INTERNO
   const [myStartDate, setMyStartDate] = useState<Date>(createUTCDate(startDate));     // DATA INIZIO
   const [myEndDate, setMyEndDate] = useState<Date | null>(endDate);                   // DATA FINE | null
@@ -115,8 +115,8 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   const [descriptionAlert, setDescriptionAlert] = useState(false); // CAMBIA IL COLORE DEL SEGNAPOSTO
 
   // SWITCH VISIBILE/NON VISIBILE PER I SINGOLI ELEMENTI
-  const [toDate, setToDate] = useState( myEndDate ? true : false); // SECONDA DATA
-  const [radioButton, setRadioButton] = useState( repeatOnDate || repeatOnDay ? true : false); // GRUPPO RADIOBUTTON
+  const [toDate, setToDate] = useState(myEndDate ? true : false); // SECONDA DATA
+  const [radioButton, setRadioButton] = useState(repeatOnDate || repeatOnDay ? true : false); // GRUPPO RADIOBUTTON
   const [rotateArrow, setRotateArrow] = useState<string>('0deg');
   const [datepickerVisible, setDatepickerVisible] = useState(false); // CALENDARIO
 
@@ -130,91 +130,91 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
     dataLabel(language, 2),
     dataLabel(language, 3),
     dataLabel(language, 4),
-    ];
+  ];
 
-  const data: {label: string, value: number | null }[] = [ // LABEL E RISPETTIVI VALORI DELLA DROPDOWN
+  const data: { label: string, value: number | null }[] = [ // LABEL E RISPETTIVI VALORI DELLA DROPDOWN
     { label: dropdownLabel[0], value: 1 },
     { label: dropdownLabel[1], value: 2 },
     { label: dropdownLabel[2], value: 3 },
     { label: dropdownLabel[3], value: null },
-    ];
-  
+  ];
+
   /* RADIOBUTTON REPEAT-ON-DATE/ON-DAY
   INIZIALMENTE false ENTRAMBI, SI ATTIVANO/DISATTIVANO QND L'UTENTE APRE/CHIUDE IL GRUPPO RADIOBUTTON
   SERVE COME PROP DA PASSARE AL CHIAMANTE (ripete? si/no, quale? upper/lower) */
-  const [upperRadioButtonActive, setUpperRadioButtonActive] = useState(repeatOnDate || false); 
-  const [lowerRadioButtonActive, setLowerRadioButtonActive] = useState(repeatOnDay || false);  
+  const [upperRadioButtonActive, setUpperRadioButtonActive] = useState(repeatOnDate || false);
+  const [lowerRadioButtonActive, setLowerRadioButtonActive] = useState(repeatOnDay || false);
 
   // LABEL LOCALIZZATE CHE SARANNO RI-ASSEMBLATE OGNI VOLTA CHE CAMBIANO myStartDate O myEndDate
   const [upperRadioButtonLabel, setUpperRadioButtonLabel] = useState<string>(); // {/*es. Ripete ogni anno, il 25 settembre*/}
   const [lowerRadioButtonLabel, setLowerRadioButtonLabel] = useState<string>(); // {/*es. Ripete ogni anno, il quarto giovedì di settembre*/}
 
   // ICONE USATE NELLO SCRIPT
-  const IcoCalendar = <IconSymbol 
-          size={16} 
-          name="calendar" 
-          color={colors.text} 
-          style={{marginTop:2}}/>;;
-  const IcoRepeat = <IconSymbol 
-          size={16} 
-          name="repeat" 
-          color={radioButton ? colors.blueBar : colors.text} 
-          style={{marginRight:4, }}/>;
-  const IcoArrow = <IconSymbol 
-          size={16} 
-          name="chevron.up"
-          color={radioButton ? colors.blueBar : colors.text} 
-          style={{marginRight:4, transform: [{rotate: rotateArrow}]}}/>;
+  const IcoCalendar = <IconSymbol
+    size={16}
+    name="calendar"
+    color={colors.text}
+    style={{ marginTop: 2 }} />;;
+  const IcoRepeat = <IconSymbol
+    size={16}
+    name="repeat"
+    color={radioButton ? colors.blueBar : colors.text}
+    style={{ marginRight: 4, }} />;
+  const IcoArrow = <IconSymbol
+    size={16}
+    name="chevron.up"
+    color={radioButton ? colors.blueBar : colors.text}
+    style={{ marginRight: 4, transform: [{ rotate: rotateArrow }] }} />;
 
   // STILI
-  const styles:any = StyleSheet.create({
+  const styles: any = StyleSheet.create({
     listTitle: {
-      minWidth:'100%',
+      minWidth: '100%',
       color: colors.text,
       fontSize: 18,
       fontWeight: '600',
-      textAlign:'center', 
+      textAlign: 'center',
     },
     textInput: {
       minWidth: '100%',
-      fontSize:20,
-      fontWeight:400,
-      paddingBottom:8,
+      fontSize: 20,
+      fontWeight: 400,
+      paddingBottom: 8,
       borderBottomWidth: 1,
       borderBottomColor: '#FF778F',
       color: isLight ? colors.black : colors.white,
     },
     dateContainer: {
-      width:'100%',
+      width: '100%',
       flexDirection: 'column',
-      alignContent:'flex-start',
-      gap:20,
+      alignContent: 'flex-start',
+      gap: 20,
     },
     dateContainerRow: {
-      minWidth:'100%',
+      minWidth: '100%',
       flexDirection: 'row',
       justifyContent: 'flex-start',
-      gap:8,
+      gap: 8,
       alignItems: 'center',
     },
     dateFrom: {
       borderWidth: 1,
       borderColor: '#FF778F',
       borderRadius: 8,
-      padding:8,
-      flexDirection:'row',
+      padding: 8,
+      flexDirection: 'row',
       justifyContent: 'space-between',
-      gap:8,
+      gap: 8,
       minWidth: '49%',
       maxWidth: '50%',
       color: colors.text,
     },
     dateFromText: {
-      fontSize:16,
+      fontSize: 16,
       color: colors.text,
-      },
+    },
     repeatText: {
-      fontSize:16,
+      fontSize: 16,
       fontWeight: 600,
       color: colors.blueBar,
     },
@@ -225,32 +225,32 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       borderWidth: 0,
       borderRadius: 8,
       paddingHorizontal: 8,
-      },
-      dropdownSelectedTextStyle: {
+    },
+    dropdownSelectedTextStyle: {
       fontSize: 16,
       color: colors.text,
     },
     repeatButton: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap:4,
+      gap: 4,
     },
-    dropdownPlaceholderStyle:{
+    dropdownPlaceholderStyle: {
       fontSize: 16,
       color: colors.text, //'rgba(51,51,51,.5)',
     },
     // RADIOBUTTON
     radioContainer: {
-      minWidth:'100%',
+      minWidth: '100%',
       flexDirection: 'column',
       justifyContent: 'space-around',
-      paddingVertical:24,
+      paddingVertical: 24,
       paddingHorizontal: 12,
-      borderWidth:1,
+      borderWidth: 1,
       borderColor: colors.blueBar,
-      borderRadius:8,
-      minHeight:80,
-      gap:24,
+      borderRadius: 8,
+      minHeight: 80,
+      gap: 24,
     },
     radioOption: {
       flexDirection: 'row',
@@ -273,29 +273,29 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       width: 10,
       borderRadius: 5,
       backgroundColor: '#0088FF',
-    },   
+    },
     radioButtonLabel: {
-      fontSize:15,
+      fontSize: 15,
       color: colors.text,
-      flex:1,
-    }, 
+      flex: 1,
+    },
     // PULSANTI ADD/CANCEL
     modalButtons: {
-      minWidth:'100%',
+      minWidth: '100%',
       flexDirection: 'column',
       justifyContent: 'center',
-      gap:12,
+      gap: 12,
     },
     cancelButton: {
       paddingVertical: 12,
-      paddingHorizontal:20,
-      maxHeight:44,
+      paddingHorizontal: 20,
+      maxHeight: 44,
       backgroundColor: colors.cancelButton,
       borderRadius: 99,
       alignItems: 'center',
-      justifyContent:'center',
-      minWidth:'100%',
-      elevation:1,
+      justifyContent: 'center',
+      minWidth: '100%',
+      elevation: 1,
       shadowColor: colors.black, // iOS shadow
       shadowOffset: {
         width: 1,
@@ -303,22 +303,22 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       },
       shadowOpacity: 0.15,
       shadowRadius: 1 // Match elevation for iOS
-      },
+    },
     cancelButtonText: {
       color: colors.text,
       fontSize: 16,
       fontWeight: 'bold',
-    },    
+    },
     addButton: {
-      minWidth:'100%',
-      flexDirection:'row',
+      minWidth: '100%',
+      flexDirection: 'row',
       paddingVertical: 12,
-      maxHeight:44,
+      maxHeight: 44,
       backgroundColor: colors.bridgeBackground,
       borderRadius: 99,
       alignItems: 'center',
-      justifyContent:'center',
-      alignContent:'center',
+      justifyContent: 'center',
+      alignContent: 'center',
     },
     addButtonText: {
       color: colors.white,
@@ -326,21 +326,21 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       fontWeight: 'bold',
     },
     datepickerContainer: {
-      position:'absolute',
-      top: sideMargin * .5, 
+      position: 'absolute',
+      top: sideMargin * .5,
       left: 0, //sideMargin * .5,
       maxWidth: 550 - sideMargin,
       width: '100%', //width - (sideMargin * 1.2) , // LARGO QUANTO LA OVERLAY SOTTOSTANTE (= 100%)
-      backgroundColor: isLight? colors.white : colors.black, 
-      borderRadius:28,
-      borderWidth:.5,
+      backgroundColor: isLight ? colors.white : colors.cardBackground,
+      borderRadius: 28,
+      borderWidth: .5,
       borderColor: colors.disabled,
       // ----------------
       paddingHorizontal: sideMargin, //24,
       paddingVertical: sideMargin,
       // ----------------
-      flexDirection:'column',
-      justifyContent:'space-between',
+      flexDirection: 'column',
+      justifyContent: 'space-between',
       // ----------------
       // elevation:6,
       // shadowColor: colors.text, // iOS shadow
@@ -352,9 +352,9 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       // shadowRadius: 16 // Match elevation for iOS
     },
     errorMsg: {
-      fontSize:16,
-      fontWeight:600,
-      textAlign:'center',
+      fontSize: 16,
+      fontWeight: 600,
+      textAlign: 'center',
       color: colors.textRed,
     }
   })
@@ -370,7 +370,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       // Compare the two dates and return 1 if the first date is after the second, 
       // -1 if the first date is before the second or 
       // 0 if dates are equal.
-      if ( compareAsc(myStartDate, myEndDate) > 0 ) { setValue(1) }
+      if (compareAsc(myStartDate, myEndDate) > 0) { setValue(1) }
       // controllo
       let d = differenceInDays(myEndDate, myStartDate);
       //console.log(`- - useEffect: GESTISCE LA DROPDOWN PARTENDO DALLA DIFFERENZA\ndifferenceInDays = ${d}`);
@@ -386,217 +386,217 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
   /* --------------------------------------------------
   ASSEMBLA LE LABEL DEI RADIOBUTTON OGNI VOLTA CHE CAMBIANO myStartDate O myEndDate
   -------------------------   ------------------------- */
-  useEffect( () => {
-    setUpperRadioButtonLabel(`${dataLabel(language, 9)} ${myStartDate.getDate()} di ${ months[myStartDate.getMonth()].label }`);
-    setLowerRadioButtonLabel(`${dataLabel(language, 9)} ${dataLabel(language, 9 + getWeekdayRecurrence(myStartDate))} ${localizedDays[getDay(myStartDate) === 0 ? 6 : getDay(myStartDate) - 1]} di ${ months[myStartDate.getMonth()].label } `);
+  useEffect(() => {
+    setUpperRadioButtonLabel(`${dataLabel(language, 9)} ${myStartDate.getDate()} di ${months[myStartDate.getMonth()].label}`);
+    setLowerRadioButtonLabel(`${dataLabel(language, 9)} ${dataLabel(language, 9 + getWeekdayRecurrence(myStartDate))} ${localizedDays[getDay(myStartDate) === 0 ? 6 : getDay(myStartDate) - 1]} di ${months[myStartDate.getMonth()].label} `);
   }, [myStartDate, myEndDate]);
 
   // CONTENUTO _INTERNO_ DELLA MODAL
   return (
-    <>       
+    <>
       {/* TITOLO MODAL cambia a seocnda se si inserisce o si edita in item ============= */}
-        <Text style={styles.listTitle}>
-          {initialIndex !== null ? dataLabel(language, 19) : dataLabel(language, 0)}
-        </Text>
+      <Text style={styles.listTitle}>
+        {initialIndex !== null ? dataLabel(language, 19) : dataLabel(language, 0)}
+      </Text>
 
-        {/* ERRORE <-- IN ARRIVO DAL CHIAMANTE ================================= */}
-        {isError && <Text style={styles.errorMsg}>{errorMsg}</Text>}
+      {/* ERRORE <-- IN ARRIVO DAL CHIAMANTE ================================= */}
+      {isError && <Text style={styles.errorMsg}>{errorMsg}</Text>}
 
-        {/* INPUT TEXT ========================================================= */}
-        <TextInput
-          key={'description'}
-          style={styles.textInput}
-          placeholder={dataLabel(language, 7)}
-          placeholderTextColor={descriptionAlert ? colors.textRed : colors.text } // gestisce errore
-          value={myDescription}
-          onChangeText={setMyDescription}
-        />
+      {/* INPUT TEXT ========================================================= */}
+      <TextInput
+        key={'description'}
+        style={styles.textInput}
+        placeholder={dataLabel(language, 7)}
+        placeholderTextColor={descriptionAlert ? colors.textRed : colors.text} // gestisce errore
+        value={myDescription}
+        onChangeText={setMyDescription}
+      />
 
-        {/* DATE FROM - TO ====================================================== */}
-        <View style={styles.dateContainer}>
-          {/* ROW 1 - DA */}
-          <View style={styles.dateContainerRow}>
-            {/* FROM */}
-            <TouchableOpacity 
-              onPress={ () => {                   // CHIAMANTE = 'startDate'  
-                setDatepickerCaller('startDate'); // PASSA AL DATEPICKER IL CHIAMANTE
-                setSelectedDate(myStartDate);     // PASSA AL DATEPICKER LA DATA DA VISUALIZZARE
-                myEndDate ? setMaxDate( subDays(myEndDate, 1) ) : setMaxDate(null); // SE ESISTE UNA endDate SI PASSA IL maxDate
-                setMinDate(null); // NESSUN VINCOLO ALL'INDIETRO NEL CALENDARIO
-                setDatepickerVisible(true);       // APRE IL DATEPICKER
-              }}
-              style={styles.dateFrom}>
-              <Text key='fromDate' style={styles.dateFromText}>{myStartDate.toLocaleDateString()}</Text>{IcoCalendar}
-            </TouchableOpacity>
+      {/* DATE FROM - TO ====================================================== */}
+      <View style={styles.dateContainer}>
+        {/* ROW 1 - DA */}
+        <View style={styles.dateContainerRow}>
+          {/* FROM */}
+          <TouchableOpacity
+            onPress={() => {                   // CHIAMANTE = 'startDate'  
+              setDatepickerCaller('startDate'); // PASSA AL DATEPICKER IL CHIAMANTE
+              setSelectedDate(myStartDate);     // PASSA AL DATEPICKER LA DATA DA VISUALIZZARE
+              myEndDate ? setMaxDate(subDays(myEndDate, 1)) : setMaxDate(null); // SE ESISTE UNA endDate SI PASSA IL maxDate
+              setMinDate(null); // NESSUN VINCOLO ALL'INDIETRO NEL CALENDARIO
+              setDatepickerVisible(true);       // APRE IL DATEPICKER
+            }}
+            style={styles.dateFrom}>
+            <Text key='fromDate' style={styles.dateFromText}>{myStartDate.toLocaleDateString()}</Text>{IcoCalendar}
+          </TouchableOpacity>
 
-            {/* DROPDOWN DURATA */}
-            <View style={{flex:1, }}>
-              <Dropdown
-                style={styles.dropdownStyle}
-                placeholder={!isFocus ? 'Select' : '...'}
-                placeholderStyle={styles.dropdownPlaceholderStyle}
-                selectedTextStyle={styles.dropdownSelectedTextStyle}
-                data={data}
-                labelField="label"
-                valueField="value"
-                value={value}
-                onFocus={() => setIsFocus(true)}
-                onBlur={() => setIsFocus(false)}
-                onChange={ (item) => {
-                  let v: number = item.value;
-                  switch (v) {
-                    case 1:
-                      setToDate(false);   // NASCONDE endDate
-                      setValue(v);        // SPOSTA DROPDOWN
-                      setMyEndDate(null); // AZZERA endDate ALTRIMENTI VIENE INTERPRETATO COME PERIODO
-                      setMaxDate(null); 
-                      break;
-                    case 2:
-                      setMyEndDate( addDays(myStartDate, 1) );
-                      setToDate(true);
-                      //setValue(v);      // SPOSTA DROPDOWN
-                      break;
-                    case 3:
-                      setMyEndDate( addDays(myStartDate, 2) );
-                      setToDate(true);
-                      //setValue(v);      // SPOSTA DROPDOWN
-                      break;
-                    default:
-                      setMyEndDate( myStartDate );
-                      setToDate(true);
-                      setValue(v);      // SPOSTA DROPDOWN
+          {/* DROPDOWN DURATA */}
+          <View style={{ flex: 1, }}>
+            <Dropdown
+              style={styles.dropdownStyle}
+              placeholder={!isFocus ? 'Select' : '...'}
+              placeholderStyle={styles.dropdownPlaceholderStyle}
+              selectedTextStyle={styles.dropdownSelectedTextStyle}
+              data={data}
+              labelField="label"
+              valueField="value"
+              value={value}
+              onFocus={() => setIsFocus(true)}
+              onBlur={() => setIsFocus(false)}
+              onChange={(item) => {
+                let v: number = item.value;
+                switch (v) {
+                  case 1:
+                    setToDate(false);   // NASCONDE endDate
+                    setValue(v);        // SPOSTA DROPDOWN
+                    setMyEndDate(null); // AZZERA endDate ALTRIMENTI VIENE INTERPRETATO COME PERIODO
+                    setMaxDate(null);
+                    break;
+                  case 2:
+                    setMyEndDate(addDays(myStartDate, 1));
+                    setToDate(true);
+                    //setValue(v);      // SPOSTA DROPDOWN
+                    break;
+                  case 3:
+                    setMyEndDate(addDays(myStartDate, 2));
+                    setToDate(true);
+                    //setValue(v);      // SPOSTA DROPDOWN
+                    break;
+                  default:
+                    setMyEndDate(myStartDate);
+                    setToDate(true);
+                    setValue(v);      // SPOSTA DROPDOWN
                     return;
-                  }
-                }               
+                }
+              }
                 //search
                 //maxHeight={300}
                 //searchPlaceholder="Search..."
                 //renderLeftIcon={() => null }
               } />
-            </View>
           </View>
-
-          {/* ROW 2 - A */}
-          {toDate && <View style={styles.dateContainerRow}>
-            {/* TO */}
-            <TouchableOpacity 
-              style={styles.dateFrom}
-              onPress={ () => {                       // CHIAMANTE = 'endDate'
-                setDatepickerCaller('endDate');       // PASSA AL DATEPICKER IL CHIAMANTE
-                setSelectedDate(myEndDate);           // PASSA AL DATEPICKER LA DATA DA VISUALIZZARE
-                setMinDate(addDays(myStartDate, 1));  // imposta data min al giorno succesivo alla startDate
-                setMaxDate(null);                     // NESSUN VINCOLO IN AVANTI NEL CALENDARIO
-                setDatepickerVisible(true);
-                }}>
-              <Text key='toDate' style={styles.dateFromText}>{myEndDate?.toLocaleDateString()}</Text>{IcoCalendar}
-            </TouchableOpacity>
-          </View>}
-
-          {/* ROW 3 - BOTTONE RIPETE ================================================ */}
-          <View style={[styles.dateContainerRow, {maxWidth:'50%', justifyContent:'flex-start'}]}>
-            <TouchableOpacity 
-              style={styles.repeatButton}
-              onPress={ () => {
-                if (!radioButton) { 
-                  setRadioButton(true)  // SE GRUPPO RADIOBUTTON SPENTO LO SI ACCENDE
-                  setRotateArrow('180deg'); // SI RUOTA LA FRECCIA
-                  setUpperRadioButtonActive(true) // E SI IMPOSTA true IL PRIMO
-                } else {
-                  setRadioButton(false) // ALTRIMENTI SI SPEGNE IL GRUPPO
-                  setRotateArrow('0deg');
-                  setUpperRadioButtonActive(false)  // E SI RIPORTANO A false I DUE RADIOBUTTON
-                  setLowerRadioButtonActive(false)
-                }
-              }}
-              >
-              {IcoRepeat}<Text 
-              style={[styles.repeatText, 
-                !radioButton && {color: colors.text}
-              ]}>
-                {dataLabel(language, 8)}
-                </Text>{IcoArrow}
-
-            </TouchableOpacity>
-          </View>
-
-          {/* ROW 4 - RADIOBUTTON =================================================== */}
-          {radioButton && <View style={styles.radioContainer}>
-
-            {/* UPPER */}
-            <TouchableOpacity
-              style={styles.radioOption}
-              onPress={() => {
-                setUpperRadioButtonActive(true);
-                setLowerRadioButtonActive(false);
-              }} >
-              <View style={styles.radioButton }>
-                {upperRadioButtonActive && <View style={styles.radioButtonSelected} />}
-              </View>
-              <Text style={styles.radioButtonLabel}>
-              {/*Ripete ogni anno, il 25 settembre*/}
-                  {upperRadioButtonLabel}
-              </Text>
-            </TouchableOpacity>
-
-            {/* LOWER */}
-            <TouchableOpacity
-              style={styles.radioOption}
-              onPress={() => {
-                setUpperRadioButtonActive(false);
-                setLowerRadioButtonActive(true);
-              }} >
-              <View style={styles.radioButton }>
-                {lowerRadioButtonActive && <View style={styles.radioButtonSelected} />}
-              </View>
-              <Text style={styles.radioButtonLabel}>
-              {/*Ripete ogni anno, il quarto giovedì di settembre*/}
-                {lowerRadioButtonLabel}
-              </Text>
-            </TouchableOpacity>
-
-          </View>}  
         </View>
 
-        {/* PULSANTI ANNULLA-SALVA ================================================= */}
-        <View style={styles.modalButtons}>
+        {/* ROW 2 - A */}
+        {toDate && <View style={styles.dateContainerRow}>
+          {/* TO */}
+          <TouchableOpacity
+            style={styles.dateFrom}
+            onPress={() => {                       // CHIAMANTE = 'endDate'
+              setDatepickerCaller('endDate');       // PASSA AL DATEPICKER IL CHIAMANTE
+              setSelectedDate(myEndDate);           // PASSA AL DATEPICKER LA DATA DA VISUALIZZARE
+              setMinDate(addDays(myStartDate, 1));  // imposta data min al giorno succesivo alla startDate
+              setMaxDate(null);                     // NESSUN VINCOLO IN AVANTI NEL CALENDARIO
+              setDatepickerVisible(true);
+            }}>
+            <Text key='toDate' style={styles.dateFromText}>{myEndDate?.toLocaleDateString()}</Text>{IcoCalendar}
+          </TouchableOpacity>
+        </View>}
 
-          {/* CANCEL */}
-          <TouchableOpacity 
-            style={styles.cancelButton} 
-            onPress={ () => onCancel() }>
-            <Text style={styles.cancelButtonText}>{dataLabel(language, 5)}</Text>
+        {/* ROW 3 - BOTTONE RIPETE ================================================ */}
+        <View style={[styles.dateContainerRow, { maxWidth: '50%', justifyContent: 'flex-start' }]}>
+          <TouchableOpacity
+            style={styles.repeatButton}
+            onPress={() => {
+              if (!radioButton) {
+                setRadioButton(true)  // SE GRUPPO RADIOBUTTON SPENTO LO SI ACCENDE
+                setRotateArrow('180deg'); // SI RUOTA LA FRECCIA
+                setUpperRadioButtonActive(true) // E SI IMPOSTA true IL PRIMO
+              } else {
+                setRadioButton(false) // ALTRIMENTI SI SPEGNE IL GRUPPO
+                setRotateArrow('0deg');
+                setUpperRadioButtonActive(false)  // E SI RIPORTANO A false I DUE RADIOBUTTON
+                setLowerRadioButtonActive(false)
+              }
+            }}
+          >
+            {IcoRepeat}<Text
+              style={[styles.repeatText,
+              !radioButton && { color: colors.text }
+              ]}>
+              {dataLabel(language, 8)}
+            </Text>{IcoArrow}
+
+          </TouchableOpacity>
+        </View>
+
+        {/* ROW 4 - RADIOBUTTON =================================================== */}
+        {radioButton && <View style={styles.radioContainer}>
+
+          {/* UPPER */}
+          <TouchableOpacity
+            style={styles.radioOption}
+            onPress={() => {
+              setUpperRadioButtonActive(true);
+              setLowerRadioButtonActive(false);
+            }} >
+            <View style={styles.radioButton}>
+              {upperRadioButtonActive && <View style={styles.radioButtonSelected} />}
+            </View>
+            <Text style={styles.radioButtonLabel}>
+              {/*Ripete ogni anno, il 25 settembre*/}
+              {upperRadioButtonLabel}
+            </Text>
           </TouchableOpacity>
 
-          {/* CONFIRM */}
-          <TouchableOpacity 
-            style={styles.addButton} 
-            onPress={ () => 
+          {/* LOWER */}
+          <TouchableOpacity
+            style={styles.radioOption}
+            onPress={() => {
+              setUpperRadioButtonActive(false);
+              setLowerRadioButtonActive(true);
+            }} >
+            <View style={styles.radioButton}>
+              {lowerRadioButtonActive && <View style={styles.radioButtonSelected} />}
+            </View>
+            <Text style={styles.radioButtonLabel}>
+              {/*Ripete ogni anno, il quarto giovedì di settembre*/}
+              {lowerRadioButtonLabel}
+            </Text>
+          </TouchableOpacity>
+
+        </View>}
+      </View>
+
+      {/* PULSANTI ANNULLA-SALVA ================================================= */}
+      <View style={styles.modalButtons}>
+
+        {/* CANCEL */}
+        <TouchableOpacity
+          style={styles.cancelButton}
+          onPress={() => onCancel()}>
+          <Text style={styles.cancelButtonText}>{dataLabel(language, 5)}</Text>
+        </TouchableOpacity>
+
+        {/* CONFIRM */}
+        <TouchableOpacity
+          style={styles.addButton}
+          onPress={() =>
             myDescription ?
               onConfirm(
-                createUTCDate(myStartDate), 
-                myEndDate && createUTCDate(myEndDate), 
-                myDescription, 
-                upperRadioButtonActive, 
-                lowerRadioButtonActive) 
+                createUTCDate(myStartDate),
+                myEndDate && createUTCDate(myEndDate),
+                myDescription,
+                upperRadioButtonActive,
+                lowerRadioButtonActive)
               :
-                setDescriptionAlert(true)
-            }>
-            <Text style={styles.addButtonText}>
-              {initialIndex !== null ? dataLabel(language, 18) : dataLabel(language, 6)}
-              </Text>
-          </TouchableOpacity>
-        </View>
+              setDescriptionAlert(true)
+          }>
+          <Text style={styles.addButtonText}>
+            {initialIndex !== null ? dataLabel(language, 18) : dataLabel(language, 6)}
+          </Text>
+        </TouchableOpacity>
+      </View>
 
       {/* DATEPICKER -> GRIGLIA CALENDARIO */}
-      {datepickerVisible && 
+      {datepickerVisible &&
 
         // OVERLAY SCURO TRASPARENTE 
         <View style={[
-          StyleSheet.absoluteFill, 
+          StyleSheet.absoluteFill,
           {
-            backgroundColor: 'rgba(0, 0, 0, .85)', 
+            backgroundColor: 'rgba(0, 0, 0, .85)',
           }
-          ]}>
+        ]}>
 
           <View style={[styles.datepickerContainer]}>
 
@@ -606,24 +606,24 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               date={selectedDate}
               maxDate={maxDate}
               minDate={minDate}
-              onChange={({date}) => {
+              onChange={({ date }) => {
                 // VARIABILE DI SERVIZIO
                 let d: Date | null = createUTCDate(date);
-                if (datepickerCaller === 'startDate') { 
-                  setMyStartDate(d); 
-                } else { 
-                  setMyEndDate(d); 
-                }; 
+                if (datepickerCaller === 'startDate') {
+                  setMyStartDate(d);
+                } else {
+                  setMyEndDate(d);
+                };
                 setSelectedDate(d); // AGGIORNA DATA NEL FILED
                 // setMaxDate(null); // RESETTA maxdate
                 // setMinDate(null);
-                }
+              }
               }
               containerHeight={220}
               hideWeekdays={true}
               disableMonthPicker={false}
               disableYearPicker={false}
-              showOutsideDays={false}          
+              showOutsideDays={false}
               firstDayOfWeek={1}
               //timeZone={'UTC'}
               locale={language}
@@ -637,47 +637,47 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
               //navigationPosition={'right'}
               styles={{
                 ...defaultStyles,
-                header:{marginBottom:36},
+                header: { marginBottom: 36 },
                 //today: { borderWidth: 0, backgroundColor:'transparent', }, 
                 //today_label: { color: '#333333'},
                 //years: {color: colors.text},
-                selected: { backgroundColor: colors.textRed, borderRadius:'12%' }, 
-                selected_label: { color: colors.text}, //'rgba(255, 255, 255, 1)' },
-                selected_month: {backgroundColor: colors.textRed},
+                selected: { backgroundColor: colors.textRed, borderRadius: '12%' },
+                selected_label: { color: colors.text }, //'rgba(255, 255, 255, 1)' },
+                selected_month: { backgroundColor: colors.textRed },
                 //year_selector_label: { display:'none'},
                 //day_cell:{backgroundColor:'#dedede'},
-                month_selector_label: {fontSize: 16, fontWeight:600, textTransform:'capitalize', color:colors.text},
-                year_selector_label: {fontSize: 16, fontWeight:600, textTransform:'capitalize', color:colors.text},
+                month_selector_label: { fontSize: 16, fontWeight: 600, textTransform: 'capitalize', color: colors.text },
+                year_selector_label: { fontSize: 16, fontWeight: 600, textTransform: 'capitalize', color: colors.text },
                 //day: {borderWidth:1, paddingVertical:8, },
-                day_label: {fontSize:16, lineHeight:24, color: colors.text},
-                button_next: { backgroundColor: colors.cancelButton, borderRadius:'100%', padding:12 },
+                day_label: { fontSize: 16, lineHeight: 24, color: colors.text },
+                button_next: { backgroundColor: colors.cancelButton, borderRadius: '100%', padding: 12 },
                 //button_next_image:{color:'red'},
-                button_prev: { backgroundColor: colors.cancelButton, borderRadius:'100%', padding:12},
+                button_prev: { backgroundColor: colors.cancelButton, borderRadius: '100%', padding: 12 },
               }}
-            />          
-            
+            />
+
             {/* PULSANTI CHIUSURA */}
-            <View style={[styles.modalButtons, {marginTop:0}]}>
+            <View style={[styles.modalButtons, { marginTop: 0 }]}>
               {/* CANCEL */}
-              <TouchableOpacity 
-                style={styles.cancelButton} 
-                onPress={ () => 
+              <TouchableOpacity
+                style={styles.cancelButton}
+                onPress={() =>
                   setDatepickerVisible(false) // CHIUDE IL DATEPICKER E LASCIA INVARIATO
                 }>
                 {/*<Text style={styles.cancelButtonText}>{dataLabel(language, 16]}</Text>*/}
-                <IconSymbol size={24} name="xmark" color={'#969696'} style={{marginLeft:0}} />
+                <IconSymbol size={24} name="xmark" color={'#969696'} style={{ marginLeft: 0 }} />
               </TouchableOpacity>
               {/* CONFERMA */}
               <TouchableOpacity
-              style={styles.addButton}  
-                onPress={ () => {
+                style={styles.addButton}
+                onPress={() => {
                   datepickerCaller === 'startDate' ? // AGGIORNA LA VARIABILE CHIAMANTE
-                    setMyStartDate(selectedDate) 
-                    : 
-                    setMyEndDate(selectedDate); 
+                    setMyStartDate(selectedDate)
+                    :
+                    setMyEndDate(selectedDate);
                   setDatepickerVisible(false) // CHIUDE IL DATEPICKER
                 }}>
-                <IconSymbol size={24} name="checkmark" color={colors.white} style={{marginRight:0}} />
+                <IconSymbol size={24} name="checkmark" color={colors.white} style={{ marginRight: 0 }} />
               </TouchableOpacity>
             </View>
 
