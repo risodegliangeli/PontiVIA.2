@@ -146,7 +146,7 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
   const [nationalExcluded, setNationalExcluded] = useState<number[]>([]); // FEST. NAZ. DA IGNORARE
   const [myCountry, setMyCountry] = useState(systemLanguage); // es: 'it-IT' --> DROPDOWN
   const [myLanguage, setMyLanguage] = useState(systemLanguage.slice(0, 2)); // es 'it' --> LINGUA SISTEMA
-  const [sniffer, setSniffer] = useState<string | undefined>(undefined);
+  const [sniffer, setSniffer] = useState<string | undefined>();
   const [goBack, setGoBack] = useState<string | undefined>(undefined);
   const [myPreferences, setMyPreferences] = useState<any>(createDefaultPreferences(systemLanguage));  // <--- NUOVO
 
@@ -196,8 +196,8 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
       myPreferences, setMyPreferences,              // preferences 'nuovo' (distribuito da Context)
       goBack, setGoBack,
       myLanguage, setMyLanguage,
-      sniffer,
-      adUnitId
+      sniffer, setSniffer,
+      adUnitId, setAdUnitId
     }}>
       {children}
     </HolydaysContext.Provider>

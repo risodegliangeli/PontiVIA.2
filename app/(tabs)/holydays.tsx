@@ -753,7 +753,7 @@ export default function HolydaysScreen() {
       let msg = `${dataLabel(myLanguage, 28)}\n\n*${itemToShare.description ?? ''}*\n${(itemToShare.startDate).toLocaleDateString(myLanguage, { day: 'numeric', month: 'long', year: 'numeric' })}\n\n---\n\n`;
 
       // gestione link pontivia://
-      msg += `📲\n${sniffer}`
+      msg += `📲\n${sniffer || 'https://pontivia.blogspot.com/p/redirect.html?action=newItemFromExternal'}`
       //msg += `https://pontivia-2025.web.app/detect.html?action=newItemFromExternal`;
       if (itemToShare.startDate) { msg += `&pStartDate=${(itemToShare.startDate).getFullYear()}-${(itemToShare.startDate).getMonth() + 1}-${(itemToShare.startDate).getDate()}` };
       if (itemToShare.description) { msg += `&pDescription=${(itemToShare.description).replace(/ /g, "%20")}`; }

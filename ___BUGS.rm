@@ -2,6 +2,17 @@
 #############################################################################
 
 
+- ### GRAFICA BALLOON SIDLABEL
+  -- rivedere grafica su tablet
+
+---
+
+- ### SPLITTEDBAR
+  -- correggere movimnto da -1 a 0 / da 1 a 0
+  -- click su pulsante della pagina dove si è posizionati non deve scatenare nulla
+
+---
+
 - ### CONDIVISIONE FESTIVITA NAZIONALI
   -- solo se il Paese è diverso da quello locale?
 

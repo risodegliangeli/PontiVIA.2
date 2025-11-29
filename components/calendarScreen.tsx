@@ -121,8 +121,9 @@ const CalendarScreen = ({ callerPreferences }: any) => {
     id: any, // viene passato il record completo (vedi sopra)
   ) {
     try {
+      console.log('DEBUG handleShare - sniffer value:', sniffer);
       let msg = '';
-      let link = sniffer;
+      let link = sniffer || 'https://pontivia.blogspot.com/p/redirect.html?action=newItemFromExternal';
 
       if (type === 'holyday') {
         // ////////////////////////////
