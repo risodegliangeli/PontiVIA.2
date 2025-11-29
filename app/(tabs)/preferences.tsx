@@ -74,14 +74,6 @@ export default function Preferences() {
   // VISIBILITA MODAL PRIVACY
   const [isPrivacyVisible, setIsPrivacyVisible] = useState<boolean>(true);
 
-  useEffect(() => {
-    mobileAds()
-      .initialize()
-      .then(adapterStatuses => {
-        console.log('AdMob Initialized @ preferences.tsx');
-      });
-  }, []);
-
   const navigation = useNavigation();
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
@@ -92,6 +84,7 @@ export default function Preferences() {
   useForeground(() => {
     Platform.OS === 'ios' && bannerRef.current?.load();
   });
+
 
 
   // CALCOLO DINAMICO MARGINE ESTERNO DELLE CARD
@@ -316,7 +309,7 @@ export default function Preferences() {
         </View>
 
         {/* GOOGLE ADMOB ############################################################################# */}
-        {isAdvertising &&adUnitId !== undefined &&
+        {isAdvertising && (adUnitId !== undefined) &&
           <View style={[styles.advContainer, { width: '100%', alignItems: 'center', }]}>
             <Text style={{ fontSize: 10, color: colors.disabled, marginBottom: 8 }}>ADV</Text>
             <BannerAd
@@ -415,7 +408,7 @@ export default function Preferences() {
         </Suspense>
 
         {/* GOOGLE ADMOB ####################################################################### */}
-        {isAdvertising &&adUnitId !== undefined &&
+        {isAdvertising && (adUnitId !== undefined) &&
           <View style={[styles.advContainer, { width: '100%', alignItems: 'center', }]}>
             <Text style={{ fontSize: 10, color: colors.disabled, marginBottom: 8 }}>ADV</Text>
             <BannerAd
@@ -427,7 +420,7 @@ export default function Preferences() {
 
         {/* INFO  ##################################################################### */}
         <View style={{ width: '100%' }}>
-          <Text style={{ fontSize: 11, alignSelf: 'center', color: colors.text }}>Angeli & Associati - PontiVIA! Rel. 1.0.0 (17)</Text>
+          <Text style={{ fontSize: 11, alignSelf: 'center', color: colors.text }}>2025 Angeli e Associati - PontiVIA! Rel. 1.0.1</Text>
         </View>
         {/* <Suspense>
           <Privacy />

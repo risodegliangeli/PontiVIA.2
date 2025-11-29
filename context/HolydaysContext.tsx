@@ -1,4 +1,10 @@
-import React, { createContext, ReactNode, useContext, useState, useEffect } from 'react';
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useState,
+  useEffect
+} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getLocales, } from 'expo-localization';
 import { getLocalizedWeekdays } from '@/app/data/data';
@@ -47,23 +53,23 @@ interface HolydaysContextType {
   // nb. va azzerato ogni volta che si modifica la dorpdown ES: [1, 3, ...]
   nationalExcluded: number[];
   setNationalExcluded: React.Dispatch<React.SetStateAction<number[]>>;
-  
+
   // NUOVE PREREFENCES
   myPreferences: any;
   setMyPreferences: React.Dispatch<React.SetStateAction<any>>;
-  
+
   // GESTISCE LA DROPDOWN FESTIVITA PER PAESE
   myCountry: string;
   setMyCountry: React.Dispatch<React.SetStateAction<string>>;
-  
+
   // GESTISCE LA LINGUA DELL'APP
   myLanguage: string;
   setMyLanguage: React.Dispatch<React.SetStateAction<string>>;
-  
+
   // FLAG PER GESTIRE NAVIGAZIONE INDIETRO
   goBack: string | undefined;
   setGoBack: React.Dispatch<React.SetStateAction<string | undefined>>;
-  
+
   // URL ESTERNA PER IL DETECT (firebase/blogspot)
   sniffer: string | undefined;
   setSniffer: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -129,8 +135,7 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
       startDate: new Date(holiday.startDate),
       endDate: holiday.endDate && new Date(holiday.endDate), // SOLO SE != null
     }));
-  };  
-  
+  };
 
   // LGGE LINGUA DISPOSITIVO
   const systemLanguage = getLocales()[0].languageTag;
@@ -144,7 +149,17 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
   const [sniffer, setSniffer] = useState<string | undefined>(undefined);
   const [goBack, setGoBack] = useState<string | undefined>(undefined);
   const [myPreferences, setMyPreferences] = useState<any>(createDefaultPreferences(systemLanguage));  // <--- NUOVO
-  const [adUnitId, setAdUnitId] = useState<string>();
+
+  // ADV ID - INIZIALIZZAZIONE SINCRONA PER PERMETTERE IL CARICAMENTO DEI BANNER AL BOOT
+  // - iOS prod: ca-app-pub-3704551485094904/6380057197 <--- *
+  // - iOS test: ca-app-pub-3940256099942544/2934735716
+  // - Android prod: ca-app-pub-3704551485094904/1638672883
+  // - Android test: ca-app-pub-3940256099942544/6300978111 <--- *
+  const [adUnitId, setAdUnitId] = useState<string>(
+    Platform.OS === 'ios'
+      ? "ca-app-pub-3704551485094904/6380057197"
+      : "ca-app-pub-3940256099942544/6300978111"
+  );
 
   // INIZIALIZZAZIONE UNA TANTUM DATI INTERNI E DA LOCAL STORAGE ///////////////////////////
   useEffect(() => {
@@ -166,35 +181,22 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
       if (myStoredPreferences) setMyPreferences(myStoredPreferences);
 
       //setSniffer('https://pontivia-2025.web.app/detect.html?action=newItemFromExternal');       // LINK ESTERNO PER IL DETECT: firebase
-      setSniffer('https://pontivia.blogspot.com/p/redirect.html?action=newItemFromExternal'); // "  "   "   blogspot
+      setSniffer('https://pontivia.blogspot.com/p/redirect.html?action=newItemFromExternal');     // "  "   "   blogspot
 
-      // ADV ID 
-      // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
-      //
-      // - iOS id: ca-app-pub-3704551485094904/6380057197
-      // 
-      // - Android id:ca-app-pub-3704551485094904/1638672883
-      // 
-      if (Platform.OS === 'ios') {
-        setAdUnitId("ca-app-pub-3940256099942544/2934735716") 
-      } else {
-        setAdUnitId("ca-app-pub-3940256099942544/6300978111");
-      }
-      
     };
     initializeData(); // CHIAMA SE STESSA
   }, []);
 
   return (
     <HolydaysContext.Provider value={{
-      newPersonalHolydays, setNewPersonalHolydays, // NUOVO GIORNI PERSONALI
-      nationalHolydays, setNationalHolydays,    // FESTIVITA NAZIONALI
-      nationalExcluded, setNationalExcluded,    // FEST. NAZ. DA IGNORARE
-      myCountry, setMyCountry,           // DROPDOWN FESTIVITA PER PAESE
-      myPreferences, setMyPreferences,       // preferences 'nuovo' (distribuito da Context)
+      newPersonalHolydays, setNewPersonalHolydays,  // NUOVO GIORNI PERSONALI
+      nationalHolydays, setNationalHolydays,        // FESTIVITA NAZIONALI
+      nationalExcluded, setNationalExcluded,        // FEST. NAZ. DA IGNORARE
+      myCountry, setMyCountry,                      // DROPDOWN FESTIVITA PER PAESE
+      myPreferences, setMyPreferences,              // preferences 'nuovo' (distribuito da Context)
       goBack, setGoBack,
       myLanguage, setMyLanguage,
-      sniffer, 
+      sniffer,
       adUnitId
     }}>
       {children}

@@ -1,15 +1,15 @@
 import SplittedBar from '@/components/ui/SplittedBar';// MY CUSTOM SPLITTED BAR
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { Tabs } from 'expo-router';
-import { StyleSheet, useColorScheme, View,   } from 'react-native';
+import { StyleSheet, useColorScheme, View, } from 'react-native';
 import { MenuProvider } from 'react-native-popup-menu';
 import MaskedView from "@react-native-masked-view/masked-view";
 import { BlurView } from 'expo-blur';
 import { LinearGradient } from "expo-linear-gradient";
 import { easeGradient } from "react-native-easing-gradient";
-import * as SplashScreen from 'expo-splash-screen'; 
+import * as SplashScreen from 'expo-splash-screen';
 import { useSplashCarousel } from '@/context/SplashCarouselContext';
-import { opacity } from 'react-native-reanimated/lib/typescript/Colors';
+//import { opacity } from 'react-native-reanimated/lib/typescript/Colors';
 //import { useContext } from 'react';
 //import { HolydaysProvider } from '@/context/HolydaysContext';// CONTEXT
 
@@ -29,9 +29,9 @@ export default function TabLayout() {
 
   const gradient = easeGradient({
     colorStops: {
-      0: {color: 'rgba(0,0,0, 1)'},
-      0.5: {color: 'rgba(0,0,0, .5)'},
-      1: {color: 'rgba(0,0,0, .01)'}
+      0: { color: 'rgba(0,0,0, 1)' },
+      0.5: { color: 'rgba(0,0,0, .5)' },
+      1: { color: 'rgba(0,0,0, .01)' }
     },
   });
   const colors = gradient.colors;
@@ -45,21 +45,22 @@ export default function TabLayout() {
           <LinearGradient
             locations={locations as [number, number, ...number[]]}
             colors={colors as [string, string, ...string[]]}
-            style={[StyleSheet.absoluteFill, {height:64, pointerEvents: 'box-none',}]} />
-          }
-        style={[StyleSheet.absoluteFill, {pointerEvents: 'box-none',}]} >
-        <BlurView 
+            style={[StyleSheet.absoluteFill, { height: 64, pointerEvents: 'box-none', }]} />
+        }
+        style={[StyleSheet.absoluteFill, { pointerEvents: 'box-none', }]} >
+        <BlurView
           experimentalBlurMethod="dimezisBlurView"
           intensity={60}
           tint={isLight ? 'light' : 'dark'}
           style={{
-            position:'absolute', 
-            top:0, 
-            left:0, 
-            height:128, 
-            width:'100%', 
-            pointerEvents: 'box-none',}} />
-      </MaskedView>       
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            height: 128,
+            width: '100%',
+            pointerEvents: 'box-none',
+          }} />
+      </MaskedView>
     )
   };
 
@@ -67,17 +68,17 @@ export default function TabLayout() {
 
   return (
     <MenuProvider>
-      <ThemeProvider value={!isLight ? DarkTheme : DefaultTheme}> 
+      <ThemeProvider value={!isLight ? DarkTheme : DefaultTheme}>
         <Tabs
           initialRouteName="index"
           //tabBar={ props => (isCarouselVisible ? null : <SplittedBar {...props}/>)}
           tabBar={props =>
-                  isCarouselVisible ? (
-                  <View style={{ height: 0 }} />
-                  ) : (
-                  <SplittedBar {...props} />
-                  )
-                  }
+            isCarouselVisible ? (
+              <View style={{ height: 0 }} />
+            ) : (
+              <SplittedBar {...props} />
+            )
+          }
           screenOptions={{
             headerShown: false,
             animation: 'shift', // fade | shift | none
@@ -98,7 +99,7 @@ export default function TabLayout() {
               headerShown: true,
               headerTransparent: true,
               headerBackground: () => (
-                <BlurPad/>
+                <BlurPad />
               ),
             }} />
 
@@ -111,7 +112,7 @@ export default function TabLayout() {
               headerShown: true,
               headerTransparent: true,
               headerBackground: () => (
-                <BlurPad/>
+                <BlurPad />
               ),
             }}
           />
@@ -125,11 +126,11 @@ export default function TabLayout() {
               headerShown: true,
               headerTransparent: true,
               headerBackground: () => (
-                <BlurPad/>
+                <BlurPad />
               ),
             }} />
 
-        </Tabs>          
+        </Tabs>
       </ThemeProvider>
     </MenuProvider>
   );

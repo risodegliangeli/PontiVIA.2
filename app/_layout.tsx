@@ -8,10 +8,12 @@ import { SplashCarouselProvider } from '@/context/SplashCarouselContext';
 //import { useFonts } from 'expo-font';
 //import { useColorScheme } from '@/hooks/useColorScheme';
 import { PortalHost } from '@rn-primitives/portal';
+import mobileAds from 'react-native-google-mobile-ads';
+import { useEffect } from 'react';
 
 // GESTISCE LE CHIAMATE ESTERNE DEL TIPO pontivia://...
 const linking = {
-  prefixes: ['pontivia://'], 
+  prefixes: ['pontivia://'],
   config: {
     screens: {
       Home: 'index',              // pontivia://index/
@@ -30,6 +32,18 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const isLight = colorScheme === 'light';
 
+  // INIZIALIZZAZIONE ADMOB AL BOOT DELL'APP
+  useEffect(() => {
+    mobileAds()
+      .initialize()
+      .then(adapterStatuses => {
+        console.log('AdMob Initialized @ app boot (_layout.tsx)');
+      })
+      .catch(error => {
+        console.error('AdMob initialization error:', error);
+      });
+  }, []);
+
   // const [loaded] = useFonts({
   //   SpaceMono: require('@/assets/fonts/NotoSans.ttf'),
   // });
@@ -41,25 +55,25 @@ export default function RootLayout() {
 
   return (
     <>
-    <SplashCarouselProvider>
-      <HolydaysProvider>
-        <ThemeProvider value={isLight ? DarkTheme : DefaultTheme}>
-          <Stack>
-            <Stack.Screen
-              name="(tabs)"
-              options={{
-                headerShown: false,
-                headerStyle: { backgroundColor: 'transparent' },
-                headerTintColor: 'dark',
-              }}
-            />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="dark" />
-        </ThemeProvider>
-      </HolydaysProvider>
-    </SplashCarouselProvider>
-    <PortalHost />
+      <SplashCarouselProvider>
+        <HolydaysProvider>
+          <ThemeProvider value={isLight ? DarkTheme : DefaultTheme}>
+            <Stack>
+              <Stack.Screen
+                name="(tabs)"
+                options={{
+                  headerShown: false,
+                  headerStyle: { backgroundColor: 'transparent' },
+                  headerTintColor: 'dark',
+                }}
+              />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <StatusBar style="dark" />
+          </ThemeProvider>
+        </HolydaysProvider>
+      </SplashCarouselProvider>
+      <PortalHost />
     </>
   );
 }

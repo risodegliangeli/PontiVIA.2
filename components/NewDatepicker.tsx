@@ -1,5 +1,13 @@
 import {useState, useEffect, } from 'react';
-import {  View, Text, TextInput, TouchableOpacity, StyleSheet, useColorScheme, Dimensions, Modal  } from 'react-native';
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  StyleSheet, 
+  useColorScheme, 
+  Dimensions, 
+} from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { addDays, subDays, compareAsc, getDay, differenceInDays, startOfMonth } from 'date-fns';
 import { getLocales, } from 'expo-localization';
@@ -52,10 +60,6 @@ function getWeekdayRecurrence(targetDate: Date) {
     const recurrenceNumber = (daysDifference / 7) + 1;
     return recurrenceNumber;
 }
-
-
-
-
 
 /* ==========================================================================================
 
@@ -324,8 +328,9 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
     datepickerContainer: {
       position:'absolute',
       top: sideMargin * .5, 
-      left: sideMargin * .5,
-      width: width - (sideMargin * 3) , // LARGO QUANTO LA OVERLAY SOTTOSTANTE (= 100%)
+      left: 0, //sideMargin * .5,
+      maxWidth: 550 - sideMargin,
+      width: '100%', //width - (sideMargin * 1.2) , // LARGO QUANTO LA OVERLAY SOTTOSTANTE (= 100%)
       backgroundColor: isLight? colors.white : colors.black, 
       borderRadius:28,
       borderWidth:.5,

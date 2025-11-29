@@ -4,7 +4,7 @@
     "description": "Trova i ponti per vacanze smart!",
     "slug": "pontivia",
     "owner": "angeli-e-associati",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "icon": "./assets/images/icon.png",
     "scheme": "pontivia",
     "userInterfaceStyle": "automatic",

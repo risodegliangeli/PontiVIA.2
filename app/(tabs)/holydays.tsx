@@ -88,7 +88,7 @@ export default function HolydaysScreen() {
     myCountry, setMyCountry,
     goBack, setGoBack,
     myLanguage,
-    sniffer, 
+    sniffer,
     adUnitId
   } = useHolydays();
 
@@ -103,14 +103,6 @@ export default function HolydaysScreen() {
   // SWITCH ADV PER TEST
   const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
 
-  useEffect(() => {
-    mobileAds()
-      .initialize()
-      .then(adapterStatuses => {
-        console.log('AdMob Initialized @ holydays.tsx');
-      });
-  }, []);
-
   const navigation = useNavigation();
 
   // puntatatore ADMOB
@@ -119,6 +111,7 @@ export default function HolydaysScreen() {
   useForeground(() => {
     Platform.OS === 'ios' && bannerRef.current?.load();
   });
+
 
 
 
@@ -423,33 +416,33 @@ export default function HolydaysScreen() {
   /* ---------------------------------------------------------------┐ 
    GESTIONE MODAL NEWDATEPICKER
   └---------------------------------------------------------------- */
-    const [isModalSingleDateVisible, setIsModalSingleDateVisible] = useState<boolean>(false);
+  const [isModalSingleDateVisible, setIsModalSingleDateVisible] = useState<boolean>(false);
 
-    /* VALORI NUOVA MODAL DATEPICKER */
-    const [dpickerStartDate, setDpickerStartDate] = useState<Date>();
-    const [dpickerEndDate, setDpickerEndDate] = useState<Date | null>(null);
-    const [dpickerDescription, setDpickerDescription] = useState<string>('');
-    const [dpickerRepeatOnDate, setDpickerRepeatOnDate] = useState<boolean | undefined>();
-    const [dpickerRepeatOnDay, setDpickerRepeatOnDay] = useState<boolean | undefined>();
+  /* VALORI NUOVA MODAL DATEPICKER */
+  const [dpickerStartDate, setDpickerStartDate] = useState<Date>();
+  const [dpickerEndDate, setDpickerEndDate] = useState<Date | null>(null);
+  const [dpickerDescription, setDpickerDescription] = useState<string>('');
+  const [dpickerRepeatOnDate, setDpickerRepeatOnDate] = useState<boolean | undefined>();
+  const [dpickerRepeatOnDay, setDpickerRepeatOnDay] = useState<boolean | undefined>();
 
-    // // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD FESTIVITA' SINGOLA
-    const [initialIndex, setInitialIndex] = useState<number | null>(null);
+  // // SERVE PER EDIT/SOVRASCRITTURA DEL RECORD FESTIVITA' SINGOLA
+  const [initialIndex, setInitialIndex] = useState<number | null>(null);
 
-    // SERVE PER VISUALIZZARE IL TOAST DI ERRORE
-    const [errorVisible, setErrorVisible] = useState(false);
+  // SERVE PER VISUALIZZARE IL TOAST DI ERRORE
+  const [errorVisible, setErrorVisible] = useState(false);
 
-    // All'inizio del componente HolydaysScreen, aggiungi:
-    const [dpickerToastMessage, setDpickerToastMessage] = useState<string | null>(null);
-    const [dpickerToastIsError, setDpickerToastIsError] = useState<boolean>(false);
+  // All'inizio del componente HolydaysScreen, aggiungi:
+  const [dpickerToastMessage, setDpickerToastMessage] = useState<string | null>(null);
+  const [dpickerToastIsError, setDpickerToastIsError] = useState<boolean>(false);
 
-    /* GESTIONE SHOW/HIDE MODAL */
-    const showModalSingleDate = () => {
-      setIsModalSingleDateVisible(true);
-    };
+  /* GESTIONE SHOW/HIDE MODAL */
+  const showModalSingleDate = () => {
+    setIsModalSingleDateVisible(true);
+  };
 
-    const hideModalSingleDate = () => {
-      setIsModalSingleDateVisible(false);
-    };
+  const hideModalSingleDate = () => {
+    setIsModalSingleDateVisible(false);
+  };
 
   /* ---------------------------------------------------------------┐ 
   // GESTISCE CHIAMATE ESTERNE 
@@ -511,34 +504,34 @@ export default function HolydaysScreen() {
   /* ---------------------------------------------------------------┐ 
       BLOCCO DI SCRIPTING PER AGGIUNTA EVENTO 
   └---------------------------------------------------------------- */
-    // FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
-    const normalizeDate = (date: Date | null): Date | null => {
-      if (!date) return null;
-      return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0));
-    };
+  // FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
+  const normalizeDate = (date: Date | null): Date | null => {
+    if (!date) return null;
+    return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0));
+  };
 
-    // MOSTRA MESSAGGIO ERRORE TEMPORIZZATO NEL DATEPICKER
-    const showToast = (message: string, isError: boolean) => {
-      setDpickerToastMessage(message);
-      setDpickerToastIsError(isError);
-      setErrorVisible(true);
-      // setTimeout(() => {  // Nasconde il toast dopo 4 secondi
-      //   setErrorVisible(false);
-      //   setDpickerToastMessage(null);
-      // }, 5000); 
-    };
+  // MOSTRA MESSAGGIO ERRORE TEMPORIZZATO NEL DATEPICKER
+  const showToast = (message: string, isError: boolean) => {
+    setDpickerToastMessage(message);
+    setDpickerToastIsError(isError);
+    setErrorVisible(true);
+    // setTimeout(() => {  // Nasconde il toast dopo 4 secondi
+    //   setErrorVisible(false);
+    //   setDpickerToastMessage(null);
+    // }, 5000); 
+  };
 
-    /* VERIFICA SE UNA DATA E' COMPRESA IN UN PERIODO
-    L'endDate è normalizzata e rappresenta il giorno successivo 
-    all'ultimo giorno del periodo (per come viene calcolata)
-    Per i periodi, il date picker imposta l'endDate al giorno successivo, 
-    quindi togliamo 1ms per includere l'ultimo giorno */
-    const isDateInRange = (date: Date, start: Date, end: Date): boolean => {
-      const normDate = normalizeDate(date)!.getTime();
-      const normStart = normalizeDate(start)!.getTime();
-      const normEnd = normalizeDate(end)!.getTime() - 1;
-      return normDate >= normStart && normDate <= normEnd;
-    };
+  /* VERIFICA SE UNA DATA E' COMPRESA IN UN PERIODO
+  L'endDate è normalizzata e rappresenta il giorno successivo 
+  all'ultimo giorno del periodo (per come viene calcolata)
+  Per i periodi, il date picker imposta l'endDate al giorno successivo, 
+  quindi togliamo 1ms per includere l'ultimo giorno */
+  const isDateInRange = (date: Date, start: Date, end: Date): boolean => {
+    const normDate = normalizeDate(date)!.getTime();
+    const normStart = normalizeDate(start)!.getTime();
+    const normEnd = normalizeDate(end)!.getTime() - 1;
+    return normDate >= normStart && normDate <= normEnd;
+  };
 
   /* ---------------------------------------------------------------┐ 
             HANDLE ADD EVENT (nuovo)
@@ -771,7 +764,7 @@ export default function HolydaysScreen() {
       if (itemToShare.repeatOnDay) { msg += `&pRODay=true` }
 
       // link download
-      msg += `\n\n${dataLabel(myLanguage, 29)} \nhttp://pontivia-2025.web.app`;
+      msg += `\n\n${dataLabel(myLanguage, 29)} \n\niOS: https://apps.apple.com/it/app/pontivia/id6754095339\n\nAndroid:`;
       const result = await Share.share({
         message: msg,
       });
@@ -1069,7 +1062,7 @@ export default function HolydaysScreen() {
         )}
 
         {/* GOOGLE ADMOB ############################################################################# */}
-        {isAdvertising && adUnitId !== undefined &&
+        {isAdvertising && (adUnitId !== undefined) &&
           <View style={[styles.advContainer, { width: '100%', alignItems: 'center', }]}>
             <Text style={{ fontSize: 10, color: colors.disabled, marginBottom: 8 }}>ADV</Text>
             <BannerAd
@@ -1173,7 +1166,7 @@ export default function HolydaysScreen() {
         </View>
 
         {/* GOOGLE ADMOB ############################################################################# */}
-        {isAdvertising &&adUnitId !== undefined &&
+        {isAdvertising && (adUnitId !== undefined) &&
           <View style={[styles.advContainer, { width: '100%', alignItems: 'center', }]}>
             <Text style={{ fontSize: 10, color: colors.disabled, marginBottom: 8 }}>ADV</Text>
             <BannerAd
@@ -1204,8 +1197,9 @@ export default function HolydaysScreen() {
             StyleSheet.absoluteFill,
             {
               backgroundColor: 'rgba(0, 0, 0, .85)',
-              justifyContent:'center',
-            }]}> 
+              justifyContent: 'center',
+              alignItems: 'center',
+            }]}>
             {/* CARD BIANCA */}
             <Animated.View style={[
               styles.modalContainer,
@@ -1253,14 +1247,14 @@ export default function HolydaysScreen() {
                   )
                 } />
             </Animated.View>
-          </View> 
+          </View>
         </Portal>
-          }
+      }
 
-        {/* SIDELABEL ###################################################################### */}
-        <Suspense>
-          <SideLabel />
-        </Suspense>
+      {/* SIDELABEL ###################################################################### */}
+      <Suspense>
+        <SideLabel />
+      </Suspense>
 
     </ImageBackground>
   );
