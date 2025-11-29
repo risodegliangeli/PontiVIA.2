@@ -1,12 +1,25 @@
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, useColorScheme, Platform, ImageBackground, Pressable, Dimensions} from "react-native";
+import { 
+    View, 
+    Text, 
+    TouchableOpacity, 
+    StyleSheet, 
+    Modal, 
+    useColorScheme, 
+    Platform, 
+    ImageBackground, 
+    Pressable, 
+    Dimensions,
+    SafeAreaView} from "react-native";
 import { useState } from 'react';
 import { Colors } from '@/constants/Colors';
 import Svg, {Path} from 'react-native-svg';
 import { indexLabels as dataLabel } from '@/constants/dataLabel';
-//import { splittedBarLabel } from '@/constants/dataLabel';
 import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT
 import FakeSplittedBar  from '@/components/ui/FakeSplittedBar';
+import Privacy from '@/components/Privacy';
+import Faq from '@/components/Faq';
+
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -113,152 +126,164 @@ const SideLabel = () => {
     }
     })
 
-
     return (
-        <>
-            <View style={styles.label}>
-                <TouchableOpacity
-                    onPress={ () => setInfoModalVisible(!infoModalVisible)}>
-                    <IconSymbol name="info.circle.fill" size={28} color={colors.white} />
-                </TouchableOpacity>
-            </View>  
-            <Modal
-                visible={infoModalVisible}
-                transparent={false}           // false: così sormonta la bottom bar
-                backdropColor={'#333'}      // colore sempre pieno: altrimenti si vede la bar
-                animationType={'fade'}
-                hardwareAccelerated={true}
-                >
-                <ImageBackground 
-                source= {isLight && require('@/assets/images/background-image_minified.jpg') }
-                resizeMode="cover" 
-                style={styles.image} >
+      <>
+        <View style={styles.label}>
+            <TouchableOpacity
+                onPress={ () => setInfoModalVisible(!infoModalVisible)}>
+                <IconSymbol name="info.circle.fill" size={28} color={colors.white} />
+            </TouchableOpacity>
+        </View>  
+        <Modal
+            visible={infoModalVisible}
+            transparent={false}           // false: così sormonta la bottom bar
+            backdropColor={'#333'}      // colore sempre pieno: altrimenti si vede la bar
+            animationType={'fade'}
+            hardwareAccelerated={true}
+            >
+            <ImageBackground 
+            source= {isLight && require('@/assets/images/background-image_minified.jpg') }
+            resizeMode="cover" 
+            style={styles.image} >
 
-                    {/* OVERLAY 50% */}
-                    <View style={
-                        [StyleSheet.absoluteFill,
-                        {
-                            backgroundColor: isLight ? 'rgba(0, 0, 0, .5)' : colors.cardBackground,
-                            flexDirection:'column',
-                            justifyContent:'center',
-                            alignItems:'center',
-                        }]}/>
+                {/* OVERLAY 50% */}
+                <View style={
+                    [StyleSheet.absoluteFill,
+                    {
+                        backgroundColor: isLight ? 'rgba(0, 0, 0, .5)' : colors.cardBackground,
+                        flexDirection:'column',
+                        justifyContent:'center',
+                        alignItems:'center',
+                    }]}/>
 
-                    <View style={{ 
-                        maxWidth: 600, 
-                        width: '100%', 
-                        alignSelf: 'center',
+                <View style={{ 
+                    maxWidth: 600, 
+                    width: '100%', 
+                    alignSelf: 'center',
+                    position:'absolute',
+                    top: Math.trunc(height * .5), 
+                    transform: [{translateY: Math.trunc(height * .35) * -1}],
+                    }}>
+
+                    <Svg
+                        viewBox={viewBox}
+                        width="100%"
+                        height="100%"
+                        fill={fill}
+                        preserveAspectRatio="xMidYMid meet"
+                        style={{ aspectRatio: 360/557, maxWidth: width}}
+                        >
+                        <Path d="M478 260.2C478 373.679 394.663 470.191 278.428 505.77L299.014 557C265.848 540.988 250.408 512.966 250.408 512.966C227.507 517.872 204.138 520.4 179.5 520.4C14.643 520.4 -119 403.905 -119 260.2C-119 116.496 14.643 0 179.5 0C344.357 0 478 116.496 478 260.2Z" />
+                    </Svg>
+
+                    <View style={{
+                        width:'100%',
+                        height:'70%',
                         position:'absolute',
-                        top: Math.trunc(height * .5), 
-                        transform: [{translateY: Math.trunc(height * .35) * -1}],
+                        top:0,
+                        flexDirection:'column',
+                        justifyContent:'space-between',
+                        gap:48,
+                        alignItems:'center',
+                        alignContent:'center',
+                        marginVertical:94,
                         }}>
+                        <Text style={styles.sectionTitle}>
+                            {dataLabel(myLanguage, 4)}
+                        </Text>
 
-                        <Svg
-                            viewBox={viewBox}
-                            width="100%"
-                            height="100%"
-                            fill={fill}
-                            preserveAspectRatio="xMidYMid meet"
-                            style={{ aspectRatio: 360/557, maxWidth: width}}
-                            >
-                            <Path d="M478 260.2C478 373.679 394.663 470.191 278.428 505.77L299.014 557C265.848 540.988 250.408 512.966 250.408 512.966C227.507 517.872 204.138 520.4 179.5 520.4C14.643 520.4 -119 403.905 -119 260.2C-119 116.496 14.643 0 179.5 0C344.357 0 478 116.496 478 260.2Z" />
-                        </Svg>
+                        <Text style={[styles.dida, {paddingHorizontal:48}]}>
+                            {dataLabel(myLanguage, infoStep)}
+                        </Text>
 
                         <View style={{
-                            width:'100%',
-                            height:'70%',
-                            position:'absolute',
-                            top:0,
                             flexDirection:'column',
-                            justifyContent:'space-between',
-                            gap:48,
                             alignItems:'center',
-                            alignContent:'center',
-                            marginVertical:94,
+                            gap:48,
                             }}>
-                            <Text style={styles.sectionTitle}>
-                                {dataLabel(myLanguage, 4)}
-                            </Text>
-
-                            <Text style={[styles.dida, {paddingHorizontal:48}]}>
-                                {dataLabel(myLanguage, infoStep)}
-                            </Text>
-
+                            {/* SPLITTED BAR */}
+                            <FakeSplittedBar 
+                                index={infoStep}
+                                action={ (x) => {
+                                    setInfoStep(x);
+                                    }}/>
+                            {/* PALLINI */}
                             <View style={{
-                                flexDirection:'column',
-                                alignItems:'center',
-                                gap:48,
+                                width:'55%', 
+                                //maxWidth: 314,
+                                flexDirection:'row', 
+                                justifyContent:'space-between', 
+                                alignItems:'center'
                                 }}>
-                                {/* SPLITTED BAR */}
-                                <FakeSplittedBar 
-                                    index={infoStep}
-                                    action={ (x) => {
-                                        setInfoStep(x);
-                                        }}/>
-                                {/* PALLINI */}
-                                <View style={{
-                                    width:'55%', 
-                                    //maxWidth: 314,
-                                    flexDirection:'row', 
-                                    justifyContent:'space-between', 
-                                    alignItems:'center'
-                                    }}>
-                                    <TouchableOpacity
-                                        onPress={ () => {
-                                            if (infoStep > 1) setInfoStep( infoStep - 1 )  
-                                            }}>                              
-                                        <IconSymbol name='chevron.left' size={Platform.OS === 'ios' ? 20:28} color={colors.disabled} />
-                                    </TouchableOpacity>
-                                    <Pressable 
-                                        onPress={ () => setInfoStep(1) }
-                                        style={{width:12, height:12, borderRadius:12,
-                                        backgroundColor: infoStep === 1 ? colors.blueBar : colors.disabled }}/>
-                                    <Pressable 
-                                        onPress={ () => setInfoStep(2) }
-                                        style={{width:12, height:12, borderRadius:12,
-                                        backgroundColor: infoStep === 2 ? colors.blueBar : colors.disabled }}/>
-                                    <Pressable 
-                                        onPress={ () => setInfoStep(3) }
-                                        style={{width:12, height:12, borderRadius:12,
-                                        backgroundColor: infoStep === 3 ? colors.blueBar : colors.disabled }}/>
-                                    <TouchableOpacity
-                                        onPress={ () => {
-                                            if (infoStep < 3) setInfoStep( infoStep + 1 )
-                                            }}>
-                                        <IconSymbol name='chevron.right' size={Platform.OS === 'ios' ? 20:28} color={colors.disabled} />
-                                    </TouchableOpacity>
-                                </View>  
-                            </View>
-
-
+                                <TouchableOpacity
+                                    onPress={ () => {
+                                        if (infoStep > 1) setInfoStep( infoStep - 1 )  
+                                        }}>                              
+                                    <IconSymbol name='chevron.left' size={Platform.OS === 'ios' ? 20:28} color={colors.disabled} />
+                                </TouchableOpacity>
+                                <Pressable 
+                                    onPress={ () => setInfoStep(1) }
+                                    style={{width:12, height:12, borderRadius:12,
+                                    backgroundColor: infoStep === 1 ? colors.blueBar : colors.disabled }}/>
+                                <Pressable 
+                                    onPress={ () => setInfoStep(2) }
+                                    style={{width:12, height:12, borderRadius:12,
+                                    backgroundColor: infoStep === 2 ? colors.blueBar : colors.disabled }}/>
+                                <Pressable 
+                                    onPress={ () => setInfoStep(3) }
+                                    style={{width:12, height:12, borderRadius:12,
+                                    backgroundColor: infoStep === 3 ? colors.blueBar : colors.disabled }}/>
+                                <TouchableOpacity
+                                    onPress={ () => {
+                                        if (infoStep < 3) setInfoStep( infoStep + 1 )
+                                        }}>
+                                    <IconSymbol name='chevron.right' size={Platform.OS === 'ios' ? 20:28} color={colors.disabled} />
+                                </TouchableOpacity>
+                            </View>  
                         </View>
-                    </View>
 
-                    {/* PULS CHIUSURA */}
-                    <View style={{
-                        position:'absolute',
-                        top:Platform.OS === 'ios' ? 44 : 0,
-                        right: 0,
-                        }}>
-                        <TouchableOpacity
-                            style={{
-                            padding:6,
-                            marginTop:24,
-                            marginRight:24,
-                            backgroundColor: isLight ? colors.cancelButton : 'rgba(255, 255, 255, .15)',
-                            borderRadius: 99,
-                            }}
-                            onPress={ () => {
-                                setInfoModalVisible(!infoModalVisible);
-                                setInfoStep(1)}}>
-                            <IconSymbol name='xmark' 
-                                size={Platform.OS === 'ios' ? 24 : 32} 
-                                color={isLight ? colors.black : colors.disabled} />
-                        </TouchableOpacity>
-                    </View>  
-                </ImageBackground>
-            </Modal>
-        </>
+
+                    </View>
+                </View>
+
+                {/* PULS CHIUSURA */}
+                <View style={{
+                    position:'absolute',
+                    top:Platform.OS === 'ios' ? 44 : 0,
+                    right: 0,
+                    }}>
+                    <TouchableOpacity
+                        style={{
+                        padding:6,
+                        marginTop:24,
+                        marginRight:24,
+                        backgroundColor: isLight ? colors.cancelButton : 'rgba(255, 255, 255, .15)',
+                        borderRadius: 99,
+                        }}
+                        onPress={ () => {
+                            setInfoModalVisible(!infoModalVisible);
+                            setInfoStep(1)}}>
+                        <IconSymbol name='xmark' 
+                            size={Platform.OS === 'ios' ? 24 : 32} 
+                            color={isLight ? colors.black : colors.disabled} />
+                    </TouchableOpacity>
+                </View>  
+
+                {/* CREDIT */}
+                <View style={{
+                    position:'absolute',
+                    bottom:72,
+                    width:'100%',
+                    marginHorizontal:24,
+                    flexDirection:'row',
+                    justifyContent:'space-around',
+                    }}>
+                        <Faq />
+                        <Privacy />
+                </View>
+            </ImageBackground>
+        </Modal>
+      </>
     )
 }
 

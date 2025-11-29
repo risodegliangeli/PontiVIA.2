@@ -68,28 +68,22 @@ const CalendarScreen = ({callerPreferences}: any) => {
     adUnitId,
   } = useHolydays();
 
+  // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
+  // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
+  // - iOS id: 
+  // ca-app-pub-3704551485094904/6380057197
+  // - Android id:
+  // ca-app-pub-3704551485094904/1638672883
+  // const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
+  // FLAG ADV PER TEST
+  const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
 
+  // NOMI MESI E GIORNI
+  const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
+  const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
 
-// ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
-// DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
-// - iOS id: 
-// ca-app-pub-3704551485094904/6380057197
-// - Android id:
-// ca-app-pub-3704551485094904/1638672883
-// const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
-
-// FLAG ADV PER TEST
-const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
-
-// NOMI MESI E GIORNI
-const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
-const { months: localizedMonths} = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
-
-
-const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
-
-
+  const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
   const colors = useThemeColors();
 

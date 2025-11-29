@@ -28,7 +28,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewDatepicker from '@/components/NewDatepicker';         // MIO DATEPICKER ✌🏻
 import SideLabel from '@/components/ui/SideLabel';
 import Privacy from '@/components/Privacy';
-import { PortalProvider, Portal } from '@gorhom/portal';
+//import { PortalProvider, Portal } from '@gorhom/portal';
+import { Portal } from '@rn-primitives/portal';
 import { FullWindowOverlay } from 'react-native-screens';
 import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
 
@@ -243,14 +244,14 @@ export default function HolydaysScreen() {
       // marginLeft:32,
       // marginRight:32,
       marginHorizontal: sideMargin,
-      backgroundColor: isLight ? 'rgba(255, 255, 255, 1)' : 'rgba(0,0,0, 1)',
+      backgroundColor: isLight ? colors.white : 'black',
       borderRadius: 32,
       flexDirection: 'column',
-      gap: 24,
+      gap: 32,
       alignItems: 'center', // HOR
       justifyContent: 'center',
       alignContent: 'center',
-      paddingHorizontal: 20,
+      paddingHorizontal: 24,
       paddingVertical: 24,
     },
     datePickerWrapper: {
@@ -871,406 +872,396 @@ export default function HolydaysScreen() {
     <ImageBackground
       source={isLight
         ? require('@/assets/images/background-image_minified.jpg')
-        : require('@/assets/images/background-image_minified-dark.jpg') // o stessa immagine
+        : require('@/assets/images/background-image_minified-dark.jpg')
       }
       resizeMode="cover"
       style={[styles.image, { alignItems: 'center' }]}>
-      <PortalProvider>
 
-        <ScrollView
-          style={styles.container}
-          showsVerticalScrollIndicator={false} >
+      <ScrollView
+        style={styles.container}
+        showsVerticalScrollIndicator={false} >
 
-          {/* TITOLO PAGINA - LE MIE DATE */}
-          <View style={{
-            flexDirection: 'column',
-            alignItems: 'center',
-            marginBottom: 32
-          }}>
-            <Text style={[styles.sectionTitle, { flex: 1, }]}>{dataLabel(myLanguage, 0)}</Text>
+        {/* TITOLO PAGINA - LE MIE DATE */}
+        <View style={{
+          flexDirection: 'column',
+          alignItems: 'center',
+          marginBottom: 32
+        }}>
+          <Text style={[styles.sectionTitle, { flex: 1, }]}>{dataLabel(myLanguage, 0)}</Text>
+        </View>
+
+        {/* PULSANTONE + GIORNI SPECIALI ############################################################# */}
+        <TouchableOpacity
+          style={styles.specialDays}
+          onPress={() => {
+            setDpickerStartDate(new Date());
+            setDpickerEndDate(null);
+            setDpickerDescription('');
+            setDpickerRepeatOnDate(false);
+            setDpickerRepeatOnDay(false);
+            setDpickerToastMessage('');
+            setDpickerToastIsError(false);
+            setGoBack('holydays');          // RIENTRO IN CASO DI OK/CANCEL
+            showModalSingleDate(); // --> APRE MODAL CON DATEPICKER
+          }}
+        >
+          <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', gap: 4 }}>
+            <IconSymbol
+              name="plus" size={36}
+              color={colors.textNegative}
+            />
+            <View style={{ flex: 1, }}><Text style={styles.specialDaysLabel}>{dataLabel(myLanguage, 1)}</Text></View>
           </View>
+        </TouchableOpacity>
 
-          {/* PULSANTONE + GIORNI SPECIALI ############################################################# */}
-          <TouchableOpacity
-            style={styles.specialDays}
-            onPress={() => {
-              setDpickerStartDate(new Date());
-              setDpickerEndDate(null);
-              setDpickerDescription('');
-              setDpickerRepeatOnDate(false);
-              setDpickerRepeatOnDay(false);
-              setDpickerToastMessage('');
-              setDpickerToastIsError(false);
-              setGoBack('holydays');          // RIENTRO IN CASO DI OK/CANCEL
-              showModalSingleDate(); // --> APRE MODAL CON DATEPICKER
-            }}
-          >
-            <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center', gap: 4 }}>
-              <IconSymbol
-                name="plus" size={36}
-                color={colors.textNegative}
-              />
-              <View style={{ flex: 1, }}><Text style={styles.specialDaysLabel}>{dataLabel(myLanguage, 1)}</Text></View>
-            </View>
-          </TouchableOpacity>
+        {/* CARD GIORNI SPECIALI ##################################################################### */}
+        {newPersonalHolydays.length > 0 && (
+          <Suspense>
+            {/* CARD */}
+            <View style={styles.listItem}>
 
-          {/* CARD GIORNI SPECIALI ##################################################################### */}
-          {newPersonalHolydays.length > 0 && (
-            <Suspense>
-              {/* CARD */}
-              <View style={styles.listItem}>
-
-                {/* LABEL SEZIONE CON PULSANTE CANCELLAZIONE */}
-                <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
-                  <Text style={{ opacity: 0 }}>*</Text>
-                  <Text style={[styles.listTitle, { textAlign: 'center' }]}>{dataLabel(myLanguage, 4)}</Text>
-                  {newPersonalHolydays ?
-                    <TouchableOpacity
-                      onPress={async () => {
-                        Alert.alert(
-                          dataLabel(myLanguage, 7),  // Attenzione
-                          dataLabel(myLanguage, 18),// Vuoi eliminare tutte le date ecc.?
-                          [
-                            {
-                              text: dataLabel(myLanguage, 9), // Annulla
-                              style: "cancel"
-                            },
-                            {
-                              text: dataLabel(myLanguage, 10), // Elimina
-                              onPress: async () => {
-                                setNewPersonalHolydays([]);
-                                await saveData([], 'newPersonalHolydays');
-                              }
+              {/* LABEL SEZIONE CON PULSANTE CANCELLAZIONE */}
+              <View style={{ width: '100%', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Text style={{ opacity: 0 }}>*</Text>
+                <Text style={[styles.listTitle, { textAlign: 'center' }]}>{dataLabel(myLanguage, 4)}</Text>
+                {newPersonalHolydays ?
+                  <TouchableOpacity
+                    onPress={async () => {
+                      Alert.alert(
+                        dataLabel(myLanguage, 7),  // Attenzione
+                        dataLabel(myLanguage, 18),// Vuoi eliminare tutte le date ecc.?
+                        [
+                          {
+                            text: dataLabel(myLanguage, 9), // Annulla
+                            style: "cancel"
+                          },
+                          {
+                            text: dataLabel(myLanguage, 10), // Elimina
+                            onPress: async () => {
+                              setNewPersonalHolydays([]);
+                              await saveData([], 'newPersonalHolydays');
                             }
-                          ]
-                        );
-                      }}>
-                      <IconSymbol size={Platform.OS === 'ios' ? 20 : 26} name="plus" color={colors.blueBar} style={{ marginRight: 8, transform: [{ rotate: '45deg' }] }} />
-                    </TouchableOpacity>
-                    :
-                    <Text style={{ opacity: 0 }}>*</Text>
-                  }
-                </View>
-
-                {/* LISTA RIGHE */}
-                {newPersonalHolydays.sort((a: any, b: any) => a.startDate - b.startDate).map((holiday, index) => (
-                  <React.Fragment key={index}>
-                    <View style={{ flexDirection: 'column', }}>
-
-                      {/* RIGA */}
-                      <View style={{
-                        width: '100%',
-                        flexDirection: 'row',
-                        alignItems: 'flex-start',
-                      }}>
-
-                        {/* DOT32 */}
-                        <View>
-                          {holiday.endDate ?
-                            <View style={[styles.dot32noshadow, { marginLeft: 6 }]} />
-                            :
-                            <View style={styles.dot32noshadow} />
                           }
-                          <View style={styles.dot32}>
-                            <Text style={styles.dot32text}>{holiday.startDate.getDate()}</Text>
-                          </View>
+                        ]
+                      );
+                    }}>
+                    <IconSymbol size={Platform.OS === 'ios' ? 20 : 26} name="plus" color={colors.blueBar} style={{ marginRight: 8, transform: [{ rotate: '45deg' }] }} />
+                  </TouchableOpacity>
+                  :
+                  <Text style={{ opacity: 0 }}>*</Text>
+                }
+              </View>
+
+              {/* LISTA RIGHE */}
+              {newPersonalHolydays.sort((a: any, b: any) => a.startDate - b.startDate).map((holiday, index) => (
+                <React.Fragment key={index}>
+                  <View style={{ flexDirection: 'column', }}>
+
+                    {/* RIGA */}
+                    <View style={{
+                      width: '100%',
+                      flexDirection: 'row',
+                      alignItems: 'flex-start',
+                    }}>
+
+                      {/* DOT32 */}
+                      <View>
+                        {holiday.endDate ?
+                          <View style={[styles.dot32noshadow, { marginLeft: 6 }]} />
+                          :
+                          <View style={styles.dot32noshadow} />
+                        }
+                        <View style={styles.dot32}>
+                          <Text style={styles.dot32text}>{holiday.startDate.getDate()}</Text>
                         </View>
+                      </View>
 
-                        {/* TESTO */}
-                        <View style={{ flex: 1, flexDirection: 'column', paddingRight: 12 }}>
-                          {!holiday.endDate ?
-                            <>
-                              <Text style={styles.itemDate}>{`${holiday.startDate.getDate()} ${months[holiday.startDate.getMonth()]?.label}`}</Text>
-                              {/*  SCRIVE ANNO (SOLO SE DIVERSO DALL' ANNO CORRENTE) */}
-                              {holiday.startDate.getFullYear() !== new Date().getFullYear() && <Text style={styles.itemDate}>{holiday.startDate.getFullYear()}</Text>}
-                            </>
-                            :
-                            <Text style={styles.itemDate}>
-                              {holiday.startDate.getDate()}
-                              {' '}
-                              {months[holiday.startDate.getMonth()]?.label.slice(0, 3)}
-                              {' '}
-                              {holiday.repeatOnDate || holiday.repeatOnDay ? '' : holiday.startDate.getFullYear()}
-                              {'-'}
-                              {holiday.endDate.getDate()}
-                              {' '}
-                              {months[holiday.endDate.getMonth()]?.label.slice(0, 3)}
-                              {' '}
-                              {holiday.repeatOnDate || holiday.repeatOnDay ? null : holiday.endDate.getFullYear()}
-                            </Text>
-                          }
+                      {/* TESTO */}
+                      <View style={{ flex: 1, flexDirection: 'column', paddingRight: 12 }}>
+                        {!holiday.endDate ?
+                          <>
+                            <Text style={styles.itemDate}>{`${holiday.startDate.getDate()} ${months[holiday.startDate.getMonth()]?.label}`}</Text>
+                            {/*  SCRIVE ANNO (SOLO SE DIVERSO DALL' ANNO CORRENTE) */}
+                            {holiday.startDate.getFullYear() !== new Date().getFullYear() && <Text style={styles.itemDate}>{holiday.startDate.getFullYear()}</Text>}
+                          </>
+                          :
+                          <Text style={styles.itemDate}>
+                            {holiday.startDate.getDate()}
+                            {' '}
+                            {months[holiday.startDate.getMonth()]?.label.slice(0, 3)}
+                            {' '}
+                            {holiday.repeatOnDate || holiday.repeatOnDay ? '' : holiday.startDate.getFullYear()}
+                            {'-'}
+                            {holiday.endDate.getDate()}
+                            {' '}
+                            {months[holiday.endDate.getMonth()]?.label.slice(0, 3)}
+                            {' '}
+                            {holiday.repeatOnDate || holiday.repeatOnDay ? null : holiday.endDate.getFullYear()}
+                          </Text>
+                        }
 
-                          {/* DESCRIZIONE */}
-                          <Text
-                            style={[
+                        {/* DESCRIZIONE */}
+                        <Text
+                          style={[
+                            styles.itemDescription,
+                            {
+                              flex: 1,
+                              flexWrap: 'wrap',
+                              marginTop: 4,
+                            }]}>
+                          {holiday.description}
+                        </Text>
+
+                        {/* REPEAT ON DATE/DAY */}
+                        {(holiday.repeatOnDate || holiday.repeatOnDay) &&
+                          <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+                            <IconSymbol
+                              size={16}
+                              name="repeat"
+                              color={colors.text}
+                              style={{ marginTop: 8, marginLeft: 10, marginRight: 4, }} />
+                            <Text style={[
                               styles.itemDescription,
                               {
-                                flex: 1,
-                                flexWrap: 'wrap',
-                                marginTop: 4,
-                              }]}>
-                            {holiday.description}
-                          </Text>
+                                paddingLeft: 0,
+                                maxWidth: 240,
+                                fontStyle: 'italic',
+                                fontWeight: 400
+                              }
+                            ]}>
+                              {(holiday.repeatOnDate || holiday.repeatOnDay) && dataLabel(myLanguage, 15)}
+                            </Text>
+                          </View>
+                        }
+                      </View>
 
-                          {/* REPEAT ON DATE/DAY */}
-                          {(holiday.repeatOnDate || holiday.repeatOnDay) &&
-                            <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-                              <IconSymbol
-                                size={16}
-                                name="repeat"
-                                color={colors.text}
-                                style={{ marginTop: 8, marginLeft: 10, marginRight: 4, }} />
-                              <Text style={[
-                                styles.itemDescription,
-                                {
-                                  paddingLeft: 0,
-                                  maxWidth: 240,
-                                  fontStyle: 'italic',
-                                  fontWeight: 400
-                                }
-                              ]}>
-                                {(holiday.repeatOnDate || holiday.repeatOnDay) && dataLabel(myLanguage, 15)}
-                              </Text>
-                            </View>
-                          }
-                        </View>
-
-                        {/* ICONE CONDIVISIONE */}
-                        <View>
-                          <View style={{
-                            flexDirection: 'row',
-                            justifyContent: 'flex-end',
-                            //backgroundColor:'fuchsia', 
-                          }}>
-                            <View style={styles.itemActions}>
-                              <TouchableOpacity onPress={() => handleShare(index)}>
-                                <IconSymbol name="square.and.arrow.up" size={24} color={colors.blueBar} />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => handleEdit(index)} style={{ marginLeft: 10 }}>
-                                <IconSymbol name="pencil" size={20} color={colors.blueBar} />
-                              </TouchableOpacity>
-                              <TouchableOpacity onPress={() => handleDelete(index)} style={{ marginLeft: 10 }}>
-                                <IconSymbol name="trash" size={20} color={colors.blueBar} />
-                              </TouchableOpacity>
-                            </View>
+                      {/* ICONE CONDIVISIONE */}
+                      <View>
+                        <View style={{
+                          flexDirection: 'row',
+                          justifyContent: 'flex-end',
+                          //backgroundColor:'fuchsia', 
+                        }}>
+                          <View style={styles.itemActions}>
+                            <TouchableOpacity onPress={() => handleShare(index)}>
+                              <IconSymbol name="square.and.arrow.up" size={24} color={colors.blueBar} />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => handleEdit(index)} style={{ marginLeft: 10 }}>
+                              <IconSymbol name="pencil" size={20} color={colors.blueBar} />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => handleDelete(index)} style={{ marginLeft: 10 }}>
+                              <IconSymbol name="trash" size={20} color={colors.blueBar} />
+                            </TouchableOpacity>
                           </View>
                         </View>
-
                       </View>
 
                     </View>
-                    {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
-                    {index !== newPersonalHolydays.length - 1 && <View style={{ width: '100%', height: 1, backgroundColor: colors.border, marginVertical: 16 }}></View>}
-                  </React.Fragment>
-                ))}
 
-              </View>
-            </Suspense>
-          )}
-
-          {/* GOOGLE ADMOB ############################################################################# */}
-          {isAdvertising && adUnitId !== undefined &&
-            <View style={[styles.advContainer, { width: '100%', alignItems: 'center', }]}>
-              <Text style={{ fontSize: 10, color: colors.disabled, marginBottom: 8 }}>ADV</Text>
-              <BannerAd
-                ref={bannerRef}
-                unitId={adUnitId}
-                size={BannerAdSize.MEDIUM_RECTANGLE} />
-            </View>
-          }
-
-          {/* FESTIVITA NAZIONALI ###################################################################### */}
-          <View style={styles.listItem}>
-            {/* TITOLO */}
-            <Text style={[styles.listTitle, { textAlign: 'center' }]}>{dataLabel(myLanguage, 2)}</Text>
-
-            {/* DROPDOWN PAESE */}
-            <View style={styles.dropDownCountry}>
-              <DropdownCountry
-                selectedValue={myCountry}
-                onChange={async (item) => {
-                  setMyCountry(item);
-                  await saveData(item, 'myCountry');
-                  setNationalExcluded([]);
-                  await saveData([], 'nationalExcluded');
-                }}
-              />
-              {myCountry.slice(0, 2) === myLanguage ? null : <ResetCountryButton />}
-            </View>
-
-            {nationalHolydays.map((holiday, index) => (
-              <React.Fragment key={index} >
-                <View
-                  key={index}
-                  style={[styles.holidayRow, { justifyContent: 'space-between', alignItems: 'center' }]}>
-                  <View style={[styles.holidayRow, { justifyContent: 'flex-start', alignItems: 'flex-start' }]}>
-                    <View style={{ width: 44, height: 44, borderRadius: 24, backgroundColor: colors.dot32 }}>
-                      <Text style={styles.dot32text}>{holiday.day}</Text>
-                    </View>
-                    <View style={{ flexDirection: 'column' }}>
-                      <Text
-                        style={[
-                          styles.itemDate,
-                          {
-                            color: nationalExcluded.indexOf(index) !== -1 ? colors.disabled : colors.text
-                          }
-                        ]} >
-                        {`${holiday.day} ${months[holiday.month]?.label}`}
-                      </Text>
-                      <Text
-                        style={[
-                          styles.itemDescription,
-                          {
-                            maxWidth: 240,
-                            color: nationalExcluded.indexOf(index) !== -1 ? colors.disabled : colors.text
-                          }
-                        ]}
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                      >
-                        {holiday.description}
-                      </Text>
-                    </View>
                   </View>
-                  <TouchableOpacity
-                    onPress={async () => {
-                      // RIGA DA NON CONTEGGIARE
-                      // 1) SE NON ESISTE NELLA LISTA
-                      if (nationalExcluded.indexOf(index) === -1) {
-                        // AGGIUNGE A nationalExcluded
-                        let tempNationalExcluded: number[] = [...nationalExcluded, index];
-                        setNationalExcluded(tempNationalExcluded);
-                        await saveData(tempNationalExcluded, 'nationalExcluded');
-                      } else {
-                        // ALTRIMENTI ELIMINA DA nationalExcluded
-                        let tempNationalExcluded: number[] = nationalExcluded.filter(i => i !== index);
-                        setNationalExcluded(tempNationalExcluded);
-                        await saveData(tempNationalExcluded, 'nationalExcluded');
-                      }
-                    }}>
-                    {nationalExcluded.indexOf(index) === -1 ?
-                      <IconSymbol
-                        style={{ paddingBottom: 8, }}
-                        size={24}
-                        name={"checkmark.circle.fill"}
-                        color={colors.blueBar}
-                      />
-                      :
-                      <IconSymbol
-                        style={{ paddingBottom: 8, }}
-                        size={24}
-                        name={"xmark"}
-                        color={colors.disabled}
-                      />
-                    }
-                  </TouchableOpacity>
-                </View>
+                  {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
+                  {index !== newPersonalHolydays.length - 1 && <View style={{ width: '100%', height: 1, backgroundColor: colors.border, marginVertical: 16 }}></View>}
+                </React.Fragment>
+              ))}
 
-                {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
-                {index !== nationalHolydays.length - 1 && <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>}
-              </React.Fragment>
-            ))}
-          </View>
-
-          {/* GOOGLE ADMOB ############################################################################# */}
-          {isAdvertising &&adUnitId !== undefined &&
-            <View style={[styles.advContainer, { width: '100%', alignItems: 'center', }]}>
-              <Text style={{ fontSize: 10, color: colors.disabled, marginBottom: 8 }}>ADV</Text>
-              <BannerAd
-                ref={bannerRef}
-                unitId={adUnitId}
-                size={BannerAdSize.MEDIUM_RECTANGLE} />
             </View>
-          }
-
-          {/* INFO + PRIVACY ##################################################################### */}
-          <View style={{ width: '100%' }}>
-            <Text style={{ fontSize: 11, alignSelf: 'center', color: colors.text }}>Angeli & Associati - PontiVIA! Rel. 1.0.0 (16a)</Text>
-          </View>
-          <Suspense>
-            <Privacy />
           </Suspense>
+        )}
 
-          {/* SPACER ################################################################################### */}
-          <View style={{ height: 480 }}></View>
-        </ScrollView>
+        {/* GOOGLE ADMOB ############################################################################# */}
+        {isAdvertising && adUnitId !== undefined &&
+          <View style={[styles.advContainer, { width: '100%', alignItems: 'center', }]}>
+            <Text style={{ fontSize: 10, color: colors.disabled, marginBottom: 8 }}>ADV</Text>
+            <BannerAd
+              ref={bannerRef}
+              unitId={adUnitId}
+              size={BannerAdSize.MEDIUM_RECTANGLE} />
+          </View>
+        }
 
-        {/* nuovo MODAL DATEPICKR ###################################################################### */}
-        {/* <Suspense> */}
-          {/* <Modal
-            visible={isModalSingleDateVisible}
-            presentationStyle="fullScreen"
-            transparent={false}
-            // backdropColor={'rgba(0, 0, 0, .25)'} // NON FUNZIONA TRASPARENZA
-            animationType="none"
-            onRequestClose={hideModalSingleDate}
-            hardwareAccelerated={true}
-            > */}
-            {isModalSingleDateVisible &&
-            <Portal>
-              <FullWindowOverlay style={StyleSheet.absoluteFill}>
+        {/* FESTIVITA NAZIONALI ###################################################################### */}
+        <View style={styles.listItem}>
+          {/* TITOLO */}
+          <Text style={[styles.listTitle, { textAlign: 'center' }]}>{dataLabel(myLanguage, 2)}</Text>
 
-                <View style={styles.backgroundModal}> 
-                  <Animated.View style={[
-                    styles.modalContainer,
-                    {
-                      transform: [{ scale: modalSize.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }) }],
-                      opacity: modalOpacity,
-                    }
-                  ]}>
-                    <NewDatepicker
-                      language={myLanguage}                   // LINGUA
-                      startDate={dpickerStartDate ? dpickerStartDate : new Date(0)}            // DATA INIZIO
-                      endDate={dpickerEndDate}                // DATA FINE O null
-                      description={dpickerDescription}        // DESCRIZIONE
-                      isError={dpickerToastIsError}           // PASSA AL COMPONENT FLAG DI ERRORE
-                      errorMsg={dpickerToastMessage}          // PASSA AL COMPONENT MSG DI ERRORE
-                      repeatOnDate={dpickerRepeatOnDate ? dpickerRepeatOnDate : null}      // RIPETE IN QUELLA DATA
-                      repeatOnDay={dpickerRepeatOnDay ? dpickerRepeatOnDay : null}        // RIPETE QUEL GIORNO DELL'ANNO
-                      initialIndex={initialIndex}             // VALORIZZATO SE EDIT
-                      onCancel={() => {
-                        setInitialIndex(null);                // SE ERA UN EDIT AZZERA IL FLAG
-                        setDpickerToastMessage('');           // AZZERA MSG ERRORE
-                        setDpickerToastIsError(false);        // AZZERA FLAG ERRORE
-                        hideModalSingleDate();
-                        if (goBack !== undefined) {
-                          // CASO CANCEL: DATA NON INSERITA
-                          let tempGoBack: string = goBack;
-                          setGoBack(undefined);       // AZZERA goBack
-                          //navigation.goBack();    // TORNA INDIETRO
-                          navigation.navigate(tempGoBack as never);
+          {/* DROPDOWN PAESE */}
+          <View style={styles.dropDownCountry}>
+            <DropdownCountry
+              selectedValue={myCountry}
+              onChange={async (item) => {
+                setMyCountry(item);
+                await saveData(item, 'myCountry');
+                setNationalExcluded([]);
+                await saveData([], 'nationalExcluded');
+              }}
+            />
+            {myCountry.slice(0, 2) === myLanguage ? null : <ResetCountryButton />}
+          </View>
+
+          {nationalHolydays.map((holiday, index) => (
+            <React.Fragment key={index} >
+              <View
+                key={index}
+                style={[styles.holidayRow, { justifyContent: 'space-between', alignItems: 'center' }]}>
+                <View style={[styles.holidayRow, { justifyContent: 'flex-start', alignItems: 'flex-start' }]}>
+                  <View style={{ width: 44, height: 44, borderRadius: 24, backgroundColor: colors.dot32 }}>
+                    <Text style={styles.dot32text}>{holiday.day}</Text>
+                  </View>
+                  <View style={{ flexDirection: 'column' }}>
+                    <Text
+                      style={[
+                        styles.itemDate,
+                        {
+                          color: nationalExcluded.indexOf(index) !== -1 ? colors.disabled : colors.text
                         }
-                      }
-                      }
-                      onConfirm={(
-                        myStartDate,
-                        myEndDate,
-                        myDescription,
-                        upperRadioButtonActive,
-                        lowerRadioButtonActive) =>
-                        handleAddEvent(
-                          myStartDate,
-                          myEndDate,
-                          myDescription,
-                          upperRadioButtonActive,
-                          lowerRadioButtonActive,
-                        )
-                      } />
-                  </Animated.View>
-                </View> 
+                      ]} >
+                      {`${holiday.day} ${months[holiday.month]?.label}`}
+                    </Text>
+                    <Text
+                      style={[
+                        styles.itemDescription,
+                        {
+                          maxWidth: 240,
+                          color: nationalExcluded.indexOf(index) !== -1 ? colors.disabled : colors.text
+                        }
+                      ]}
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                    >
+                      {holiday.description}
+                    </Text>
+                  </View>
+                </View>
+                <TouchableOpacity
+                  onPress={async () => {
+                    // RIGA DA NON CONTEGGIARE
+                    // 1) SE NON ESISTE NELLA LISTA
+                    if (nationalExcluded.indexOf(index) === -1) {
+                      // AGGIUNGE A nationalExcluded
+                      let tempNationalExcluded: number[] = [...nationalExcluded, index];
+                      setNationalExcluded(tempNationalExcluded);
+                      await saveData(tempNationalExcluded, 'nationalExcluded');
+                    } else {
+                      // ALTRIMENTI ELIMINA DA nationalExcluded
+                      let tempNationalExcluded: number[] = nationalExcluded.filter(i => i !== index);
+                      setNationalExcluded(tempNationalExcluded);
+                      await saveData(tempNationalExcluded, 'nationalExcluded');
+                    }
+                  }}>
+                  {nationalExcluded.indexOf(index) === -1 ?
+                    <IconSymbol
+                      style={{ paddingBottom: 8, }}
+                      size={24}
+                      name={"checkmark.circle.fill"}
+                      color={colors.blueBar}
+                    />
+                    :
+                    <IconSymbol
+                      style={{ paddingBottom: 8, }}
+                      size={24}
+                      name={"xmark"}
+                      color={colors.disabled}
+                    />
+                  }
+                </TouchableOpacity>
+              </View>
 
+              {/* SE NON E' L'ULTIMO ELEMENTO, AGGIUNGE UNA LINEA DI SEPARAZIONE */}
+              {index !== nationalHolydays.length - 1 && <View style={{ width: '100%', height: 1, backgroundColor: colors.border }}></View>}
+            </React.Fragment>
+          ))}
+        </View>
 
-              </FullWindowOverlay>
-            </Portal>}
-          {/* </Modal> */}
-        {/* </Suspense> */}
+        {/* GOOGLE ADMOB ############################################################################# */}
+        {isAdvertising &&adUnitId !== undefined &&
+          <View style={[styles.advContainer, { width: '100%', alignItems: 'center', }]}>
+            <Text style={{ fontSize: 10, color: colors.disabled, marginBottom: 8 }}>ADV</Text>
+            <BannerAd
+              ref={bannerRef}
+              unitId={adUnitId}
+              size={BannerAdSize.MEDIUM_RECTANGLE} />
+          </View>
+        }
+
+        {/* INFO + PRIVACY ##################################################################### */}
+        {/* <View style={{ width: '100%' }}>
+          <Text style={{ fontSize: 11, alignSelf: 'center', color: colors.text }}>Angeli & Associati - PontiVIA! Rel. 1.0.0 (16a)</Text>
+        </View>
+        <Suspense>
+          <Privacy />
+        </Suspense> */}
+
+        {/* SPACER ################################################################################### */}
+        <View style={{ height: 480 }}></View>
+      </ScrollView>
+
+      {/* nuovo MODAL DATEPICKR ###################################################################### */}
+      {isModalSingleDateVisible &&
+        <Portal name='datepicker-portal'>
+
+          {/* OVERLAY SCURO */}
+          <View style={[
+            StyleSheet.absoluteFill,
+            {
+              backgroundColor: 'rgba(0, 0, 0, .85)',
+              justifyContent:'center',
+            }]}> 
+            {/* CARD BIANCA */}
+            <Animated.View style={[
+              styles.modalContainer,
+              {
+                transform: [{ scale: modalSize.interpolate({ inputRange: [0, 1], outputRange: [0, 1] }) }],
+                opacity: modalOpacity,
+              }
+            ]}>
+              <NewDatepicker
+                language={myLanguage}                   // LINGUA
+                startDate={dpickerStartDate ? dpickerStartDate : new Date(0)}            // DATA INIZIO
+                endDate={dpickerEndDate}                // DATA FINE O null
+                description={dpickerDescription}        // DESCRIZIONE
+                isError={dpickerToastIsError}           // PASSA AL COMPONENT FLAG DI ERRORE
+                errorMsg={dpickerToastMessage}          // PASSA AL COMPONENT MSG DI ERRORE
+                repeatOnDate={dpickerRepeatOnDate ? dpickerRepeatOnDate : null}      // RIPETE IN QUELLA DATA
+                repeatOnDay={dpickerRepeatOnDay ? dpickerRepeatOnDay : null}        // RIPETE QUEL GIORNO DELL'ANNO
+                initialIndex={initialIndex}             // VALORIZZATO SE EDIT
+                onCancel={() => {
+                  setInitialIndex(null);                // SE ERA UN EDIT AZZERA IL FLAG
+                  setDpickerToastMessage('');           // AZZERA MSG ERRORE
+                  setDpickerToastIsError(false);        // AZZERA FLAG ERRORE
+                  hideModalSingleDate();
+                  if (goBack !== undefined) {
+                    // CASO CANCEL: DATA NON INSERITA
+                    let tempGoBack: string = goBack;
+                    setGoBack(undefined);       // AZZERA goBack
+                    //navigation.goBack();    // TORNA INDIETRO
+                    navigation.navigate(tempGoBack as never);
+                  }
+                }
+                }
+                onConfirm={(
+                  myStartDate,
+                  myEndDate,
+                  myDescription,
+                  upperRadioButtonActive,
+                  lowerRadioButtonActive) =>
+                  handleAddEvent(
+                    myStartDate,
+                    myEndDate,
+                    myDescription,
+                    upperRadioButtonActive,
+                    lowerRadioButtonActive,
+                  )
+                } />
+            </Animated.View>
+          </View> 
+        </Portal>
+          }
 
         {/* SIDELABEL ###################################################################### */}
         <Suspense>
           <SideLabel />
         </Suspense>
 
-    </PortalProvider>
     </ImageBackground>
   );
 }

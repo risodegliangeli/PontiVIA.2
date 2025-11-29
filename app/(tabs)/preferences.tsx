@@ -25,7 +25,7 @@ import {
   Pressable,
   Dimensions,
 } from 'react-native';
-import Privacy from '@/components/Privacy';
+//import Privacy from '@/components/Privacy';
 
 // GOOGLE ADMOB ///////////////////////////////////
 import mobileAds, { BannerAd, BannerAdSize, useForeground } from 'react-native-google-mobile-ads';
@@ -427,11 +427,11 @@ export default function Preferences() {
 
         {/* INFO  ##################################################################### */}
         <View style={{ width: '100%' }}>
-          <Text style={{ fontSize: 11, alignSelf: 'center', color: colors.text }}>Angeli & Associati - PontiVIA! Rel. 1.0.0 (16a)</Text>
+          <Text style={{ fontSize: 11, alignSelf: 'center', color: colors.text }}>Angeli & Associati - PontiVIA! Rel. 1.0.0 (17)</Text>
         </View>
-        <Suspense>
+        {/* <Suspense>
           <Privacy />
-        </Suspense>
+        </Suspense> */}
 
         {/* SPACER  ############################################################################# */}
         <View style={{ height: 480 }} />

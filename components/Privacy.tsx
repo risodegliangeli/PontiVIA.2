@@ -29,11 +29,10 @@ function Privacy(){
         <Pressable
             onPress={ () => setIsPrivacyVisible(true) }>
             <Text style={{
-            fontSize:12,
+            fontSize:14,
             fontWeight:'800',
             textAlign: 'center',
-            color: colors.blueBar,
-            marginTop: 12,
+            color: colors.white,
             }}>
             {dataLabel(myLanguage, 17)}
             </Text>
@@ -57,7 +56,7 @@ function Privacy(){
                 backgroundColor: colors.cardBackground,
             }}>
                 <Text 
-                    style={{color: colors.text}} >
+                    style={{fontSize:14, color: colors.text}} >
                     {privacy('en', 0)}
                 </Text>
             </ScrollView>

@@ -1,5 +1,5 @@
 import {useState, useEffect, } from 'react';
-import {  View, Text, TextInput, TouchableOpacity, StyleSheet, useColorScheme, Dimensions  } from 'react-native';
+import {  View, Text, TextInput, TouchableOpacity, StyleSheet, useColorScheme, Dimensions, Modal  } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import { addDays, subDays, compareAsc, getDay, differenceInDays, startOfMonth } from 'date-fns';
 import { getLocales, } from 'expo-localization';
@@ -164,22 +164,11 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
 
   // STILI
   const styles:any = StyleSheet.create({
-    // modalContainer: { // CONTENUTO INTERNO ALLA MODAL
-    //   width:'100%',
-    //   flexDirection:'column',
-    //   gap:24,
-    //   alignItems:'center', // HOR
-    //   //justifyContent:'center',
-    //   //alignContent:'center',
-    //   borderWidth:1
-    // },    
     listTitle: {
-      //flex:1,
       minWidth:'100%',
       color: colors.text,
       fontSize: 18,
       fontWeight: '600',
-      //paddingBottom: 12,
       textAlign:'center', 
     },
     textInput: {
@@ -232,8 +221,6 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       borderWidth: 0,
       borderRadius: 8,
       paddingHorizontal: 8,
-      // position:'relative',
-      // zIndex: 99999,
       },
       dropdownSelectedTextStyle: {
       fontSize: 16,
@@ -294,9 +281,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       flexDirection: 'column',
       justifyContent: 'center',
       gap:12,
-      // borderWidth:1,
     },
-
     cancelButton: {
       paddingVertical: 12,
       paddingHorizontal:20,
@@ -330,8 +315,6 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
       alignItems: 'center',
       justifyContent:'center',
       alignContent:'center',
-      //marginLeft: 4,
-
     },
     addButtonText: {
       color: colors.white,
@@ -340,26 +323,28 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
     },
     datepickerContainer: {
       position:'absolute',
-      top: sideMargin, 
-      left: 0,
-      //marginHorizontal: 0, //sideMargin, //12,
+      top: sideMargin * .5, 
+      left: sideMargin * .5,
+      width: width - (sideMargin * 3) , // LARGO QUANTO LA OVERLAY SOTTOSTANTE (= 100%)
+      backgroundColor: isLight? colors.white : colors.black, 
+      borderRadius:28,
+      borderWidth:.5,
+      borderColor: colors.disabled,
+      // ----------------
       paddingHorizontal: sideMargin, //24,
-      paddingVertical: 24,
+      paddingVertical: sideMargin,
+      // ----------------
       flexDirection:'column',
-      //gap:20,
       justifyContent:'space-between',
-      minWidth: width -(sideMargin * 2), // LARGO QUANTO LA MODAL SOTTOSTANTE
-      //flex:1,
-      borderRadius:32,
-      backgroundColor: colors.textNegative, //'rgba(255, 255, 255, .95)',
-      elevation:6,
-      shadowColor: colors.text, // iOS shadow
-      shadowOffset: {
-        width: 0,
-        height: 16, // Match elevation for iOS
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 16 // Match elevation for iOS
+      // ----------------
+      // elevation:6,
+      // shadowColor: colors.text, // iOS shadow
+      // shadowOffset: {
+      //   width: 0,
+      //   height: 16, // Match elevation for iOS
+      // },
+      // shadowOpacity: 0.45,
+      // shadowRadius: 16 // Match elevation for iOS
     },
     errorMsg: {
       fontSize:16,
@@ -440,9 +425,9 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
             </TouchableOpacity>
 
             {/* DROPDOWN DURATA */}
-            <View style={{width:'48%', borderWidth:1, borderColor:'white'}}>
+            <View style={{flex:1, }}>
               <Dropdown
-                style={[styles.dropdownStyle, {zIndex:9999}]}
+                style={styles.dropdownStyle}
                 placeholder={!isFocus ? 'Select' : '...'}
                 placeholderStyle={styles.dropdownPlaceholderStyle}
                 selectedTextStyle={styles.dropdownSelectedTextStyle}
@@ -597,97 +582,104 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
           </TouchableOpacity>
         </View>
 
-      {/* DATEPICKER - GRIGLIA CALENDARIO */}
+      {/* DATEPICKER -> GRIGLIA CALENDARIO */}
       {datepickerVisible && 
-        <View style={styles.datepickerContainer}>
 
-          <DateTimePicker
-            mode="single"
-            calendar="gregory"
-            date={selectedDate}
-            maxDate={maxDate}
-            minDate={minDate}
-            onChange={({date}) => {
-              // VARIABILE DI SERVIZIO
-              let d: Date | null = createUTCDate(date);
-              if (datepickerCaller === 'startDate') { 
-                setMyStartDate(d); 
-              } else { 
-                setMyEndDate(d); 
-              }; 
-              setSelectedDate(d); // AGGIORNA DATA NEL FILED
-              // setMaxDate(null); // RESETTA maxdate
-              // setMinDate(null);
+        // OVERLAY SCURO TRASPARENTE 
+        <View style={[
+          StyleSheet.absoluteFill, 
+          {
+            backgroundColor: 'rgba(0, 0, 0, .85)', 
+          }
+          ]}>
+
+          <View style={[styles.datepickerContainer]}>
+
+            <DateTimePicker
+              mode="single"
+              calendar="gregory"
+              date={selectedDate}
+              maxDate={maxDate}
+              minDate={minDate}
+              onChange={({date}) => {
+                // VARIABILE DI SERVIZIO
+                let d: Date | null = createUTCDate(date);
+                if (datepickerCaller === 'startDate') { 
+                  setMyStartDate(d); 
+                } else { 
+                  setMyEndDate(d); 
+                }; 
+                setSelectedDate(d); // AGGIORNA DATA NEL FILED
+                // setMaxDate(null); // RESETTA maxdate
+                // setMinDate(null);
+                }
               }
-            }
-            containerHeight={220}
-            hideWeekdays={true}
-            disableMonthPicker={false}
-            disableYearPicker={false}
-            showOutsideDays={false}          
-            firstDayOfWeek={1}
-            //timeZone={'UTC'}
-            locale={language}
-            style={{
-              // padding:0, 
-              // margin:0, 
-              //backgroundColor: colors.textNegative,
-              // borderWidth:1,
-              // paddingTop: 24
-            }}
-            //navigationPosition={'right'}
-            styles={{
-              ...defaultStyles,
-              header:{marginBottom:36},
-              //today: { borderWidth: 0, backgroundColor:'transparent', }, 
-              //today_label: { color: '#333333'},
-              //years: {color: colors.text},
-              selected: { backgroundColor: colors.textRed, borderRadius:'12%' }, 
-              selected_label: { color: colors.text}, //'rgba(255, 255, 255, 1)' },
-              selected_month: {backgroundColor: colors.textRed},
-              //year_selector_label: { display:'none'},
-              //day_cell:{backgroundColor:'#dedede'},
-              month_selector_label: {fontSize: 16, fontWeight:600, textTransform:'capitalize', color:colors.text},
-              year_selector_label: {fontSize: 16, fontWeight:600, textTransform:'capitalize', color:colors.text},
-              //day: {borderWidth:1, paddingVertical:8, },
-              day_label: {fontSize:16, lineHeight:24, color: colors.text},
-              button_next: { backgroundColor: colors.cancelButton, borderRadius:'100%', padding:12 },
-              //button_next_image:{color:'red'},
-              button_prev: { backgroundColor: colors.cancelButton, borderRadius:'100%', padding:12},
-            }}
-          />          
-          
-          {/* <View style={{width: '100%', height:1, backgroundColor:'#dedede', marginBottom: 24}} /> */}
-          
+              containerHeight={220}
+              hideWeekdays={true}
+              disableMonthPicker={false}
+              disableYearPicker={false}
+              showOutsideDays={false}          
+              firstDayOfWeek={1}
+              //timeZone={'UTC'}
+              locale={language}
+              style={{
+                // padding:0, 
+                // margin:0, 
+                //backgroundColor: colors.textNegative,
+                // borderWidth:1,
+                // paddingTop: 24
+              }}
+              //navigationPosition={'right'}
+              styles={{
+                ...defaultStyles,
+                header:{marginBottom:36},
+                //today: { borderWidth: 0, backgroundColor:'transparent', }, 
+                //today_label: { color: '#333333'},
+                //years: {color: colors.text},
+                selected: { backgroundColor: colors.textRed, borderRadius:'12%' }, 
+                selected_label: { color: colors.text}, //'rgba(255, 255, 255, 1)' },
+                selected_month: {backgroundColor: colors.textRed},
+                //year_selector_label: { display:'none'},
+                //day_cell:{backgroundColor:'#dedede'},
+                month_selector_label: {fontSize: 16, fontWeight:600, textTransform:'capitalize', color:colors.text},
+                year_selector_label: {fontSize: 16, fontWeight:600, textTransform:'capitalize', color:colors.text},
+                //day: {borderWidth:1, paddingVertical:8, },
+                day_label: {fontSize:16, lineHeight:24, color: colors.text},
+                button_next: { backgroundColor: colors.cancelButton, borderRadius:'100%', padding:12 },
+                //button_next_image:{color:'red'},
+                button_prev: { backgroundColor: colors.cancelButton, borderRadius:'100%', padding:12},
+              }}
+            />          
+            
+            {/* PULSANTI CHIUSURA */}
+            <View style={[styles.modalButtons, {marginTop:0}]}>
+              {/* CANCEL */}
+              <TouchableOpacity 
+                style={styles.cancelButton} 
+                onPress={ () => 
+                  setDatepickerVisible(false) // CHIUDE IL DATEPICKER E LASCIA INVARIATO
+                }>
+                {/*<Text style={styles.cancelButtonText}>{dataLabel(language, 16]}</Text>*/}
+                <IconSymbol size={24} name="xmark" color={'#969696'} style={{marginLeft:0}} />
+              </TouchableOpacity>
+              {/* CONFERMA */}
+              <TouchableOpacity
+              style={styles.addButton}  
+                onPress={ () => {
+                  datepickerCaller === 'startDate' ? // AGGIORNA LA VARIABILE CHIAMANTE
+                    setMyStartDate(selectedDate) 
+                    : 
+                    setMyEndDate(selectedDate); 
+                  setDatepickerVisible(false) // CHIUDE IL DATEPICKER
+                }}>
+                <IconSymbol size={24} name="checkmark" color={colors.white} style={{marginRight:0}} />
+              </TouchableOpacity>
+            </View>
 
-
-
-
-          <View style={[styles.modalButtons, {marginTop:0}]}>
-            {/* CHIUDE CALENDARIO */}
-            <TouchableOpacity 
-              style={styles.cancelButton} 
-              onPress={ () => 
-                setDatepickerVisible(false) // CHIUDE IL DATEPICKER E LASCIA INVARIATO
-              }>
-              {/*<Text style={styles.cancelButtonText}>{dataLabel(language, 16]}</Text>*/}
-              <IconSymbol size={24} name="xmark" color={'#969696'} style={{marginLeft:0}} />
-            </TouchableOpacity>
-            {/* CONFERMA CALENDARIO */}
-            <TouchableOpacity
-            style={styles.addButton}  
-              onPress={ () => {
-                datepickerCaller === 'startDate' ? // AGGIORNA LA VARIABILE CHIAMANTE
-                  setMyStartDate(selectedDate) 
-                  : 
-                  setMyEndDate(selectedDate); 
-                setDatepickerVisible(false) // CHIUDE IL DATEPICKER
-              }}>
-              <IconSymbol size={24} name="checkmark" color={colors.white} style={{marginRight:0}} />
-            </TouchableOpacity>
           </View>
 
         </View>
+
       }
     </>
   );

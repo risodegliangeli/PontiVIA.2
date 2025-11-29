@@ -7,7 +7,7 @@ import { HolydaysProvider } from '@/context/HolydaysContext'; // CONTEXT
 import { SplashCarouselProvider } from '@/context/SplashCarouselContext';
 //import { useFonts } from 'expo-font';
 //import { useColorScheme } from '@/hooks/useColorScheme';
-
+import { PortalHost } from '@rn-primitives/portal';
 
 // GESTISCE LE CHIAMATE ESTERNE DEL TIPO pontivia://...
 const linking = {
@@ -40,6 +40,7 @@ export default function RootLayout() {
   // }
 
   return (
+    <>
     <SplashCarouselProvider>
       <HolydaysProvider>
         <ThemeProvider value={isLight ? DarkTheme : DefaultTheme}>
@@ -58,5 +59,7 @@ export default function RootLayout() {
         </ThemeProvider>
       </HolydaysProvider>
     </SplashCarouselProvider>
+    <PortalHost />
+    </>
   );
 }

@@ -2,23 +2,6 @@
 #############################################################################
 
 
-- ### ANDROID/iOS
-  -- NewDatepicker modalità DARK
-  -- NewDatepicker non funziona dropdown lunghezza ponte
-
-- ### Portal
-  -- sostituir con --> https://rnprimitives.com/portal/
-
-- ### LINK FAQ
-  -- nella pagina SideLabel
-
----
-
-- ### RELEASE
-  -- bottom pagina preferences
-
----
-
 - ### CONDIVISIONE FESTIVITA NAZIONALI
   -- solo se il Paese è diverso da quello locale?
 
@@ -45,6 +28,26 @@
 
 # TICKET RISOLTI:
 
+- ### RELEASE
+  -- bottom pagina preferences
+
+---
+
+- ### LINK FAQ
+  -- nella pagina SideLabel
+
+---
+
+- ### Portal
+  -- sostituir con --> https://rnprimitives.com/portal/
+
+---
+
+- ### ANDROID/iOS
+  -- NewDatepicker modalità DARK
+  -- NewDatepicker non funziona dropdown lunghezza ponte
+
+---
 
 - ### MARGINHORIZONTAL
   -- calcolare sideMargin = Math.trunc(width * .05)
