@@ -24,6 +24,7 @@ import { addMonths, isWithinInterval } from "date-fns";
 import * as Calendar from 'expo-calendar'; // ACCESSO AL CALENDARIO DI SISTEMA
 import { calendarScrenLabels as dataLabel } from '@/constants/dataLabel'; // LABEL LOCALIZZATE
 import { useNavigation } from '@react-navigation/native';
+import useShareMsgComposer from '@/components/useShareMsgComposer';
 import mobileAds, { BannerAd, BannerAdSize, useForeground, } from 'react-native-google-mobile-ads';
 
 // INTERFACCIA DI NewHolyday (local copy, renamed to avoid type collision with external types)
@@ -50,7 +51,9 @@ const normalizeDate = (date: Date | null): Date | null => {
 
 /* ============================================================================= 
 
+
                 MAIN CALENDARSCREEN - print calendario
+
 
 ============================================================================= */
 const CalendarScreen = ({ callerPreferences }: any) => {
@@ -66,6 +69,9 @@ const CalendarScreen = ({ callerPreferences }: any) => {
     sniffer,
     adUnitId,
   } = useHolydays();
+
+  // HOOK PER COMPORRE I MESSAGGI DI CONDIVISIONE
+  const composeShareMsg = useShareMsgComposer();
 
   // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
   // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
@@ -113,97 +119,17 @@ const CalendarScreen = ({ callerPreferences }: any) => {
     (servirà in futuro per edit/delete) ->
       id[0]: Mon Nov 17 2025 13:00:00 GMT+0100 
       id[1]: 1 
-      id[2]: Giorno sfortunato per me 
+      id[2]: Giorno fortunato per me 
       id[3]: true
   └---------------------------------------------------------------- */
   async function handleShare(
-    type: ('holyday' | 'bridge'), // tipo di condivisione 'holyday' o 'bridge'
-    id: any, // viene passato il record completo (vedi sopra)
+    type: ('holyday' | 'bridge'),   // tipo di condivisione in ingresso 'holyday' o 'bridge'
+    id: any,                        // id: il record completo (vedi sopra)
   ) {
     try {
-      console.log('DEBUG handleShare - sniffer value:', sniffer);
-      let msg = '';
-      let link = sniffer || 'https://pontivia.blogspot.com/p/redirect.html?action=newItemFromExternal';
-
-      if (type === 'holyday') {
-        // ////////////////////////////
-        // TIPO: FESTIVITA' (1+ GIORNI)
-        // ////////////////////////////
-        msg = `${dataLabel(myLanguage, 12)}\n\n`;    // "Vorrei condividere con te"
-        msg += `*${id[2]}*\n`;                    // nome evento
-
-        // Check: cerca se quella data esiste in newPersonalHolydays:
-        const isPersonalHolyday = newPersonalHolydays.some((item: any, index: number) => {
-          // la description è presente in myPersonalHolydays?
-          if (id[2] === item.description) {
-            // SI (la data esiste in myPersonalHolydays)
-
-            // il record in myPersonalHolydays ha anche una endDate?
-            if (newPersonalHolydays[index].endDate === null) {
-              // [ NO = quindi evento di 1 giorno]
-
-              // controllo di conferma: data del giorno premuto = data dell'evento sull'array?
-              if (id[0].getTime() === newPersonalHolydays[index].startDate.getTime()) {
-                // si aggiunge al msg la data in formato human-readable
-                msg += newPersonalHolydays[index].startDate.toLocaleDateString(myLanguage, { day: 'numeric', month: 'long', year: 'numeric' });
-                // si forma la seconda parte del link
-                link += `&pStartDate=${id[0].getFullYear()}-${id[0].getMonth() + 1}-${id[0].getDate()}`;
-                // trattandosi di evento inserito dall'utente
-                // si aggiungono al link anchei description, pRODate e pRODay
-                link += `&pDescription=${newPersonalHolydays[index].description?.replace(/ /g, "%20")}`;
-                if (newPersonalHolydays[index].repeatOnDate) link += '&pRODate=true'
-                if (newPersonalHolydays[index].repeatOnDay) link += '&pRODay=true'
-                return true;
-              };
-            } else {
-              // [ SI = quindi la data appartiene a un evento di più giorni]
-
-              // controllo di conferma: data giorno premuto compresa tra startDate e endDate?
-              if (isWithinInterval(new Date(id[0]), { start: newPersonalHolydays[index].startDate, end: newPersonalHolydays[index].endDate })) {
-                // si aggiunge al msg la doppia data in formato human readable
-                msg += newPersonalHolydays[index].startDate.toLocaleDateString(myLanguage, { day: 'numeric', month: 'long', year: 'numeric' });
-                msg += ' - ';
-                msg += newPersonalHolydays[index].endDate.toLocaleDateString(myLanguage, { day: 'numeric', month: 'long', year: 'numeric' });
-                // idem, si forma il link con la doppia data
-                link += `&pStartDate=${newPersonalHolydays[index].startDate.getFullYear()}-${newPersonalHolydays[index].startDate.getMonth() + 1}-${newPersonalHolydays[index].startDate.getDate()}`;
-                link += `&pEndDate=${newPersonalHolydays[index].endDate.getFullYear()}-${newPersonalHolydays[index].endDate.getMonth() + 1}-${newPersonalHolydays[index].endDate.getDate()}`;
-                // trattandosi di evento inserito dall'utente
-                // si aggiungono al link anchei description, pRODate e pRODay
-                link += `&pDescription=${newPersonalHolydays[index].description?.replace(/ /g, "%20")}`;
-                if (newPersonalHolydays[index].repeatOnDate) link += '&pRODate=true'
-                if (newPersonalHolydays[index].repeatOnDay) link += '&pRODay=true'
-                return true;
-              };
-            }
-          }
-        });
-
-        // se la data NON è inserita dall'utente
-        // si aggiunge al msg la data della probabile festivita nazionale in formato human-readable
-        if (!isPersonalHolyday) {
-          msg += id[0].toLocaleDateString(myLanguage, { day: 'numeric', month: 'long', year: 'numeric' }) + "\n\n";
-        }
-        // se la data è inserita dall'utente si aggiunge il link
-        if (isPersonalHolyday) {
-          msg += `\n\n---\n\n📲\n` + link + "\n\n";
-        }
-        // in ogni caso si aggiunge "Scarica PontiVIA!"
-        msg += `${dataLabel(myLanguage, 13)} \n\niOS: https://apps.apple.com/it/app/pontivia/id6754095339\n\nAndroid:`;
-      } else {
-        // /////////////////////////
-        // TIPO: POSSIBILE PONTE
-        // /////////////////////////
-
-        // MESSAGGIO: solo segnalazione ponte, niente link per inserire le date
-        msg += `${dataLabel(myLanguage, 12)}\n\n`;
-        msg += `*${dataLabel(myLanguage, 9)}*\n`;
-        msg += `${id[0].toLocaleDateString(myLanguage, { day: 'numeric', month: 'long', year: 'numeric' })}\n\n`;
-        msg += `\n---\n\n${dataLabel(myLanguage, 13)} \n\niOS: https://apps.apple.com/it/app/pontivia/id6754095339\n\nAndroid:`;
-      }
-
       // APRE SHARE DEL DISPOSITIVO
       const result = await Share.share({
-        message: msg,
+        message: composeShareMsg(type, id), // RICHIAMA HOOK CON FUNZIONE ESTERNA
       });
 
       if (result.action === Share.sharedAction) {

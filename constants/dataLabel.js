@@ -396,11 +396,12 @@ export function holydayLabels(language,item) {
         'Attenzione, l\'evento è in conflitto con ',                // 24
         'Questa data è già presente ',                              // 25
         'Come funziona?',                                           // 26
-        'Info Privacy',                                       // 27 ex 'Info Privacy'
+        'Info Privacy',                                             // 27 ex 'Info Privacy'
         'Vorrei condividere con te questo evento:',                 // 28
         'Scarica PontiVIA!',                                        // 29
         'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?',    // 30
         'Prosegui',                                                 // 31
+        '(aggiungilo al tuo calendario: '                           // 32
     ],
     'fr':[
         'Mes dates',                                                // 0
@@ -421,7 +422,7 @@ export function holydayLabels(language,item) {
         '(se répète chaque année)',                                 // 15
         'Vos jours spéciaux',                                       // 16
         'Un événement est déjà présent à cette date',               // 17
-        'Voulez-vous supprimer toutes les dates de cette section ?', // 18
+        'Voulez-vous supprimer toutes les dates de cette section ?',// 18
         '(ex. une date fixe qui revient chaque année)',             // 19
         '(ex. une période de vacances)',                            // 20
         'La date de début coïncide avec une fête nationale',        // 21
@@ -430,11 +431,12 @@ export function holydayLabels(language,item) {
         'Attention, l\'événement est en conflit avec ',             // 24
         'Cette date est déjà présente ',                            // 25
         'Comment ça marche ?',                                      // 26
-        'Infos Confidentialité',                              // 27
+        'Infos Confidentialité',                                    // 27
         'Je voudrais partager cet événement avec toi :',            // 28
         'Télécharge PontiVIA !',                                    // 29
-        'Vous allez être redirigé vers une page externe. Voulez-vous continuer ?',  // 30
+        'Vous allez être redirigé vers une page externe. Voulez-vous continuer ?',// 30
         'Continuer',                                                // 31
+        '(ajoute-le à ton calendrier: '                             // 32
     ],  
     'es':[
         'Mis fechas',                                               // 0
@@ -464,11 +466,12 @@ export function holydayLabels(language,item) {
         'Atención, el evento está en conflicto con ',               // 24
         'Esta fecha ya está presente ',                             // 25
         '¿Cómo funciona?',                                          // 26
-        'Info Privacidad',                                    // 27
+        'Info Privacidad',                                          // 27
         'Me gustaría compartir este evento contigo:',               // 28
         '¡Descarga PontiVIA!',                                      // 29
         'Está a punto de ser redirigido a una página externa. ¿Desea continuar?', // 30
         'Continuar',                                                // 31
+        '(añádelo a tu calendario: '                                // 32
     ],  
     'de':[
         'Meine Termine',                                            // 0
@@ -498,11 +501,12 @@ export function holydayLabels(language,item) {
         'Achtung, das Ereignis steht in Konflikt mit ',             // 24
         'Dieses Datum ist bereits vorhanden ',                      // 25
         'Wie funktioniert es?',                                     // 16
-        'Datenschutz-Info',                                   // 17
+        'Datenschutz-Info',                                         // 17
         'Ich möchte dieses Ereignis mit dir teilen:',               // 28
         'Lade PontiVIA herunter!',                                  // 29
         'Sie werden zu einer externen Seite weitergeleitet. Möchten Sie fortfahren?', // 30
         'Fortfahren',                                               // 31
+        '(füge es zu deinem Kalender hinzu: '                       // 32
     ],
     'en':[
         'My dates',                                                 // 0
@@ -531,12 +535,13 @@ export function holydayLabels(language,item) {
         'Warning, the event overlaps with ',                        // 23
         'Warning, the event conflicts with ',                       // 24
         'This date is already present ',                            // 25
-        'How does it work?',                                        // 16
-        'Privacy Info',                                       // 17
+        'How does it work?',                                        // 26
+        'Privacy Info',                                             // 27
         'I would like to share this event with you:',               // 28
         'Download PontiVIA!',                                       // 29
         'You are about to be redirected to an external page. Do you want to continue?', // 30
         'Continue',                                                 // 31
+        '(add it to your calendar: '                                // 32
     ],
     'nl':[
         'Mijn datums',                                              // 0
@@ -565,12 +570,13 @@ export function holydayLabels(language,item) {
         'Let op, het evenement overlapt met ',                      // 23
         'Let op, het evenement is in conflict met ',                // 24
         'Deze datum is al aanwezig ',                               // 25
-        'Hoe werkt het?',                                           // 16
-        'Privacy Info',                                       // 17
+        'Hoe werkt het?',                                           // 26
+        'Privacy Info',                                             // 27
         'Ik wil deze gebeurtenis met je delen:',                    // 28
         'Download PontiVIA!',                                       // 29
         'U wordt doorgestuurd naar een externe pagina. Wilt u doorgaan?',// 30
         'Doorgaan',                                                 // 31
+        '(voeg het toe aan je kalender: '                           // 32
     ],
     'pt':[
         'Minhas datas',                                             // 0
@@ -599,12 +605,13 @@ export function holydayLabels(language,item) {
         'Atenção, o evento se sobrepõe a ',                         // 23
         'Atenção, o evento está em conflito com ',                  // 24
         'Esta data já está presente ',                              // 25
-        'Como funciona?',                                           // 16
-        'Info Privacidade',                                   // 17
+        'Como funciona?',                                           // 26
+        'Info Privacidade',                                         // 27
         'Gostaria de compartilhar este evento com você:',           // 28
         'Baixe PontiVIA!',                                          // 29
         'Você está prestes a ser redirecionado para uma página externa. Deseja continuar?',  // 30
         'Continuar',                                                // 31
+        '(adicione ao seu calendário: '                             // 32
     ],
     'hr': [
         'Moji datumi',                                              // 0
@@ -633,13 +640,13 @@ export function holydayLabels(language,item) {
         'Pažnja, događaj se preklapa s ',                           // 23
         'Pažnja, događaj je u sukobu s ',                           // 24
         'Ovaj datum je već prisutan ',                              // 25
-        'Kako funkcionira?',                                        // 16
-        'Info o privatnosti',                                 // 17
+        'Kako funkcionira?',                                        // 26
+        'Info o privatnosti',                                       // 27
         'Želio bih podijeliti ovaj događaj s tobom:',               // 28
         'Preuzmi PontiVIA!',                                        // 29
         'Bit ćete preusmjereni na vanjsku stranicu. Želite li nastaviti?', // 30
         'Nastavi',                                                  // 31
-
+        '(dodaj u svoj kalendar: '                                  // 32
     ],
     'si': [
         'Moji datumi',                                              // 0
@@ -668,12 +675,13 @@ export function holydayLabels(language,item) {
         'Pozor, dogodek se prekriva z ',                            // 23
         'Pozor, dogodek je v sporu z ',                             // 24
         'Ta datum je že prisoten ',                                 // 25
-        'Kako deluje?',                                             // 16
-        'Info o zasebnosti',                                  // 17
+        'Kako deluje?',                                             // 26
+        'Info o zasebnosti',                                        // 27
         'Rad bi delil ta dogodek s teboj:',                         // 28
         'Prenesi PontiVIA!',                                        // 29
         'Preusmerjeni boste na zunanjo stran. Želite nadaljevati?', // 30
         'Nadaljuj',                                                 // 31
+        '(dodaj v svoj koledar: '                                   // 32
     ],
     'gr': [
         'Οι ημερομηνίες μου',                                       // 0
@@ -702,12 +710,13 @@ export function holydayLabels(language,item) {
         'Προσοχή, το γεγονός επικαλύπτεται με ',                    // 23
         'Προσοχή, το γεγονός έρχεται σε σύγκρουση με ',             // 24
         'Αυτή η ημερομηνία είναι ήδη παρούσα ',                     // 25
-        'Πώς λειτουργεί;',                                          // 16
-        'Πληροφορίες Απορρήτου',                              // 17
+        'Πώς λειτουργεί;',                                          // 26
+        'Πληροφορίες Απορρήτου',                                    // 27
         'Θα ήθελα να μοιραστώ αυτό το γεγονός μαζί σου:',           // 28
         'Κατέβασε το PontiVIA!',                                    // 29
         'Πρόκειται να ανακατευθυνθείτε σε εξωτερική σελίδα. Θέλετε να συνεχίσετε;',  // 30
         'Συνέχεια',                                                 // 31
+        '(πρόσθεσέ το στο ημερολόγιό σου: '                         // 32
     ]
     };
     return dataLabel[language][item];
@@ -730,7 +739,8 @@ export function calendarScrenLabels(language, item) {
             'Annulla',                                  // 10
             'Aggiungi',                                 // 11
             'Vorrei condividere con te questo evento:', // 12
-            'Scarica PontiVIA!'                         // 13
+            'Scarica PontiVIA!',                        // 13
+            '(aggiungilo al tuo calendario: '           // 14
         ],
         'fr':[
             'Pont !',                                   // 0
@@ -745,9 +755,9 @@ export function calendarScrenLabels(language, item) {
             'Pont possible !',                          // 9
             'Annuler',                                  // 10
             'Ajouter',                                  // 11
-            'Je voudrais partager cet événement avec toi :',            // 28
-            'Télécharge PontiVIA !'                                     // 29
-
+            'Je voudrais partager cet événement avec toi :',// 12
+            'Télécharge PontiVIA !',                    // 13
+            '(ajoute-le à ton calendrier: '             // 14
         ],
         'es':[
             '¡Puente!',                                 // 0
@@ -762,8 +772,9 @@ export function calendarScrenLabels(language, item) {
             '¡Posible puente!',                         // 9
             'Cancelar',                                 // 10
             'Añadir',                                    // 11
-            'Me gustaría compartir este evento contigo:',               // 28
-            '¡Descarga PontiVIA!'                                       // 29
+            'Me gustaría compartir este evento contigo:', // 12
+            '¡Descarga PontiVIA!',                      // 13
+            '(añádelo a tu calendario: '                // 14
         ],
         'de':[
             'Brücke!',                                  // 0
@@ -777,15 +788,16 @@ export function calendarScrenLabels(language, item) {
             ' (1 Tag)',                                 // 8
             'Mögliche Brücke!',                         // 9
             'Abbrechen',                                // 10
-            'Hinzufügen',                                // 11
-            'Ich möchte dieses Ereignis mit dir teilen:',               // 28
-            'Lade PontiVIA herunter!'                                   // 29
-        ],  
+            'Hinzufügen',                               // 11
+            'Ich möchte dieses Ereignis mit dir teilen:', // 12
+            'Lade PontiVIA herunter!',                  // 13
+         '(füge es zu deinem Kalender hinzu: '          // 14
+        ], 
         'en':[
             'Bridge!',                                  // 0
             'PontiVIA! found this bridge for you',      // 1
             'bridges found!',                           // 2
-            'bridge day found!',                            // 3
+            'bridge day found!',                        // 3
             'From ',                                    // 4
             ' to ',                                     // 5
             ' days)',                                   // 6
@@ -793,9 +805,10 @@ export function calendarScrenLabels(language, item) {
             ' (1 day)',                                 // 8
             'Possible bridge!',                         // 9
             'Cancel',                                   // 10
-            'Add',                                       // 11
-            'I would like to share this event with you:',               // 28
-            'Download PontiVIA!'                                        // 29
+            'Add',                                      // 11
+            'I would like to share this event with you:',// 12
+            'Download PontiVIA!',                       // 13
+            '(add it to your calendar: '                 // 14
         ],
         'nl':[
             'Brug!',                                    // 0
@@ -809,9 +822,10 @@ export function calendarScrenLabels(language, item) {
             ' (1 dag)',                                 // 8
             'Mogelijke brug!',                          // 9
             'Annuleren',                                // 10
-            'Toevoegen',                                 // 11
-            'Ik wil deze gebeurtenis met je delen:',                    // 28
-            'Download PontiVIA!'                                        // 29
+            'Toevoegen',                                // 11
+            'Ik wil deze gebeurtenis met je delen:',    // 12
+            'Download PontiVIA!',                       // 13
+            '(voeg het toe aan je kalender: '           // 14
         ],
         'pt':[
             'Ponte!',                                   // 0
@@ -825,9 +839,10 @@ export function calendarScrenLabels(language, item) {
             ' (1 dia)',                                 // 8
             'Ponte possível!',                          // 9
             'Cancelar',                                 // 10
-            'Adicionar',                                 // 11
-            'Gostaria de compartilhar este evento com você:',           // 28
-            'Baixe PontiVIA!'                                           // 29
+            'Adicionar',                                // 11
+            'Gostaria de compartilhar este evento com você:',// 12
+            'Baixe PontiVIA!',                          // 13
+            '(adicione ao seu calendário: '             // 14
         ],
         'hr': [
             'Most!',                                    // 0
@@ -841,9 +856,10 @@ export function calendarScrenLabels(language, item) {
             ' (1 dan)',                                 // 8
             'Moguć most!',                              // 9
             'Otkaži',                                   // 10
-            'Dodaj',                                     // 11
-            'Želio bih podijeliti ovaj događaj s tobom:',               // 28
-            'Preuzmi PontiVIA!'                                         // 29
+            'Dodaj',                                    // 11
+            'Želio bih podijeliti ovaj događaj s tobom:',// 12
+            'Preuzmi PontiVIA!',                        // 13
+            '(dodaj u svoj kalendar: '                  // 14
         ],
         'si': [
             'Most!',                                    // 0
@@ -857,9 +873,10 @@ export function calendarScrenLabels(language, item) {
             ' (1 dan)',                                 // 8
             'Možen most!',                              // 9
             'Prekliči',                                 // 10
-            'Dodaj',                                     // 11
-            'Rad bi delil ta dogodek s teboj:',                         // 28
-            'Prenesi PontiVIA!'                                         // 29
+            'Dodaj',                                    // 11
+            'Rad bi delil ta dogodek s teboj:',         // 12
+            'Prenesi PontiVIA!',                        // 13
+            '(dodaj v svoj koledar: '                   // 14
         ],
         'gr': [
             'Γέφυρα!',                                  // 0
@@ -873,9 +890,10 @@ export function calendarScrenLabels(language, item) {
             ' (1 μέρα)',                                // 8
             'Πιθανή γέφυρα!',                           // 9
             'Ακύρωση',                                  // 10
-            'Προσθήκη',                                  // 11
-            'Θα ήθελα να μοιραστώ αυτό το γεγονός μαζί σου:',           // 28
-            'Κατέβασε το PontiVIA!'                                     // 29
+            'Προσθήκη',                                 // 11
+            'Θα ήθελα να μοιραστώ αυτό το γεγονός μαζί σου:',// 12
+            'Κατέβασε το PontiVIA!',                    // 13
+            '(πρόσθεσέ το στο ημερολόγιό σου: '         // 14
     ]
     };
     return dataLabel[language][item];

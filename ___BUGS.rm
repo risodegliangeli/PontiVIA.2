@@ -2,26 +2,14 @@
 #############################################################################
 
 
-- ### CONDIVISIONE
-  -- "Scarica PontiVIA!" 
-  -- "Invia via PontiVIA" 
-
----
-
-- ### GRAFICA CAROUSEL
-  -- skip in ogni pagina
-  -- dots
-
----
-
-- ### GRAFICA BALLOON SIDLABEL
+- ### GRAFICA BALLOON SIDELABEL
   -- rivedere grafica generale
 
 ---
 
 - ### SPLITTEDBAR
   -- correggere movimnto da -1 a 0 / da 1 a 0
-  ~~-- click su pulsante della pagina dove si è posizionati non deve scatenare nulla~~
+  ok -- click su pulsante della pagina dove si è posizionati non deve scatenare nulla
 
 ---
 
@@ -50,6 +38,19 @@
 
 
 # TICKET RISOLTI:
+
+- ### CONDIVISIONE
+  -- !urgente: considivione in holydays non scrive data di puù giorni
+  -- togliere "Scarica PontiVIA!" 
+  -- "Invia via PontiVIA" 
+
+---
+
+- ### GRAFICA CAROUSEL
+  -- skip in ogni pagina
+  -- dots
+
+---
 
 - ### RELEASE
   -- bottom pagina preferences

@@ -27,7 +27,8 @@ import DropdownCountry from '@/components/ui/DropdownCountry';  // COUNTRY PICKE
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewDatepicker from '@/components/NewDatepicker';         // MIO DATEPICKER ✌🏻
 import SideLabel from '@/components/ui/SideLabel';
-import Privacy from '@/components/Privacy';
+// import Privacy from '@/components/Privacy';
+import useShareMsgComposer from '@/components/useShareMsgComposer';
 //import { PortalProvider, Portal } from '@gorhom/portal';
 import { Portal } from '@rn-primitives/portal';
 import { FullWindowOverlay } from 'react-native-screens';
@@ -91,6 +92,10 @@ export default function HolydaysScreen() {
     sniffer,
     adUnitId
   } = useHolydays();
+
+  // HOOK PER COMPORRE I MESSAGGI DI CONDIVISIONE
+  const composeShareMsg = useShareMsgComposer();
+
 
   // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
   // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
@@ -749,22 +754,49 @@ export default function HolydaysScreen() {
   async function handleShare(index: any) {
     const itemToShare: any = newPersonalHolydays[index];
     try {
-      // Vorrei condividere questo evento ecc
-      let msg = `${dataLabel(myLanguage, 28)}\n\n*${itemToShare.description ?? ''}*\n${(itemToShare.startDate).toLocaleDateString(myLanguage, { day: 'numeric', month: 'long', year: 'numeric' })}\n\n---\n\n`;
 
-      // gestione link pontivia://
-      msg += `📲\n${sniffer || 'https://pontivia.blogspot.com/p/redirect.html?action=newItemFromExternal'}`
-      //msg += `https://pontivia-2025.web.app/detect.html?action=newItemFromExternal`;
-      if (itemToShare.startDate) { msg += `&pStartDate=${(itemToShare.startDate).getFullYear()}-${(itemToShare.startDate).getMonth() + 1}-${(itemToShare.startDate).getDate()}` };
-      if (itemToShare.description) { msg += `&pDescription=${(itemToShare.description).replace(/ /g, "%20")}`; }
-      if (itemToShare.endDate) { msg += `&pEndDate=${(itemToShare.endDate).getFullYear()}-${(itemToShare.endDate).getMonth() + 1}-${(itemToShare.endDate).getDate()}` }
-      if (itemToShare.repeatOnDate) { msg += `&pRODate=true` }
-      if (itemToShare.repeatOnDay) { msg += `&pRODay=true` }
+      // let msg = `${dataLabel(myLanguage, 28)}\n\n`; // Vorrei condividere con te questo evento:\n\n
 
-      // link download
-      msg += `\n\n${dataLabel(myLanguage, 29)} \n\niOS: https://apps.apple.com/it/app/pontivia/id6754095339\n\nAndroid:`;
+      // msg += `*${itemToShare.description ?? ''}*\n`; // Descrizione\n
+
+      // msg += `_${(itemToShare.startDate).toLocaleDateString(myLanguage, { day: 'numeric', month: 'long', year: 'numeric' })}_\n\n`; // Data\n\n
+
+      // msg += `${dataLabel(myLanguage, 32)}\n`; // (aggiungi al tuo calendario: \n
+
+      // // costruzione link da passare nel msg
+      // msg += `${sniffer || 'https://pontivia.blogspot.com/p/redirect.html?action=newItemFromExternal'}`
+      // // msg += `${sniffer || 'https://pontivia-2025.web.app/detect.html?action=newItemFromExternal'}`;
+
+      // if (itemToShare.startDate) {
+      //   msg += `&pStartDate=${(itemToShare.startDate).getFullYear()}-${(itemToShare.startDate).getMonth() + 1}-${(itemToShare.startDate).getDate()}`
+      // };
+      // if (itemToShare.description) {
+      //   msg += `&pDescription=${(itemToShare.description).replace(/ /g, "%20")}`;
+      // }
+      // if (itemToShare.endDate) {
+      //   msg += `&pEndDate=${(itemToShare.endDate).getFullYear()}-${(itemToShare.endDate).getMonth() + 1}-${(itemToShare.endDate).getDate()}`
+      // }
+      // if (itemToShare.repeatOnDate) { msg += `&pRODate=true` }
+      // if (itemToShare.repeatOnDay) { msg += `&pRODay=true` }
+
+      // msg += `)\n\n`;
+      // // fine link
+
+      // msg += `${new Date().getFullYear()} © PontiVIA!`; // 2025 PontiVIA!
+
+      // // link download PontiVIA
+      // // msg += `\n\n${dataLabel(myLanguage, 29)} \n\niOS: https://apps.apple.com/it/app/pontivia/id6754095339\n\nAndroid:`;
+
+      // Converti itemToShare in formato array per composeShareMsg
+      // Formato atteso: [startDate, unused, description]
+      const shareData = [
+        itemToShare.startDate,
+        null,
+        itemToShare.description
+      ];
+
       const result = await Share.share({
-        message: msg,
+        message: composeShareMsg('holyday', shareData),
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
