@@ -151,14 +151,14 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
   const [myPreferences, setMyPreferences] = useState<any>(createDefaultPreferences(systemLanguage));  // <--- NUOVO
 
   // ADV ID - INIZIALIZZAZIONE SINCRONA PER PERMETTERE IL CARICAMENTO DEI BANNER AL BOOT
-  // - iOS prod: ca-app-pub-3704551485094904/6380057197 <--- *
+  // - iOS prod: ca-app-pub-3704551485094904/6380057197 <--- * attivo
   // - iOS test: ca-app-pub-3940256099942544/2934735716
-  // - Android prod: ca-app-pub-3704551485094904/1638672883
-  // - Android test: ca-app-pub-3940256099942544/6300978111 <--- *
+  // - Android prod: ca-app-pub-3704551485094904/1638672883 <--- * attivo
+  // - Android test: ca-app-pub-3940256099942544/6300978111 
   const [adUnitId, setAdUnitId] = useState<string>(
     Platform.OS === 'ios'
       ? "ca-app-pub-3704551485094904/6380057197"
-      : "ca-app-pub-3940256099942544/6300978111"
+      : "ca-app-pub-3704551485094904/1638672883"
   );
 
   // INIZIALIZZAZIONE UNA TANTUM DATI INTERNI E DA LOCAL STORAGE ///////////////////////////
