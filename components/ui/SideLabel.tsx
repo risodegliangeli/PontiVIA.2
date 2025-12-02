@@ -3,25 +3,19 @@ import {
   Text,
   TouchableOpacity,
   StyleSheet,
-  // Modal,
   useColorScheme,
   Platform,
-  // ImageBackground,
-  // Pressable,
   Dimensions,
-  // SafeAreaView
 } from "react-native";
 import { useRef, useState } from 'react';
 import { Colors } from '@/constants/Colors';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-//import Svg, { Path } from 'react-native-svg';
 import { indexLabels as dataLabel, datepickerLabels } from '@/constants/dataLabel';
 import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT
 import FakeSplittedBar from '@/components/ui/FakeSplittedBar';
 import Privacy from '@/components/Privacy';
 import Faq from '@/components/Faq';
 import { Portal } from '@rn-primitives/portal';
-// import { splashCarousel as splashCarouselLabel } from '@/constants/dataLabel';
 import Carousel, { ICarouselInstance, } from 'react-native-reanimated-carousel';
 import Pagination from '@/components/ui/Pagination';
 
@@ -47,6 +41,7 @@ const UseSideLabel = () => {
   const colors = useThemeColors();
   const colorScheme = useColorScheme();
   const isLight = colorScheme === 'light';
+  const isIos = Platform.OS === 'ios';
 
   // STYLES
   const styles: any = StyleSheet.create({
@@ -86,7 +81,7 @@ const UseSideLabel = () => {
       fontSize: 22,
       fontWeight: '600',
       textAlign: 'center',
-      color: colors.text,
+      color: colors.white,
     },
     dot32: {
       width: 44,
@@ -107,7 +102,7 @@ const UseSideLabel = () => {
       fontWeight: 600,
       color: 'rgba(255, 255, 255, 1)',
       textAlign: 'center',
-      paddingTop: Platform.OS === 'ios' ? 6 : 3,
+      paddingTop: isIos ? 6 : 3,
     },
     // IMMAGINE DI SFONDO
     image: {
@@ -130,15 +125,16 @@ const UseSideLabel = () => {
   └---------------------------------------------------------------- */
   const sideLabel = () => {
     
-    const [myHeight, setMyHeight] = useState<number>(Dimensions.get('window').height);
+    // const [myHeight, setMyHeight] = useState<number>(Dimensions.get('window').height);
     const [myWidth, setMyWidth] = useState<number>(Dimensions.get('window').width);
+    myWidth > 550 && setMyWidth(550);
+    
     const ref = useRef<ICarouselInstance>(null);
-    const [dots, setDots] = useState<number>(0);
-
+    // const [dots, setDots] = useState<number>(0);
 
     const viewBox = "0 0 360 557";
     const fill = isLight ? 'rgba(255, 255, 255, .85)' : 'rgba(255, 255, 255, .15)'
-    const { width, height } = Dimensions.get("window");
+    // const { width, height } = Dimensions.get("window");
 
     // VISIBILITA INFO ANIMATE
     const [infoModalVisible, setInfoModalVisible] = useState<boolean>(false);
@@ -150,21 +146,21 @@ const UseSideLabel = () => {
       text: <><Text style={{fontWeight:800, color: colors.blueBar}}>
                 {dataLabel(myLanguage, 1).split(":")[0]}
               </Text>
-              <Text>:{dataLabel(myLanguage, 1).split(":")[1]}</Text></>
+              <Text style={{fontWeight:400, color: colors.white}}>:{dataLabel(myLanguage, 1).split(":")[1]}</Text></>
     },
     {
       id: 2,
       text: <><Text style={{fontWeight:800, color: colors.blueBar}}>
                 {dataLabel(myLanguage, 2).split(":")[0]}
               </Text>
-              <Text>:{dataLabel(myLanguage, 2).split(":")[1]}</Text></>
+              <Text style={{fontWeight:400, color: colors.white}}>:{dataLabel(myLanguage, 2).split(":")[1]}</Text></>
     },
     {
       id: 3,
       text: <><Text style={{fontWeight:800, color: colors.blueBar}}>
                 {dataLabel(myLanguage, 3).split(":")[0]}
               </Text>
-              <Text>:{dataLabel(myLanguage, 3).split(":")[1]}</Text></>
+              <Text style={{fontWeight:400, color: colors.white}}>:{dataLabel(myLanguage, 3).split(":")[1]}</Text></>
     },
   ];
 
@@ -186,6 +182,7 @@ const UseSideLabel = () => {
             <TouchableOpacity 
               style={{
                 width:'100%',
+                maxWidth: 550, 
                 padding:12, 
               }}
               onPress={ () => setInfoModalVisible(false) }
@@ -194,24 +191,28 @@ const UseSideLabel = () => {
                 width:'100%',
                 flexDirection:'row',
                 justifyContent: 'flex-start',
-                gap:4 ,
+                gap: isIos ? 4 : 0,
                 alignItems: 'center',
               }}>
                 <IconSymbol 
-                  size={10} 
+                  size={isIos ? 10 : 24} 
                   name="arrowtriangle.left.fill" 
-                  color={colors.textNegative} 
-                /><Text style={{fontSize:12, fontWeight:600, color:colors.textNegative}}>{datepickerLabels(myLanguage, 16)}</Text>
+                  color={colors.white} 
+                /><Text style={{
+                  fontSize:12, 
+                  fontWeight:600, 
+                  color:colors.white}}>{datepickerLabels(myLanguage, 16)}</Text>
               </View>
             </TouchableOpacity>
 
-            <View style={{ // CARD BIANCA
+            <View style={{ // WRAPPER SCURO
               width:'100%',
               maxWidth: 550,
-              backgroundColor: colors.cardBackground,
+              backgroundColor: 'rgba(0, 0, 0, .55)',
               paddingVertical:64,
             }}>
 
+              {/* TITOLO */}
               <Text style={styles.sectionTitle}>
                 {dataLabel(myLanguage, 4)}
               </Text>
@@ -238,7 +239,7 @@ const UseSideLabel = () => {
                   <View style={{
                     width:'100%',
                     height:'100%',
-                    paddingHorizontal: 48,
+                    paddingHorizontal: 54,
                     flexDirection:'column',
                     justifyContent: 'center',
                     alignItems:'center'
@@ -278,7 +279,7 @@ const UseSideLabel = () => {
                   height: 8,
                   borderRadius: 5,
                   marginHorizontal: 8,
-                  backgroundColor: colors.text,
+                  backgroundColor: colors.white,
                 }}
                 inactiveDotOpacity={0.4}
                 inactiveDotScale={0.6}
@@ -287,6 +288,7 @@ const UseSideLabel = () => {
 
             <View style={{
               width:'100%',
+              maxWidth: 550, 
               flexDirection:'row',
               justifyContent:'space-around',
               marginTop:64,

@@ -37,24 +37,31 @@ function Faq(){
     languages.includes(myLanguage) ? languageToUse = myLanguage : languageToUse = 'en';
     return(
         <>
-            <Pressable
-                // style={{
-                //     borderWidth:1, 
-                //     borderColor: colors.textNegative, 
-                //     borderRadius:99, 
-                //     paddingVertical:12,
-                //     paddingHorizontal:20,
-                //  }}
+            <TouchableOpacity
+                style={{
+                    // borderWidth:1, 
+                    // borderColor: colors.textNegative, 
+                    // borderRadius:99, 
+                    // paddingVertical:12,
+                    // paddingHorizontal:20,
+                    alignItems:'center',
+                    gap:12,
+                 }}
                 onPress={ () => setIsPrivacyVisible(true) }>
+                    <IconSymbol
+                    name={'lifepreserver'}
+                    size={28}
+                    color={colors.blueBar} //'white'
+                    />
                 <Text style={{
                 fontSize:14,
                 fontWeight:'800',
                 textAlign: 'center',
-                color: colors.white,
+                color: colors.blueBar, //colors.white,
                 }}>
                 {dataLabel(myLanguage, 16)}
                 </Text>
-            </Pressable>        
+            </TouchableOpacity>        
 
             <Modal
                 visible={isPrivacyVisible}

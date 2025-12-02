@@ -176,6 +176,12 @@ export default function FakeSplittedBar(props: any) {
       borderWidth:1,
       borderColor: 'rgba(0, 0, 0, .06)'
     },
+    iconContainer: {
+      width:'50%', 
+      justifyContent:'center',
+      alignContent: 'center',
+      alignItems: 'center'
+    }
   });
 
   return (
@@ -225,14 +231,9 @@ export default function FakeSplittedBar(props: any) {
           }}>
           
             {/* PULSE CALENDAR */}
-            <Pressable 
-              onPress = { () => action(1) }
-              style={{
-                width:'50%', 
-                justifyContent:'center',
-                alignContent: 'center',
-                alignItems: 'center'
-              }}>
+            <View
+              //onPress = { () => null } //() => action(1) }
+              style={styles.iconContainer}>
               {index === 1 ?
               <PulseCalendar />
               :
@@ -241,17 +242,12 @@ export default function FakeSplittedBar(props: any) {
                 contentFit='contain'
                 style={{width:'50%', height:'50%', opacity: .25}}  /> 
               }
-            </Pressable>
+            </View>
 
             {/* PULSE MAGIC WAND */}
-            <Pressable
-              onPress = { () => action(2) }
-              style={{
-              width:'50%', 
-              justifyContent:'center',
-              alignContent: 'center',
-              alignItems: 'center'
-              }}>
+            <View
+              //onPress = { () => null } // () => action(2) }
+              style={styles.iconContainer}>
                 {index === 2 ?
                   <PulseWand />
                   :
@@ -260,12 +256,12 @@ export default function FakeSplittedBar(props: any) {
                     contentFit='contain'
                     style={{width:'50%', height:'50%', opacity: .25}} /> 
                 }
-            </Pressable>
+            </View>
         </View>
 
         {/* SINGOLO */}
-        <Pressable 
-          onPress = { () => action(3) }
+        <View 
+          // onPress = { () => null } // () => action(3) }
           style={styles.singleItemTransparent}>
           {index === 3 ?
             <PulseGirl />
@@ -275,7 +271,7 @@ export default function FakeSplittedBar(props: any) {
               contentFit='contain'
               style={[styles.singleItemIcon, {opacity: .25}]} />       
           }
-        </Pressable>
+        </View>
       </View>
     </View>
   );

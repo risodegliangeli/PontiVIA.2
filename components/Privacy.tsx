@@ -26,24 +26,31 @@ function Privacy(){
 
     return(
         <>
-        <Pressable
-            // style={{
-            //     borderWidth:1, 
-            //     borderColor: colors.textNegative, 
-            //     borderRadius:99, 
-            //     paddingVertical:12,
-            //     paddingHorizontal:20,
-            //     }}
-            onPress={ () => setIsPrivacyVisible(true) }>
+            <TouchableOpacity
+                style={{
+                    // borderWidth:1, 
+                    // borderColor: colors.textNegative, 
+                    // borderRadius:99, 
+                    // paddingVertical:12,
+                    // paddingHorizontal:20,
+                    alignItems:'center',
+                    gap:12,
+                 }}
+                onPress={ () => setIsPrivacyVisible(true) }>
+                    <IconSymbol
+                    name={'eye.fill'}
+                    size={28}
+                    color={colors.blueBar} //'white'
+                    />
             <Text style={{
             fontSize:14,
             fontWeight:'800',
             textAlign: 'center',
-            color: colors.white,
+            color: colors.blueBar, //colors.white,
             }}>
             {dataLabel(myLanguage, 17)}
             </Text>
-        </Pressable>        
+        </TouchableOpacity>        
 
         <Modal
             visible={isPrivacyVisible}

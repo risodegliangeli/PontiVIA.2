@@ -32,7 +32,9 @@ const MAPPING = {
   'chevron.left':'chevron-left',                  // NAVIGAZIONE INFO
   'chevron.down': 'keyboard-arrow-down',
   'chevron.up': 'keyboard-arrow-up',
-  'arrowtriangle.left.fill': 'arrow-left'         // < Chiudi
+  'arrowtriangle.left.fill': 'arrow-left',        // < Chiudi
+  'lifepreserver': 'support',                     // Faq.tsx
+  'eye.fill':'visibility',                        // Privacy.tsx
   // 'gobackward':'settings-backup-restore', // restore preferences
   // 'calendar.circle': 'event',
   // 'list.dash': 'list', // route holydays
