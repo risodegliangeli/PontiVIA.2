@@ -9,7 +9,7 @@ import { getLocales, } from 'expo-localization';
 import { dataLabel as switchNames } from '@/constants/dataLabel'; // LABEL LOCALIZZATE
 import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 //import * as Linking from 'expo-linking';
-import SideLabel from '@/components/ui/SideLabel';
+//import UseSideLabel from '@/components/ui/SideLabel';
 import {
   ImageBackground,
   Platform,
@@ -30,15 +30,11 @@ import {
 // GOOGLE ADMOB ///////////////////////////////////
 import mobileAds, { BannerAd, BannerAdSize, useForeground } from 'react-native-google-mobile-ads';
 
-
-
-
 // COLORI
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
   return Colors[colorScheme ?? 'light'];
 };
-
 
 /* ============================================================================= 
 
@@ -420,22 +416,12 @@ export default function Preferences() {
 
         {/* INFO  ##################################################################### */}
         <View style={{ width: '100%' }}>
-          <Text style={{ fontSize: 11, alignSelf: 'center', color: colors.text }}>2025 Angeli e Associati - PontiVIA! Rel. 1.0.1</Text>
+          <Text style={{ fontSize: 11, alignSelf: 'center', color: colors.text }}>2025 Angeli e Associati - PontiVIA! 1.0.2</Text>
         </View>
-        {/* <Suspense>
-          <Privacy />
-        </Suspense> */}
 
         {/* SPACER  ############################################################################# */}
         <View style={{ height: 480 }} />
       </ScrollView>
-
-      {/* INFOPOINT  ############################################################################# */}
-      <Suspense>
-        <SideLabel />
-      </Suspense>
-
-
 
     </ImageBackground>
   );

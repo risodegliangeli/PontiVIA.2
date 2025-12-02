@@ -1,13 +1,13 @@
-import { 
-  Animated, 
-  Easing, 
-  ImageBackground, 
-  StyleSheet, 
-  useColorScheme, 
-  Text, 
+import {
+  Animated,
+  Easing,
+  ImageBackground,
+  StyleSheet,
+  useColorScheme,
+  Text,
   TouchableOpacity,
   View,
-  } from 'react-native';
+} from 'react-native';
 import { CalendarScreen } from '@/components/calendarScreen';
 import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT
 import { useSplashCarousel } from '@/context/SplashCarouselContext';
@@ -17,7 +17,6 @@ import { Colors } from '@/constants/Colors';
 import { MovingHands } from '@/components/ui/MovingHands';      // MIO
 import { indexLabels as dataLabel } from '@/constants/dataLabel';
 import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
-import SideLabel from '@/components/ui/SideLabel';
 import SplashCarousel from '@/components/ui/SplashCarousel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -40,19 +39,19 @@ export default function HomeScreen() {
 
   // RICHIESTA PERMESSO PER TRACKING DI AdMob
   useEffect(() => {
-  (async () => {
-    const { status } = await requestTrackingPermissionsAsync();
-    if (status === 'granted') {
-      // console.log('ok permission to track data');
-    }
-  })();
+    (async () => {
+      const { status } = await requestTrackingPermissionsAsync();
+      if (status === 'granted') {
+        // console.log('ok permission to track data');
+      }
+    })();
   }, []);
- 
+
   // VARIABILI DA CONTEXT
-  const { 
+  const {
     newPersonalHolydays,
     myPreferences, setMyPreferences,
-    myCountry, 
+    myCountry,
     myLanguage,
   } = useHolydays();
 
@@ -99,14 +98,14 @@ export default function HomeScreen() {
     const initializeData = async () => {
       const myStoredPreferences = await loadData('PREFERENCES_KEY');
       if (myStoredPreferences) setMyPreferences(myStoredPreferences);
-    };  
-    initializeData(); 
+    };
+    initializeData();
   }, []);
 
   // MEMORIZZA LA KEY DEL CALENDARIO
   // la key forza il ricaricamento del calendario quando i dati cambiano.
   const calendarKey = useMemo(() =>
-    JSON.stringify({newPersonalHolydays, myPreferences, myCountry}),
+    JSON.stringify({ newPersonalHolydays, myPreferences, myCountry }),
     [
       newPersonalHolydays,
       myPreferences,
@@ -125,43 +124,43 @@ export default function HomeScreen() {
   // ANIMAZIONE - 1 spostamento /////////////////////////////////////////////
   const startAnimation = () => {
 
-      Animated.timing(logoSize, { // 1) TESTO E MANINA SI RIDUCONO (NON CAMBIA OPACITY)
-        toValue: 0,
-        duration: 200,
+    Animated.timing(logoSize, { // 1) TESTO E MANINA SI RIDUCONO (NON CAMBIA OPACITY)
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+
+    Animated.timing(cloud01Anim, { // 2) NUVOLETTA 01 APPARE E SCOMPARE
+      toValue: 1,
+      duration: 200,
+      easing: Easing.elastic(1.5),
+      useNativeDriver: true,
+    }).start(() => { cloud01Anim.setValue(0); });
+
+    setTimeout(() => {
+      Animated.timing(cloud02Anim, { // 3) NUVOLETTA 02 APPARTE E SCOMPARE RITARDATA
+        toValue: 1,
+        duration: 150,
+        easing: Easing.elastic(2),
+        useNativeDriver: true,
+      }).start(() => { cloud02Anim.setValue(0); });
+    }, 125);
+
+    setTimeout(() => {
+      Animated.timing(logoMarginTop, {
+        toValue: -500,
+        duration: 300,
         useNativeDriver: true,
       }).start();
+    }, 500);
 
-      Animated.timing(cloud01Anim, { // 2) NUVOLETTA 01 APPARE E SCOMPARE
-        toValue: 1,
-        duration: 200,
-        easing: Easing.elastic(1.5),
+    setTimeout(() => {
+      Animated.timing(cardMarginTop, { // SPOSTA IN ALTO LE CARD
+        toValue: 0,
+        duration: 700,
         useNativeDriver: true,
-      }).start( () => { cloud01Anim.setValue(0);} );
-
-      setTimeout(() => {
-        Animated.timing(cloud02Anim, { // 3) NUVOLETTA 02 APPARTE E SCOMPARE RITARDATA
-          toValue: 1,
-          duration: 150,
-          easing: Easing.elastic(2),
-          useNativeDriver: true,
-        }).start( () => { cloud02Anim.setValue(0); });
-      }, 125);
-
-      setTimeout(() => {
-        Animated.timing( logoMarginTop, {
-          toValue: -500,
-          duration:300,
-          useNativeDriver: true,
-        }).start();
-      }, 500);
-
-      setTimeout(() => {
-        Animated.timing(cardMarginTop, { // SPOSTA IN ALTO LE CARD
-          toValue: 0,
-          duration: 700,
-          useNativeDriver: true,
-        }).start()
-      }, 500);
+      }).start()
+    }, 500);
   }
 
   // ANIMAZIONE - 2 opacita /////////////////////////////////////////////////
@@ -184,7 +183,7 @@ export default function HomeScreen() {
   };
 
   // FOGLI DI STILE
-  const styles:any = StyleSheet.create({
+  const styles: any = StyleSheet.create({
     // CONTAINER CARDS CALENDARIO
     container: {
       transform: [
@@ -194,44 +193,44 @@ export default function HomeScreen() {
       flex: 1,
       width: '100%',
       maxWidth: 550,
-      paddingHorizontal:0,      
-      alignItems:'center',
-    }, 
+      paddingHorizontal: 0,
+      alignItems: 'center',
+    },
     // IMMAGINE DI SFONDO
-    image: {      
+    image: {
       flex: 1,
       width: '100%',
-      alignItems:'center',
-      
+      alignItems: 'center',
+
     },
     // CONTAINER ESTERNO DEL WRAPPER 
     wrapperContainer: {
-      position:'absolute',
-      top:92,
-      width:'100%',
-      alignContent:'flex-start',
+      position: 'absolute',
+      top: 92,
+      width: '100%',
+      alignContent: 'flex-start',
       transform: [
         { translateY: logoMarginTop }
-      ]      
+      ]
     },
     // WRAPPER TESTO E MANINA
     welcome: {
-      width:'100%',
+      width: '100%',
       height: 180,
-      alignItems:'center',      
+      alignItems: 'center',
       transform: [
         { scale: logoSize.interpolate({ inputRange: [0, 1], outputRange: [0, 1], }), },
       ],
     },
     // TESTO DI WELCOME
     welcomeText: {
-      fontSize:18, 
-      fontWeight:600, 
-      color: colors.blueBar, 
-      textAlign:'center'
+      fontSize: 18,
+      fontWeight: 600,
+      color: colors.blueBar,
+      textAlign: 'center'
     },
     // NUVOLETTA 1
-    cloud01: {            
+    cloud01: {
       width: '35%',
       resizeMode: 'contain',
       position: 'absolute',
@@ -247,50 +246,50 @@ export default function HomeScreen() {
       position: 'absolute',
       opacity: cloud02Anim,
       transform: [
-        {scale: cloud02Anim.interpolate({ inputRange: [0, 1], outputRange: [0, 1], }), },
+        { scale: cloud02Anim.interpolate({ inputRange: [0, 1], outputRange: [0, 1], }), },
       ],
     },
   });
 
-  return ( 
-    <ImageBackground 
-      source={isLight 
+  return (
+    <ImageBackground
+      source={isLight
         ? require('@/assets/images/background-image_minified.jpg')
         : require('@/assets/images/background-image_minified-dark.jpg') // o stessa immagine
-        }      
-      resizeMode="cover" 
+      }
+      resizeMode="cover"
       style={styles.image} >
 
       {/* CARD CALENDARIO */}
-      <Animated.View 
+      <Animated.View
         key='card'
         style={styles.container} // MARGINTOP = ANIMATO
-        >
-        <CalendarScreen 
-          key={calendarKey} 
-          callerPreferences={myPreferences} /> 
+      >
+        <CalendarScreen
+          key={calendarKey}
+          callerPreferences={myPreferences} />
       </Animated.View>
 
       {/* CONTAINER TESTO, MANINA E NUVOLETTE CHE A FINE ANIMAZIONE ESCE DALLA VIEW */}
-      <Animated.View 
+      <Animated.View
         key='logo'
         style={styles.wrapperContainer}>
 
         {/* PULSANTE TRASP PER FAR PARTIRE SUBITO L'ANIMAZIONE */}
-        <TouchableOpacity 
-          onPress={handleLogoPress} 
-          style={{alignItems:'center'}}>
+        <TouchableOpacity
+          onPress={handleLogoPress}
+          style={{ alignItems: 'center' }}>
 
-            {/* WRAPPER TESTO E MANINA */}
-            <Animated.View style={styles.welcome}>
-              
-              {/* TESTO WELCOME */}
-              <Text style={styles.welcomeText}>{dataLabel(myLanguage, 0)}</Text>
-              
-              {/* MANINA ANIMATA */}
-              <MovingHands />
+          {/* WRAPPER TESTO E MANINA */}
+          <Animated.View style={styles.welcome}>
 
-            </Animated.View>
+            {/* TESTO WELCOME */}
+            <Text style={styles.welcomeText}>{dataLabel(myLanguage, 0)}</Text>
+
+            {/* MANINA ANIMATA */}
+            <MovingHands />
+
+          </Animated.View>
 
           {/* NUVOLETTA 1 */}
           <Animated.Image
@@ -302,12 +301,9 @@ export default function HomeScreen() {
           <Animated.Image
             source={require('@/assets/images/cloud_02.png')}
             style={styles.cloud02}
-          />            
+          />
         </TouchableOpacity>
       </Animated.View>
-
-      {/* INFO */}
-      <SideLabel/>
 
       {/* SPLASH CAROUSEL SOLO AL PRIMO AVVIO */}
       {splashChecked && <View style={{
@@ -324,6 +320,6 @@ export default function HomeScreen() {
       {/* STATUSBAR */}
       <StatusBar style={!isLight ? 'light' : 'dark'} />
 
-    </ImageBackground> 
+    </ImageBackground>
   );
 }

@@ -27,6 +27,13 @@ function Privacy(){
     return(
         <>
         <Pressable
+            // style={{
+            //     borderWidth:1, 
+            //     borderColor: colors.textNegative, 
+            //     borderRadius:99, 
+            //     paddingVertical:12,
+            //     paddingHorizontal:20,
+            //     }}
             onPress={ () => setIsPrivacyVisible(true) }>
             <Text style={{
             fontSize:14,

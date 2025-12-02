@@ -154,11 +154,10 @@ export default function SplashCarousel(props: any) {
     
     <View style={styles.carouselView}>
       <Carousel
-        // style={{borderWidth:1}}
+        style={{borderWidth:0, }}
         ref={ref}
         autoPlay={true}
-        autoPlayInterval={4000}
-        autoPlayReverse={true}
+        autoPlayInterval={3500}
         mode="parallax"
         modeConfig={{
           parallaxScrollingScale: 1,
@@ -166,7 +165,7 @@ export default function SplashCarousel(props: any) {
         }}
         //onProgressChange={ () => ref.current && setDots(ref.current.getCurrentIndex)}
         onSnapToItem={(index) => setDots(index)}
-        loop={false}
+        loop={true}
         pagingEnabled
         width={myWidth}
         height={myHeight * .65} // 3/4 di altezza schermo

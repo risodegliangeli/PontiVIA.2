@@ -71,9 +71,9 @@ export default function RootLayout() {
             </Stack>
             <StatusBar style="dark" />
           </ThemeProvider>
+          <PortalHost />
         </HolydaysProvider>
       </SplashCarouselProvider>
-      <PortalHost />
     </>
   );
 }

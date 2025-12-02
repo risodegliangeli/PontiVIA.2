@@ -31,7 +31,8 @@ const MAPPING = {
   'chevron.right':'chevron-right',                // NAVIGAZIONE INFO
   'chevron.left':'chevron-left',                  // NAVIGAZIONE INFO
   'chevron.down': 'keyboard-arrow-down',
-  'chevron.up': 'keyboard-arrow-up'      
+  'chevron.up': 'keyboard-arrow-up',
+  'arrowtriangle.left.fill': 'arrow-left'         // < Chiudi
   // 'gobackward':'settings-backup-restore', // restore preferences
   // 'calendar.circle': 'event',
   // 'list.dash': 'list', // route holydays

@@ -26,13 +26,14 @@ import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
 import DropdownCountry from '@/components/ui/DropdownCountry';  // COUNTRY PICKER 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewDatepicker from '@/components/NewDatepicker';         // MIO DATEPICKER ✌🏻
-import SideLabel from '@/components/ui/SideLabel';
+//import UseSideLabel from '@/components/ui/SideLabel';
 // import Privacy from '@/components/Privacy';
 import useShareMsgComposer from '@/components/useShareMsgComposer';
 //import { PortalProvider, Portal } from '@gorhom/portal';
 import { Portal } from '@rn-primitives/portal';
 import { FullWindowOverlay } from 'react-native-screens';
 import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
+import { useSitemap } from 'expo-router';
 
 // TYPE Holiday
 type Holiday = {          // DEFINIZIONE DI holiday
@@ -1205,15 +1206,11 @@ export default function HolydaysScreen() {
               size={BannerAdSize.MEDIUM_RECTANGLE} />
           </View>
         }
-
-        {/* INFO + PRIVACY ##################################################################### */}
-        {/* <View style={{ width: '100%' }}>
-          <Text style={{ fontSize: 11, alignSelf: 'center', color: colors.text }}>Angeli & Associati - PontiVIA! Rel. 1.0.0 (16a)</Text>
+        {/* INFO  ##################################################################### */}
+        <View style={{ width: '100%' }}>
+          <Text style={{ fontSize: 11, alignSelf: 'center', color: colors.text }}>2025 Angeli e Associati - PontiVIA! 1.0.2</Text>
         </View>
-        <Suspense>
-          <Privacy />
-        </Suspense> */}
-
+        
         {/* SPACER ################################################################################### */}
         <View style={{ height: 480 }}></View>
       </ScrollView>
@@ -1280,12 +1277,7 @@ export default function HolydaysScreen() {
           </View>
         </Portal>
       }
-
-      {/* SIDELABEL ###################################################################### */}
-      <Suspense>
-        <SideLabel />
-      </Suspense>
-
+    
     </ImageBackground>
   );
 }

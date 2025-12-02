@@ -9,6 +9,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { easeGradient } from "react-native-easing-gradient";
 import * as SplashScreen from 'expo-splash-screen';
 import { useSplashCarousel } from '@/context/SplashCarouselContext';
+import UseSideLabel from '@/components/ui/SideLabel';
 //import { opacity } from 'react-native-reanimated/lib/typescript/Colors';
 //import { useContext } from 'react';
 //import { HolydaysProvider } from '@/context/HolydaysContext';// CONTEXT
@@ -131,6 +132,7 @@ export default function TabLayout() {
             }} />
 
         </Tabs>
+        {UseSideLabel()()}
       </ThemeProvider>
     </MenuProvider>
   );
