@@ -130,7 +130,6 @@ const UseSideLabel = () => {
     myWidth > 550 && setMyWidth(550);
     
     const ref = useRef<ICarouselInstance>(null);
-    // const [dots, setDots] = useState<number>(0);
 
     const viewBox = "0 0 360 557";
     const fill = isLight ? 'rgba(255, 255, 255, .85)' : 'rgba(255, 255, 255, .15)'
@@ -210,6 +209,7 @@ const UseSideLabel = () => {
               maxWidth: 550,
               backgroundColor: 'rgba(0, 0, 0, .55)',
               paddingVertical:64,
+                        borderRadius:24,
             }}>
 
               {/* TITOLO */}
@@ -233,7 +233,7 @@ const UseSideLabel = () => {
                 loop={true}
                 pagingEnabled
                 width={myWidth}
-                height={140}
+                height={150}
                 data={frame}
                 renderItem={({ index }) => (
                   <View style={{
@@ -257,11 +257,11 @@ const UseSideLabel = () => {
                 index={infoStep}
                 action={(x: number) => {
                   setInfoStep(x);
-                  
+                  ref.current?.scrollTo({ index: x - 1, animated: true });
               }} />
 
               {/* SPAZIATORE */}
-              <View style={{height:24, }} />
+              <View style={{height:48, }} />
 
               {/* DOTS */}
               <Pagination
@@ -286,6 +286,7 @@ const UseSideLabel = () => {
               /> 
             </View>
 
+            {/* FAQ / PRIVACY */}
             <View style={{
               width:'100%',
               maxWidth: 550, 
@@ -293,9 +294,19 @@ const UseSideLabel = () => {
               justifyContent:'space-around',
               marginTop:64,
 
-            }}>
-            <Faq />            
-            <Privacy />
+              }}>
+              <Faq />            
+              <Privacy />
+            </View>
+
+            {/* CREDIT */}
+            <View style={{
+              position: 'absolute',
+              bottom:20,
+              left:0,
+              width: '100%',
+              }}>
+              <Text style={{fontSize:11, color: colors.white, alignSelf:'center'}}>1.0.2 - 2025 © Angeli e Associati</Text>
             </View>
 
         </View>
@@ -307,6 +318,7 @@ const UseSideLabel = () => {
           <IconSymbol name="info.circle.fill" size={28} color={colors.white} />
         </TouchableOpacity>
       </View>
+
       </>
     )
   }

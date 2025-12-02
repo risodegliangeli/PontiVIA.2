@@ -13,8 +13,6 @@ import { PulseWand } from '@/components/ui/PulseWand';
 import { PulseGirl } from '@/components/ui/PulseGirl';
 import {PulseCalendar} from '@/components/ui/PulseCalendar';
 
-const w = Dimensions.get('window').width;
-
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
   return Colors[colorScheme ?? 'light'];
@@ -26,7 +24,10 @@ const useThemeColors = () => {
                                       
 ########################################################################################################### */
 export default function FakeSplittedBar(props: any) {
-  const { index, action } = props;
+  const { 
+    index,  // NUMERO PULSANTE DA VISUALIZZARE <---
+    action  // RESTITUISCE PULSANTE SELEZIONATO -->
+    } = props;
 
   const colors = useThemeColors();  
   const colorScheme = useColorScheme();
@@ -36,9 +37,6 @@ export default function FakeSplittedBar(props: any) {
   const windowWidth: number = Dimensions.get('window').width;
   const splittedBarHeigth: number = 80;
   const doubleItemsSize: number = Math.trunc(splittedTotalWidth * .65);
-  // const singleItemImageSize: string = '70%';
-  // const doubleItemsImageSize: string = '50%';
-  //const splittedFromBottom: number = Platform.OS === 'ios' ? 28 : 44;
   const itemsInternalPadding: number = 3;
 
   useEffect( () => {
@@ -48,8 +46,6 @@ export default function FakeSplittedBar(props: any) {
       setSplittedTotalWidth(350);
     }
   }, [windowWidth]);
-  
-
 
   const styles: any = StyleSheet.create({
     splittedBase: {
@@ -176,47 +172,48 @@ export default function FakeSplittedBar(props: any) {
       borderWidth:1,
       borderColor: 'rgba(0, 0, 0, .06)'
     },
-    iconContainer: {
+    iconBase: {
       width:'50%', 
       justifyContent:'center',
       alignContent: 'center',
       alignItems: 'center'
+    },
+    baseDouble: {
+      width:doubleItemsSize,
+      borderRadius: splittedBarHeigth,
+      elevation:18,
+      shadowColor: colors.black, 
+      shadowOffset: { width: 0, height: 8, },
+      shadowOpacity: 0.45,
+      shadowRadius: 12,   
+      marginVertical:8, 
+    },
+    baseSingle: {
+      width:splittedBarHeigth,
+      borderRadius: splittedBarHeigth,
+      elevation:18,
+      shadowColor: colors.black, 
+      shadowOffset: {
+        width: 2,
+        height: 4, 
+      },
+      shadowOpacity: 0.45,
+      shadowRadius: 12,    
     }
   });
 
   return (
     <View style={styles.bottomSpace}>
+
       {/* BASE GENERALE WIDTH 100% DEI CONTENITORI */}   
       <View style={styles.splittedBase}>      
-        
         {/* BASE PULSANTE DOPPIO TRASPARENTE DENTRO AL QUALE WRAPPARE IL BLUR */}
-        <View style={{
-          width:doubleItemsSize,
-          borderRadius: splittedBarHeigth,
-          elevation:18,
-          shadowColor: colors.black, 
-          shadowOffset: { width: 0, height: 8, },
-          shadowOpacity: 0.45,
-          shadowRadius: 12,   
-          marginVertical:8, 
-          }}>
+        <View style={styles.baseDouble}>
           <View style={styles.androidBlurView} />
         </View>
 
         {/* BASE PULSANTE SINGOLO TRASPARENTE DENTRO AL QUALE WRAPPARE IL BLUR */}
-        <View style={{
-          width:splittedBarHeigth,
-          borderRadius: splittedBarHeigth,
-          elevation:18,
-          shadowColor: colors.black, 
-          shadowOffset: {
-            width: 2,
-            height: 4, 
-          },
-          shadowOpacity: 0.45,
-          shadowRadius: 12,
-          }}>
-          {/* BLUR SINGOLO */}
+        <View style={styles.baseSingle}>
           <View style={styles.androidBlurView} /> 
         </View>        
       </View>
@@ -224,16 +221,14 @@ export default function FakeSplittedBar(props: any) {
       <View style={[styles.splittedBase, {position: 'absolute', }]}> 
         {/* DOPPIO */}
         <View style={{
-          //width: Math.trunc(doubleItemsSize*.65),
           width: '65%',
           height: splittedBarHeigth*.90,
           flexDirection:'row'
           }}>
-          
-            {/* PULSE CALENDAR */}
-            <View
-              //onPress = { () => null } //() => action(1) }
-              style={styles.iconContainer}>
+            {/* CALENDAR */}
+            <Pressable 
+              onPress = { () => action(1) }
+              style={styles.iconBase}>
               {index === 1 ?
               <PulseCalendar />
               :
@@ -242,12 +237,12 @@ export default function FakeSplittedBar(props: any) {
                 contentFit='contain'
                 style={{width:'50%', height:'50%', opacity: .25}}  /> 
               }
-            </View>
+            </Pressable>
 
-            {/* PULSE MAGIC WAND */}
-            <View
-              //onPress = { () => null } // () => action(2) }
-              style={styles.iconContainer}>
+            {/* MAGIC WAND */}
+            <Pressable
+              onPress = { () => action(2) }
+              style={styles.iconBase}>
                 {index === 2 ?
                   <PulseWand />
                   :
@@ -256,12 +251,12 @@ export default function FakeSplittedBar(props: any) {
                     contentFit='contain'
                     style={{width:'50%', height:'50%', opacity: .25}} /> 
                 }
-            </View>
+            </Pressable>
         </View>
 
         {/* SINGOLO */}
-        <View 
-          // onPress = { () => null } // () => action(3) }
+        <Pressable 
+          onPress = { () => action(3) }
           style={styles.singleItemTransparent}>
           {index === 3 ?
             <PulseGirl />
@@ -271,11 +266,9 @@ export default function FakeSplittedBar(props: any) {
               contentFit='contain'
               style={[styles.singleItemIcon, {opacity: .25}]} />       
           }
-        </View>
+        </Pressable>
       </View>
+
     </View>
   );
 }
-
-//export default (FakeSplittedBar);
-
