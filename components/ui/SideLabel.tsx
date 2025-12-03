@@ -171,7 +171,7 @@ const UseSideLabel = () => {
           position:'absolute',
           top:0, left:0,
           bottom:0, right:0,
-          backgroundColor: isLight ? 'rgba(0, 0, 0, .85)' : colors.cardBackground,
+          backgroundColor: isLight ? 'rgba(0, 0, 0, .95)' : colors.cardBackground,
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',          
@@ -207,7 +207,7 @@ const UseSideLabel = () => {
             <View style={{ // WRAPPER SCURO
               width:'100%',
               maxWidth: 550,
-              backgroundColor: 'rgba(0, 0, 0, .55)',
+              backgroundColor: isLight ? 'rgba(0, 0, 0, .85)' : 'rgba(0, 0, 0, .55)',
               paddingVertical:64,
                         borderRadius:24,
             }}>
