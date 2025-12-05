@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState, Suspense } from 'react';
+import React, { useCallback, useEffect, useReducer, useRef, useState, Suspense } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -26,9 +26,10 @@ import * as Calendar from 'expo-calendar'; // ACCESSO AL CALENDARIO DI SISTEMA
 import { calendarScrenLabels as dataLabel } from '@/constants/dataLabel'; // LABEL LOCALIZZATE
 import { useNavigation } from '@react-navigation/native';
 import useShareMsgComposer from '@/components/useShareMsgComposer';
-import mobileAds, { BannerAd, BannerAdSize, useForeground, } from 'react-native-google-mobile-ads';
+import { BannerAd, BannerAdSize, useForeground, } from 'react-native-google-mobile-ads';
+import createCalendarStyles from '@/components/styles/createCalendarStyles';
 
-// INTERFACCIA DI NewHolyday (local copy, renamed to avoid type collision with external types)
+// INTERFACCIA DI NewHolyday (local copy to avoid collision with external types)
 interface LocalNewHolyday {
   startDate: Date;
   endDate: Date | null;
@@ -36,6 +37,91 @@ interface LocalNewHolyday {
   repeatOnDate: boolean;  // RIPETE OGNI ANNO, IL 25 settembre 
   repeatOnDay: boolean;   // RIPETE OGNI ANNO, il primo martedì di settembre
 }
+
+/* ---------------------------------------------------------------┐ 
+  TOAST STATE MANAGEMENT CON useReducer
+└---------------------------------------------------------------- */
+// Types per il toast state
+type ToastState = {
+  visible: boolean;
+  position: 'top' | 'center' | 'bottom';
+  background: string;
+  overlayBackground: string;
+  radius: number | number[] | undefined;
+  paddingTop: number;
+  paddingBottom: number;
+  body: React.ReactNode;
+  animation: 'none' | 'slide' | 'fade';
+  onClose?: () => void;
+};
+
+// Actions disponibili
+type ToastAction =
+  | { type: 'SHOW_HOLYDAY_TOAST'; payload: { day: any; title: string; description: string; colors: any } }
+  | { type: 'SHOW_BRIDGE_TOAST'; payload: { day: any; title: string; description: string; bridgeStart: Date; bridgeEnds: Date; colors: any } }
+  | { type: 'HIDE_TOAST' }
+  | { type: 'RESET' };
+
+// State iniziale
+const initialToastState: ToastState = {
+  visible: false,
+  position: 'center',
+  background: '',
+  overlayBackground: '',
+  radius: [0, 0, 0, 0],
+  paddingTop: 0,
+  paddingBottom: 0,
+  body: '',
+  animation: 'slide',
+  onClose: undefined,
+};
+
+// Reducer function
+const toastReducer = (state: ToastState, action: ToastAction): ToastState => {
+  switch (action.type) {
+    case 'SHOW_HOLYDAY_TOAST':
+      return {
+        ...state,
+        visible: true,
+        position: 'center',
+        background: action.payload.colors.toastBackground,
+        overlayBackground: 'rgba(50, 50, 50, 0.15)',
+        radius: [32, 32, 32, 32],
+        paddingTop: 48,
+        paddingBottom: 48,
+        animation: 'fade',
+        body: null, // Verrà impostato dopo nel componente
+        onClose: undefined,
+      };
+
+    case 'SHOW_BRIDGE_TOAST':
+      return {
+        ...state,
+        visible: true,
+        position: 'center',
+        background: action.payload.colors.toastBackground,
+        overlayBackground: 'rgba(50, 50, 50, 0.05)',
+        radius: [32, 32, 32, 32],
+        paddingTop: 48,
+        paddingBottom: 48,
+        animation: 'fade',
+        body: null, // Verrà impostato dopo nel componente
+        onClose: undefined,
+      };
+
+    case 'HIDE_TOAST':
+      return {
+        ...state,
+        visible: false,
+      };
+
+    case 'RESET':
+      return initialToastState;
+
+    default:
+      return state;
+  }
+};
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -45,10 +131,10 @@ const useThemeColors = () => {
 /* ---------------------------------------------------------------┐ 
   FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
 └---------------------------------------------------------------- */
-const normalizeDate = (date: Date | null): Date | null => {
-  if (!date) return null;
-  return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0));
-};
+// const normalizeDate = (date: Date | null): Date | null => {
+//   if (!date) return null;
+//   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0));
+// };
 
 /* ============================================================================= 
 
@@ -74,14 +160,6 @@ const CalendarScreen = ({ callerPreferences }: any) => {
   // HOOK PER COMPORRE I MESSAGGI DI CONDIVISIONE
   const composeShareMsg = useShareMsgComposer();
 
-  // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
-  // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
-  // - iOS id: 
-  // ca-app-pub-3704551485094904/6380057197
-  // - Android id:
-  // ca-app-pub-3704551485094904/1638672883
-  // const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
-
   // FLAG ADV PER TEST
   const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
 
@@ -89,11 +167,11 @@ const CalendarScreen = ({ callerPreferences }: any) => {
   const { localizedDays } = useLocalizationData(); // RICEVE I NOMI DEI GIORNI LOCALIZZATI
   const { months: localizedMonths } = useLocalizationData(); // RICEVE I NOMI DEI MESI LOCALIZZATI
 
-  const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
+  //const spaceAbove = Platform.OS === 'ios' ? 70 : 0;
 
   const colors = useThemeColors();
-  const colorScheme = useColorScheme();
-  const isLight = colorScheme === 'light';
+  //const colorScheme = useColorScheme();
+  //const isLight = colorScheme === 'light';
 
   // ADMOB
   const bannerRef = useRef<BannerAd>(null);
@@ -107,8 +185,8 @@ const CalendarScreen = ({ callerPreferences }: any) => {
   const monthsToLoad = 3;
 
   // CALCOLO DINAMICO MARGINE ESTERNO DELLE CARD
-  const width = Dimensions.get("window").width;
-  const sideMargin = Math.trunc(width * .025); // MARGINE LATERALE
+  //const width = Dimensions.get("window").width;
+  //const sideMargin = Math.trunc(width * .025); // MARGINE LATERALE
 
   /* ---------------------------------------------------------------┐ 
   GESTIONE PERMESSI CALENDARIO CON RICHIESTA RIPETUTA
@@ -199,14 +277,14 @@ const CalendarScreen = ({ callerPreferences }: any) => {
       if (result.action === Share.sharedAction) {
         if (result.activityType) {
           // OK -> shared with activity type of result.activityType
-          setVisibleToast(false);
+          dispatchToast({ type: 'HIDE_TOAST' });
         } else {
           // shared
-          setVisibleToast(false);
+          dispatchToast({ type: 'HIDE_TOAST' });
         }
       } else if (result.action === Share.dismissedAction) {
         // CANCEL -> dismissed
-        setVisibleToast(false);
+        dispatchToast({ type: 'HIDE_TOAST' });
       }
     } catch (error) {
       console.error(error);
@@ -270,7 +348,7 @@ const CalendarScreen = ({ callerPreferences }: any) => {
         <View style={styles.modalButtons}>
           <TouchableOpacity
             style={styles.cancelButton}
-            onPress={() => setVisibleToast(false)}>
+            onPress={() => dispatchToast({ type: 'HIDE_TOAST' })}>
             <Text style={styles.cancelButtonText}>{dataLabel(myLanguage, 10)}</Text>
           </TouchableOpacity>
         </View>
@@ -324,7 +402,7 @@ const CalendarScreen = ({ callerPreferences }: any) => {
         <View style={styles.modalButtons}>
           <TouchableOpacity
             style={styles.cancelButton}
-            onPress={() => setVisibleToast(false)}>
+            onPress={() => dispatchToast({ type: 'HIDE_TOAST' })}>
             <Text style={styles.cancelButtonText}>{dataLabel(myLanguage, 10)}</Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -336,7 +414,7 @@ const CalendarScreen = ({ callerPreferences }: any) => {
 
                 if (!hasPermission) {
                   // Permesso negato - chiudi il toast
-                  setVisibleToast(false);
+                  dispatchToast({ type: 'HIDE_TOAST' });
                   return;
                 }
 
@@ -374,7 +452,7 @@ const CalendarScreen = ({ callerPreferences }: any) => {
                   );
                 }
               } finally {
-                setVisibleToast(false);
+                dispatchToast({ type: 'HIDE_TOAST' });
               }
             }}
           >
@@ -397,17 +475,10 @@ const CalendarScreen = ({ callerPreferences }: any) => {
     })();
   }, []);
 
-  // PARAMETRI INTERFACCIA SIMPLETOAST (ST)
-  const [visibleToast, setVisibleToast] = useState<boolean>(false);
-  const [toastPosition, setToastPosition] = useState<'top' | 'center' | 'bottom'>('center');
-  const [toastBackground, setToastBackground] = useState<string>('');
-  const [overlayBackground, setOverlayBackground] = useState<string>('');
-  const [toastRadius, setToastRadius] = useState<number | number[] | undefined>([0, 0, 0, 0]);
-  const [paddingFromTop, setPaddingFromTop] = useState<number>(0);
-  const [paddingFromBottom, setPaddingFromBottom] = useState<number>(0);
+  // PARAMETRI INTERFACCIA SIMPLETOAST - GESTITI CON useReducer
+  const [toastState, dispatchToast] = useReducer(toastReducer, initialToastState);
   const [toastBody, setToastBody] = useState<React.ReactNode>('');
-  const [toastAnimation, setToastAnimation] = useState<'none' | 'slide' | 'fade'>('slide');
-  const [toastOnClose, setToastOnClose] = useState();
+  
   const [calendarData, setCalendarData] = useState<any[]>([]);
 
   // SEGNA LA DATA DI PARTENZA PER IL PROSSIMO BLOCCO DI MESI DA CALCOLARE  
@@ -425,264 +496,10 @@ const CalendarScreen = ({ callerPreferences }: any) => {
   // BACKGROUNDCOLOR (MESSO QUI = DIVENTA GLOBALE)
   const backgroundColor = useThemeColor({}, 'black'); //'background');
 
-  // STYLESHEET
-  const styles: any = StyleSheet.create({
-    fltList: {
-      flex: 1,
-      backgroundColor: 'transparent',
-      maxWidth: 550, // CENTRATO SU TABLET
-    },
-    card: {
-      flex: 1,
-      paddingTop: 24,
-      paddingBottom: 16,
-      paddingLeft: 16,
-      paddingRight: 16,
-      marginBottom: 16,
-      marginHorizontal: sideMargin,
-      backgroundColor: colors.cardBackground,
-      borderRadius: 24,
-      borderWidth: 0,
-    },
-    advContainer: {
-      paddingTop: 24,
-      paddingBottom: 24,
-      paddingLeft: 0,
-      paddingRight: 0,
-      marginBottom: 48,
-      marginTop: 24,
-      backgroundColor: 'rgba(0, 0, 0, .08)',
-      borderRadius: 0,
-      borderWidth: 0,
-    },
-    monthTitle: {
-      fontSize: 16,
-      fontWeight: 600,
-      color: colors.headerText,
-      marginBottom: 4,
-      textAlign: 'left',
-    },
-    yearTitle: {
-      fontSize: 20,
-      fontWeight: 300,
-      color: colors.disabled,
-      marginBottom: 24,
-      textAlign: 'left',
-    },
-    weekDaysHeader: {
-      flexDirection: 'row',
-      borderBottomWidth: 0,
-      borderBottomColor: colors.disabled,
-      paddingBottom: 12,
-      marginBottom: 5,
-    },
-    weekDayText: {
-      width: `${Math.trunc(100 / 7)}%`,
-      textAlign: 'center',
-      color: colors.disabled,
-      fontSize: 12,
-    },
-    // LABEL PONTI TROVATI
-    bridgeYellowLabel: {
-      marginRight: -16,
-      paddingHorizontal: 16,
-      paddingVertical: 4,
-      borderTopLeftRadius: 24,
-      borderBottomLeftRadius: 24,
-      backgroundColor: colors.bridgeBackground,
-      elevation: 6,
-      shadowColor: colors.black, // iOS shadow
-      shadowOffset: {
-        width: 1,
-        height: 2, // Match elevation for iOS
-      },
-      shadowOpacity: 0.45,
-      shadowRadius: 2 // Match elevation for iOS
-    },
-    cardLabelBridgeFound: {
-      fontSize: 13,
-      fontWeight: 600,
-      color: isLight ? colors.white : colors.bla,
-    },
-    daysGrid: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      backgroundColor: 'transparent',
-    },
-    dayCell: {
-      width: `${Math.trunc(100 / 7)}%`,
-      minHeight: 60,
-      alignItems: 'center',
-      justifyContent: 'center',
-      textAlign: 'center',
-      position: 'relative', // Importante per il positioning dei connettori
-    },
-    // dayCellOutsideMonth: {
-    //   backgroundColor: colors.outsideMonth,
-    //   opacity: 0.25,
-    // },
-    // dayCellBridge: {
-    //   backgroundColor: 'green',
-    //   borderRadius: 0,
-    //   borderWidth: 0,
-    //   borderColor: colors.bridgeBackground,
-    // },
-    dayNumber: {
-      fontSize: 16,
-      color: colors.text,
-      textAlign: 'left',
-    },
-    // dayNumberSunday: {
-    //   color: colors.textRed,
-    // },
-    // dayNumberSaturday: {
-    //   color: colors.textRed,
-    // },
-    dayNumberHoliday: {
-      color: colors.textRed,
-    },
-    dayNumberBridge: {
-      color: colors.bridgeDay,
-      fontWeight: 600,
-      paddingHorizontal: 4,
-      paddingVertical: 2,
-    },
-    dayNumberBold: {
-      fontWeight: 800,
-    },
-    loadingContainer: {
-      flex: 1,
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingVertical: 50,
-    },
-    loadingText: {
-      textAlign: 'center',
-      marginTop: 10,
-      fontSize: 16,
-      color: colors.tint,
-    },
-    loadingIndicatorContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingVertical: 20,
-      backgroundColor: colors.disabled,
-      marginHorizontal: sideMargin, //10,
-      borderRadius: 8,
-      marginBottom: 0,
-    },
-    loadingIndicatorText: {
-      marginLeft: 10,
-      color: colors.text,
-    },
-    endOfContentText: {
-      textAlign: 'center',
-      paddingVertical: 20,
-      color: colors.disabled,
-      fontSize: 14,
-      fontStyle: 'italic',
-    },
-    redCircle: {
-      position: 'absolute',
-      left: '50%',
-      top: '50%',
-      transform: [{ translateY: '-50%' }, { translateX: '-50%' }],
-      width: 36,
-      height: 36,
-      borderWidth: 2,
-      borderColor: colors.textRed,
-      borderRadius: 36,
-    },
-    yellowCircle: { // NON E' PIU YELLOW MA BLUE... ;-)
-      position: 'absolute',
-      width: 36,
-      height: 36,
-      left: '50%',
-      top: '50%',
-      transform: [{ translateY: '-50%' }, { translateX: '-50%' }],
-      backgroundColor: colors.bridgeBackground,
-      borderRadius: 48,
-      elevation: 6,
-      shadowColor: colors.black, // iOS shadow
-      shadowOffset: {
-        width: 1,
-        height: 2, // Match elevation for iOS
-      },
-      shadowOpacity: 0.25,
-      shadowRadius: 4 // Match elevation for iOS
-    },
-    // yellowBadge: {
-    //   position:'absolute',
-    //   top:'20%', 
-    //   right:'20%',
-    //   height:6, 
-    //   width:6,
-    //   borderRadius:'100%',
-    //   backgroundColor: '#ffffff66',
-    // },
-    squaredTouchable: {
-      position: 'absolute',
-      width: '99%', height: '100%',
-      borderRadius: 999,
-      backgroundColor: 'transparent',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    // yellowToast: {
-    //   marginTop: spaceAbove,
-    //   width:'90%',
-    //   minHeight: 180,
-    //   backgroundColor: colors.white, 
-    //   padding: 24, 
-    //   borderRadius: 12,
-    //   elevation:12, 
-    //   shadowColor: colors.black, // iOS shadow
-    //   shadowOffset: {
-    //     width: 0,
-    //     height: 12, // Match elevation for iOS
-    //   },
-    //   shadowOpacity: 0.25,
-    //   shadowRadius: 12 // Match elevation for iOS
-    // },
-    modalButtons: {
-      minWidth: '100%',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      gap: 12,
-    },
-    cancelButton: {
-      paddingVertical: 12,
-      paddingHorizontal: 20,
-      maxHeight: 44,
-      backgroundColor: colors.cancelButton,
-      borderRadius: 99,
-      alignItems: 'center',
-      justifyContent: 'center',
-      width: '100%',
-    },
-    cancelButtonText: {
-      color: colors.text,
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    addButton: {
-      width: '100%',
-      flexDirection: 'row',
-      paddingVertical: 12,
-      maxHeight: 44,
-      backgroundColor: colors.bridgeBackground,
-      borderRadius: 99,
-      alignItems: 'center',
-      justifyContent: 'center',
-      alignContent: 'center',
-    },
-    addButtonText: {
-      color: colors.white,
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-  });
+  /* ---------------------------------------------------------------┐ 
+ STYLESHEET
+ └---------------------------------------------------------------- */
+  const styles = createCalendarStyles();
 
   const navigation = useNavigation<any>();
 
@@ -849,21 +666,22 @@ const CalendarScreen = ({ callerPreferences }: any) => {
                         onPress={() => {
                           if (day[2] != undefined) {
                             if (day[1] > 0) {
-                              setToastPosition('center');
-                              setToastBackground(colors.toastBackground);       // SFONDO TOAST
-                              setOverlayBackground('rgba(50, 50, 50, 0.15)')  // COLORE OVERLAY
-                              setToastRadius([32, 32, 32, 32]);                    // STONDATURA
-                              setPaddingFromTop(48);                            // MARGINE TOP
-                              setPaddingFromBottom(48);                         // MARGINE BOTTOM
-                              setToastAnimation('fade');                        // EFFETTO
+                              // HOLYDAY TOAST - dispatch singola invece di 10 setState
+                              dispatchToast({
+                                type: 'SHOW_HOLYDAY_TOAST',
+                                payload: {
+                                  day,
+                                  title: day[2],
+                                  description: day[0].toLocaleDateString(myLanguage, { day: "numeric", month: 'long', year: "numeric" }),
+                                  colors
+                                }
+                              });
                               setToastBody(
                                 <HolydayToast
                                   id={day} // passo anche l'intero record -> day[0], day[1], day[2], day[3] 
                                   title={day[2]}
                                   description={day[0].toLocaleDateString(myLanguage, { day: "numeric", month: 'long', year: "numeric" })} />
                               );
-                              setToastOnClose(undefined);
-                              setVisibleToast(true);
                             } else {
                               /* MODAL/SimpleToast --> POSSIBILE PONTE */
                               let bridgeDescription: string = '';
@@ -890,13 +708,18 @@ const CalendarScreen = ({ callerPreferences }: any) => {
                                   }
                                 }
                               });
-                              setVisibleToast(true);
-                              setToastPosition('center');
-                              setToastBackground(colors.toastBackground); // SFONDO TOAST
-                              setOverlayBackground('rgba(50, 50, 50, 0.05)'); // COLORE OVERLAY
-                              setToastRadius([32, 32, 32, 32]); // STONDATURA
-                              setPaddingFromTop(48); // MARGINE TOP
-                              setPaddingFromBottom(48); // MARGINE BOTTTOM
+                              // BRIDGE TOAST - dispatch singola invece di 9 setState
+                              dispatchToast({
+                                type: 'SHOW_BRIDGE_TOAST',
+                                payload: {
+                                  day,
+                                  title: day[2],
+                                  description: bridgeDescription,
+                                  bridgeStart: bridgeStartAt,
+                                  bridgeEnds: bridgeEndsAt,
+                                  colors
+                                }
+                              });
                               setToastBody(
                                 <BridgeToast
                                   id={day}
@@ -905,8 +728,6 @@ const CalendarScreen = ({ callerPreferences }: any) => {
                                   bridgeStart={bridgeStartAt}
                                   bridgeEnds={bridgeEndsAt}
                                 />);
-                              setToastAnimation('fade');
-                              setToastOnClose(undefined);
                             }
                           }
                         }
@@ -1060,16 +881,16 @@ const CalendarScreen = ({ callerPreferences }: any) => {
       {/* SimpleToast */}
       <Suspense>
         <SimpleToast
-          isSTVisible={visibleToast}
-          isSTPosition={toastPosition}
-          isSTBackground={toastBackground}
-          isOverlayBackground={overlayBackground}
-          isSTRadius={toastRadius}
-          isSTpaddingFromTop={paddingFromTop}
-          isSTpaddingFromBottom={paddingFromBottom}
+          isSTVisible={toastState.visible}
+          isSTPosition={toastState.position}
+          isSTBackground={toastState.background}
+          isOverlayBackground={toastState.overlayBackground}
+          isSTRadius={toastState.radius}
+          isSTpaddingFromTop={toastState.paddingTop}
+          isSTpaddingFromBottom={toastState.paddingBottom}
           isSTBody={toastBody}
-          isSTAnimation={toastAnimation}
-          onClose={() => setVisibleToast(false)}
+          isSTAnimation={toastState.animation}
+          onClose={() => dispatchToast({ type: 'HIDE_TOAST' })}
         />
       </Suspense>
     </>
