@@ -3,7 +3,6 @@ import {
   Animated,
   Alert,
   ImageBackground,
-  // Modal,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,27 +12,22 @@ import {
   Platform,
   Share,
   Easing,
-  Dimensions,
 } from 'react-native';
-import { useRoute } from '@react-navigation/native';            // SERVE PER LEGGERE I PARAMETRI
-import { useNavigation } from '@react-navigation/native';       // SERVE PER GESTIRE LA NAVIGAZIONE
+import { useRoute } from '@react-navigation/native';                // SERVE PER LEGGERE I PARAMETRI
+import { useNavigation } from '@react-navigation/native';            // SERVE PER GESTIRE LA NAVIGAZIONE
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { Colors } from '@/constants/Colors';
-import { useHolydays } from '@/context/HolydaysContext';        // CONTEXT VARIABILI
+import { useHolydays } from '@/context/HolydaysContext';            // CONTEXT VARIABILI
 import { getLocales, } from 'expo-localization';
 import { holydayLabels as dataLabel } from '@/constants/dataLabel';
 import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
-import DropdownCountry from '@/components/ui/DropdownCountry';  // COUNTRY PICKER 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import NewDatepicker from '@/components/NewDatepicker';         // MIO DATEPICKER ✌🏻
-//import UseSideLabel from '@/components/ui/SideLabel';
-// import Privacy from '@/components/Privacy';
+import DropdownCountry from '@/components/ui/DropdownCountry';      // COUNTRY PICKER 
+import NewDatepicker from '@/components/NewDatepicker';             // MIO DATEPICKER ✌🏻
 import useShareMsgComposer from '@/components/useShareMsgComposer';
-//import { PortalProvider, Portal } from '@gorhom/portal';
 import { Portal } from '@rn-primitives/portal';
-import { FullWindowOverlay } from 'react-native-screens';
-import mobileAds, { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
-import { useSitemap } from 'expo-router';
+import { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
+import { saveData, } from '@/components/storageHandle';
+import createHolydaysStyles from '@/components/styles/createHolydaysStyles';
 
 // TYPE Holiday
 type Holiday = {          // DEFINIZIONE DI holiday
@@ -60,18 +54,6 @@ const useThemeColors = () => {
 // LEGGE NOMI DEI MESI LOCALIZZATI DA data.tsx
 const { months } = useLocalizationData();
 
-/* ---------------------------------------------------------------┐ 
-FUNZIONE DI SCRITURA SU STORAGE DATI
-└---------------------------------------------------------------- */
-const saveData = async (data: any, key: string) => {
-  try {
-    const jsonValue = JSON.stringify(data);
-    await AsyncStorage.setItem(key, jsonValue);
-  } catch (e) {
-    console.error(`Errore ${key} nel salvataggio locale: `, e);
-  }
-};
-
 /* ###########################################################################################################
 
                                       MAIN - HolydaysScreen
@@ -90,21 +72,12 @@ export default function HolydaysScreen() {
     myCountry, setMyCountry,
     goBack, setGoBack,
     myLanguage,
-    sniffer,
+    // sniffer,
     adUnitId
   } = useHolydays();
 
   // HOOK PER COMPORRE I MESSAGGI DI CONDIVISIONE
   const composeShareMsg = useShareMsgComposer();
-
-
-  // ADV: TEST ID FROM https://developers.google.com/admob/ios/test-ads?hl=it
-  // DA AGGIORNARE/RIMUOVERE CON ID CORRETTI
-  // - iOS id: 
-  // ca-app-pub-3704551485094904/6380057197
-  // - Android id:
-  // ca-app-pub-3704551485094904/1638672883
-  //const adUnitId = Platform.OS === 'ios' ? "ca-app-pub-3940256099942544/2934735716" : "ca-app-pub-3940256099942544/6300978111";
 
   // SWITCH ADV PER TEST
   const isAdvertising: boolean = true; // SE ATTIVA CAMPAGNA AdMob
@@ -118,264 +91,10 @@ export default function HolydaysScreen() {
     Platform.OS === 'ios' && bannerRef.current?.load();
   });
 
-
-
-
-  // CALCOLO DINAMICO MARGINE ESTERNO DELLE CARD
-  const width = Dimensions.get("window").width;
-  const sideMargin = Math.trunc(width * .025); // MARGINE LATERALE
-
   /* ---------------------------------------------------------------┐ 
   STYLESHEET
   └---------------------------------------------------------------- */
-  const styles: any = StyleSheet.create({
-    // SFONDO
-    image: {
-      flex: 1,
-      justifyContent: 'center',
-      width: '100%',
-    },
-    // CONTENITORE PRINCIPALE
-    container: {
-      width: '100%',
-      backgroundColor: 'transparent',
-      paddingTop: 90,
-      maxWidth: 550,
-    },
-    // TITOLO PAGINA
-    sectionTitle: {
-      fontSize: 24,
-      fontWeight: '600',
-      textAlign: 'center',
-      color: colors.text,
-    },
-    // WRAPPER TITOLO PAGINA
-    sectionContainer: {
-      width: '100%',
-      justifyContent: 'center',
-      alignItems: 'center',
-      alignContent: 'center',
-    },
-    // TITOLO CARD
-    listTitle: {
-      color: colors.text,
-      fontSize: 22,
-      fontWeight: '600',
-      marginBottom: 10,
-      paddingBottom: 12,
-    },
-    // CARD
-    listItem: {
-      backgroundColor: colors.cardBackground,
-      paddingTop: 24,
-      paddingBottom: 24,
-      paddingLeft: 16,
-      paddingRight: 16,
-      borderRadius: 24,
-      marginBottom: 24,
-      // marginLeft:12,
-      // marginRight:12,
-      marginHorizontal: sideMargin,
-    },
-    holidayRow: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      paddingVertical: 16,
-    },
-    itemDate: {
-      flexWrap: 'wrap',
-      fontSize: 16,
-      fontWeight: 'bold',
-      paddingLeft: 8,
-      color: colors.text,
-    },
-    itemDescription: {
-      fontSize: 16,
-      paddingLeft: 8,
-      color: colors.text,
-    },
-    itemActions: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginRight: 8,
-    },
-    dot32: {
-      position: 'absolute',
-      top: 0,
-      width: 44,
-      height: 44,
-      borderRadius: 24,
-      backgroundColor: colors.dot32,
-      borderWidth: 1,
-      borderColor: colors.cardBackground,
-    },
-    dot32noshadow: {
-      borderWidth: 1,
-      borderColor: colors.cardBackground,
-      width: 44,
-      height: 44,
-      borderRadius: 24,
-      backgroundColor: colors.dot32
-    },
-    dot32text: {
-      height: '100%',
-      fontSize: 24,
-      fontWeight: !isLight ? 200 : 300,
-      color: colors.textNegative,
-      textAlign: 'center',
-      justifyContent: 'center',
-      alignContent: 'center',
-      alignItems: 'center',
-      paddingTop: Platform.OS === 'ios' ? 7 : 5,
-      letterSpacing: -.5,
-    },
-    // MODAL
-    modalOverlay: {
-      flex: 1,
-      margin: 0,
-      backgroundColor: 'rgba(255, 0, 0, 0.75)',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    modalContainer: {
-      maxWidth: 550,
-      marginHorizontal: sideMargin,
-      backgroundColor: isLight ? colors.white : colors.cardBackground,
-      borderRadius: 32,
-      flexDirection: 'column',
-      gap: 32,
-      alignItems: 'center', // HOR
-      justifyContent: 'center',
-      alignContent: 'center',
-      paddingHorizontal: 24,
-      paddingVertical: 24,
-    },
-    datePickerWrapper: {
-      borderWidth: 1,
-      borderColor: colors.textRed,
-      borderRadius: 8,
-      padding: 8,
-      backgroundColor: 'transparent',
-    },
-    // PULSANTI ADD/CANCEL
-    modalButtons: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      marginTop: 24,
-    },
-    addButton: {
-      padding: 16,
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: colors.blueBar,
-      alignItems: 'center',
-      flex: 1,
-      marginLeft: 10,
-    },
-    addButtonText: {
-      color: colors.blueBar,
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    cancelButton: {
-      padding: 16,
-      borderRadius: 8,
-      borderWidth: 1,
-      borderColor: colors.disabled,
-      alignItems: 'center',
-      flex: 1,
-      marginRight: 10,
-    },
-    cancelButtonText: {
-      color: colors.disabled,
-      fontSize: 16,
-      fontWeight: 'bold',
-    },
-    // DESCRIZIONE
-    modalInput: {
-      borderWidth: 1,
-      borderColor: colors.textRed,
-      borderRadius: 8,
-      paddingVertical: 10,
-      paddingHorizontal: 12,
-      fontSize: 16,
-      marginBottom: 12,
-      height: 50,
-      color: colors.black,
-    },
-    errorText: {
-      color: 'red',
-      marginBottom: 16,
-      textAlign: 'center',
-      fontSize: 16,
-      fontWeight: 600,
-    },
-    // PULSANTONE AGGIUNGI GIORNI SPECIALI
-    specialDays: {
-      //flex:1,
-      minHeight: 68,
-      borderRadius: 999,
-      backgroundColor: colors.blueBar,
-      marginBottom: 24,
-      marginHorizontal: sideMargin * 2, //24,
-      // flexDirection: 'row',
-      //flexWrap:'wrap',
-      // alignItems: 'center',
-      // alignContent:'center',
-      // justifyContent:'flex-start',
-      padding: 20,
-      elevation: 18,
-      shadowColor: colors.black, // iOS shadow
-      shadowOffset: { width: 2, height: 8, },
-      shadowOpacity: 0.65,
-      shadowRadius: 18 // Match elevation for iOS
-    },
-    specialDaysLabel: {
-      fontSize: 20,
-      fontWeight: 400,
-      color: colors.textNegative,
-    },
-    // DROPDOWN FESTIVITA PER PAESE
-    dropDownCountry: {
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      gap: 8,
-    },
-    backgroundModal: {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      backgroundColor: isLight ? 'rgba(0,0,0, 0.75)' : colors.black
-    },
-    advContainer: {
-      paddingTop: 12,
-      paddingBottom: 12,
-      paddingLeft: 0,
-      paddingRight: 0,
-      marginBottom: 32,
-      marginTop: 12,
-      backgroundColor: 'rgba(0, 0, 0, .08)',
-      borderRadius: 0,
-      borderWidth: 0,
-    },
-    infoButton: {
-      flex: 1,
-      flexDirection: 'row',
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 20,
-      marginHorizontal: 12,
-      gap: 8,
-      borderWidth: 2,
-      borderStyle: 'dotted',
-      borderColor: colors.blueBar,
-      borderRadius: 24,
-      backgroundColor: 'rgba(255, 255, 255, .5)'
-    }
-  });
+  const styles = createHolydaysStyles();
 
   /* ---------------------------------------------------------------┐ 
   // GESTISCE LE CHIAMATE 'newItem' DA UNA LONG PRESS SUL CALENDARIO 
@@ -755,41 +474,6 @@ export default function HolydaysScreen() {
   async function handleShare(index: any) {
     const itemToShare: any = newPersonalHolydays[index];
     try {
-
-      // let msg = `${dataLabel(myLanguage, 28)}\n\n`; // Vorrei condividere con te questo evento:\n\n
-
-      // msg += `*${itemToShare.description ?? ''}*\n`; // Descrizione\n
-
-      // msg += `_${(itemToShare.startDate).toLocaleDateString(myLanguage, { day: 'numeric', month: 'long', year: 'numeric' })}_\n\n`; // Data\n\n
-
-      // msg += `${dataLabel(myLanguage, 32)}\n`; // (aggiungi al tuo calendario: \n
-
-      // // costruzione link da passare nel msg
-      // msg += `${sniffer || 'https://pontivia.blogspot.com/p/redirect.html?action=newItemFromExternal'}`
-      // // msg += `${sniffer || 'https://pontivia-2025.web.app/detect.html?action=newItemFromExternal'}`;
-
-      // if (itemToShare.startDate) {
-      //   msg += `&pStartDate=${(itemToShare.startDate).getFullYear()}-${(itemToShare.startDate).getMonth() + 1}-${(itemToShare.startDate).getDate()}`
-      // };
-      // if (itemToShare.description) {
-      //   msg += `&pDescription=${(itemToShare.description).replace(/ /g, "%20")}`;
-      // }
-      // if (itemToShare.endDate) {
-      //   msg += `&pEndDate=${(itemToShare.endDate).getFullYear()}-${(itemToShare.endDate).getMonth() + 1}-${(itemToShare.endDate).getDate()}`
-      // }
-      // if (itemToShare.repeatOnDate) { msg += `&pRODate=true` }
-      // if (itemToShare.repeatOnDay) { msg += `&pRODay=true` }
-
-      // msg += `)\n\n`;
-      // // fine link
-
-      // msg += `${new Date().getFullYear()} © PontiVIA!`; // 2025 PontiVIA!
-
-      // // link download PontiVIA
-      // // msg += `\n\n${dataLabel(myLanguage, 29)} \n\niOS: https://apps.apple.com/it/app/pontivia/id6754095339\n\nAndroid:`;
-
-      // Converti itemToShare in formato array per composeShareMsg
-      // Formato atteso: [startDate, unused, description]
       const shareData = [
         itemToShare.startDate,
         null,
@@ -1210,7 +894,7 @@ export default function HolydaysScreen() {
         <View style={{ width: '100%' }}>
           <Text style={{ fontSize: 11, alignSelf: 'center', color: colors.text }}>2025 Angeli e Associati - PontiVIA! 1.0.2</Text>
         </View>
-        
+
         {/* SPACER ################################################################################### */}
         <View style={{ height: 480 }}></View>
       </ScrollView>
@@ -1277,7 +961,7 @@ export default function HolydaysScreen() {
           </View>
         </Portal>
       }
-    
+
     </ImageBackground>
   );
 }

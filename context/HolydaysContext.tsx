@@ -10,6 +10,7 @@ import { getLocales, } from 'expo-localization';
 import { getLocalizedWeekdays } from '@/app/data/data';
 import { dataLabel } from '@/constants/dataLabel';
 import { Platform } from 'react-native';
+import { loadData } from '@/components/storageHandle';
 
 // INTERFACCIA DI Holiday
 interface Holiday {
@@ -30,15 +31,15 @@ interface NewHolyday {
 /* ---------------------------------------------------------------┐ 
 FUNZ. GENERICA LETTURA STORAGE DATI
 └---------------------------------------------------------------- */
-const loadData = async (key: string) => {
-  try {
-    const jsonValue = await AsyncStorage.getItem(key);
-    return jsonValue != null ? JSON.parse(jsonValue) : null;
-  } catch (e) {
-    console.error(`Errore ${key} nella lettura da locale:`, e);
-    return null;
-  }
-};
+// const loadData = async (key: string) => {
+//   try {
+//     const jsonValue = await AsyncStorage.getItem(key);
+//     return jsonValue != null ? JSON.parse(jsonValue) : null;
+//   } catch (e) {
+//     console.error(`Errore ${key} nella lettura da locale:`, e);
+//     return null;
+//   }
+// };
 
 interface HolydaysContextType {
   // NUOVE FESTIVITA PERSONALI

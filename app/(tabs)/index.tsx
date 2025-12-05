@@ -19,6 +19,8 @@ import { indexLabels as dataLabel } from '@/constants/dataLabel';
 import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import SplashCarousel from '@/components/ui/SplashCarousel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { loadData } from '@/components/storageHandle';
+
 
 const useThemeColors = () => {
   const colorScheme = useColorScheme();
@@ -83,15 +85,15 @@ export default function HomeScreen() {
 
   /* ============================================================================= 
       LETTURA STORAGE DATI
-  ============================================================================= */
-  const loadData = async (key: string) => {
-    try {
-      const jsonValue = await AsyncStorage.getItem(key);
-      return jsonValue != null ? JSON.parse(jsonValue) : null;
-    } catch (e) {
-      return null;
-    }
-  };
+  // ============================================================================= */
+  // const loadData = async (key: string) => {
+  //   try {
+  //     const jsonValue = await AsyncStorage.getItem(key);
+  //     return jsonValue != null ? JSON.parse(jsonValue) : null;
+  //   } catch (e) {
+  //     return null;
+  //   }
+  // };
 
   // LETTURA PREFERENCES DA LOCAL STORAGE
   useEffect(() => {
