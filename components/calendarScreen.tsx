@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState, Suspense } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Dimensions,
   FlatList,
   Image,
@@ -108,6 +109,69 @@ const CalendarScreen = ({ callerPreferences }: any) => {
   // CALCOLO DINAMICO MARGINE ESTERNO DELLE CARD
   const width = Dimensions.get("window").width;
   const sideMargin = Math.trunc(width * .025); // MARGINE LATERALE
+
+  /* ---------------------------------------------------------------┐ 
+  GESTIONE PERMESSI CALENDARIO CON RICHIESTA RIPETUTA
+  └---------------------------------------------------------------- */
+  const requestCalendarPermission = async (): Promise<boolean> => {
+    try {
+      // Verifica lo stato attuale dei permessi
+      const { status: currentStatus } = await Calendar.getCalendarPermissionsAsync();
+
+      if (currentStatus === 'granted') {
+        return true;
+      }
+
+      // Richiedi i permessi (prima richiesta)
+      const { status: newStatus } = await Calendar.requestCalendarPermissionsAsync();
+
+      if (newStatus === 'granted') {
+        return true;
+      }
+
+      // Permesso negato alla prima richiesta - mostra alert con opzione Riprova
+      return new Promise((resolve) => {
+        Alert.alert(
+          dataLabel(myLanguage, 15) || 'Permesso Calendario Richiesto',
+          dataLabel(myLanguage, 16) || 'Per salvare eventi nel calendario, PontiVIA ha bisogno del permesso di accesso al calendario. Senza questo permesso non potrai salvare i ponti trovati nel tuo calendario.',
+          [
+            {
+              text: dataLabel(myLanguage, 10) || 'Annulla',
+              style: 'cancel',
+              onPress: () => resolve(false)
+            },
+            {
+              text: dataLabel(myLanguage, 17) || 'Riprova',
+              onPress: async () => {
+                // Richiedi nuovamente i permessi (seconda richiesta)
+                const { status: retryStatus } = await Calendar.requestCalendarPermissionsAsync();
+
+                if (retryStatus === 'granted') {
+                  // Permesso concesso al secondo tentativo
+                  resolve(true);
+                } else {
+                  // Ancora negato - mostra messaggio finale
+                  Alert.alert(
+                    dataLabel(myLanguage, 18) || 'Permesso Negato',
+                    dataLabel(myLanguage, 19) || 'Non potrai salvare eventi nel calendario finché non concedi il permesso nelle impostazioni del dispositivo.',
+                    [{
+                      text: 'OK',
+                      style: 'default',
+                      onPress: () => resolve(false)
+                    }]
+                  );
+                }
+              }
+            }
+          ]
+        );
+      });
+
+    } catch (error) {
+      console.error('[Calendar] Errore durante la richiesta permessi:', error);
+      return false;
+    }
+  };
 
   /* ---------------------------------------------------------------┐ 
   SHARE
@@ -267,6 +331,16 @@ const CalendarScreen = ({ callerPreferences }: any) => {
             style={styles.addButton}
             onPress={async () => {
               try {
+                // Richiedi permessi calendario con gestione robusta
+                const hasPermission = await requestCalendarPermission();
+
+                if (!hasPermission) {
+                  // Permesso negato - chiudi il toast
+                  setVisibleToast(false);
+                  return;
+                }
+
+                // Permesso concesso - crea l'evento
                 const eventDetails = {
                   title: dataLabel(myLanguage, 0),    // Ponte!
                   startDate: bridgeStart,
@@ -274,9 +348,31 @@ const CalendarScreen = ({ callerPreferences }: any) => {
                   notes: dataLabel(myLanguage, 1),    // PontiVIA! ha trovato questo ponte ecc..
                   allDay: true,
                 };
+
                 await Calendar.createEventInCalendarAsync(eventDetails);
-              } catch (e) {
-                console.error('Errore durante l\'apertura del calendario:', e);
+
+                // Successo - mostra conferma
+                Alert.alert(
+                  dataLabel(myLanguage, 20) || 'Evento Aggiunto',
+                  dataLabel(myLanguage, 21) || 'Il ponte è stato aggiunto al tuo calendario!',
+                  [{ text: 'OK', style: 'default' }]
+                );
+
+              } catch (e: any) {
+                console.error('[Calendar] Errore durante la creazione evento:', e);
+
+                // Gestisci errori specifici
+                if (e.code === 'ERR_MISSING_PERMISSIONS') {
+                  // Permesso mancante - richiedi nuovamente
+                  await requestCalendarPermission();
+                } else {
+                  // Altro errore
+                  Alert.alert(
+                    dataLabel(myLanguage, 22) || 'Errore',
+                    dataLabel(myLanguage, 23) || 'Si è verificato un errore durante il salvataggio dell\'evento nel calendario.',
+                    [{ text: 'OK', style: 'default' }]
+                  );
+                }
               } finally {
                 setVisibleToast(false);
               }

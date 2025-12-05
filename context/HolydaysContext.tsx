@@ -10,7 +10,8 @@ import { getLocales, } from 'expo-localization';
 import { getLocalizedWeekdays } from '@/app/data/data';
 import { dataLabel } from '@/constants/dataLabel';
 import { Platform } from 'react-native';
-import { loadData } from '@/components/storageHandle';
+//import { loadData } from '@/components/storageHandle';
+import { loadData } from '@/utils/storage';
 
 // INTERFACCIA DI Holiday
 interface Holiday {

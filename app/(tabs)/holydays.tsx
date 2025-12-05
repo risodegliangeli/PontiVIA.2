@@ -26,7 +26,7 @@ import NewDatepicker from '@/components/NewDatepicker';             // MIO DATEP
 import useShareMsgComposer from '@/components/useShareMsgComposer';
 import { Portal } from '@rn-primitives/portal';
 import { BannerAd, BannerAdSize, TestIds, useForeground } from 'react-native-google-mobile-ads';
-import { saveData, } from '@/components/storageHandle';
+import { saveData, STORAGE_KEYS } from '@/utils/storage';
 import createHolydaysStyles from '@/components/styles/createHolydaysStyles';
 
 // TYPE Holiday
@@ -429,7 +429,7 @@ export default function HolydaysScreen() {
       tempNewPersonalHolydays = newPersonalHolydays.map((h, i) => i === initialIndex ? newEvent : h);
       setNewPersonalHolydays(tempNewPersonalHolydays);
     }
-    await saveData(tempNewPersonalHolydays, 'newPersonalHolydays'); // SALVATAGGIO LOCAL STORAGE
+    await saveData('newPersonalHolydays', tempNewPersonalHolydays); // SALVATAGGIO LOCAL STORAGE
 
     // AZZERA LE VARIABILI DI ERRORE E CHIUDE LA MODAL
     setInitialIndex(null);
@@ -517,7 +517,7 @@ export default function HolydaysScreen() {
           onPress: async () => {
             let tempPersonalHolydays = newPersonalHolydays.filter((_, i) => i !== index);
             setNewPersonalHolydays(tempPersonalHolydays);
-            await saveData(tempPersonalHolydays, 'newPersonalHolydays');
+            await saveData('newPersonalHolydays', tempPersonalHolydays);
           }
         }
       ]
@@ -531,9 +531,9 @@ export default function HolydaysScreen() {
         onPress={
           async () => {
             setMyCountry(getLocales()[0].languageTag);
-            await saveData(getLocales()[0].languageTag, 'myCountry');
+            await saveData('myCountry', getLocales()[0].languageTag);
             setNationalExcluded([]);
-            await saveData([], 'nationalExcluded');
+            await saveData('nationalExcluded', []);
           }
         }>
         <IconSymbol size={20} name="gobackward" color={colors.blueBar} style={{ marginBottom: 10, }} />
@@ -547,7 +547,7 @@ export default function HolydaysScreen() {
   └---------------------------------------------------------------- */
   useEffect(() => {
     setNationalHolydays(getLocalHolydas(myCountry));    // RICHIAMO LA FUNZIONE getLocalHolydas (DA data.tsx)
-    async () => await saveData(myCountry, 'myCountry');
+    async () => await saveData('myCountry', myCountry);
   }, [myCountry]);
 
   // EFFETTO GENIUS PER LA MODAL 
@@ -647,7 +647,7 @@ export default function HolydaysScreen() {
                             text: dataLabel(myLanguage, 10), // Elimina
                             onPress: async () => {
                               setNewPersonalHolydays([]);
-                              await saveData([], 'newPersonalHolydays');
+                              await saveData('newPersonalHolydays', []);
                             }
                           }
                         ]
@@ -798,9 +798,9 @@ export default function HolydaysScreen() {
               selectedValue={myCountry}
               onChange={async (item) => {
                 setMyCountry(item);
-                await saveData(item, 'myCountry');
+                await saveData('myCountry', item);
                 setNationalExcluded([]);
-                await saveData([], 'nationalExcluded');
+                await saveData('nationalExcluded', []);
               }}
             />
             {myCountry.slice(0, 2) === myLanguage ? null : <ResetCountryButton />}
@@ -848,12 +848,12 @@ export default function HolydaysScreen() {
                       // AGGIUNGE A nationalExcluded
                       let tempNationalExcluded: number[] = [...nationalExcluded, index];
                       setNationalExcluded(tempNationalExcluded);
-                      await saveData(tempNationalExcluded, 'nationalExcluded');
+                      await saveData('nationalExcluded', tempNationalExcluded);
                     } else {
                       // ALTRIMENTI ELIMINA DA nationalExcluded
                       let tempNationalExcluded: number[] = nationalExcluded.filter(i => i !== index);
                       setNationalExcluded(tempNationalExcluded);
-                      await saveData(tempNationalExcluded, 'nationalExcluded');
+                      await saveData('nationalExcluded', tempNationalExcluded);
                     }
                   }}>
                   {nationalExcluded.indexOf(index) === -1 ?

@@ -1,7 +1,11 @@
 # TICKET:
 #############################################################################
 
+- ### GESTIONE ACCESSO CALENDARIO
+  -- correggere: qnd l'utente rifiuta il salvataggio sul calendario 
+     compare ugualmente il msg di cortesia "Evento salvato su..."
 
+---
 
 - ### SPLITTEDBAR
   -- correggere movimnto da -1 a 0 / da 1 a 0

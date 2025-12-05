@@ -19,7 +19,8 @@ import { indexLabels as dataLabel } from '@/constants/dataLabel';
 import { requestTrackingPermissionsAsync } from 'expo-tracking-transparency';
 import SplashCarousel from '@/components/ui/SplashCarousel';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { loadData } from '@/components/storageHandle';
+//import { loadData } from '@/components/storageHandle';
+import { loadData } from '@/utils/storage';
 
 
 const useThemeColors = () => {
