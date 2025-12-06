@@ -4,11 +4,11 @@
 import { addDays, } from 'date-fns';
 // import { PREFERENCES } from '@/app/(tabs)/preferences';
 import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
-import { getLocales,  } from 'expo-localization';
+import { getLocales, } from 'expo-localization';
 // import { Platform } from 'react-native';
 //import { da } from 'date-fns/locale'; // importa il Danese???
 import { dataLabel } from '@/constants/dataLabel';
-import  checkPersonalHolydays  from '@/components/checkPersonalHolydays';
+import checkPersonalHolydays from '@/components/checkPersonalHolydays';
 
 // TYPE Holiday (VECCHIO)
 interface Holiday {
@@ -16,26 +16,26 @@ interface Holiday {
     month: number;
     yyyy?: number; // OPZIONALE
     description: string;
-    }
+}
 
 // TYPE NewHoliday (NUOVO)
 type NewHolyday = {
-  startDate: Date;
-  endDate: Date | null;
-  description: string;
-  repeatOnDate: boolean;
-  repeatOnDay: boolean;
+    startDate: Date;
+    endDate: Date | null;
+    description: string;
+    repeatOnDate: boolean;
+    repeatOnDay: boolean;
 };
 
 // CARICA LE FESTIVITA' LOCALI DAL FILE .data
 const { localHolydas: countryHolydays } = useLocalizationData();
 
 // CARICA IL LINGUAGGIO
-const myLanguage = (getLocales()[0].languageTag).slice(0,2);
+const myLanguage = (getLocales()[0].languageTag).slice(0, 2);
 
 /* ============================================================================= 
     CREA UNA DATA A MEZZOGIORNO UTC ( su base YYYY MM GG)
-============================================================================= */ 
+============================================================================= */
 const createUTCDate = (year: Number, month: Number, day: Number) => {
     const date = new Date(Date.UTC(Number(year), Number(month), Number(day), 12, 0, 0, 0)); // 12:00 UTC
     return date;
@@ -47,7 +47,7 @@ const createUTCDate = (year: Number, month: Number, day: Number) => {
     *** si può sostituire (con modifiche) con: date-fns --> getDaysInMonth
 ============================================================================= */
 const getDaysInMonth = (year: number, month: number) => {
-    return createUTCDate(year, month + 1, 0).getUTCDate(); 
+    return createUTCDate(year, month + 1, 0).getUTCDate();
 };
 
 /* ============================================================================= 
@@ -68,15 +68,15 @@ const getCountryNationalHolidays = (
     year: number,
     newPersonalHolydays: NewHolyday[],
     myPreferences: any,
-    nationalExcluded: any 
-    ) => {   
+    nationalExcluded: any
+) => {
 
     // console.log('\t\t[GETCOUNTRYNATIONALHOLYDAYS]');
     //console.log('\t- - nationalExcluded:', JSON.stringify(nationalExcluded));
 
     // ARRAY DOVE SONO SALVATI I DATI
     const holidays = [];
-    
+
     // SE SWITCH Festivita Nazionali = true AGGIUNGO LE FESTIVITA LOCALI DEL PAESE
     // ** VALIDE PER TUTTI GLI ANNI ** QUINDI yyy = undefined
     if (myPreferences.festivitaNazionali.status) {
@@ -86,12 +86,12 @@ const getCountryNationalHolidays = (
         // opzione 2) ELIMINA LE FESTIVITA NAZIONALI DISATTIVATE
         // Rimuove da tempLocalHolydays tutti gli item il cui indice è presente in nationalExcluded
         let tempLocalHolydays: Holiday[] = [...getLocalHolydas(myCountry)];
-        tempLocalHolydays = tempLocalHolydays.filter((_, idx) => 
+        tempLocalHolydays = tempLocalHolydays.filter((_, idx) =>
             !nationalExcluded.includes(idx)
-            );
+        );
 
         holidays.push(...tempLocalHolydays);
-        }
+    }
 
     /* + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 
@@ -102,7 +102,7 @@ const getCountryNationalHolidays = (
     if (myPreferences.festivitaPersonali.status) {
         const tempNewPersonalHolydays = checkPersonalHolydays(newPersonalHolydays, year);
         holidays.push(...tempNewPersonalHolydays);
-        }
+    }
     /* + + + + + + + + + + + + + + + + + + + + + + + + + + + + 
     + + + + + + + + + + + + + + + + + + + + + + + + + + +*/
 
@@ -120,12 +120,12 @@ const getCountryNationalHolidays = (
     const m = Math.floor((a + 11 * h + 22 * l) / 451);
     const monthOfEaster = Math.floor((h + l - 7 * m + 114) / 31); // Mese di Pasqua (1-12)
     const dayOfEaster = ((h + l - 7 * m + 114) % 31) + 1;         // Giorno di Pasqua
-    
+
     // AGGIUNGO PASQUA A holidays SE SWITCH pasqua=true
-    myPreferences.pasqua.status && holidays.push({ 
-        day: dayOfEaster, 
-        month: monthOfEaster - 1, 
-        description: dataLabel(myLanguage,0) 
+    myPreferences.pasqua.status && holidays.push({
+        day: dayOfEaster,
+        month: monthOfEaster - 1,
+        description: dataLabel(myLanguage, 0)
     });
 
     // CREO VARIABILE TIPO Data PER I CALCOLI CHE SEGUONO
@@ -133,50 +133,51 @@ const getCountryNationalHolidays = (
 
     // AGGIUNGO LUNEDI DELL'ANGELO A holidays SE LO SWITCH =true
     if (myPreferences.lunediDellAngelo.status === true) {
-        const easterMonday = addDays(currentPasqua, 1);    
-        holidays.push({ 
-            day: easterMonday.getUTCDate(), 
-            month: easterMonday.getUTCMonth(), 
-            description: dataLabel(myLanguage,1) });
+        const easterMonday = addDays(currentPasqua, 1);
+        holidays.push({
+            day: easterMonday.getUTCDate(),
+            month: easterMonday.getUTCMonth(),
+            description: dataLabel(myLanguage, 1)
+        });
     }
 
     // ASCENSIONE (39 giorni dopo Pasqua)
     if (myPreferences.ascensione.status === true) {
         const ascensione = addDays(currentPasqua, 39);
-        holidays.push({ 
-            day: ascensione.getUTCDate(), 
-            month: ascensione.getUTCMonth(), 
-            description: dataLabel(myLanguage,2) 
+        holidays.push({
+            day: ascensione.getUTCDate(),
+            month: ascensione.getUTCMonth(),
+            description: dataLabel(myLanguage, 2)
         });
     }
 
     // PENTECOSTE (49 giorni dopo Pasqua)
     if (myPreferences.pentecoste.status === true) {
         const pentecoste = addDays(currentPasqua, 49);
-        holidays.push({ 
-            day: pentecoste.getUTCDate(), 
-            month: pentecoste.getUTCMonth(), 
-            description: dataLabel(myLanguage,3) 
+        holidays.push({
+            day: pentecoste.getUTCDate(),
+            month: pentecoste.getUTCMonth(),
+            description: dataLabel(myLanguage, 3)
         });
     }
 
     // LUNEDI DI PENTECOSTE (50 giorni dopo Pasqua)
     if (myPreferences.lunediPentecoste.status === true) {
         const lunediPentecoste = addDays(currentPasqua, 50);
-        holidays.push({ 
-            day: lunediPentecoste.getUTCDate(), 
-            month: lunediPentecoste.getUTCMonth(), 
-            description: dataLabel(myLanguage,4) 
+        holidays.push({
+            day: lunediPentecoste.getUTCDate(),
+            month: lunediPentecoste.getUTCMonth(),
+            description: dataLabel(myLanguage, 4)
         });
     }
 
     // CORPUS DOMINI (60 giorni dopo Pasqua)
     if (myPreferences.corpusDomini.status === true) {
         const corpusDomini = addDays(currentPasqua, 60);
-        holidays.push({ 
-            day: corpusDomini.getUTCDate(), 
-            month: corpusDomini.getUTCMonth(), 
-            description: dataLabel(myLanguage,5)
+        holidays.push({
+            day: corpusDomini.getUTCDate(),
+            month: corpusDomini.getUTCMonth(),
+            description: dataLabel(myLanguage, 5)
         });
     }
 
@@ -190,7 +191,7 @@ const getCountryNationalHolidays = (
 
     // console.log('- - script terminato');
     //console.log('- - holydays: ', holidays);
-   
+
     return holidays;
 };
 
@@ -198,15 +199,15 @@ const getCountryNationalHolidays = (
 CALCOLO DEL CALENDARIO
 ============================================================================== */
 const getDayType = (
-    date: Date, 
+    date: Date,
     holidays: { day: number; month: number; description: string }[],
     myPreferences
-    ) => {
+) => {
 
     const dayOfWeek = getUTCDayOfWeek(date); // 0 = Domenica, 6 = Sabato
 
     // 1) CONTROLLO: FESTIVITA NAZIONALE/PERSONALE/LOCALE/PASQUA?
-    let foundHoliday: { day: number; month: number; description: string } | undefined = undefined; 
+    let foundHoliday: { day: number; month: number; description: string } | undefined = undefined;
 
     // Controlla sempre le festività personali e locali se gli switch sono attivi
     if (myPreferences.festivitaPersonali.status || myPreferences.festivitaLocali.status || myPreferences.festivitaNazionali.status || myPreferences.feriePersonali.status) {
@@ -220,12 +221,12 @@ const getDayType = (
 
     // 2) GIORNI DELLA SETTIMANA FESTIVI IMPOSTATI IN PREFERENZE?
     if (dayOfWeek === 0 && myPreferences.domenica.status) { return { value: 1, type: undefined }; }
-    if (dayOfWeek === 6 && myPreferences.sabato.status)   { return { value: 1, type: undefined }; }      
-    if (dayOfWeek === 5 && myPreferences.venerdi.status)  { return { value: 1, type: undefined }; }
-    if (dayOfWeek === 4 && myPreferences.giovedi.status)  { return { value: 1, type: undefined }; }
-    if (dayOfWeek === 3 && myPreferences.mercoledi.status) {return { value: 1, type: undefined }; }
-    if (dayOfWeek === 2 && myPreferences.martedi.status)  { return { value: 1, type: undefined }; } 
-    if (dayOfWeek === 1 && myPreferences.lunedi.status)   { return { value: 1, type: undefined }; }
+    if (dayOfWeek === 6 && myPreferences.sabato.status) { return { value: 1, type: undefined }; }
+    if (dayOfWeek === 5 && myPreferences.venerdi.status) { return { value: 1, type: undefined }; }
+    if (dayOfWeek === 4 && myPreferences.giovedi.status) { return { value: 1, type: undefined }; }
+    if (dayOfWeek === 3 && myPreferences.mercoledi.status) { return { value: 1, type: undefined }; }
+    if (dayOfWeek === 2 && myPreferences.martedi.status) { return { value: 1, type: undefined }; }
+    if (dayOfWeek === 1 && myPreferences.lunedi.status) { return { value: 1, type: undefined }; }
 
     // 3) SE NESSUNO DI QUESTI ALLORA --> GIORNO FERIALE
     return { value: undefined, type: undefined };
@@ -304,17 +305,17 @@ const countBridges = (monthTable: any[]) => {
         {...}]
 ============================================================================= */
 const createCalendarGrid = (
-        startDate: Date, 
-        monthsTotal: number, 
-        bridgeLength: number, 
-        newPersonalHolydays: NewHolyday[],
-        myCountry: string, 
-        myPreferences,
-        nationalExcluded: number[],
-    ) => {
+    startDate: Date,
+    monthsTotal: number,
+    bridgeLength: number,
+    newPersonalHolydays: NewHolyday[],
+    myCountry: string,
+    myPreferences,
+    nationalExcluded: number[],
+) => {
     // console.log('\t[CREATECALENDARGRID]');
     //console.log(`prop ricevuto -> nationalExcluded: ${JSON.stringify(nationalExcluded)}`);
-   
+
     // AZZERO L'ARRAY CHE CONTERRA' LA GRIGLIA
     const grid = [];
     const initialYear = startDate.getUTCFullYear();
@@ -322,17 +323,17 @@ const createCalendarGrid = (
 
     // Cache per le festività per anno - evita ricalcoli
     const holidaysByYear: { [year: number]: Holiday[] } = {};
-    
+
     const getHolidaysForYear = (year: number) => {
         if (!holidaysByYear[year]) {
             holidaysByYear[year] = getCountryNationalHolidays(
-                                        myCountry, 
-                                        year, 
-                                        newPersonalHolydays, 
-                                        myPreferences,
-                                        nationalExcluded,
-                                        );
-            }
+                myCountry,
+                year,
+                newPersonalHolydays,
+                myPreferences,
+                nationalExcluded,
+            );
+        }
         return holidaysByYear[year];
     };
 
@@ -343,7 +344,7 @@ const createCalendarGrid = (
 
         // Ottieni le festività solo per l'anno corrente del mese
         const currentYearHolidays = getHolidaysForYear(year);
-        
+
         // Per i giorni del mese precedente/successivo, potrebbe servire anche l'anno adiacente
         const prevYear = year - 1;
         const nextYear = year + 1;
@@ -371,9 +372,9 @@ const createCalendarGrid = (
         for (let j = daysFromPrevMonth - 1; j >= 0; j--) {
             const dateToAdd: Date = createUTCDate(prevMonthYear, prevMonth, daysInPrevMonth - j);
             const dateYear = dateToAdd.getUTCFullYear();
-            const holidaysToUse = dateYear === year ? currentYearHolidays : 
-                                 dateYear === prevYear ? prevYearHolidays : 
-                                 getHolidaysForYear(dateYear);
+            const holidaysToUse = dateYear === year ? currentYearHolidays :
+                dateYear === prevYear ? prevYearHolidays :
+                    getHolidaysForYear(dateYear);
             const { value, type } = getDayType(dateToAdd, holidaysToUse, myPreferences);
             monthData.table.push([dateToAdd, value, type, false]);
         }
@@ -391,9 +392,9 @@ const createCalendarGrid = (
         while (monthData.table.length < 42) {
             const dateToAdd = createUTCDate(year, month + 1, dayOfNextMonth);
             const dateYear = dateToAdd.getUTCFullYear();
-            const holidaysToUse = dateYear === year ? currentYearHolidays : 
-                                 dateYear === nextYear ? nextYearHolidays : 
-                                 getHolidaysForYear(dateYear);
+            const holidaysToUse = dateYear === year ? currentYearHolidays :
+                dateYear === nextYear ? nextYearHolidays :
+                    getHolidaysForYear(dateYear);
             const { value, type } = getDayType(dateToAdd, holidaysToUse, myPreferences);
             monthData.table.push([dateToAdd, value, type, false]);
             dayOfNextMonth++;
@@ -402,7 +403,7 @@ const createCalendarGrid = (
         // CALCOLO PONTI
         // scorro l'intera table per identificare i ponti
         for (let k = 0; k < monthData.table.length; k++) {
-            const [, currentValue] = monthData.table[k]; 
+            const [, currentValue] = monthData.table[k];
             // NB. LA VIRGOLA SIGNIFICA CHE SI PARTE DAL SECONDO ELEMENTO DELL'ARRAY 
 
             // giorno feriale (= undefined)
@@ -412,8 +413,23 @@ const createCalendarGrid = (
                 // controlla il giorno precedente: deve essere festivo o weekend
                 const prevDayIndex = k - 1;
                 if (prevDayIndex >= 0) {
+                    // Il giorno precedente è nella griglia corrente
                     const [, prevValue] = monthData.table[prevDayIndex];
                     if (prevValue === 1 || prevValue === 2 || prevValue === 3) {
+                        isPotentialBridge = true;
+                    }
+                } else if (k === 0) {
+                    // Siamo al primo giorno della griglia, controlliamo il giorno precedente effettivo
+                    // (che potrebbe essere nel mese precedente e non incluso nella griglia)
+                    const firstDayDate = monthData.table[0][0];
+                    const prevDayDate = new Date(firstDayDate);
+                    prevDayDate.setUTCDate(prevDayDate.getUTCDate() - 1);
+
+                    const prevDayYear = prevDayDate.getUTCFullYear();
+                    const prevDayHolidays = getHolidaysForYear(prevDayYear);
+                    const { value: prevValue } = getDayType(prevDayDate, prevDayHolidays, myPreferences);
+
+                    if (prevValue === 1) {
                         isPotentialBridge = true;
                     }
                 }
@@ -421,11 +437,11 @@ const createCalendarGrid = (
                 if (isPotentialBridge) {
                     let daysInBetween = 0;
                     let foundNextHoliday = false;
-                    let bridgeDaysIndices = []; 
+                    let bridgeDaysIndices = [];
                     // memorizza gli indici dei giorni che formano il ponte
 
                     // conta dal giorno corrente (k) fino a `bridgeLength` giorni avanti
-                    for (let b = 0; b < bridgeLength + 1 ; b++) {
+                    for (let b = 0; b < bridgeLength + 1; b++) {
                         const checkIndex = k + b;
                         if (checkIndex < monthData.table.length) {
                             const [, checkValue] = monthData.table[checkIndex];
@@ -448,13 +464,13 @@ const createCalendarGrid = (
 
                     // ee il gg successivo è festivo e la lunghezza del ponte è valida
                     if (foundNextHoliday && daysInBetween > 0 && daysInBetween <= bridgeLength) {
-                        
+
                         // marca TUTTI i giorni identificati come parte del ponte
-                        bridgeDaysIndices.forEach( idx => {
+                        bridgeDaysIndices.forEach(idx => {
                             // controlla che il giorno non sia già stato marcato come festività, sabato o domenica
                             if (monthData.table[idx][1] === undefined) {
                                 // ponte
-                                monthData.table[idx][1] = -1 ; 
+                                monthData.table[idx][1] = -1;
                                 monthData.table[idx][2] = '_'; //dataLabel[6]; // basta che la cell[2] non sia vuota
                             }
                         });

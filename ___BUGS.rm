@@ -1,21 +1,26 @@
 # TICKET:
 #############################################################################
 
+
+- ### NEWCALENDARPICKER
+  -- colore riga GIORNI = colors.text
+
+---
+
+
+
 - ### GESTIONE ACCESSO CALENDARIO
   -- correggere: qnd l'utente rifiuta il salvataggio sul calendario 
      compare ugualmente il msg di cortesia "Evento salvato su..."
 
 ---
 
-- NEWCALENDARPICKER
-  -- colore riga GIORNI = colors.text
+- ### CONDIVISIONE FESTIVITA' NAZIONALE
+  -- aggiungere "festività nazionale Italia"
 
 ---
 
-- HOLYDAYS/I TUOI GIORNI SPECIALI
-  -- se una data ripete nascondere Anno (es. 20 ottobre e non 20 ottobre 2025)
 
----
 
 - ### SPLITTEDBAR
   -- correggere movimnto da -1 a 0 / da 1 a 0
@@ -49,6 +54,11 @@
 
 # TICKET RISOLTI:
 
+
+- ### HOLYDAYS/I TUOI GIORNI SPECIALI
+  -- se una data ripete nascondere Anno (es. 20 ottobre e non 20 ottobre 2025)
+
+---
 
 - ### GRAFICA BALLOON SIDELABEL
   -- rivedere grafica generale

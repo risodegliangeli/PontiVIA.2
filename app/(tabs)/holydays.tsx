@@ -689,8 +689,8 @@ export default function HolydaysScreen() {
                         {!holiday.endDate ?
                           <>
                             <Text style={styles.itemDate}>{`${holiday.startDate.getDate()} ${months[holiday.startDate.getMonth()]?.label}`}</Text>
-                            {/*  SCRIVE ANNO (SOLO SE DIVERSO DALL' ANNO CORRENTE) */}
-                            {holiday.startDate.getFullYear() !== new Date().getFullYear() && <Text style={styles.itemDate}>{holiday.startDate.getFullYear()}</Text>}
+                            {/*  SCRIVE ANNO (SOLO SE DIVERSO DALL' ANNO CORRENTE E NON RIPETE) */}
+                            {!holiday.repeatOnDate && !holiday.repeatOnDay && holiday.startDate.getFullYear() !== new Date().getFullYear() && <Text style={styles.itemDate}>{holiday.startDate.getFullYear()}</Text>}
                           </>
                           :
                           <Text style={styles.itemDate}>

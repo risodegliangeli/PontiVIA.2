@@ -21,9 +21,9 @@ import SimpleToast from '@/components/ui/SimpleToast';
 import { Colors } from '@/constants/Colors';
 import { useHolydays } from '@/context/HolydaysContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
-import { addMonths, isWithinInterval } from "date-fns";
+import { addMonths, isWithinInterval, getDay, differenceInDays, startOfMonth } from "date-fns";
 import * as Calendar from 'expo-calendar'; // ACCESSO AL CALENDARIO DI SISTEMA
-import { calendarScrenLabels as dataLabel } from '@/constants/dataLabel'; // LABEL LOCALIZZATE
+import { calendarScrenLabels as dataLabel, datepickerLabels } from '@/constants/dataLabel'; // LABEL LOCALIZZATE
 import { useNavigation } from '@react-navigation/native';
 import useShareMsgComposer from '@/components/useShareMsgComposer';
 import { BannerAd, BannerAdSize, useForeground, } from 'react-native-google-mobile-ads';
@@ -127,6 +127,42 @@ const useThemeColors = () => {
   const colorScheme = useColorScheme();
   return Colors[colorScheme ?? 'light'];
 };
+
+/* ---------------------------------------------------------------┐ 
+  CALCOLA LA RICORRENZA DI UNA DATA ALL'INTERNO DEL MESE
+  (es. primo, secondo, terzo, quarto, quinto)
+└---------------------------------------------------------------- */
+function getWeekdayRecurrence(targetDate: Date) {
+  const targetDayOfWeek = getDay(targetDate);
+  const firstDayOfMonth = startOfMonth(targetDate);
+  const startDayOfWeek = getDay(firstDayOfMonth);
+  const daysToAdd = (targetDayOfWeek - startDayOfWeek + 7) % 7;
+  const firstOccurrence = addMonths(firstDayOfMonth, 0);
+  firstOccurrence.setDate(firstOccurrence.getDate() + daysToAdd);
+  const daysDifference = differenceInDays(targetDate, firstOccurrence);
+  const recurrenceNumber = (daysDifference / 7) + 1;
+  return recurrenceNumber;
+}
+
+/* ---------------------------------------------------------------┐ 
+  FORMATTA IL PATTERN DI RICORRENZA PER repeatOnDay
+  (es. "Terzo giovedì di novembre")
+└---------------------------------------------------------------- */
+function formatRecurrencePattern(
+  date: Date,
+  language: string,
+  localizedDays: string[],
+  months: any[]
+): string {
+  const recurrence = getWeekdayRecurrence(date);
+  const dayOfWeek = getDay(date);
+  const monthIndex = date.getMonth();
+
+  // Costruisce la stringa: "Ripete ogni anno, il" + "terzo" + "giovedì" + "di" + "novembre"
+  const pattern = `${datepickerLabels(language, 9)} ${datepickerLabels(language, 9 + recurrence)} ${localizedDays[dayOfWeek === 0 ? 6 : dayOfWeek - 1]} ${datepickerLabels(language, 15)} ${months[monthIndex].label}`;
+
+  return pattern;
+}
 
 /* ---------------------------------------------------------------┐ 
   FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
@@ -430,11 +466,11 @@ const CalendarScreen = ({ callerPreferences }: any) => {
                 await Calendar.createEventInCalendarAsync(eventDetails);
 
                 // Successo - mostra conferma
-                Alert.alert(
-                  dataLabel(myLanguage, 20) || 'Evento Aggiunto',
-                  dataLabel(myLanguage, 21) || 'Il ponte è stato aggiunto al tuo calendario!',
-                  [{ text: 'OK', style: 'default' }]
-                );
+                // Alert.alert(
+                //   dataLabel(myLanguage, 20) || 'Evento Aggiunto',
+                //   dataLabel(myLanguage, 21) || 'Il ponte è stato aggiunto al tuo calendario!',
+                //   [{ text: 'OK', style: 'default' }]
+                // );
 
               } catch (e: any) {
                 console.error('[Calendar] Errore durante la creazione evento:', e);
@@ -478,7 +514,7 @@ const CalendarScreen = ({ callerPreferences }: any) => {
   // PARAMETRI INTERFACCIA SIMPLETOAST - GESTITI CON useReducer
   const [toastState, dispatchToast] = useReducer(toastReducer, initialToastState);
   const [toastBody, setToastBody] = useState<React.ReactNode>('');
-  
+
   const [calendarData, setCalendarData] = useState<any[]>([]);
 
   // SEGNA LA DATA DI PARTENZA PER IL PROSSIMO BLOCCO DI MESI DA CALCOLARE  
@@ -662,17 +698,28 @@ const CalendarScreen = ({ callerPreferences }: any) => {
                         ]}
                         hitSlop={{ top: 5, bottom: 5, left: 5, right: 5 }}
 
+
                         // ON PRESS
                         onPress={() => {
                           if (day[2] != undefined) {
                             if (day[1] > 0) {
+                              // Check if this is a repeatOnDay event by matching description
+                              const matchingEvent = newPersonalHolydays.find(
+                                (event: any) => event.description === day[2] && event.repeatOnDay === true
+                              );
+
+                              // For repeatOnDay events, show recurrence pattern instead of specific date
+                              const displayDescription = matchingEvent
+                                ? formatRecurrencePattern(day[0], myLanguage, localizedDays, localizedMonths)
+                                : day[0].toLocaleDateString(myLanguage, { day: "numeric", month: 'long', year: "numeric" });
+
                               // HOLYDAY TOAST - dispatch singola invece di 10 setState
                               dispatchToast({
                                 type: 'SHOW_HOLYDAY_TOAST',
                                 payload: {
                                   day,
                                   title: day[2],
-                                  description: day[0].toLocaleDateString(myLanguage, { day: "numeric", month: 'long', year: "numeric" }),
+                                  description: displayDescription,
                                   colors
                                 }
                               });
@@ -680,7 +727,7 @@ const CalendarScreen = ({ callerPreferences }: any) => {
                                 <HolydayToast
                                   id={day} // passo anche l'intero record -> day[0], day[1], day[2], day[3] 
                                   title={day[2]}
-                                  description={day[0].toLocaleDateString(myLanguage, { day: "numeric", month: 'long', year: "numeric" })} />
+                                  description={displayDescription} />
                               );
                             } else {
                               /* MODAL/SimpleToast --> POSSIBILE PONTE */
