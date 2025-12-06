@@ -2,25 +2,10 @@
 #############################################################################
 
 
-- ### NEWCALENDARPICKER
-  -- colore riga GIORNI = colors.text
-
----
-
-
-
-- ### GESTIONE ACCESSO CALENDARIO
-  -- correggere: qnd l'utente rifiuta il salvataggio sul calendario 
-     compare ugualmente il msg di cortesia "Evento salvato su..."
-
----
-
 - ### CONDIVISIONE FESTIVITA' NAZIONALE
   -- aggiungere "festività nazionale Italia"
 
 ---
-
-
 
 - ### SPLITTEDBAR
   -- correggere movimnto da -1 a 0 / da 1 a 0
@@ -54,6 +39,17 @@
 
 # TICKET RISOLTI:
 
+
+- ### GESTIONE ACCESSO CALENDARIO
+  -- correggere: qnd l'utente rifiuta il salvataggio sul calendario 
+     compare ugualmente il msg di cortesia "Evento salvato su..."
+
+---
+
+- ### NEWCALENDARPICKER
+  -- colore riga GIORNI = colors.text
+
+---
 
 - ### HOLYDAYS/I TUOI GIORNI SPECIALI
   -- se una data ripete nascondere Anno (es. 20 ottobre e non 20 ottobre 2025)

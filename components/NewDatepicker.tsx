@@ -619,22 +619,22 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                 // setMinDate(null);
               }
               }
-              containerHeight={220}
-              hideWeekdays={true}
+              containerHeight={240}
+              hideWeekdays={false}
               disableMonthPicker={false}
               disableYearPicker={false}
               showOutsideDays={false}
               firstDayOfWeek={1}
               //timeZone={'UTC'}
               locale={language}
-              style={{
-                // padding:0, 
-                // margin:0, 
-                //backgroundColor: colors.textNegative,
-                // borderWidth:1,
-                // paddingTop: 24
-              }}
-              //navigationPosition={'right'}
+              // style={{
+              //   // padding:0, 
+              //   // margin:0, 
+              //   //backgroundColor: colors.textNegative,
+              //   // borderWidth:1,
+              //   // paddingTop: 24
+              // }}
+              //navigationPosition={'left'}
               styles={{
                 ...defaultStyles,
                 header: { marginBottom: 36 },
@@ -652,6 +652,7 @@ const NewDatepicker: React.FC<NewDatepickerInterface> = ({
                 day_label: { fontSize: 16, lineHeight: 24, color: colors.text },
                 button_next: { backgroundColor: colors.cancelButton, borderRadius: '100%', padding: 12 },
                 //button_next_image:{color:'red'},
+                weekday_label: { fontSize: 12, fontWeight: 400, textTransform: 'uppercase', color: colors.text, opacity: 0.5 },
                 button_prev: { backgroundColor: colors.cancelButton, borderRadius: '100%', padding: 12 },
               }}
             />

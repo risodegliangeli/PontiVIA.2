@@ -891,9 +891,9 @@ export default function HolydaysScreen() {
           </View>
         }
         {/* INFO  ##################################################################### */}
-        <View style={{ width: '100%' }}>
+        {/* <View style={{ width: '100%' }}>
           <Text style={{ fontSize: 11, alignSelf: 'center', color: colors.text }}>2025 Angeli e Associati - PontiVIA! 1.0.2</Text>
-        </View>
+        </View> */}
 
         {/* SPACER ################################################################################### */}
         <View style={{ height: 480 }}></View>

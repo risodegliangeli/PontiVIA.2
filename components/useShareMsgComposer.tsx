@@ -83,7 +83,7 @@ export default function useShareMsgComposer() {
       }
       // se la data è inserita dall'utente si aggiunge il link
       if (isPersonalHolyday) {
-        msg += `\n\n${dataLabel(myLanguage, 14)}` + link + ")"; // (aggiungi evento al tuo calendario: 
+        msg += `\n\n${dataLabel(myLanguage, 14)}` + link; // (aggiungi evento al tuo calendario: 
       }
     } else {
       // /////////////////////////

@@ -401,7 +401,7 @@ export function holydayLabels(language, item) {
             'Scarica PontiVIA!',                                        // 29
             'Stai per essere indirizzato verso una pagina esterna. Vuoi proseguire?',    // 30
             'Prosegui',                                                 // 31
-            '(aggiungilo al tuo calendario: '                           // 32
+            'Aggiungilo al tuo calendario: '                           // 32
         ],
         'fr': [
             'Mes dates',                                                // 0
@@ -436,7 +436,7 @@ export function holydayLabels(language, item) {
             'Télécharge PontiVIA !',                                    // 29
             'Vous allez être redirigé vers une page externe. Voulez-vous continuer ?',// 30
             'Continuer',                                                // 31
-            '(ajoute-le à ton calendrier: '                             // 32
+            'Ajoute-le à ton calendrier: '                             // 32
         ],
         'es': [
             'Mis fechas',                                               // 0
@@ -471,7 +471,7 @@ export function holydayLabels(language, item) {
             '¡Descarga PontiVIA!',                                      // 29
             'Está a punto de ser redirigido a una página externa. ¿Desea continuar?', // 30
             'Continuar',                                                // 31
-            '(añádelo a tu calendario: '                                // 32
+            'Añádelo a tu calendario: '                                // 32
         ],
         'de': [
             'Meine Termine',                                            // 0
@@ -506,7 +506,7 @@ export function holydayLabels(language, item) {
             'Lade PontiVIA herunter!',                                  // 29
             'Sie werden zu einer externen Seite weitergeleitet. Möchten Sie fortfahren?', // 30
             'Fortfahren',                                               // 31
-            '(füge es zu deinem Kalender hinzu: '                       // 32
+            'Füge es zu deinem Kalender hinzu: '                       // 32
         ],
         'en': [
             'My dates',                                                 // 0
@@ -541,7 +541,7 @@ export function holydayLabels(language, item) {
             'Download PontiVIA!',                                       // 29
             'You are about to be redirected to an external page. Do you want to continue?', // 30
             'Continue',                                                 // 31
-            '(add it to your calendar: '                                // 32
+            'Add it to your calendar: '                                // 32
         ],
         'nl': [
             'Mijn datums',                                              // 0
@@ -576,7 +576,7 @@ export function holydayLabels(language, item) {
             'Download PontiVIA!',                                       // 29
             'U wordt doorgestuurd naar een externe pagina. Wilt u doorgaan?',// 30
             'Doorgaan',                                                 // 31
-            '(voeg het toe aan je kalender: '                           // 32
+            'Voeg het toe aan je kalender: '                           // 32
         ],
         'pt': [
             'Minhas datas',                                             // 0
@@ -611,7 +611,7 @@ export function holydayLabels(language, item) {
             'Baixe PontiVIA!',                                          // 29
             'Você está prestes a ser redirecionado para uma página externa. Deseja continuar?',  // 30
             'Continuar',                                                // 31
-            '(adicione ao seu calendário: '                             // 32
+            'Adicione ao seu calendário: '                             // 32
         ],
         'hr': [
             'Moji datumi',                                              // 0
@@ -646,7 +646,7 @@ export function holydayLabels(language, item) {
             'Preuzmi PontiVIA!',                                        // 29
             'Bit ćete preusmjereni na vanjsku stranicu. Želite li nastaviti?', // 30
             'Nastavi',                                                  // 31
-            '(dodaj u svoj kalendar: '                                  // 32
+            'Dodaj u svoj kalendar: '                                  // 32
         ],
         'si': [
             'Moji datumi',                                              // 0
@@ -681,7 +681,7 @@ export function holydayLabels(language, item) {
             'Prenesi PontiVIA!',                                        // 29
             'Preusmerjeni boste na zunanjo stran. Želite nadaljevati?', // 30
             'Nadaljuj',                                                 // 31
-            '(dodaj v svoj koledar: '                                   // 32
+            'Dodaj v svoj koledar: '                                   // 32
         ],
         'gr': [
             'Οι ημερομηνίες μου',                                       // 0
@@ -716,7 +716,7 @@ export function holydayLabels(language, item) {
             'Κατέβασε το PontiVIA!',                                    // 29
             'Πρόκειται να ανακατευθυνθείτε σε εξωτερική σελίδα. Θέλετε να συνεχίσετε;',  // 30
             'Συνέχεια',                                                 // 31
-            '(πρόσθεσέ το στο ημερολόγιό σου: '                         // 32
+            'πρόσθεσέ το στο ημερολόγιό σου: '                         // 32
         ]
     };
     return dataLabel[language][item];
@@ -740,7 +740,7 @@ export function calendarScrenLabels(language, item) {
             'Aggiungi',                                 // 11
             'Vorrei condividere con te questo evento:', // 12
             'Scarica PontiVIA!',                        // 13
-            '(aggiungilo al tuo calendario: ',          // 14
+            'Aggiungilo al tuo calendario: ',          // 14
             'Permesso Calendario Richiesto',            // 15
             'Per salvare eventi nel calendario, PontiVIA ha bisogno del permesso di accesso al calendario. Senza questo permesso non potrai salvare i ponti trovati nel tuo calendario.', // 16
             'Riprova',                                  // 17
@@ -766,7 +766,7 @@ export function calendarScrenLabels(language, item) {
             'Ajouter',                                  // 11
             'Je voudrais partager cet événement avec toi :',// 12
             'Télécharge PontiVIA !',                    // 13
-            '(ajoute-le à ton calendrier: ',            // 14
+            'Ajoute-le à ton calendrier: ',            // 14
             'Permission Calendrier Requise',            // 15
             'Pour enregistrer des événements dans le calendrier, PontiVIA a besoin de la permission d\'accès au calendrier. Sans cette permission, vous ne pourrez pas enregistrer les ponts trouvés dans votre calendrier.', // 16
             'Réessayer',                                // 17
@@ -792,7 +792,7 @@ export function calendarScrenLabels(language, item) {
             'Añadir',                                    // 11
             'Me gustaría compartir este evento contigo:', // 12
             '¡Descarga PontiVIA!',                      // 13
-            '(añádelo a tu calendario: ',               // 14
+            'Añádelo a tu calendario: ',               // 14
             'Permiso de Calendario Requerido',          // 15
             'Para guardar eventos en el calendario, PontiVIA necesita permiso de acceso al calendario. Sin este permiso no podrás guardar los puentes encontrados en tu calendario.', // 16
             'Reintentar',                               // 17
@@ -818,7 +818,7 @@ export function calendarScrenLabels(language, item) {
             'Hinzufügen',                               // 11
             'Ich möchte dieses Ereignis mit dir teilen:', // 12
             'Lade PontiVIA herunter!',                  // 13
-            '(füge es zu deinem Kalender hinzu: ',      // 14
+            'Füge es zu deinem Kalender hinzu: ',      // 14
             'Kalenderberechtigung Erforderlich',        // 15
             'Um Ereignisse im Kalender zu speichern, benötigt PontiVIA die Berechtigung zum Zugriff auf den Kalender. Ohne diese Berechtigung können Sie die gefundenen Brücken nicht in Ihrem Kalender speichern.', // 16
             'Erneut versuchen',                         // 17
@@ -844,7 +844,7 @@ export function calendarScrenLabels(language, item) {
             'Add',                                      // 11
             'I would like to share this event with you:',// 12
             'Download PontiVIA!',                       // 13
-            '(add it to your calendar: ',               // 14
+            'Add it to your calendar: ',               // 14
             'Calendar Permission Required',             // 15
             'To save events to the calendar, PontiVIA needs permission to access the calendar. Without this permission you will not be able to save the bridges found to your calendar.', // 16
             'Retry',                                    // 17
@@ -870,7 +870,7 @@ export function calendarScrenLabels(language, item) {
             'Toevoegen',                                // 11
             'Ik wil deze gebeurtenis met je delen:',    // 12
             'Download PontiVIA!',                       // 13
-            '(voeg het toe aan je kalender: ',          // 14
+            'Voeg het toe aan je kalender: ',          // 14
             'Kalendertoestemming Vereist',              // 15
             'Om gebeurtenissen op te slaan in de kalender, heeft PontiVIA toestemming nodig voor toegang tot de kalender. Zonder deze toestemming kunt u de gevonden bruggen niet opslaan in uw kalender.', // 16
             'Opnieuw proberen',                         // 17
@@ -896,7 +896,7 @@ export function calendarScrenLabels(language, item) {
             'Adicionar',                                // 11
             'Gostaria de compartilhar este evento com você:',// 12
             'Baixe PontiVIA!',                          // 13
-            '(adicione ao seu calendário: ',            // 14
+            'Adicione ao seu calendário: ',            // 14
             'Permissão de Calendário Necessária',        // 15
             'Para salvar eventos no calendário, PontiVIA precisa de permissão para acessar o calendário. Sem esta permissão você não poderá salvar as pontes encontradas no seu calendário.', // 16
             'Tentar novamente',                         // 17
@@ -922,7 +922,7 @@ export function calendarScrenLabels(language, item) {
             'Dodaj',                                    // 11
             'Želio bih podijeliti ovaj događaj s tobom:',// 12
             'Preuzmi PontiVIA!',                        // 13
-            '(dodaj u svoj kalendar: ',                 // 14
+            'Dodaj u svoj kalendar: ',                 // 14
             'Potrebna Dozvola za Kalendar',             // 15
             'Za spremanje događaja u kalendar, PontiVIA treba dozvolu za pristup kalendaru. Bez ove dozvole nećeš moći spremiti pronađene mostove u svoj kalendar.', // 16
             'Pokušaj ponovo',                            // 17
@@ -948,7 +948,7 @@ export function calendarScrenLabels(language, item) {
             'Dodaj',                                    // 11
             'Rad bi delil ta dogodek s teboj:',         // 12
             'Prenesi PontiVIA!',                        // 13
-            '(dodaj v svoj koledar: ',                  // 14
+            'Dodaj v svoj koledar: ',                  // 14
             'Potrebno Dovoljenje za Koledar',           // 15
             'Za shranjevanje dogodkov v koledar, PontiVIA potrebuje dovoljenje za dostop do koledarja. Brez tega dovoljenja ne boste mogli shraniti najdenih mostov v svoj koledar.', // 16
             'Poskusi znova',                            // 17
@@ -974,7 +974,7 @@ export function calendarScrenLabels(language, item) {
             'Προσθήκη',                                 // 11
             'Θα ήθελα να μοιραστώ αυτό το γεγονός μαζί σου:',// 12
             'Κατέβασε το PontiVIA!',                    // 13
-            '(πρόσθεσέ το στο ημερολόγιό σου: ',         // 14
+            'πρόσθεσέ το στο ημερολόγιό σου: ',         // 14
             'Απαιτείται Άδεια Ημερολογίου',             // 15
             'Για να αποθηκεύσετε γεγονότα στο ημερολόγιο, το PontiVIA χρειάζεται άδεια πρόσβασης στο ημερολόγιο. Χωρίς αυτήν την άδεια δεν θα μπορείτε να αποθηκεύσετε τις γέφυρες που βρέθηκαν στο ημερολόγιό σας.', // 16
             'Επανάληψη',                                // 17

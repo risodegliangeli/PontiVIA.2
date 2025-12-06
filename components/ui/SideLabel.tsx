@@ -36,7 +36,7 @@ const UseSideLabel = () => {
 
   // CALCOLA LARGH./ALT. E 1/4 DEI VALORI PER LA CENTRATURA
   let { height, width } = Dimensions.get('window');
-  
+
   // GESTIONE COLORE (chiamate al top level)
   const colors = useThemeColors();
   const colorScheme = useColorScheme();
@@ -124,11 +124,11 @@ const UseSideLabel = () => {
   FUNZIONE DENTRO L'HOOK
   └---------------------------------------------------------------- */
   const sideLabel = () => {
-    
+
     // const [myHeight, setMyHeight] = useState<number>(Dimensions.get('window').height);
     const [myWidth, setMyWidth] = useState<number>(Dimensions.get('window').width);
     myWidth > 550 && setMyWidth(550);
-    
+
     const ref = useRef<ICarouselInstance>(null);
 
     const viewBox = "0 0 360 557";
@@ -140,184 +140,185 @@ const UseSideLabel = () => {
     const [infoStep, setInfoStep] = useState<number>(1);
 
     const frame = [
-    {
-      id: 1,
-      text: <><Text style={{fontWeight:800, color: colors.blueBar}}>
-                {dataLabel(myLanguage, 1).split(":")[0]}
-              </Text>
-              <Text style={{fontWeight:400, color: colors.white}}>:{dataLabel(myLanguage, 1).split(":")[1]}</Text></>
-    },
-    {
-      id: 2,
-      text: <><Text style={{fontWeight:800, color: colors.blueBar}}>
-                {dataLabel(myLanguage, 2).split(":")[0]}
-              </Text>
-              <Text style={{fontWeight:400, color: colors.white}}>:{dataLabel(myLanguage, 2).split(":")[1]}</Text></>
-    },
-    {
-      id: 3,
-      text: <><Text style={{fontWeight:800, color: colors.blueBar}}>
-                {dataLabel(myLanguage, 3).split(":")[0]}
-              </Text>
-              <Text style={{fontWeight:400, color: colors.white}}>:{dataLabel(myLanguage, 3).split(":")[1]}</Text></>
-    },
-  ];
+      {
+        id: 1,
+        text: <><Text style={{ fontWeight: 800, color: colors.blueBar }}>
+          {dataLabel(myLanguage, 1).split(":")[0]}
+        </Text>
+          <Text style={{ fontWeight: 400, color: colors.white }}>:{dataLabel(myLanguage, 1).split(":")[1]}</Text></>
+      },
+      {
+        id: 2,
+        text: <><Text style={{ fontWeight: 800, color: colors.blueBar }}>
+          {dataLabel(myLanguage, 2).split(":")[0]}
+        </Text>
+          <Text style={{ fontWeight: 400, color: colors.white }}>:{dataLabel(myLanguage, 2).split(":")[1]}</Text></>
+      },
+      {
+        id: 3,
+        text: <><Text style={{ fontWeight: 800, color: colors.blueBar }}>
+          {dataLabel(myLanguage, 3).split(":")[0]}
+        </Text>
+          <Text style={{ fontWeight: 400, color: colors.white }}>:{dataLabel(myLanguage, 3).split(":")[1]}</Text></>
+      },
+    ];
 
     return (
       <>
-      {infoModalVisible && 
-      <Portal name='sidelabel-portal' >
-        <View style={{  // OVERLAY SCURO
-          position:'absolute',
-          top:0, left:0,
-          bottom:0, right:0,
-          backgroundColor: isLight ? 'rgba(0, 0, 0, .95)' : colors.cardBackground,
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',          
-          }}>
-
-            {/* CHIUDI */}
-            <TouchableOpacity 
-              style={{
-                width:'100%',
-                maxWidth: 550, 
-                padding:12, 
-              }}
-              onPress={ () => setInfoModalVisible(false) }
-              >
-              <View style={{
-                width:'100%',
-                flexDirection:'row',
-                justifyContent: 'flex-start',
-                gap: isIos ? 4 : 0,
-                alignItems: 'center',
-              }}>
-                <IconSymbol 
-                  size={isIos ? 10 : 24} 
-                  name="arrowtriangle.left.fill" 
-                  color={colors.white} 
-                /><Text style={{
-                  fontSize:12, 
-                  fontWeight:600, 
-                  color:colors.white}}>{datepickerLabels(myLanguage, 16)}</Text>
-              </View>
-            </TouchableOpacity>
-
-            <View style={{ // WRAPPER SCURO
-              width:'100%',
-              maxWidth: 550,
-              backgroundColor: isLight ? 'rgba(0, 0, 0, .85)' : 'rgba(0, 0, 0, .55)',
-              paddingVertical:64,
-                        borderRadius:24,
+        {infoModalVisible &&
+          <Portal name='sidelabel-portal' >
+            <View style={{  // OVERLAY SCURO
+              position: 'absolute',
+              top: 0, left: 0,
+              bottom: 0, right: 0,
+              backgroundColor: isLight ? 'rgba(0, 0, 0, .95)' : colors.cardBackground,
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
             }}>
 
-              {/* TITOLO */}
-              <Text style={styles.sectionTitle}>
-                {dataLabel(myLanguage, 4)}
-              </Text>
-
-              <Carousel
-                ref={ref}
-                autoPlay={true}
-                autoPlayInterval={5000}
-                mode="parallax"
-                modeConfig={{
-                  parallaxScrollingScale: .99,
-                  parallaxScrollingOffset:  25,
+              {/* CHIUDI */}
+              <TouchableOpacity
+                style={{
+                  width: '100%',
+                  maxWidth: 550,
+                  padding: 12,
                 }}
-                //onProgressChange={ () => ref.current && setDots(ref.current.getCurrentIndex)}
-                onSnapToItem={(index) => {
-                  setInfoStep(index + 1);
-               }}
-                loop={true}
-                pagingEnabled
-                width={myWidth}
-                height={150}
-                data={frame}
-                renderItem={({ index }) => (
-                  <View style={{
-                    width:'100%',
-                    height:'100%',
-                    paddingHorizontal: 54,
-                    flexDirection:'column',
-                    justifyContent: 'center',
-                    alignItems:'center'
+                onPress={() => setInfoModalVisible(false)}
+              >
+                <View style={{
+                  width: '100%',
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  gap: isIos ? 4 : 0,
+                  alignItems: 'center',
+                }}>
+                  <IconSymbol
+                    size={isIos ? 10 : 24}
+                    name="arrowtriangle.left.fill"
+                    color={colors.white}
+                  /><Text style={{
+                    fontSize: 12,
+                    fontWeight: 600,
+                    color: colors.white
+                  }}>{datepickerLabels(myLanguage, 16)}</Text>
+                </View>
+              </TouchableOpacity>
+
+              <View style={{ // WRAPPER SCURO
+                width: '100%',
+                maxWidth: 550,
+                backgroundColor: isLight ? 'rgba(0, 0, 0, .85)' : 'rgba(0, 0, 0, .55)',
+                paddingVertical: 64,
+                borderRadius: 24,
+              }}>
+
+                {/* TITOLO */}
+                <Text style={styles.sectionTitle}>
+                  {dataLabel(myLanguage, 4)}
+                </Text>
+
+                <Carousel
+                  ref={ref}
+                  autoPlay={true}
+                  autoPlayInterval={5000}
+                  mode="parallax"
+                  modeConfig={{
+                    parallaxScrollingScale: .99,
+                    parallaxScrollingOffset: 25,
                   }}
-                  ><Text style={{
-                    fontSize:18,
-                    textAlign:'center',
-                    color: colors.text
+                  //onProgressChange={ () => ref.current && setDots(ref.current.getCurrentIndex)}
+                  onSnapToItem={(index) => {
+                    setInfoStep(index + 1);
                   }}
-                  >{frame[index].text}</Text></View>
+                  loop={true}
+                  pagingEnabled
+                  width={myWidth}
+                  height={150}
+                  data={frame}
+                  renderItem={({ index }) => (
+                    <View style={{
+                      width: '100%',
+                      height: '100%',
+                      paddingHorizontal: 54,
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center'
+                    }}
+                    ><Text style={{
+                      fontSize: 18,
+                      textAlign: 'center',
+                      color: colors.text
+                    }}
+                    >{frame[index].text}</Text></View>
                   )}
-                  />
+                />
 
-              <FakeSplittedBar
-                index={infoStep}
-                action={(x: number) => {
-                  setInfoStep(x);
-                  ref.current?.scrollTo({ index: x - 1, animated: true });
-              }} />
+                <FakeSplittedBar
+                  index={infoStep}
+                  action={(x: number) => {
+                    setInfoStep(x);
+                    ref.current?.scrollTo({ index: x - 1, animated: true });
+                  }} />
 
-              {/* SPAZIATORE */}
-              <View style={{height:48, }} />
+                {/* SPAZIATORE */}
+                <View style={{ height: 48, }} />
 
-              {/* DOTS */}
-              <Pagination
-                dotsLength={frame.length}
-                activeDotIndex={infoStep - 1}
-                containerStyle={{
-                  // position: 'absolute',
-                  // bottom: 100,
-                  // alignSelf: 'center',
-                  // borderWidth: 1,
-                  // maxHeight: 12,
-                }}
-                dotStyle={{
-                  width: 8,
-                  height: 8,
-                  borderRadius: 5,
-                  marginHorizontal: 8,
-                  backgroundColor: colors.white,
-                }}
-                inactiveDotOpacity={0.4}
-                inactiveDotScale={0.6}
-              /> 
-            </View>
+                {/* DOTS */}
+                <Pagination
+                  dotsLength={frame.length}
+                  activeDotIndex={infoStep - 1}
+                  containerStyle={{
+                    // position: 'absolute',
+                    // bottom: 100,
+                    // alignSelf: 'center',
+                    // borderWidth: 1,
+                    // maxHeight: 12,
+                  }}
+                  dotStyle={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: 5,
+                    marginHorizontal: 8,
+                    backgroundColor: colors.white,
+                  }}
+                  inactiveDotOpacity={0.4}
+                  inactiveDotScale={0.6}
+                />
+              </View>
 
-            {/* FAQ / PRIVACY */}
-            <View style={{
-              width:'100%',
-              maxWidth: 550, 
-              flexDirection:'row',
-              justifyContent:'space-around',
-              marginTop:64,
+              {/* FAQ / PRIVACY */}
+              <View style={{
+                width: '100%',
+                maxWidth: 550,
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                marginTop: 64,
 
               }}>
-              <Faq />            
-              <Privacy />
-            </View>
+                <Faq />
+                <Privacy />
+              </View>
 
-            {/* CREDIT */}
-            <View style={{
-              position: 'absolute',
-              bottom:20,
-              left:0,
-              width: '100%',
+              {/* CREDIT */}
+              <View style={{
+                position: 'absolute',
+                bottom: 20,
+                left: 0,
+                width: '100%',
               }}>
-              <Text style={{fontSize:11, color: colors.white, alignSelf:'center'}}>1.0.2 - 2025 © Angeli e Associati</Text>
-            </View>
+                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>1.0.3 beta - 2025 © Angeli e Associati</Text>
+              </View>
 
+            </View>
+          </Portal>}
+
+        <View style={styles.label}>
+          <TouchableOpacity
+            onPress={() => setInfoModalVisible(!infoModalVisible)}>
+            <IconSymbol name="info.circle.fill" size={28} color={colors.white} />
+          </TouchableOpacity>
         </View>
-      </Portal>}
-
-      <View style={styles.label}>
-        <TouchableOpacity
-          onPress={() => setInfoModalVisible(!infoModalVisible)}>
-          <IconSymbol name="info.circle.fill" size={28} color={colors.white} />
-        </TouchableOpacity>
-      </View>
 
       </>
     )
