@@ -307,7 +307,7 @@ const UseSideLabel = () => {
                 left: 0,
                 width: '100%',
               }}>
-                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>1.0.3 beta - 2025 © Angeli e Associati</Text>
+                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>1.0.3 beta 2025.1206 - 2025 © Angeli e Associati</Text>
               </View>
 
             </View>

@@ -14,7 +14,7 @@ import {
   View,
   useColorScheme
 } from 'react-native';
-import useLocalizationData from '@/app/data/data';
+import useLocalizationData, { getLocalHolydas } from '@/app/data/data';
 import { createCalendarGrid, createUTCDate } from '@/components/calendarUtils';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import SimpleToast from '@/components/ui/SimpleToast';
@@ -165,12 +165,27 @@ function formatRecurrencePattern(
 }
 
 /* ---------------------------------------------------------------┐ 
-  FUNZIONE PER NORMALIZZARE LE DATE ALLE 12:00:00 PER EVITARE PROBLEMI DI FUSO ORARIO
+  HELPER PER NOME PAESE DA CODICE LOCALE
 └---------------------------------------------------------------- */
-// const normalizeDate = (date: Date | null): Date | null => {
-//   if (!date) return null;
-//   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate(), 12, 0, 0, 0));
-// };
+const getCountryName = (code: string) => {
+  const names: { [key: string]: string } = {
+    'de-AT': '🇦🇹 Österreich',
+    'ch-CH': '🇨🇭 Switzerland',
+    'be-BE': '🇧🇪 Belgium',
+    'en-GB': '🇬🇧 UK',
+    'en-IE': '🇮🇪 Éire',
+    'fr-FR': '🇫🇷 France',
+    'de-DE': '🇩🇪 Deutschland',
+    'es-ES': '🇪🇸 España',
+    'nl-NL': '🇳🇱 Nederland',
+    'pt-PT': '🇵🇹 Portugal',
+    'si-SI': '🇸🇮 Slovenija',
+    'hr-HR': '🇵🇹 Hrvatska',
+    'gr-GR': '🇬🇷 Ελλάδα',
+    'it-IT': '🇮🇹 Italia',
+  };
+  return names[code] || 'Italia';
+};
 
 /* ============================================================================= 
 
@@ -709,9 +724,24 @@ const CalendarScreen = ({ callerPreferences }: any) => {
                               );
 
                               // For repeatOnDay events, show recurrence pattern instead of specific date
-                              const displayDescription = matchingEvent
+                              let displayDescription = matchingEvent
                                 ? formatRecurrencePattern(day[0], myLanguage, localizedDays, localizedMonths)
                                 : day[0].toLocaleDateString(myLanguage, { day: "numeric", month: 'long', year: "numeric" });
+
+                              // VERIFICA SE E' UNA FESTIVITA NAZIONALE FISSA
+                              let isFixedNational = false;
+                              if (myPreferences.festivitaNazionali.status) {
+                                const fixedHolidays = getLocalHolydas(myCountry);
+                                const matchIndex = fixedHolidays.findIndex((h: any) => h.day === day[0].getUTCDate() && h.month === day[0].getUTCMonth());
+
+                                if (matchIndex !== -1 && !nationalExcluded.includes(matchIndex)) {
+                                  isFixedNational = true;
+                                }
+                              }
+
+                              if (isFixedNational) {
+                                displayDescription += `\n(festività nazionale ${getCountryName(myCountry)})`;
+                              }
 
                               // HOLYDAY TOAST - dispatch singola invece di 10 setState
                               dispatchToast({
@@ -863,7 +893,16 @@ const CalendarScreen = ({ callerPreferences }: any) => {
       </React.Fragment>
     );
 
-  }, []);
+  }, [
+    localizedMonths,
+    localizedDays,
+    myLanguage,
+    myCountry,
+    myPreferences,
+    nationalExcluded,
+    newPersonalHolydays,
+    colors
+  ]);
 
   /* ---------------------------------------------------------------┐ 
     (CALLBACK) RENDER FOOTER
