@@ -10,10 +10,7 @@
 
 ---
 
-- ### CONDIVISIONE FESTIVITA NAZIONALI
-  -- solo se il Paese è diverso da quello locale?
 
----
 
 - #### ALERT eventi personali/possibili ponti
   -- aggiungere checkbox CAMPANELLA nelle due modal (giono singolo e periodo):
@@ -36,6 +33,11 @@
 
 # TICKET RISOLTI:
 
+
+- ### CONDIVISIONE FESTIVITA NAZIONALI
+  -- solo se il Paese è diverso da quello locale?
+
+---
 
 - ### CONDIVISIONE FESTIVITA repeatOnDate
   -- dopo la modifica del contenuto del toast non condivide più correttamente l'evento
