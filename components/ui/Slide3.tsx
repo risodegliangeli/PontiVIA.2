@@ -1,4 +1,9 @@
-import { Image, View, Dimensions, StyleSheet,} from 'react-native';
+import {
+  Image,
+  View,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
 import { useEffect, } from 'react';
 import Animated, {
   useSharedValue,
@@ -11,7 +16,10 @@ import Animated, {
 } from 'react-native-reanimated';
 
 const Slide3 = () => {
-  const windowWidth = Dimensions.get("window").width;
+  let { width, height } = useWindowDimensions();
+  width > 550 && (width = 550);
+  height = width; // immagine quadrata
+
   const rotation = useSharedValue(0);
 
   useEffect(() => {
@@ -38,24 +46,23 @@ const Slide3 = () => {
   });
 
 
-  const styles:any = StyleSheet.create ({
+  const styles: any = StyleSheet.create({
     imageBack: {
-      position:'absolute',
-      top:0, left:0,
-      width: windowWidth,
-      height: windowWidth,
+      position: 'absolute',
+      top: 0, left: 0,
+      width: width,
+      height: height,
       resizeMode: 'contain',
-      //borderWidth:1,
     },
     imageTop: {
-      position:'absolute',
-      top:0, left:0,
-      width: windowWidth,
-      height: windowWidth,
+      position: 'absolute',
+      top: 0, left: 0,
+      width: width,
+      height: width,
       resizeMode: 'contain',
       animationName: {
         '50%': { transform: [{ rotate: '25deg' }] },
-        },
+      },
       animationIterationCount: 15,
       animationDuration: '300ms',
     }
@@ -63,19 +70,18 @@ const Slide3 = () => {
 
   return (
     <View style={{
-      //borderWidth:1,
-      width: windowWidth,
-      height: windowWidth,
+      width: width,
+      height: width,
       backgroundColor: 'transparent',
-      }}>
+    }}>
       <Image
-        style={styles.imageTop}        
+        style={styles.imageTop}
         source={require('@/assets/images/_slide3_00.png')}
-      />      
-      <Animated.Image 
+      />
+      <Animated.Image
         style={[
           styles.imageBack, animatedStyle
-          ]}
+        ]}
         source={require('@/assets/images/_slide3_01.png')}
       />
     </View>

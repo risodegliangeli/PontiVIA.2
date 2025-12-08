@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
-  useWindowDimensions,
   View,
   Text,
   TouchableOpacity,
@@ -36,60 +35,39 @@ export default function SplashCarousel(props: any) {
   // GESTIONE COLORE
   const colors = useThemeColors();
 
-  //const splittedFromBottom: number = Platform.OS === 'ios' ? 28 : 32;
+  const splittedFromBottom: number = Platform.OS === 'ios' ? 28 : 64;
+  
 
+  let { height, width } = Dimensions.get('window');
 
-  // let { height, width } = Dimensions.get('window');
-  // console.log('h w', height, width);
+  // CALCOLA LARGH./ALT. E 1/4 DEI VALORI PER LA CENTRATURA
+  const [myHeight, setMyHeight] = useState<number>(height);
+  const [myWidth, setMyWidth] = useState<number>(width);
 
-  // // CALCOLA LARGH./ALT. E 1/4 DEI VALORI PER LA CENTRATURA
-  // const [myHeight, setMyHeight] = useState<number>(height);
-  // const [myWidth, setMyWidth] = useState<number>(width);
-
-  // // GESTISCE RIDIMENSIONAMENTO DELLA FINESTRA SU TABLET
-  // useEffect(() => {
-  //   const subscription = Dimensions.addEventListener('change', ({ window }) => {
-  //     setMyHeight(window.height);
-  //     setMyWidth(window.width);
-  //   });
-  //   return () => subscription?.remove();
-  // }, []);
-
-  let { width, height } = useWindowDimensions();
-  width > 550 && (width = 550);
-  height = width; // immagine quadrata
-
-
-
-  // calcola il fattore di scala per adattare il design a schermi di varie dimensioni
-  // const baseWidth = 360;                                            // design di riferimento
-  // const scaleFactor = Math.round((width / baseWidth) * 10) / 10;  // scala (1 decimali)
-
-  // //const [myHeight, setMyHeight] = useState<number>(height);
-  // //const [myWidth, setMyWidth] = useState<number>(width * scaleFactor);
-  // let myWidth = width * scaleFactor;
-  // console.log(Platform.OS, ` ${width}x${height} \n\tscalefactor: ${scaleFactor}\n\tmyWidth: ${myWidth}`);
-
-
-
-
-
+  // GESTISCE RIDIMENSIONAMENTO DELLA FINESTRA SU TABLET
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+      setMyHeight(window.height);
+      setMyWidth(window.width);
+    });
+    return () => subscription?.remove();
+  }, []);
 
   // RICEVE VARIABILI DAL CONTEXT
   const {
     myLanguage
   } = useHolydays();
 
-  // // ANIMAZIONE INGRESSO CAROUSEL (solo iOS)
-  // const scaleValue = useRef(new Animated.Value(2)).current;
-  // useEffect(() => {
-  //   Animated.timing(scaleValue, { // RIDUCI/ESPANDI
-  //     toValue: 1,
-  //     duration: 750,
-  //     easing: Easing.elastic(1.5),
-  //     useNativeDriver: true,
-  //   }).start();
-  // }, [])
+  // ANIMAZIONE INGRESSO CAROUSEL (solo iOS)
+  const scaleValue = useRef(new Animated.Value(2)).current;
+  useEffect(() => {
+    Animated.timing(scaleValue, { // RIDUCI/ESPANDI
+      toValue: 1,
+      duration: 750,
+      easing: Easing.elastic(1.5),
+      useNativeDriver: true,
+    }).start();
+  }, [])
 
   const ref = useRef<ICarouselInstance>(null);
 
@@ -97,7 +75,7 @@ export default function SplashCarousel(props: any) {
 
   const styles: any = StyleSheet.create({
     text: {
-      fontSize: 22,
+      fontSize: 26,
       fontWeight: 800,
       fontStyle: 'italic',
       color: '#ffffff',
@@ -105,13 +83,13 @@ export default function SplashCarousel(props: any) {
       paddingHorizontal: 24,
     },
     textSecondLine: {
-      fontSize: 18,
+      fontSize: 20,
       fontWeight: 400,
       fontStyle: 'italic',
       color: '#ffffff',
       textAlign: 'center',
       paddingHorizontal: 24,
-      paddingVertical: 4,
+      paddingVertical: 8,
     },
     textItalic: {
       fontSize: 18,
@@ -122,31 +100,25 @@ export default function SplashCarousel(props: any) {
     },
     button: {
       backgroundColor: 'rgba(0, 0, 0, .08)',
-      padding: 8,
+      padding: 12,
       borderRadius: 99,
       paddingHorizontal: 24
     },
     carouselView: {
       position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      // borderWidth: 8, borderColor: 'yellow',
+      top: 0, bottom: 0,
+      left: 0, right: 0,
+      //borderWidth:8, borderColor:'red',
       backgroundColor: '#E35527',
       flexDirection: 'column',
       justifyContent: 'center',
       alignItems: 'center',
       alignContent: 'center',
-      //paddingBottom: 24,
-      // gap: 24,
     },
     innerContent: {
       // flex: 1,
       justifyContent: 'center',
-      alignItems: 'center',
-      alignContent: 'center',
-      //borderWidth: 1,
+      //borderWidth:1,
     }
   })
 
@@ -155,81 +127,76 @@ export default function SplashCarousel(props: any) {
       id: 1,
       action: null,
       image: <Slide2 />,
-      text: <><Text style={styles.text}>{splashCarouselLabel(myLanguage, 0)}{' '}
-        {splashCarouselLabel(myLanguage, 1) !== '' && <Text style={styles.text}>{splashCarouselLabel(myLanguage, 1)}</Text>}
-      </Text>
+      text: <><Text style={styles.text}>{splashCarouselLabel(myLanguage, 0)}</Text>
+        {splashCarouselLabel(myLanguage, 1) && <Text style={styles.text}>{splashCarouselLabel(myLanguage, 1)}</Text>}
         <Text style={styles.textSecondLine}>{splashCarouselLabel(myLanguage, 2)}</Text></>
     },
     {
       id: 2,
       action: null,
       image: <Slide1 />,
-      text: <><Text style={styles.text}>{splashCarouselLabel(myLanguage, 3)}{' '}
-        {splashCarouselLabel(myLanguage, 4) !== '' && <Text style={styles.text}>{splashCarouselLabel(myLanguage, 4)}</Text>}
-      </Text>
+      text: <><Text style={styles.text}>{splashCarouselLabel(myLanguage, 3)}</Text>
+        {splashCarouselLabel(myLanguage, 4) && <Text style={styles.text}>{splashCarouselLabel(myLanguage, 4)}</Text>}
         <Text style={styles.textSecondLine}>{splashCarouselLabel(myLanguage, 5)}</Text></>
     },
     {
       id: 3,
       action: null,
       image: <Slide3 />,
-      text: <><Text style={styles.text}>{splashCarouselLabel(myLanguage, 6)}{' '}
-        {splashCarouselLabel(myLanguage, 7) !== '' && <Text style={styles.text}>{splashCarouselLabel(myLanguage, 7)}</Text>}
-      </Text>
+      text: <><Text style={styles.text}>{splashCarouselLabel(myLanguage, 6)}</Text>
+        {splashCarouselLabel(myLanguage, 7) && <Text style={styles.text}>{splashCarouselLabel(myLanguage, 7)}</Text>}
         <Text style={styles.textSecondLine}>{splashCarouselLabel(myLanguage, 8)}</Text></>
     },
   ];
 
 
   return (
-
+    
     <View style={styles.carouselView}>
       <Carousel
-        width={width}
-        //height={height}
-        style={{
-          // borderWidth: 1,
-          // flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'center',
-        }}
+        style={{borderWidth:0, }}
         ref={ref}
         autoPlay={true}
-        autoPlayInterval={4000}
-        // mode="parallax"
-        // modeConfig={{
-        //   parallaxScrollingScale: .5,
-        //   parallaxScrollingOffset: 4,
-        // }}
+        autoPlayInterval={3500}
+        mode="parallax"
+        modeConfig={{
+          parallaxScrollingScale: 1,
+          parallaxScrollingOffset:  5,
+        }}
         //onProgressChange={ () => ref.current && setDots(ref.current.getCurrentIndex)}
         onSnapToItem={(index) => setDots(index)}
         loop={true}
         pagingEnabled
+        width={myWidth}
+        height={myHeight * .65} // 3/4 di altezza schermo
         data={frame}
         renderItem={({ index }) => (
-          // Platform.OS === 'ios' ?
-          //   <Animated.View style={[
-          //     styles.innerContent,
-          //     { transform: [{ scale: scaleValue }] }
-          //   ]}>
-          //     {frame[index].image}
-          //     {frame[index].text}
-          //     {frame[index].action}
-          //   </Animated.View>
-          //   :
-          <View style={styles.innerContent}>
-            {frame[index].image}
-            {frame[index].text}
-            {frame[index].action}
-          </View>
+          Platform.OS === 'ios' ?
+            <Animated.View style={[
+              styles.innerContent,
+              { transform: [{ scale: scaleValue }] }
+            ]}>
+              {frame[index].image}
+              {frame[index].text}
+              {frame[index].action}
+            </Animated.View>
+            :
+            <View style={[
+              styles.innerContent,
+              { transform: [{ scale: 1 }] }
+            ]}>
+              {frame[index].image}
+              {frame[index].text}
+              {frame[index].action}
+            </View>
         )}
       />
 
       <View style={{
-        position: 'absolute',
-        bottom: 24,
-        flexDirection: 'column',
-        gap: 24,
+        position:'absolute',
+        bottom: splittedFromBottom,
+        flexDirection:'column',
+        gap:24,
       }}>
         {/* DOTS */}
         <Pagination
@@ -246,7 +213,7 @@ export default function SplashCarousel(props: any) {
             width: 8,
             height: 8,
             borderRadius: 5,
-            marginHorizontal: 6,
+            marginHorizontal: 8,
             backgroundColor: 'rgba(255, 255, 255, 0.92)'
           }}
           inactiveDotOpacity={0.4}
@@ -259,7 +226,7 @@ export default function SplashCarousel(props: any) {
             {
               borderWidth: 2,
               borderColor: colors.white,
-              //marginHorizontal: 84,
+              marginHorizontal: 96,
               elevation: 18,
               shadowColor: colors.black, // iOS shadow
               shadowOffset: {
@@ -270,9 +237,9 @@ export default function SplashCarousel(props: any) {
               shadowRadius: 16 // Match elevation for iOS
             }]}
           onPress={splashClose}>
-          <Text style={[
-            styles.textItalic,
-            { textAlign: 'center' }]
+        <Text style={[
+          styles.textItalic, 
+          { textAlign: 'center' }]
           }>Skip</Text>
         </TouchableOpacity>
       </View>

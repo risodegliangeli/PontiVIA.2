@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useReducer, useRef, useState, Suspense }
 import {
   ActivityIndicator,
   Alert,
-  Dimensions,
+  //Dimensions,
   FlatList,
   Image,
   Platform,
@@ -23,7 +23,7 @@ import { useHolydays } from '@/context/HolydaysContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { addMonths, isWithinInterval, getDay, differenceInDays, startOfMonth } from "date-fns";
 import * as Calendar from 'expo-calendar'; // ACCESSO AL CALENDARIO DI SISTEMA
-import { calendarScrenLabels as dataLabel, datepickerLabels } from '@/constants/dataLabel'; // LABEL LOCALIZZATE
+import { dataLabel as chunkDataLabel, calendarScrenLabels as dataLabel, datepickerLabels } from '@/constants/dataLabel'; // LABEL LOCALIZZATE
 import { useNavigation } from '@react-navigation/native';
 import useShareMsgComposer from '@/components/useShareMsgComposer';
 import { BannerAd, BannerAdSize, useForeground, } from 'react-native-google-mobile-ads';
@@ -169,20 +169,20 @@ function formatRecurrencePattern(
 └---------------------------------------------------------------- */
 const getCountryName = (code: string) => {
   const names: { [key: string]: string } = {
-    'de-AT': '🇦🇹 Österreich',
-    'ch-CH': '🇨🇭 Switzerland',
-    'be-BE': '🇧🇪 Belgium',
-    'en-GB': '🇬🇧 UK',
-    'en-IE': '🇮🇪 Éire',
-    'fr-FR': '🇫🇷 France',
-    'de-DE': '🇩🇪 Deutschland',
-    'es-ES': '🇪🇸 España',
-    'nl-NL': '🇳🇱 Nederland',
-    'pt-PT': '🇵🇹 Portugal',
-    'si-SI': '🇸🇮 Slovenija',
-    'hr-HR': '🇵🇹 Hrvatska',
-    'gr-GR': '🇬🇷 Ελλάδα',
-    'it-IT': '🇮🇹 Italia',
+    'de-AT': 'Österreich 🇦🇹',
+    'ch-CH': 'Switzerland 🇨🇭',
+    'be-BE': 'Belgium 🇧🇪',
+    'en-GB': 'UK 🇬🇧',
+    'en-IE': 'Éire 🇮🇪',
+    'fr-FR': 'France 🇫🇷',
+    'de-DE': 'Deutschland 🇩🇪',
+    'es-ES': 'España 🇪🇸',
+    'nl-NL': 'Nederland 🇳🇱',
+    'pt-PT': 'Portugal 🇵🇹',
+    'si-SI': 'Slovenija 🇸🇮',
+    'hr-HR': 'Hrvatska 🇵🇹',
+    'gr-GR': 'Ελλάδα 🇬🇷',
+    'it-IT': 'Italia 🇮🇹',
   };
   return names[code] || 'Italia';
 };
@@ -740,7 +740,8 @@ const CalendarScreen = ({ callerPreferences }: any) => {
                               }
 
                               if (isFixedNational) {
-                                displayDescription += `\n(festività nazionale ${getCountryName(myCountry)})`;
+                                // Aggiunge la stringa "Festività nazionale: PAESE" 
+                                displayDescription += `\n(${chunkDataLabel(myLanguage, 7)}: ${getCountryName(myCountry)})`;
                               }
 
                               // HOLYDAY TOAST - dispatch singola invece di 10 setState

@@ -2,15 +2,11 @@
 #############################################################################
 
 
-
-
 - ### SPLITTEDBAR
   -- correggere movimnto da -1 a 0 / da 1 a 0
   ok -- click su pulsante della pagina dove si è posizionati non deve scatenare nulla
 
 ---
-
-
 
 - #### ALERT eventi personali/possibili ponti
   -- aggiungere checkbox CAMPANELLA nelle due modal (giono singolo e periodo):

@@ -1,10 +1,10 @@
 {
   "expo": {
     "name": "PontiVIA!",
-    "description": "Trova i ponti per vacanze smart!",
+    "description": "Cerca i ponti per vacanze smart!",
     "slug": "pontivia",
     "owner": "angeli-e-associati",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "icon": "./assets/images/icon.png",
     "scheme": "pontivia",
     "userInterfaceStyle": "automatic",

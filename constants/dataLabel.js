@@ -1254,7 +1254,7 @@ export function splashCarousel(language, item) {
             '',
             ' Trova tutti i ponti nascosti nel calendario',
             'Con PontiVIA',
-            'scopri la magia!',
+            'scopri la magia',
             'Ogni festività diventa una vacanza',
             'Via verso la tua',
             'prossima avventura!',
