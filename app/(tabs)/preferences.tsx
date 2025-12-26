@@ -11,6 +11,11 @@ import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 //import * as Linking from 'expo-linking';
 //import UseSideLabel from '@/components/ui/SideLabel';
 import createPreferencesStyles from '@/components/styles/createPreferencesStyles';
+import DropdownLookahead from '@/components/ui/DropdownLookahead';
+import * as BackgroundTask from 'expo-background-task';
+import * as TaskManager from 'expo-task-manager';
+import { BACKGROUND_BRIDGE_TASK } from '@/utils/backgroundTask';
+import { registerForPushNotificationsAsync } from '@/utils/notifications';
 
 import {
   ImageBackground,
@@ -83,8 +88,6 @@ export default function Preferences() {
     Platform.OS === 'ios' && bannerRef.current?.load();
   });
 
-
-
   // CALCOLO DINAMICO MARGINE ESTERNO DELLE CARD
   const width = Dimensions.get("window").width;
   const sideMargin = Math.trunc(width * .025); // MARGINE LATERALE
@@ -97,135 +100,84 @@ export default function Preferences() {
 
   const [dropdownSelected, setDropdownSelected] = useState<number>(Math.trunc(myPreferences?.bridgeDuration ?? 3));
 
+  /* ============================================================================= 
+    GESTIONE BACKGROUND TASK
+  ============================================================================= */
+  // Stato locale per lo switch delle notifiche
+  const [isBackgroundEnabled, setIsBackgroundEnabled] = useState(false);
+  const [lookaheadValue, setLookaheadValue] = useState<number>(30); // Default 30
+
+  useEffect(() => {
+    // Verifica stato iniziale del task
+    const checkStatus = async () => {
+      const isRegistered = await TaskManager.isTaskRegisteredAsync(BACKGROUND_BRIDGE_TASK);
+
+      // Usa il valore salvato in myPreferences se esiste, altrimenti usa lo stato del task
+      const savedState = myPreferences?.backgroundNotifications?.status ?? isRegistered;
+      setIsBackgroundEnabled(savedState);
+
+      // Carica valore lookahead dalle preferenze se esiste
+      if (myPreferences?.bridgeLookaheaddays) {
+        setLookaheadValue(myPreferences.bridgeLookaheaddays);
+      }
+    };
+    checkStatus();
+  }, [myPreferences]);
+
+  const toggleBackground = async () => {
+    if (isBackgroundEnabled) {
+      // DISATTIVA
+      try {
+        await BackgroundTask.unregisterTaskAsync(BACKGROUND_BRIDGE_TASK);
+        setIsBackgroundEnabled(false);
+
+        // Salva lo stato in myPreferences
+        const updated = { ...myPreferences, backgroundNotifications: { ...myPreferences?.backgroundNotifications, status: false } };
+        setMyPreferences(updated);
+        await AsyncStorage.setItem('PREFERENCES_KEY', JSON.stringify(updated));
+
+        // Alert.alert("Notifiche Disattivate", "Il controllo periodico dei ponti è stato disattivato.");
+      } catch (err) {
+        console.error("Task unregister failed:", err);
+      }
+    } else {
+      // ATTIVA
+      try {
+        // Richiedi permessi notifiche
+        const hasPermissions = await registerForPushNotificationsAsync();
+        if (!hasPermissions) {
+          Alert.alert("Permesso Negato", "Non è possibile attivare le notifiche senza permessi.");
+          return;
+        }
+
+        await BackgroundTask.registerTaskAsync(BACKGROUND_BRIDGE_TASK, {
+          minimumInterval: 30, // 1440 minutes = 24 hours
+        });
+        setIsBackgroundEnabled(true);
+
+        // Salva lo stato in myPreferences
+        const updated = { ...myPreferences, backgroundNotifications: { ...myPreferences?.backgroundNotifications, status: true } };
+        setMyPreferences(updated);
+        await AsyncStorage.setItem('PREFERENCES_KEY', JSON.stringify(updated));
+
+        Alert.alert(switchNames(myLanguage, 20), switchNames(myLanguage, 27)); // Notifiche attivate / Ponti e Ferie cercherà nuovi ponti ogni giorno anche ad app chiusa.
+      } catch (err) {
+        console.error("Task register failed:", err);
+      }
+    }
+  };
+
+  // Aggiorna lookahead
+  const updateLookahead = async (val: number) => {
+    setLookaheadValue(val);
+    const updated = { ...myPreferences, bridgeLookaheaddays: val };
+    setMyPreferences(updated);
+    try { await AsyncStorage.setItem('PREFERENCES_KEY', JSON.stringify(updated)); } catch (e) { console.error('Failed to save preferences:', e); }
+  }
+
   // GESTISCE PULSANTE 'MODIFICA LISTA FESTIVITA'
   const handleEditHolydays = () => { navigation.navigate('holydays' as never) };
 
-  // STILI PAGINA
-  // const styles = StyleSheet.create({
-  //   scrollview: {
-  //     width: '100%',
-  //     backgroundColor: 'transparent',
-  //     paddingTop: 90,
-  //     maxWidth: 550,
-  //   },
-  //   pageTitle: {
-  //     flex: 1,
-  //     width: '100%',
-  //     height: 54,
-  //     flexDirection: 'row',
-  //     justifyContent: 'center',
-  //     alignItems: 'flex-start',
-  //     // borderWidth: 1,
-  //     pointerEvents: 'box-none',
-
-  //   },
-  //   sectionTitle: {
-  //     fontSize: 24,
-  //     fontWeight: '600',
-  //     textAlign: 'center',
-  //     color: colors.text,
-  //   },
-  //   // CONTAINER TITOLO PAGINA
-  //   sectionContainer: {
-  //     width: '100%',
-  //     flex: 1,
-  //     justifyContent: 'center',
-  //     alignItems: 'center',
-  //     alignContent: 'center',
-  //     marginBottom: 8,
-  //   },
-  //   // TITOLO ESTERNO BLOCCHETTI
-  //   listTitle: {
-  //     color: colors.headerText,
-  //     fontSize: 18,
-  //     fontWeight: '600',
-  //     marginBottom: 16,
-  //     paddingBottom: 8,
-  //   },
-  //   text: {
-  //     fontSize: 16,
-  //     fontWeight: '400',
-  //     color: colors.text,
-  //   },
-  //   // CARD
-  //   groupContainer: {
-  //     backgroundColor: colors.cardBackground,
-  //     borderRadius: 24,
-  //     paddingVertical: 24,
-  //     paddingHorizontal: 18,
-  //     // marginLeft:12,
-  //     // marginRight:12,
-  //     marginHorizontal: sideMargin,
-  //     marginBottom: 24,
-  //     //width: '100%',
-  //   },
-  //   preferenceRow: {
-  //     flexDirection: 'row',
-  //     justifyContent: 'space-between',
-  //     alignItems: 'center',
-  //     marginBottom: 10,
-  //   },
-  //   editLinkContainer: {
-  //     width: '100%',
-  //     alignItems: 'flex-end',
-  //     paddingTop: 16,
-  //     paddingRight: 12,
-  //   },
-  //   editButton: {
-  //     flexDirection: 'row',
-  //     alignItems: 'center',
-  //   },
-  //   editText: {
-  //     marginLeft: 8,
-  //     marginTop: 12,
-  //     marginBottom: 12,
-  //     color: colors.text,
-  //     fontSize: 14,
-  //     fontWeight: 400,
-  //   },
-  //   creditsView: {
-  //     flex: 1,
-  //     width: '100%',
-  //     justifyContent: 'center',
-  //     alignItems: 'center',
-  //     marginTop: 10,
-  //   },
-  //   credits: {
-  //     fontSize: 11,
-  //     color: colors.disabled,
-  //   },
-  //   image: {
-  //     flex: 1,
-  //     justifyContent: 'center',
-  //   },
-  //   advContainer: {
-  //     paddingTop: 12,
-  //     paddingBottom: 12,
-  //     paddingLeft: 0,
-  //     paddingRight: 0,
-  //     marginBottom: 32,
-  //     marginTop: 12,
-  //     backgroundColor: 'rgba(0, 0, 0, .08)',
-  //     borderRadius: 0,
-  //     borderWidth: 0,
-  //   },
-  //   infoButton: {
-  //     flex: 1,
-  //     flexDirection: 'row',
-  //     justifyContent: 'center',
-  //     alignItems: 'center',
-  //     padding: 20,
-  //     marginHorizontal: sideMargin, //12,
-  //     marginTop: 12,
-  //     gap: 8,
-  //     borderWidth: 2,
-  //     borderStyle: 'dotted',
-  //     borderColor: colors.blueBar,
-  //     borderRadius: 24,
-  //     backgroundColor: 'rgba(255, 255, 255, .5)'
-  //   }
-
-  // });
   const styles = createPreferencesStyles();
 
   // AGGIORNA CONTEXT A OGNI CAMBIAMENTO DI PREFERENCES
@@ -274,9 +226,6 @@ export default function Preferences() {
       <View style={styles.preferenceRow as ViewStyle}>
         <Text style={styles.text}>{(myPreferences?.[preferenceKey]?.label ?? preferenceKey)}</Text>
         <Switch
-          trackColor={{ false: '#767577', true: '#767577' }}
-          thumbColor={isEnabled ? colors.textRed : '#f4f3f4'}
-          ios_backgroundColor="#3e3e3e"
           onValueChange={toggleSwitch}
           value={isEnabled}
         />
@@ -331,6 +280,29 @@ export default function Preferences() {
               try { await AsyncStorage.setItem('PREFERENCES_KEY', JSON.stringify(updated)); } catch (e) { console.error('Failed to save preferences:', e); }
             }}
           />
+        </View>
+
+        {/* ==================== NOTIFICHE BACKGROUND ==================== */}
+        <View style={styles.groupContainer}>
+          <Text style={[styles.listTitle, { textAlign: 'center' }]}>{switchNames(myLanguage, 20)}</Text>
+
+          {/* LOOKAHEAD */}
+          <Text style={{ fontSize: 13, color: colors.text, marginBottom: 8, paddingHorizontal: 4 }}>{switchNames(myLanguage, 21)}</Text>
+          <DropdownLookahead
+            selectedValue={lookaheadValue}
+            onChange={updateLookahead}
+          />
+
+          <View style={{ width: '100%', height: 1, backgroundColor: colors.border, marginBottom: 12 }}></View>
+
+          {/* SWITCH ATTIVA/DISATTIVA */}
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
+            <Text style={{ fontSize: 16, color: colors.text }}>{switchNames(myLanguage, 26)}</Text>
+            <Switch
+              onValueChange={toggleBackground}
+              value={isBackgroundEnabled}
+            />
+          </View>
         </View>
 
         {/* ==================== DROPDOWN GIORNO SETTIMANA ==================== */}

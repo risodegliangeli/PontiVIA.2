@@ -262,7 +262,7 @@ const CalendarScreen = ({ callerPreferences }: any) => {
       return new Promise((resolve) => {
         Alert.alert(
           dataLabel(myLanguage, 15) || 'Permesso Calendario Richiesto',
-          dataLabel(myLanguage, 16) || 'Per salvare eventi nel calendario, PontiVIA ha bisogno del permesso di accesso al calendario. Senza questo permesso non potrai salvare i ponti trovati nel tuo calendario.',
+          dataLabel(myLanguage, 16) || 'Per salvare eventi nel calendario, Ponti e Ferie ha bisogno del permesso di accesso al calendario. Senza questo permesso non potrai salvare i ponti trovati nel tuo calendario.',
           [
             {
               text: dataLabel(myLanguage, 10) || 'Annulla',
@@ -474,7 +474,7 @@ const CalendarScreen = ({ callerPreferences }: any) => {
                   title: dataLabel(myLanguage, 0),    // Ponte!
                   startDate: bridgeStart,
                   endDate: bridgeEnds,
-                  notes: dataLabel(myLanguage, 1),    // PontiVIA! ha trovato questo ponte ecc..
+                  notes: dataLabel(myLanguage, 1),    // Ponti e Ferie! ha trovato questo ponte ecc..
                   allDay: true,
                 };
 

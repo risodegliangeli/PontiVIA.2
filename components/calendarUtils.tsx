@@ -28,7 +28,9 @@ type NewHolyday = {
 };
 
 // CARICA LE FESTIVITA' LOCALI DAL FILE .data
-const { localHolydas: countryHolydays } = useLocalizationData();
+// const { localHolydas: countryHolydays } = useLocalizationData(); 
+// NB: Removed top-level hook call for background task compatibility. 
+// countryHolydays was unused in the file or should be passed as argument if needed.
 
 // CARICA IL LINGUAGGIO
 const myLanguage = (getLocales()[0].languageTag).slice(0, 2);
@@ -198,10 +200,13 @@ const getCountryNationalHolidays = (
 /* ============================================================================= 
 CALCOLO DEL CALENDARIO
 ============================================================================== */
+/* ============================================================================= 
+    CALCOLO DEL CALENDARIO
+============================================================================== */
 const getDayType = (
     date: Date,
     holidays: { day: number; month: number; description: string }[],
-    myPreferences
+    myPreferences: any
 ) => {
 
     const dayOfWeek = getUTCDayOfWeek(date); // 0 = Domenica, 6 = Sabato
@@ -237,7 +242,13 @@ CONTEGGIO DEI PONTI. // CONTEGGIA TUTTI I PONTI ALL'INTERNO DI CIASCUNA CARD E L
 ============================================================================== */
 const countBridges = (monthTable: any[]) => {
     const bridges: Array<{ da: Date; a: Date; length: number }> = [];
-    let currentBridge: { start: Date; days: Date[] } | null = null;
+
+    interface CurrentBridge {
+        start: Date;
+        days: Date[];
+    }
+    let currentBridge: CurrentBridge | null = null;
+
     // Filtra solo i giorni che appartengono al mese corrente (isCurrentMonth === true)
     const currentMonthDays = monthTable.filter(day => day[3] === true);
     const sortedDays = [...currentMonthDays].sort((a, b) => a[0].getTime() - b[0].getTime());
@@ -304,20 +315,39 @@ const countBridges = (monthTable: any[]) => {
         {...},
         {...}]
 ============================================================================= */
+/* ============================================================================= 
+    INTERFACCE PER IL CALENDARIO
+============================================================================= */
+interface Bridge {
+    da: Date;
+    a: Date;
+    length: number;
+}
+
+interface MonthData {
+    y: number;
+    m: number;
+    table: any[]; // [Date, value, type, boolean]
+    bridges: Bridge[];
+}
+
+/* ============================================================================= 
+    CREAZIONE ARRAY CON LA GRIGLIA DEI GIORNI - createCalendarGrid
+============================================================================= */
 const createCalendarGrid = (
     startDate: Date,
     monthsTotal: number,
     bridgeLength: number,
     newPersonalHolydays: NewHolyday[],
     myCountry: string,
-    myPreferences,
+    myPreferences: any,
     nationalExcluded: number[],
-) => {
+): MonthData[] => {
     // console.log('\t[CREATECALENDARGRID]');
     //console.log(`prop ricevuto -> nationalExcluded: ${JSON.stringify(nationalExcluded)}`);
 
     // AZZERO L'ARRAY CHE CONTERRA' LA GRIGLIA
-    const grid = [];
+    const grid: MonthData[] = [];
     const initialYear = startDate.getUTCFullYear();
     const initialMonth = startDate.getUTCMonth();
 
@@ -351,7 +381,7 @@ const createCalendarGrid = (
         const prevYearHolidays = getHolidaysForYear(prevYear);
         const nextYearHolidays = getHolidaysForYear(nextYear);
 
-        const monthData = {
+        const monthData: MonthData = {
             y: year,        // anno
             m: month + 1,   // mese -> (+1) 
             table: [],      // array coi giorni
@@ -437,7 +467,7 @@ const createCalendarGrid = (
                 if (isPotentialBridge) {
                     let daysInBetween = 0;
                     let foundNextHoliday = false;
-                    let bridgeDaysIndices = [];
+                    let bridgeDaysIndices: number[] = [];
                     // memorizza gli indici dei giorni che formano il ponte
 
                     // conta dal giorno corrente (k) fino a `bridgeLength` giorni avanti

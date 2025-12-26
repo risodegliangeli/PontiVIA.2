@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "PontiVIA!",
+    "name": "Ponti e Ferie!",
     "description": "Cerca i ponti per vacanze smart!",
     "slug": "pontivia",
     "owner": "angeli-e-associati",
@@ -21,7 +21,11 @@
       "userInterfaceStyle": "automatic",
       "supportsTablet": true,
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIBackgroundModes": [
+          "fetch",
+          "processing"
+        ]
       }
     },
     "android": {
@@ -133,7 +137,8 @@
           ]
         }
       ],
-      "expo-tracking-transparency"
+      "expo-tracking-transparency",
+      "expo-background-task"
     ],
     "experiments": {
       "typedRoutes": true

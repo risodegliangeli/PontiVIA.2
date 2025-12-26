@@ -96,7 +96,7 @@ export default function useShareMsgComposer() {
     }
 
     // COPYRIGHT
-    msg += `\n\n${new Date().getFullYear()} © PontiVIA!`; // 2025 PontiVIA!
+    msg += `\n\n${new Date().getFullYear()} © Ponti e Ferie!`; // 2025 Ponti e Ferie!
 
     return msg;
   };

@@ -214,9 +214,15 @@ const UseSideLabel = () => {
               }}>
 
                 {/* TITOLO */}
-                <Text style={styles.sectionTitle}>
-                  {dataLabel(myLanguage, 4)}
-                </Text>
+                <View style={{
+                  width: '100%',
+                  flexWrap: 'wrap',
+                  paddingHorizontal: 32,
+                }}>
+                  <Text style={[styles.sectionTitle, { alignSelf: 'center' }]}>
+                    {dataLabel(myLanguage, 4)}
+                  </Text>
+                </View>
 
                 <Carousel
                   ref={ref}
@@ -307,11 +313,11 @@ const UseSideLabel = () => {
                 left: 0,
                 width: '100%',
               }}>
-                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>1.0.3 beta - 2025 © Angeli e Associati</Text>
+                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>Ponti e Ferie! beta / ADV TestId - 2025/2026 © Angeli e Associati</Text>
               </View>
 
-            </View>
-          </Portal>}
+            </View >
+          </Portal >}
 
         <View style={styles.label}>
           <TouchableOpacity
