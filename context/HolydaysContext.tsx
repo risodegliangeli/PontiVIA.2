@@ -122,6 +122,7 @@ export const HolydaysProvider: React.FC<HolydaysProviderProps> = ({ children }) 
       festivitaPersonali: { status: true, label: dataLabel(myLanguageShort, 9) },
       feriePersonali: { status: true, label: dataLabel(myLanguageShort, 10) },
       bridgeDuration: 3,
+      bridgeLookaheaddays: 30,
       firstDayOfWeek: 1,
       backgroundNotifications: { status: false, label: 'Background Notifications' },
     };

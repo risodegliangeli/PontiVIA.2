@@ -37,7 +37,9 @@
       "versionCode": 17,
       "permissions": [
         "android.permission.READ_CALENDAR",
-        "android.permission.WRITE_CALENDAR"
+        "android.permission.WRITE_CALENDAR",
+        "android.permission.POST_NOTIFICATIONS",
+        "android.permission.RECEIVE_BOOT_COMPLETED"
       ]
     },
     "web": {
@@ -137,8 +139,21 @@
           ]
         }
       ],
-      "expo-tracking-transparency",
-      "expo-background-task"
+      [
+        "expo-background-task",
+        {
+          "taskNames": [
+            "BACKGROUND_BRIDGE_DETECTION_TASK"
+          ]
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "color": "#E35527",
+          "mode": "production"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

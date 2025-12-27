@@ -1,15 +1,15 @@
-1) check iOS/Android + light/dark mode
-
-3) check iOS/Android + formati screen
+1) check iOS/Android + light/dark mode + formati screen
 
 2) check lingue
 
-4) ripristinare adv produzione
+3) ripristinare AdMob ID --> produzione
 
-5) pubblicazione -> produzione
+4) ripristinare notifiche background ogni 1440 minuti
 
-6) check Google AdMob
+5) cancellare pulsante test in fondo a preferenze   
 
-7) re-inserire adv
+6) ripristinare info in SideLabel --> 1.0.4 ecc
 
-8) update -> produzione
+7) EAS pubblicazione --> produzione
+
+

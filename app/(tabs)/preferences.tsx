@@ -11,11 +11,8 @@ import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 //import * as Linking from 'expo-linking';
 //import UseSideLabel from '@/components/ui/SideLabel';
 import createPreferencesStyles from '@/components/styles/createPreferencesStyles';
-import DropdownLookahead from '@/components/ui/DropdownLookahead';
-import * as BackgroundTask from 'expo-background-task';
-import * as TaskManager from 'expo-task-manager';
-import { BACKGROUND_BRIDGE_TASK } from '@/utils/backgroundTask';
-import { registerForPushNotificationsAsync } from '@/utils/notifications';
+// import { BACKGROUND_BRIDGE_TASK } from '@/utils/backgroundTask';
+// import { registerForPushNotificationsAsync } from '@/utils/notifications';
 
 import {
   ImageBackground,
@@ -74,11 +71,7 @@ export default function Preferences() {
   // NOMI GIORNI LOCALIZZATI
   const { localizedDays } = useLocalizationData();
 
-  // VISIBILITA MODAL PRIVACY
-  const [isPrivacyVisible, setIsPrivacyVisible] = useState<boolean>(true);
-
   const navigation = useNavigation();
-  const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
   // ADMOB
   const bannerRef = useRef<BannerAd>(null);
@@ -92,91 +85,21 @@ export default function Preferences() {
   const width = Dimensions.get("window").width;
   const sideMargin = Math.trunc(width * .025); // MARGINE LATERALE
 
-  // Nota: la inizializzazione/caricamento da storage viene gestita dal Provider
-  // qui ci limitiamo a marcare 'preferencesLoaded' true quando il context è pronto
-  useEffect(() => {
-    setPreferencesLoaded(true);
-  }, []);
-
   const [dropdownSelected, setDropdownSelected] = useState<number>(Math.trunc(myPreferences?.bridgeDuration ?? 3));
 
   /* ============================================================================= 
     GESTIONE BACKGROUND TASK
   ============================================================================= */
-  // Stato locale per lo switch delle notifiche
-  const [isBackgroundEnabled, setIsBackgroundEnabled] = useState(false);
-  const [lookaheadValue, setLookaheadValue] = useState<number>(30); // Default 30
-
-  useEffect(() => {
-    // Verifica stato iniziale del task
-    const checkStatus = async () => {
-      const isRegistered = await TaskManager.isTaskRegisteredAsync(BACKGROUND_BRIDGE_TASK);
-
-      // Usa il valore salvato in myPreferences se esiste, altrimenti usa lo stato del task
-      const savedState = myPreferences?.backgroundNotifications?.status ?? isRegistered;
-      setIsBackgroundEnabled(savedState);
-
-      // Carica valore lookahead dalle preferenze se esiste
-      if (myPreferences?.bridgeLookaheaddays) {
-        setLookaheadValue(myPreferences.bridgeLookaheaddays);
-      }
-    };
-    checkStatus();
-  }, [myPreferences]);
-
-  const toggleBackground = async () => {
-    if (isBackgroundEnabled) {
-      // DISATTIVA
-      try {
-        await BackgroundTask.unregisterTaskAsync(BACKGROUND_BRIDGE_TASK);
-        setIsBackgroundEnabled(false);
-
-        // Salva lo stato in myPreferences
-        const updated = { ...myPreferences, backgroundNotifications: { ...myPreferences?.backgroundNotifications, status: false } };
-        setMyPreferences(updated);
-        await AsyncStorage.setItem('PREFERENCES_KEY', JSON.stringify(updated));
-
-        // Alert.alert("Notifiche Disattivate", "Il controllo periodico dei ponti è stato disattivato.");
-      } catch (err) {
-        console.error("Task unregister failed:", err);
-      }
-    } else {
-      // ATTIVA
-      try {
-        // Richiedi permessi notifiche
-        const hasPermissions = await registerForPushNotificationsAsync();
-        if (!hasPermissions) {
-          Alert.alert("Permesso Negato", "Non è possibile attivare le notifiche senza permessi.");
-          return;
-        }
-
-        await BackgroundTask.registerTaskAsync(BACKGROUND_BRIDGE_TASK, {
-          minimumInterval: 30, // 1440 minutes = 24 hours
-        });
-        setIsBackgroundEnabled(true);
-
-        // Salva lo stato in myPreferences
-        const updated = { ...myPreferences, backgroundNotifications: { ...myPreferences?.backgroundNotifications, status: true } };
-        setMyPreferences(updated);
-        await AsyncStorage.setItem('PREFERENCES_KEY', JSON.stringify(updated));
-
-        Alert.alert(switchNames(myLanguage, 20), switchNames(myLanguage, 27)); // Notifiche attivate / Ponti e Ferie cercherà nuovi ponti ogni giorno anche ad app chiusa.
-      } catch (err) {
-        console.error("Task register failed:", err);
-      }
-    }
-  };
-
-  // Aggiorna lookahead
+  // Aggiorna lookahead (REMOVED)
+  /*
   const updateLookahead = async (val: number) => {
-    setLookaheadValue(val);
-    const updated = { ...myPreferences, bridgeLookaheaddays: val };
-    setMyPreferences(updated);
-    try { await AsyncStorage.setItem('PREFERENCES_KEY', JSON.stringify(updated)); } catch (e) { console.error('Failed to save preferences:', e); }
+    // Feature removed
   }
+  */
 
   // GESTISCE PULSANTE 'MODIFICA LISTA FESTIVITA'
   const handleEditHolydays = () => { navigation.navigate('holydays' as never) };
+  // const handleBackgroundTaskTest = () => { navigation.navigate('test-background' as never) };
 
   const styles = createPreferencesStyles();
 
@@ -282,11 +205,11 @@ export default function Preferences() {
           />
         </View>
 
-        {/* ==================== NOTIFICHE BACKGROUND ==================== */}
+        {/* ==================== NOTIFICHE BACKGROUND (DISABLED) ==================== */}
+        {/*
         <View style={styles.groupContainer}>
           <Text style={[styles.listTitle, { textAlign: 'center' }]}>{switchNames(myLanguage, 20)}</Text>
 
-          {/* LOOKAHEAD */}
           <Text style={{ fontSize: 13, color: colors.text, marginBottom: 8, paddingHorizontal: 4 }}>{switchNames(myLanguage, 21)}</Text>
           <DropdownLookahead
             selectedValue={lookaheadValue}
@@ -295,7 +218,6 @@ export default function Preferences() {
 
           <View style={{ width: '100%', height: 1, backgroundColor: colors.border, marginBottom: 12 }}></View>
 
-          {/* SWITCH ATTIVA/DISATTIVA */}
           <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
             <Text style={{ fontSize: 16, color: colors.text }}>{switchNames(myLanguage, 26)}</Text>
             <Switch
@@ -304,6 +226,7 @@ export default function Preferences() {
             />
           </View>
         </View>
+        */}
 
         {/* ==================== DROPDOWN GIORNO SETTIMANA ==================== */}
         {/* <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[2]}</Text>
@@ -388,6 +311,16 @@ export default function Preferences() {
               size={BannerAdSize.MEDIUM_RECTANGLE} />
           </View>
         }
+
+
+
+
+        {/*
+        <TouchableOpacity onPress={handleBackgroundTaskTest}>
+          <Text style={{ alignSelf: 'center', color: colors.text }}>Test Background Task</Text>
+        </TouchableOpacity>
+        */}
+
 
 
 

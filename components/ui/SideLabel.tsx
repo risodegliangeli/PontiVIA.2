@@ -313,7 +313,7 @@ const UseSideLabel = () => {
                 left: 0,
                 width: '100%',
               }}>
-                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>Ponti e Ferie! beta / ADV TestId - 2025/2026 © Angeli e Associati</Text>
+                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>Ponti e Ferie! beta 20251227 / ADV TestId - 2025/2026 © Angeli e Associati</Text>
               </View>
 
             </View >

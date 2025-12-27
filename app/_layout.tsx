@@ -9,7 +9,7 @@ import { SplashCarouselProvider } from '@/context/SplashCarouselContext';
 //import { useColorScheme } from '@/hooks/useColorScheme';
 import { PortalHost } from '@rn-primitives/portal';
 import mobileAds from 'react-native-google-mobile-ads';
-import '@/utils/backgroundTask';
+// import '@/utils/backgroundTask';
 import { useEffect } from 'react';
 
 // GESTISCE LE CHIAMATE ESTERNE DEL TIPO pontivia://...

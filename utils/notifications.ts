@@ -5,7 +5,6 @@ import { Platform } from 'react-native';
 // Configura il comportamento delle notifiche quando l'app è in primo piano
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
-        shouldShowAlert: true,
         shouldPlaySound: true,
         shouldSetBadge: false,
         shouldShowBanner: true,
@@ -52,4 +51,21 @@ export async function scheduleLocalNotification(title: string, body: string, dat
         },
         trigger: null, // null trigger means show immediately
     });
+}
+
+// Verifica se i permessi notifiche sono concessi
+export async function checkNotificationPermissions() {
+    const { status } = await Notifications.getPermissionsAsync();
+    return status === 'granted';
+}
+
+// Apre le impostazioni di sistema per le notifiche
+export async function openNotificationSettings() {
+    const { Linking } = require('react-native');
+    if (Platform.OS === 'ios') {
+        Linking.openURL('app-settings:');
+    } else {
+        // Android - apri le impostazioni dell'app
+        Linking.openSettings();
+    }
 }

@@ -1,4 +1,4 @@
-
+console.log("Loading backgroundTask.ts - registering TaskManager definition...");
 import * as BackgroundTask from 'expo-background-task';
 import * as TaskManager from 'expo-task-manager';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -6,7 +6,7 @@ import { createCalendarGrid, createUTCDate } from '@/components/calendarUtils';
 import { scheduleLocalNotification } from './notifications';
 import { getLocales } from 'expo-localization';
 import { dataLabel } from '@/constants/dataLabel';
-import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
+
 
 
 export const BACKGROUND_BRIDGE_TASK = 'BACKGROUND_BRIDGE_DETECTION_TASK';
@@ -29,14 +29,12 @@ const getPreferences = async () => {
 
 TaskManager.defineTask(BACKGROUND_BRIDGE_TASK, async () => {
 
-    // AGGANCIA LE VARIABILI myPreferences E preferences DAL CONTEXT
-    const {
-        myLanguage,
-        myCountry
-    } = useHolydays();
-
     const now = new Date();
-    //console.log(`[${now.toISOString()}] Esecuzione Background Task Ponti e Ferie...`);
+    console.log(`[${now.toISOString()}] Esecuzione Background Task Ponti e Ferie...`);
+
+    // Ottieni lingua e paese direttamente (non possiamo usare React hooks qui!)
+    const myLanguage = getLocales()[0].languageTag;
+    const myCountry = myLanguage; // Usa la lingua come fallback per il paese
 
     try {
         // 1. Carica preferenze

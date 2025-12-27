@@ -1,6 +1,5 @@
 /* ===============================
    SIMPLE TOAST
-   G. Angeli 2025 - MIT License ;)
    =============================*/
 import React, { useEffect } from 'react';
 import { Animated, Dimensions, Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
