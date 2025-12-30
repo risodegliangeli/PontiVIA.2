@@ -56,7 +56,9 @@ export function splittedBarLabel(language, item) {
       ''
     ],
   };
-  return countryLabels[language][item];
+  const labels = countryLabels[language] || countryLabels['en'];
+
+  return labels ? labels[item] : '';
 }
 
 // LABEL USATE IN index.tsx
@@ -134,7 +136,9 @@ export function indexLabels(language, item) {
       'Τι μπορείτε να κάνετε με το Ponti e Ferie;'
     ]
   };
-  return dataLabel[language][item];
+  const labels = dataLabel[language] || dataLabel['en'];
+
+  return labels ? labels[item] : '';
 }
 
 // LABEL USATE IN calendarUtils.tsx E preferences.tsx
@@ -441,7 +445,9 @@ export function dataLabel(language, item) {
       'Το Ponti e Ferie θα αναζητά νέες γέφυρες κάθε μέρα ακόμα και με την εφαρμογή κλειστή' // 27
     ]
   };
-  return countryLabels[language][item];
+  const labels = countryLabels[language] || countryLabels['en'];
+
+  return labels ? labels[item] : '';
 }
 
 // LABEL USATE IN holydays.tsx
@@ -798,7 +804,9 @@ export function holydayLabels(language, item) {
       'πρόσθεσέ το στο ημερολόγιό σου: '                         // 32
     ]
   };
-  return dataLabel[language][item];
+  const labels = dataLabel[language] || dataLabel['en'];
+
+  return labels ? labels[item] : '';
 }
 
 // LABEL USATE IN calendarScreen.tsx
@@ -1065,7 +1073,9 @@ export function calendarScrenLabels(language, item) {
       'Παρουσιάστηκε σφάλμα κατά την αποθήκευση του γεγονότος στο ημερολόγιο.' // 23
     ]
   };
-  return dataLabel[language][item];
+  const labels = dataLabel[language] || dataLabel['en'];
+
+  return labels ? labels[item] : '';
 }
 
 // LABEL USATE IN NewDatepicker
@@ -1292,7 +1302,9 @@ export function datepickerLabels(language, item) {
       'Επεξεργασία συμβάντος',   // 19
     ],
   };
-  return dataLabel[language][item];
+  const labels = dataLabel[language] || dataLabel['en'];
+
+  return labels ? labels[item] : '';
 }
 
 export function privacy(language, item) {
@@ -1301,7 +1313,9 @@ export function privacy(language, item) {
       'PRIVACY POLICY\n\nLast Update: December 2025\n\n1. INTRODUCTION\n\n Ponti e Ferie! respects user privacy and is committed to protecting personal data in compliance with the General Data Protection Regulation (GDPR) and applicable regulations.\n\n2. DATA CONTROLLER \n\nAngeli & Associati Milan - angelieassociati@gmail.com \n\n3. DATA COLLECTED\n\n3.1 Data provided directly by the user\n\n- The application locally manages the following voluntarily entered data:\n\n- Personal events: holidays, anniversaries, and appointments entered into the application.\n\n- Preferences: selection of the reference country for holidays, language settings, and search filters.\n\n3.2 AUTOMATICALLY COLLECTED DATA (THIRD PARTY SERVICES) \n\nWhile the app authors do not directly collect personal data, the application uses Google AdMob to display advertisements. To operate this service, the following data may be automatically collected and processed:\n\n- IP Address (to estimate approximate location).\n\n- Device Identifiers (such as Android Advertising ID or iOS IDFA).\n\n- Usage data, diagnostics, and ad interactions.\n\n- Cookies and similar technologies for ad frequency capping and fraud prevention.\n\n3.3 USER SHARING \n\nWhen the user chooses to share dates or bridges with third parties, the information is transmitted through the device\'s native sharing system. The app does not store or track what content is shared, with whom, or when. Sharing occurs exclusively upon the user\'s voluntary initiative.\n\n4. PURPOSE OF PROCESSING \n\nData is processed for the following purposes:\n\n- App Functionality: To calculate available bridges between holidays, display the personalized calendar, and manage holidays.\n\n- Advertising: To display advertisements (including personalized ones, subject to consent) via the Google AdMob service.\n\n5. LEGAL BASIS FOR PROCESSING \n\nProcessing is based on user consent. Regarding personalized advertising, consent is explicitly requested via a Consent Management Platform (CMP) upon app launch, in compliance with Google policies and GDPR.\n\n6. DATA RETENTION\n\nUser Data: All personal data (events, holidays) entered is stored exclusively locally on the user\'s device and is not transferred to external servers managed by the developer.\n\nAdvertising Data: Technical data collected by Google AdMob is managed according to Google\'s retention policies.\n\n7. DATA SHARING AND THIRD PARTIES \n\nThe developer DOES NOT share or sell user personal data (events, names, notes) to third parties. However, the app integrates third-party services necessary for the project\'s sustainability:\n\n- Google AdMob (Google LLC/Google Ireland Ltd): Advertising service provider. For more information: Google Privacy Policy.\n\n8. USER RIGHTS \n\nIn accordance with GDPR, users have the right to:\n\n- Access and Rectification: View and modify their data directly within the app.\n\n- Erasure: Delete all data by uninstalling the application or manually deleting events.\n\n- Ad Management: Users can revoke consent for ad personalization via device settings or the app\'s internal privacy options.\n\n- Objection: Cease using the application at any time.\n\n9. DATA SECURITY \n\nPonti e Ferie! adopts appropriate technical measures, such as secure local storage on the device. Please note that the transmission of data required for ad delivery occurs via secure protocols managed by Google.\n\n10. MINOR USERS \n\nThe application is suitable for users of all ages. It does not intentionally collect identifying personal data from minors. Since the app displays advertisements, parental supervision is recommended for users under 13 years of age (or the applicable minimum age in their country).\n\n11. CHANGES TO THE POLICY \n\nWe reserve the right to update this policy. Changes will be communicated through app updates or Store notifications.\n\n12. CONTACT \n\nFor privacy-related questions or requests, contact: angelieassociati@gmail.com.\n\n13. SUPERVISORY AUTHORITY \n\nUsers have the right to lodge a complaint with the competent supervisory authority (Italy: Data Protection Authority - www.garanteprivacy.it).\n\n\n\n\n\n'
     ]
   }
-  return dataLabel[language][item];
+  const labels = dataLabel[language] || dataLabel['en'];
+
+  return labels ? labels[item] : '';
 }
 
 export function faq(language, item) {
@@ -1323,7 +1337,9 @@ export function faq(language, item) {
     ]
 
   }
-  return dataLabel[language][item];
+  const labels = dataLabel[language] || dataLabel['en'];
+
+  return labels ? labels[item] : '';
 }
 
 export function splashCarousel(language, item) {
@@ -1439,5 +1455,7 @@ export function splashCarousel(language, item) {
       'Ο αφεντικό σου μπορεί να περιμένει 😎'            // 8
     ]
   }
-  return dataLabel[language][item];
+  const labels = dataLabel[language] || dataLabel['en'];
+
+  return labels ? labels[item] : '';
 }

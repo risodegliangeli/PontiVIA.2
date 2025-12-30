@@ -42,6 +42,8 @@ const UseSideLabel = () => {
   const colorScheme = useColorScheme();
   const isLight = colorScheme === 'light';
   const isIos = Platform.OS === 'ios';
+  const xcrossSize = isIos ? 24 : 32;
+
 
   // STYLES
   const styles: any = StyleSheet.create({
@@ -178,11 +180,11 @@ const UseSideLabel = () => {
             }}>
 
               {/* CHIUDI */}
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={{
                   position: 'absolute',
-                  top: 48,
-                  left: 12,
+                  top: isIos ? 48 : 32,
+                  // left: isIos ? 12 : 8,
                   width: '100%',
                   //maxWidth: 550,
                   //padding: 12,
@@ -208,7 +210,30 @@ const UseSideLabel = () => {
                     color: colors.white
                   }}>{datepickerLabels(myLanguage, 16)}</Text>
                 </View>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
+
+
+              {/* PULS CHIUSURA */}
+              <View style={{
+                position: 'absolute',
+                top: isIos ? 32 : 24,
+                right: 0,
+              }}>
+                <TouchableOpacity
+                  style={{
+                    padding: 6,
+                    marginTop: 24,
+                    marginRight: 24,
+                    backgroundColor: colors.cancelButton,
+                    borderRadius: 99,
+                  }}
+                  onPress={() => setInfoModalVisible(false)}>
+                  <IconSymbol name='xmark'
+                    size={xcrossSize}
+                    color={colors.disabled} />
+                </TouchableOpacity>
+              </View>
+
 
               <View style={{ // WRAPPER SCURO
                 width: '100%',
@@ -318,7 +343,7 @@ const UseSideLabel = () => {
                 left: 0,
                 width: '100%',
               }}>
-                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>PontiVia: Ponti e Ferie! 1.0.4 - 2025/2026 © Angeli e Associati</Text>
+                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>PontiVia: Ponti e Ferie! 1.0.4a - 2025/2026 © Angeli e Associati</Text>
               </View>
 
             </View >
