@@ -21,8 +21,7 @@ export default function useShareMsgComposer() {
   const composeMessage = (type: string, id: any): string => {
 
     let msg = '';
-    let link = sniffer || 'https://pontivia.blogspot.com/p/redirect.html?action=newItemFromExternal';
-    //  let link = `${sniffer || 'https://pontivia-2025.web.app/detect.html?action=newItemFromExternal'}`;
+    let link = sniffer || 'https://pontieferie.blogspot.com/p/redirect.html?action=newItemFromExternal';
 
     if (type === 'holyday') {
       // ////////////////////////////
@@ -96,7 +95,7 @@ export default function useShareMsgComposer() {
     }
 
     // COPYRIGHT
-    msg += `\n\n${new Date().getFullYear()} © Ponti e Ferie!`; // 2025 Ponti e Ferie!
+    msg += `\n${new Date().getFullYear()} © Ponti e Ferie!`; // 2025 Ponti e Ferie!
 
     return msg;
   };

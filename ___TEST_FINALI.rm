@@ -2,14 +2,16 @@
 
 2) check lingue
 
-3) ripristinare AdMob ID --> produzione
+3) check condivisione (old pontivia --> new pontieferie)
 
-4) ripristinare notifiche background ogni 1440 minuti
+4) check pagina sviluppatore (https://pontieferie.blogspot.com/)
 
-5) cancellare pulsante test in fondo a preferenze   
+5) check pagina privacy (https://pontieferie.blogspot.com/privacy-policy/)
 
-6) ripristinare info in SideLabel --> 1.0.4 ecc
+6) check pagina termini (https://pontieferie.blogspot.com/terms-of-service/)
 
-7) EAS pubblicazione --> produzione
+7) ripristinare AdMob ID produzione
+
+8) ripristinare info in SideLabel --> 1.0.3 
 
 
