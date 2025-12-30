@@ -78,7 +78,7 @@ export default function useShareMsgComposer() {
       // se la data NON è inserita dall'utente
       // si aggiunge al msg la data della probabile festivita nazionale in formato human-readable
       if (!isPersonalHolyday) {
-        msg += id[0].toLocaleDateString(myLanguage, { day: 'numeric', month: 'long', year: 'numeric' }) + "\n\n";
+        msg += id[0].toLocaleDateString(myLanguage, { day: 'numeric', month: 'long', year: 'numeric' });
       }
       // se la data è inserita dall'utente si aggiunge il link
       if (isPersonalHolyday) {
@@ -91,11 +91,11 @@ export default function useShareMsgComposer() {
       // MESSAGGIO: solo segnalazione ponte, niente link per inserire le date
       msg += `${dataLabel(myLanguage, 12)}\n\n`;      // Vorrei condividere con te. \n\n
       msg += `*${dataLabel(myLanguage, 9)}*\n`;       // Descrizione\n
-      msg += `_${id[0].toLocaleDateString(myLanguage, { day: 'numeric', month: 'long', year: 'numeric' })}_\n\n`;
+      msg += `_${id[0].toLocaleDateString(myLanguage, { day: 'numeric', month: 'long', year: 'numeric' })}_`;
     }
 
     // COPYRIGHT
-    msg += `\n${new Date().getFullYear()} © Ponti e Ferie!`; // 2025 Ponti e Ferie!
+    msg += `\n\n${new Date().getFullYear()} © Ponti e Ferie!`; // 2025 Ponti e Ferie!
 
     return msg;
   };

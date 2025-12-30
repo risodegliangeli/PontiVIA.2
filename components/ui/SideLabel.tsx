@@ -180,9 +180,14 @@ const UseSideLabel = () => {
               {/* CHIUDI */}
               <TouchableOpacity
                 style={{
+                  position: 'absolute',
+                  top: 48,
+                  left: 12,
                   width: '100%',
-                  maxWidth: 550,
-                  padding: 12,
+                  //maxWidth: 550,
+                  //padding: 12,
+                  // borderWidth: 1,
+                  // borderColor: colors.white,
                 }}
                 onPress={() => setInfoModalVisible(false)}
               >
@@ -313,7 +318,7 @@ const UseSideLabel = () => {
                 left: 0,
                 width: '100%',
               }}>
-                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>PontiVia: Ponti e Ferie! 1.0.3 - 2025/2026 © Angeli e Associati</Text>
+                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>PontiVia: Ponti e Ferie! 1.0.4 - 2025/2026 © Angeli e Associati</Text>
               </View>
 
             </View >
