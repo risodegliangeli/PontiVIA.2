@@ -29,11 +29,6 @@ function Privacy() {
         <>
             <TouchableOpacity
                 style={{
-                    // borderWidth:1, 
-                    // borderColor: colors.textNegative, 
-                    // borderRadius:99, 
-                    // paddingVertical:12,
-                    // paddingHorizontal:20,
                     alignItems: 'center',
                     gap: 12,
                 }}
@@ -41,13 +36,13 @@ function Privacy() {
                 <IconSymbol
                     name={'eye.fill'}
                     size={28}
-                    color={colors.blueBar} //'white'
+                    color={'#78beff'} //'white'
                 />
                 <Text style={{
                     fontSize: 14,
                     fontWeight: '800',
                     textAlign: 'center',
-                    color: colors.blueBar, //colors.white,
+                    color: '#78beff', //colors.blueBar, //colors.white,
                 }}>
                     {dataLabel(myLanguage, 17)}
                 </Text>
@@ -56,15 +51,17 @@ function Privacy() {
             <Modal
                 visible={isPrivacyVisible}
                 transparent={false}           // false: così sormonta la bottom bar
-                backdropColor={'#ffffff'}   // colore sempre pieno: altrimenti si vede la bar
+                backdropColor={'rgba(71,64,71, 1)'}   // colore sempre pieno: altrimenti si vede la bar
                 animationType={'slide'}
                 hardwareAccelerated={true}
             >
                 <ScrollView style={{
                     position: 'absolute',
                     top: 0,
-                    left: 0,
+                    left: '50%',
+                    transform: [{ translateX: '-50%' }],
                     width: '100%',
+                    maxWidth: 550,
                     height: '100%',
                     paddingHorizontal: 24,
                     paddingVertical: 96,
@@ -79,7 +76,7 @@ function Privacy() {
                 {/* PULS CHIUSURA */}
                 <View style={{
                     position: 'absolute',
-                    top: isIos ? 44 : 0,
+                    top: isIos ? 48 : 0,
                     right: 0,
                 }}>
                     <TouchableOpacity

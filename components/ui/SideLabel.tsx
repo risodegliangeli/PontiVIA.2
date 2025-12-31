@@ -133,8 +133,8 @@ const UseSideLabel = () => {
 
     const ref = useRef<ICarouselInstance>(null);
 
-    const viewBox = "0 0 360 557";
-    const fill = isLight ? 'rgba(255, 255, 255, .85)' : 'rgba(255, 255, 255, .15)'
+    //const viewBox = "0 0 360 557";
+    //const fill = isLight ? 'rgba(255, 255, 255, .85)' : 'rgba(255, 255, 255, .15)'
     // const { width, height } = Dimensions.get("window");
 
     // VISIBILITA INFO ANIMATE
@@ -144,21 +144,21 @@ const UseSideLabel = () => {
     const frame = [
       {
         id: 1,
-        text: <><Text style={{ fontWeight: 800, color: colors.blueBar }}>
+        text: <><Text style={{ fontWeight: 800, color: '#78beff' }}>
           {dataLabel(myLanguage, 1).split(":")[0]}
         </Text>
           <Text style={{ fontWeight: 400, color: colors.white }}>:{dataLabel(myLanguage, 1).split(":")[1]}</Text></>
       },
       {
         id: 2,
-        text: <><Text style={{ fontWeight: 800, color: colors.blueBar }}>
+        text: <><Text style={{ fontWeight: 800, color: '#78beff' }}>
           {dataLabel(myLanguage, 2).split(":")[0]}
         </Text>
           <Text style={{ fontWeight: 400, color: colors.white }}>:{dataLabel(myLanguage, 2).split(":")[1]}</Text></>
       },
       {
         id: 3,
-        text: <><Text style={{ fontWeight: 800, color: colors.blueBar }}>
+        text: <><Text style={{ fontWeight: 800, color: '#78beff' }}>
           {dataLabel(myLanguage, 3).split(":")[0]}
         </Text>
           <Text style={{ fontWeight: 400, color: colors.white }}>:{dataLabel(myLanguage, 3).split(":")[1]}</Text></>
@@ -173,57 +173,23 @@ const UseSideLabel = () => {
               position: 'absolute',
               top: 0, left: 0,
               bottom: 0, right: 0,
-              backgroundColor: isLight ? 'rgba(0, 0, 0, .95)' : colors.cardBackground,
+              backgroundColor: 'rgba(71,64,71, 1)',
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
+              paddingHorizontal: 12,
             }}>
-
-              {/* CHIUDI */}
-              {/* <TouchableOpacity
-                style={{
-                  position: 'absolute',
-                  top: isIos ? 48 : 32,
-                  // left: isIos ? 12 : 8,
-                  width: '100%',
-                  //maxWidth: 550,
-                  //padding: 12,
-                  // borderWidth: 1,
-                  // borderColor: colors.white,
-                }}
-                onPress={() => setInfoModalVisible(false)}
-              >
-                <View style={{
-                  width: '100%',
-                  flexDirection: 'row',
-                  justifyContent: 'flex-start',
-                  gap: isIos ? 4 : 0,
-                  alignItems: 'center',
-                }}>
-                  <IconSymbol
-                    size={isIos ? 10 : 24}
-                    name="arrowtriangle.left.fill"
-                    color={colors.white}
-                  /><Text style={{
-                    fontSize: 12,
-                    fontWeight: 600,
-                    color: colors.white
-                  }}>{datepickerLabels(myLanguage, 16)}</Text>
-                </View>
-              </TouchableOpacity> */}
-
 
               {/* PULS CHIUSURA */}
               <View style={{
                 position: 'absolute',
-                top: isIos ? 32 : 24,
+                top: 48,
                 right: 0,
               }}>
                 <TouchableOpacity
                   style={{
                     padding: 6,
-                    marginTop: 24,
-                    marginRight: 24,
+                    marginRight: 12,
                     backgroundColor: colors.cancelButton,
                     borderRadius: 99,
                   }}
@@ -233,14 +199,10 @@ const UseSideLabel = () => {
                     color={colors.disabled} />
                 </TouchableOpacity>
               </View>
-
-
               <View style={{ // WRAPPER SCURO
                 width: '100%',
                 maxWidth: 550,
-                backgroundColor: isLight ? 'rgba(0, 0, 0, .85)' : 'rgba(0, 0, 0, .55)',
-                paddingVertical: 64,
-                borderRadius: 24,
+                alignItems: 'center',
               }}>
 
                 {/* TITOLO */}
@@ -248,6 +210,7 @@ const UseSideLabel = () => {
                   width: '100%',
                   flexWrap: 'wrap',
                   paddingHorizontal: 32,
+                  alignContent: 'center',
                 }}>
                   <Text style={[styles.sectionTitle, { alignSelf: 'center' }]}>
                     {dataLabel(myLanguage, 4)}
@@ -261,7 +224,7 @@ const UseSideLabel = () => {
                   mode="parallax"
                   modeConfig={{
                     parallaxScrollingScale: .99,
-                    parallaxScrollingOffset: 25,
+                    parallaxScrollingOffset: 0,
                   }}
                   //onProgressChange={ () => ref.current && setDots(ref.current.getCurrentIndex)}
                   onSnapToItem={(index) => {
@@ -269,17 +232,16 @@ const UseSideLabel = () => {
                   }}
                   loop={true}
                   pagingEnabled
-                  width={myWidth}
-                  height={150}
+                  width={320}//myWidth}
+                  height={120}
                   data={frame}
                   renderItem={({ index }) => (
                     <View style={{
                       width: '100%',
                       height: '100%',
-                      paddingHorizontal: 54,
                       flexDirection: 'column',
                       justifyContent: 'center',
-                      alignItems: 'center'
+                      alignItems: 'center',
                     }}
                     ><Text style={{
                       fontSize: 18,
@@ -298,18 +260,13 @@ const UseSideLabel = () => {
                   }} />
 
                 {/* SPAZIATORE */}
-                <View style={{ height: 48, }} />
+                <View style={{ height: 12, }} />
 
                 {/* DOTS */}
                 <Pagination
                   dotsLength={frame.length}
                   activeDotIndex={infoStep - 1}
                   containerStyle={{
-                    // position: 'absolute',
-                    // bottom: 100,
-                    // alignSelf: 'center',
-                    // borderWidth: 1,
-                    // maxHeight: 12,
                   }}
                   dotStyle={{
                     width: 8,
@@ -329,7 +286,7 @@ const UseSideLabel = () => {
                 maxWidth: 550,
                 flexDirection: 'row',
                 justifyContent: 'space-around',
-                marginTop: 64,
+                marginTop: 48,
 
               }}>
                 <Faq />
@@ -343,7 +300,7 @@ const UseSideLabel = () => {
                 left: 0,
                 width: '100%',
               }}>
-                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>PontiVia: Ponti e Ferie! 1.0.4a - 2025/2026 © Angeli e Associati</Text>
+                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>Ponti e Ferie! 1.0.4 b - 2025/2026 © Angeli e Associati</Text>
               </View>
 
             </View >
