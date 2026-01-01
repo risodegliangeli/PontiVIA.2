@@ -4,7 +4,7 @@
     "description": "Cerca i ponti per vacanze smart!",
     "slug": "pontivia",
     "owner": "angeli-e-associati",
-    "version": "1.0.4",
+    "version": "1.0.5",
     "icon": "./assets/images/icon.png",
     "scheme": "pontivia",
     "userInterfaceStyle": "automatic",
@@ -22,10 +22,7 @@
       "supportsTablet": true,
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "UIBackgroundModes": [
-          "fetch",
-          "processing"
-        ]
+        "UIBackgroundModes": []
       }
     },
     "android": {

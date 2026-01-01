@@ -300,7 +300,7 @@ const UseSideLabel = () => {
                 left: 0,
                 width: '100%',
               }}>
-                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>Ponti e Ferie! 1.0.4 b - 2025/2026 © Angeli e Associati</Text>
+                <Text style={{ fontSize: 11, color: colors.white, alignSelf: 'center' }}>Ponti e Ferie! 1.0.5 - 2026 © Angeli e Associati</Text>
               </View>
 
             </View >

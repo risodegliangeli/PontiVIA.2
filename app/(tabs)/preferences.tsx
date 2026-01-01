@@ -11,8 +11,7 @@ import { useHolydays } from '@/context/HolydaysContext'; // CONTEXT
 //import * as Linking from 'expo-linking';
 //import UseSideLabel from '@/components/ui/SideLabel';
 import createPreferencesStyles from '@/components/styles/createPreferencesStyles';
-// import { BACKGROUND_BRIDGE_TASK } from '@/utils/backgroundTask';
-// import { registerForPushNotificationsAsync } from '@/utils/notifications';
+
 
 import {
   ImageBackground,
@@ -205,28 +204,7 @@ export default function Preferences() {
           />
         </View>
 
-        {/* ==================== NOTIFICHE BACKGROUND (DISABLED) ==================== */}
-        {/*
-        <View style={styles.groupContainer}>
-          <Text style={[styles.listTitle, { textAlign: 'center' }]}>{switchNames(myLanguage, 20)}</Text>
 
-          <Text style={{ fontSize: 13, color: colors.text, marginBottom: 8, paddingHorizontal: 4 }}>{switchNames(myLanguage, 21)}</Text>
-          <DropdownLookahead
-            selectedValue={lookaheadValue}
-            onChange={updateLookahead}
-          />
-
-          <View style={{ width: '100%', height: 1, backgroundColor: colors.border, marginBottom: 12 }}></View>
-
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
-            <Text style={{ fontSize: 16, color: colors.text }}>{switchNames(myLanguage, 26)}</Text>
-            <Switch
-              onValueChange={toggleBackground}
-              value={isBackgroundEnabled}
-            />
-          </View>
-        </View>
-        */}
 
         {/* ==================== DROPDOWN GIORNO SETTIMANA ==================== */}
         {/* <Text style={[styles.listTitle, {textAlign:'center'}]}>{dataLabel[2]}</Text>
@@ -315,11 +293,7 @@ export default function Preferences() {
 
 
 
-        {/*
-        <TouchableOpacity onPress={handleBackgroundTaskTest}>
-          <Text style={{ alignSelf: 'center', color: colors.text }}>Test Background Task</Text>
-        </TouchableOpacity>
-        */}
+
 
 
 
